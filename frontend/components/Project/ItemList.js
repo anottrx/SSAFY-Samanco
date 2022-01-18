@@ -40,7 +40,7 @@ function ItemList() {
             {
                 projectData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={data.no}  onClick={()=>{
+                        <Grid item xs={12} sm={6} key={data.no}  onClick={()=>{
                             Router.push("/project/"+data.no);
                             setDetail({detail: data});
                         }}>
