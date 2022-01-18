@@ -4,8 +4,10 @@ import "../styles/globals.css";
 // import { Container } from "next/app";
 import Head from "next/head";
 import Link from "next/link";
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Router from "next/router";
+
+import Cookies from "universal-cookie";
 
 const styles = {
   layout: {
@@ -29,10 +31,10 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
   },
   link: {
-    marginRight: "10px"
+    marginRight: "10px",
   },
   main: {
     flex: 1,
@@ -44,15 +46,19 @@ const styles = {
   },
 };
 
-
 function MyApp({ Component, pageProps }) {
   let [isLogin, setIsLogin] = useState(false);
   let [userId, setUserId] = useState(null);
 
+  const cookies = new Cookies();
+
   useEffect(() => {
-    setIsLogin(sessionStorage.getItem("userToken"));
+    setIsLogin(cookies.get("userToken"));
+    // setIsLogin(sessionStorage.getItem("userToken"));
+    console.log(sessionStorage.getItem("userToken"));
+    console.log(cookies.get("userToken"));
     setUserId(sessionStorage.getItem("userId"));
-  }, [isLogin, userId])
+  }, [isLogin, userId]);
 
   return (
     <div>
@@ -72,29 +78,49 @@ function MyApp({ Component, pageProps }) {
   );
 
   function HeaderLink(props) {
+    console.log(props);
     return (
       <div style={styles.headerLink}>
-        <Link href="/"><img src="/images/main-logo.png" height="30px"></img></Link>
+        <Link href="/">
+          <img src="/images/main-logo.png" height="30px"></img>
+        </Link>
         <div>
-
-        {props.isLogin?
-          <>
-              <span className='mr-5'>{props.userId}님, 안녕하세요</span>
-              <Link href="/" className="site-nav-item"  style={styles.link}>마이페이지</Link>
-              <span style={styles.link} onClick={()=>{
-                alert("로그아웃 되었습니다."); 
-                sessionStorage.clear(); 
-                Router.push("/"); 
-                setIsLogin(false);
-                setUserId(null);
-                }} className="site-nav-item" >로그아웃</span>
-          </>
-          :
-          <>
-              <Link href="/login" style={styles.link}>로그인</Link>
-              <Link href="/regist" style={styles.link}>회원가입</Link>
-          </>
-          }
+          {props.isLogin ? (
+            <>
+              <span className="mr-5">{props.userId}님, 안녕하세요</span>
+              {props.userId === "admin" ? (
+                <Link href="/">회원관리</Link>
+              ) : (
+                <></>
+              )}
+              <Link href="/" className="site-nav-item" style={styles.link}>
+                마이페이지
+              </Link>
+              <span
+                style={styles.link}
+                onClick={() => {
+                  alert("로그아웃 되었습니다.");
+                  sessionStorage.clear();
+                  cookies.set("userToken", "");
+                  Router.push("/");
+                  setIsLogin(false);
+                  setUserId(null);
+                }}
+                className="site-nav-item"
+              >
+                로그아웃
+              </span>
+            </>
+          ) : (
+            <>
+              <Link href="/login" style={styles.link}>
+                로그인
+              </Link>
+              <Link href="/regist" style={styles.link}>
+                회원가입
+              </Link>
+            </>
+          )}
         </div>
       </div>
     );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { getUserInfo, loginAPI } from "../../pages/api/user";
 import Link from "next/link";
 import Router from "next/router";
+import { useCookies } from "react-cookie";
 
 // import styles from "../../styles/Login.module.css";
 
@@ -22,6 +23,8 @@ export default function Login() {
     showPassword: false,
   });
 
+  const [cookies, setCookie, removeCookies] = useCookies(["userToken"]);
+
   const handleChange = (e) => {
     // setInputState({ ...inputState, [prop]: e.target.value });
     const { id, value } = e.target;
@@ -36,10 +39,6 @@ export default function Login() {
       ...inputState,
       showPassword: !inputState.showPassword,
     });
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
   };
 
   const handleSubmit = (event) => {
@@ -63,12 +62,18 @@ export default function Login() {
         switch (res.statusCode) {
           case 200: // 로그인 성공
             alert(`로그인 성공: ${res.accessToken}`);
-            sessionStorage.setItem("userToken", res.accessToken);
+            // sessionStorage.setItem("userToken", res.accessToken);
+            setCookie("userToken", res.accessToken); // 쿠키 설정
 
+            console.log(res);
             getUserInfo(res.accessToken).then((res) => {
-              sessionStorage.setItem("userId", res.userId);
+              alert();
+              sessionStorage.setItem("userId", inputState.id);
+              sessionStorage.setItem("email", res.email);
+              sessionStorage.setItem("nickname", res.nickname);
             });
-            Router.push("/");
+            // Router.push("/");
+            window.location.replace("/");
             break;
           case 401: // 비밀번호 틀림
             alert("비밀번호를 확인해주세요.");
