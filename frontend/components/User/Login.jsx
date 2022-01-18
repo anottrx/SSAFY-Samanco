@@ -140,7 +140,7 @@ export default function Login() {
         </Button>
         <br />
         <div flexDirection="row">
-          <Link href="/project">비밀번호 찾기</Link>
+          <Link href="/findpw">비밀번호 찾기</Link>
           <Link href="/regist">회원가입</Link>
         </div>
 
