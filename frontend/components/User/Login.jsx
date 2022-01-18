@@ -136,7 +136,6 @@ export default function Login() {
                 </IconButton>
               </InputAdornment>
             }
-            label="Password"
           />
         </FormControl>
         <br />
@@ -146,6 +145,7 @@ export default function Login() {
         <br />
         <div flexDirection="row">
           <Link href="/findpw">비밀번호 찾기</Link>
+           <span> | </span> 
           <Link href="/regist">회원가입</Link>
         </div>
 

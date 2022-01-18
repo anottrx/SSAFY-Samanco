@@ -55,8 +55,8 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     setIsLogin(cookies.get("userToken"));
     // setIsLogin(sessionStorage.getItem("userToken"));
-    console.log(sessionStorage.getItem("userToken"));
-    console.log(cookies.get("userToken"));
+    // console.log(sessionStorage.getItem("userToken"));
+    // console.log(cookies.get("userToken"));
     setUserId(sessionStorage.getItem("userId"));
   }, [isLogin, userId]);
 
@@ -78,7 +78,6 @@ function MyApp({ Component, pageProps }) {
   );
 
   function HeaderLink(props) {
-    console.log(props);
     return (
       <div style={styles.headerLink}>
         <Link href="/">
@@ -88,11 +87,6 @@ function MyApp({ Component, pageProps }) {
           {props.isLogin ? (
             <>
               <span className="mr-5">{props.userId}님, 안녕하세요</span>
-              {props.userId === "admin" ? (
-                <Link href="/">회원관리</Link>
-              ) : (
-                <></>
-              )}
               <Link href="/" className="site-nav-item" style={styles.link}>
                 마이페이지
               </Link>
@@ -102,7 +96,8 @@ function MyApp({ Component, pageProps }) {
                   alert("로그아웃 되었습니다.");
                   sessionStorage.clear();
                   cookies.set("userToken", "");
-                  Router.push("/");
+                  // Router.push("/");
+                  document.location.href = "/";
                   setIsLogin(false);
                   setUserId(null);
                 }}

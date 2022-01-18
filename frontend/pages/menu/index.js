@@ -1,7 +1,14 @@
 import Link from "next/link";
 import styles from "../../styles/Menu.module.css";
+import React, { useState, useEffect } from "react";
 
 const menu = () => {
+  let [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    setUserId(sessionStorage.getItem("userId"));
+  }, [userId]);
+
   return (
     <div className={styles.menus}>
       <Link href="/">
@@ -19,6 +26,7 @@ const menu = () => {
       <Link href="/board">
         <a className={styles.link}> 게시판</a>
       </Link>
+      {userId === "admin" ? <Link href="/"><a className={styles.link}>회원관리</a></Link> :null}
     </div>
   );
 };
