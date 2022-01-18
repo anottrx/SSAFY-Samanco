@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 
 import styled from "@emotion/styled"
 import Grid from '@mui/material/Grid';
@@ -11,6 +11,8 @@ import Pagination from '@mui/material/Pagination';
 import projectData from "../../data/projectData.json"
 import Router from "next/router";
 
+import { useDispatch } from 'react-redux';
+import * as projectActions from '../../store/module/project';
 
 function ItemList() {
     const [page, setPage] = useState(1);
@@ -22,6 +24,16 @@ function ItemList() {
         setPage(value);
     };
 
+    const dispatch = useDispatch();
+    // const detail = useSelector(({data}) => data.projectDetail);
+
+    const setDetail = useCallback(
+        ({detail}) => {
+            dispatch(projectActions.setProjectDetail({detail}))
+        },
+        [dispatch],
+    )
+
     return (
         <>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
@@ -30,6 +42,7 @@ function ItemList() {
                     return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={data.no}  onClick={()=>{
                             Router.push("/project/"+data.no);
+                            setDetail({detail: data});
                         }}>
                             <Item no={data.no}></Item> 
                         </Grid>
