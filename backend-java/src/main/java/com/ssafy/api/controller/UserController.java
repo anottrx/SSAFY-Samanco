@@ -16,7 +16,6 @@ import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.UserRepositorySupport;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,11 +29,14 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Api(value = "유저 API", tags = {"User"})
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/user")
 public class UserController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@PostMapping()
 	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드, 이름, 이메일, 전화번호</strong>를 통해 회원가입 한다.")
@@ -49,30 +51,10 @@ public class UserController {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 
-		String userId = registerInfo.getId();
 		String userPwd = registerInfo.getPassword();
 		String userName = registerInfo.getName();
 		String userEmail = registerInfo.getEmail();
 		String userPhone = registerInfo.getPhone();
-
-
-      /*
-         Todo : BE - 회원가입시 유효성검사
-         1. id 디비에서 중복된거 있는지 체크
-         2. id 길이 4자이상 ~ 16자 이하
-         3. 비밀번호 8자이상 ~ 16자 이하
-         4. 비밀번호 영어, 숫자, 특수문자 필수포함
-         5. 이메일은 @ 필수적으로 포함
-         6. 전화번호는 01012341234 형식
-         */
-
-
-		//1. 아이디 오류
-		int idCode=userService.idCheck(userId);
-		if(idCode == 401)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"아이디 길이는 4자이상 16자이하로 해주세요."));
-		else if(idCode == 402)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"아이디가 중복됩니다. 다른 아이디로 가입해주세요."));
 
 		//3. 비밀번호 오류
 		int passCode=userService.pwdCheck(userPwd);
@@ -111,24 +93,24 @@ public class UserController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
-	@GetMapping("idcheck/{userId}")
-	@ApiOperation(value = "아이디 유효성 검사", notes = "<strong>회원 가입 시 아이디</strong>의 유효성을 검사한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "글자 길이 제한"),
-			@ApiResponse(code = 402, message = "중복 아이디"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
-	public ResponseEntity<? extends BaseResponseBody> idCheck(@PathVariable("userId") @ApiParam(value="아이디", required = true) String id) {
-		//200 일때 사용 가능
-		int idCode=userService.idCheck(id);
-		if(idCode == 401)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"아이디 길이는 4자이상 16자이하로 해주세요."));
-		else if(idCode == 402)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"아이디가 중복됩니다. 다른 아이디로 가입해주세요."));
-
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "아이디 사용 가능합니다."));
-	}
+//	@GetMapping("idcheck/{userId}")
+//	@ApiOperation(value = "아이디 유효성 검사", notes = "<strong>회원 가입 시 아이디</strong>의 유효성을 검사한다.")
+//	@ApiResponses({
+//			@ApiResponse(code = 200, message = "성공"),
+//			@ApiResponse(code = 401, message = "글자 길이 제한"),
+//			@ApiResponse(code = 402, message = "중복 아이디"),
+//			@ApiResponse(code = 500, message = "서버 오류")
+//	})
+//	public ResponseEntity<? extends BaseResponseBody> idCheck(@PathVariable("userId") @ApiParam(value="아이디", required = true) String id) {
+//		//200 일때 사용 가능
+//		int idCode=userService.idCheck(id);
+//		if(idCode == 401)
+//			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"아이디 길이는 4자이상 16자이하로 해주세요."));
+//		else if(idCode == 402)
+//			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"아이디가 중복됩니다. 다른 아이디로 가입해주세요."));
+//
+//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "아이디 사용 가능합니다."));
+//	}
 
 	@PostMapping("passcheck")
 	@ApiOperation(value = "비밀번호 유효성 검사", notes = "<strong>회원 가입 시 비밀번호</strong>의 유효성을 검사한다. 아이디는 무시하세요.")
@@ -164,8 +146,36 @@ public class UserController {
 		 */
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
-		User user = userService.getUserByUserId(userId);
+//		User user = userService.getUserByUserId(userId);
+		User user=null;
 
 		return ResponseEntity.status(200).body(UserRes.of(user));
+	}
+
+	@PostMapping("/login")
+	@ApiOperation(value = "로그인", notes = "<strong>아이디와 패스워드</strong>를 통해 로그인 한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<UserLoginPostRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
+		String userId = loginInfo.getId();
+		String password = loginInfo.getPassword();
+
+//		User user = userService.getUserByUserId(userId);
+		User user=null;
+		// 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
+
+		if (user==null){
+			return ResponseEntity.status(200).body(UserLoginPostRes.of(404, "존재하는 아이디가 없습니다.", null));
+		}
+		if(passwordEncoder.matches(password, user.getPassword())) {
+			// 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
+			return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(userId)));
+		}
+		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
+		return ResponseEntity.status(200).body(UserLoginPostRes.of(401, "아이디 혹은 비밀번호가 일치하지 않습니다.", null));
 	}
 }
