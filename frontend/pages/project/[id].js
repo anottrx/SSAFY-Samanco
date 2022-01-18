@@ -10,8 +10,8 @@ import positionData from "../../data/positionData.json"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-import { Card, Container, Skeleton, CardContent, Typography, Divider } from "@mui/material";
-import Link from "next/link";
+import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup } from "@mui/material";
+import { useState } from "react";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -42,7 +42,7 @@ const ProjectDetail = () => {
     
     return (
     <Layout>
-        <CusContainer  maxWidth="md">
+        <CusContainer maxWidth="md">
             <br></br>
             <h2>{detail.title}</h2>
             <DetailWrapper maxWidth="sm">
@@ -133,23 +133,51 @@ const ProjectDetail = () => {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
+                text-align: center;
             }
 
             & span {
-                margin : 0px 10px 0px 5px;
+                margin : 0px 5px;
             }
         `
+        const [open, setOpen] = useState(false);
+
+        const JoinDialogOpen = () => { setOpen(true) }
+        const JoinDialogClose = () => { setOpen(false) }
 
         return (
             <ActionWrapper>
-                <div>
-                    <VisibilityIcon /> 
-                    <span>{detail.hit}</span>
-                    <FavoriteIcon /> 
-                    <span>{detail.like}</span>
-                </div>
+                <ButtonGroup variant="outlined" aria-label="text button group">
+                    <Button  style={{ pointerEvents: "none" }}> 
+                        <VisibilityIcon /> 
+                        <span>{detail.hit}</span>
+                    </Button>
+                    <Button>
+                        <FavoriteIcon /> 
+                        <span>{detail.like}</span>
+                    </Button>
+                </ButtonGroup>
                 <>
-                    <Link href="/project/join">지원하기</Link>
+                    <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                    <Dialog
+                        open={open}
+                        onClose={JoinDialogClose}
+                        >
+                        <DialogTitle>
+                            {"지원 하시겠습니까?"}
+                        </DialogTitle>
+                        <DialogContent>
+                        <DialogContentText>
+                            마이페이지에 기입된 정보가 전달됩니다. 
+                        </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={JoinDialogClose}>취소</Button>
+                        <Button onClick={JoinDialogClose} autoFocus>
+                            확인
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
                 </>
             </ActionWrapper>
         )

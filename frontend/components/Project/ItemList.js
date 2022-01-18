@@ -1,18 +1,16 @@
 import { useState, useRef, useCallback } from "react";
 
 import styled from "@emotion/styled"
-import Grid from '@mui/material/Grid';
-import Skeleton from '@mui/material/Skeleton';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+import { Grid, Skeleton, Card, CardContent, Typography, Pagination } from '@mui/material';
 
-import Pagination from '@mui/material/Pagination';
 import projectData from "../../data/projectData.json"
 import Router from "next/router";
 
 import { useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
+
+import StackList from "../../components/Project/StackList"
+import stackData from "../../data/StackData.json"
 
 function ItemList() {
     const [page, setPage] = useState(1);
@@ -25,7 +23,6 @@ function ItemList() {
     };
 
     const dispatch = useDispatch();
-    // const detail = useSelector(({data}) => data.projectDetail);
 
     const setDetail = useCallback(
         ({detail}) => {
@@ -34,9 +31,13 @@ function ItemList() {
         [dispatch],
     )
 
+    const CusPagination = styled(Pagination)`
+        margin-top: 20px;
+    `;
+
     return (
         <>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
+        <Grid container maxWidth="md" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
             {
                 projectData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
@@ -44,18 +45,20 @@ function ItemList() {
                             Router.push("/project/"+data.no);
                             setDetail({detail: data});
                         }}>
-                            <Item no={data.no}></Item> 
+                            <Item data={data}></Item> 
                         </Grid>
                     )
                 })
             }
         </Grid>
-        <Pagination count={allPage} color="primary" page={page} onChange={handleChange} />
+        <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />
         </>
     )
 }
 
 function Item(props) {
+    let data = props.data;
+
     const Container = styled.div`
         display: flex;
         flex-direction: column;
@@ -65,15 +68,14 @@ function Item(props) {
     return (
         <Container>
             <Card>
-                <Skeleton variant="rectangular" height={100} animation={false} />
+                <Skeleton variant="rectangular" height={150} animation={false} />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                    {props.no}
+                    {data.title}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                    Lizards are a widespread group of squamate reptiles, with over 6,000
-                    species, ranging across all continents except Antarctica
-                    </Typography>
+                    
+                    <StackList stackData={stackData}></StackList>
+                
                 </CardContent>
             </Card>
         </Container>
