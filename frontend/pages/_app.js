@@ -64,6 +64,7 @@ function MyApp({ Component, pageProps }) {
     <div>
       <Head>
         <title>Static Website</title>
+        <meta name="viewport" content="viewport-fit=cover" />
       </Head>
       <div style={styles.layout}>
         <header style={styles.header}>

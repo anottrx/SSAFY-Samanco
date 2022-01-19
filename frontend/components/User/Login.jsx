@@ -67,7 +67,7 @@ export default function Login() {
 
             console.log(res);
             getUserInfo(res.accessToken).then((res) => {
-              alert();
+              console.log(res);
               sessionStorage.setItem("userId", inputState.id);
               sessionStorage.setItem("email", res.email);
               sessionStorage.setItem("nickname", res.nickname);

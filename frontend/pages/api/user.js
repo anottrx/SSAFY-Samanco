@@ -34,9 +34,9 @@ async function registAPI(inputState) {
       //   nickname: inputState.nickname,
       //   birthday: inputState.birthday,
       //   generation: inputState.generation,
-      //   class: inputState.class,
-      //   student_id: inputState.student_id,
-      //   stack_array: inputState.stack_array, // array
+      //   userClass: inputState.userClass,
+      //   studentId: inputState.studentId,
+      //   stacks: inputState.stacks, // array
       //   position: inputState.position,
       //   link: inputState.link, // ,로 자르기
       //   description: inputState.description,
@@ -109,7 +109,7 @@ async function resetPWAPI(inputState) {
   // 비밀번호 재설정
   return await api
     .post("/api/user/pass", {
-      user_id: inputState.user_id,
+      userId: inputState.userId,
       password: inputState.password,
     })
     .then((res) => res.data)
@@ -120,17 +120,17 @@ async function updateUserAPI(inputState) {
   // 회원정보 변경
   return await api
     .post("/api/user/update", {
-      user_id: inputState.user_id, // 바꿀 수 없음
+      userId: inputState.userId, // 바꿀 수 없음
       email: inputState.email,
       name: inputState.name, // 바꿀 수 없음
       password: inputState.password,
       phone: inputState.phone,
       nickname: inputState.nickname,
       birthday: inputState.birthday,
-      generation: inputState.generation,
-      class: inputState.class,
-      student_id: inputState.student_id, // 바꿀 수 없음
-      stack_array: inputState.stack_array,
+      generation: inputState.generation, // 바꿀 수 없음
+      userClass: inputState.userClass,
+      studentId: inputState.studentId, // 바꿀 수 없음
+      stacks: inputState.stacks,
       position: inputState.position,
       link: inputState.link,
       description: inputState.description,
@@ -140,11 +140,11 @@ async function updateUserAPI(inputState) {
     .catch((err) => err.response.data);
 }
 
-async function deleteUserAPI(user_id) {
+async function deleteUserAPI(userId) {
   // 회원 탈퇴 -> 실제로 데이터를 지우는 것은 아님
   return await api
     .post("/api/user/delete", {
-      user_id: user_id,
+      userId: userId,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
@@ -167,10 +167,10 @@ async function checkNicknameAPI(nickname) {
 }
 
 async function checkMemberAPI(inputState) {
-  // 싸피생 확인
+  // 싸피생 확인 -> 안 함! 회원가입 때 할 것
   return await api
-    .post("/api/user/delete", {
-      student_id: inputState.student_id,
+    .post("/api/user/check", {
+      studentId: inputState.studentId,
       name: inputState.name,
     })
     .then((res) => res.data)
