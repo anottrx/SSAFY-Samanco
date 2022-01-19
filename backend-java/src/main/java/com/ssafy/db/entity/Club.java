@@ -35,15 +35,13 @@ public class Club extends BaseEntity{
     @Column(name = "end_date")
     private LocalDateTime endDate;
 
-    @JoinColumn(name="stack_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private StackGrade stackGrade;
+    @OneToMany(mappedBy = "club")
+    private List<StackGrade> stackGrades=new ArrayList<>();
 
     private Long likes;
 
-    @JoinColumn(name="position_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private PositionSize positionSize;
+    @OneToMany(mappedBy = "club")
+    private List<PositionSize> positionSizes=new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="host")

@@ -21,9 +21,8 @@ public class UserClub extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private Club club;
 
-    @JoinColumn(name = "position_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private PositionSize positionSize;
+    @OneToMany(mappedBy = "userClub")
+    private List<PositionSize> positionSizes;
 
     @Enumerated(EnumType.STRING)
     private UserJoinClubStatus joinStatus;

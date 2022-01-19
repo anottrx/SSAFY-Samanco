@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.service.StackService;
+import com.ssafy.db.entity.StackGrade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +38,13 @@ public class UserController {
 	UserService userService;
 
 	@Autowired
+	StackService stackService;
+
+	@Autowired
 	PasswordEncoder passwordEncoder;
 
 	@PostMapping()
-	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드, 이름, 이메일, 전화번호</strong>를 통해 회원가입 한다.")
+	@ApiOperation(value = "회원 가입")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
 			@ApiResponse(code = 401, message = "인증 실패"),
@@ -51,10 +56,31 @@ public class UserController {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 
+//		String userId = registerInfo.getId();
 		String userPwd = registerInfo.getPassword();
 		String userName = registerInfo.getName();
 		String userEmail = registerInfo.getEmail();
 		String userPhone = registerInfo.getPhone();
+//		System.out.println(registerInfo.getStacks());
+//		System.out.println(registerInfo.getStacks().size());
+
+      /*
+         Todo : BE - 회원가입시 유효성검사
+         1. id 디비에서 중복된거 있는지 체크
+         2. id 길이 4자이상 ~ 16자 이하
+         3. 비밀번호 8자이상 ~ 16자 이하
+         4. 비밀번호 영어, 숫자, 특수문자 필수포함
+         5. 이메일은 @ 필수적으로 포함
+         6. 전화번호는 01012341234 형식
+         */
+//
+//
+//		//1. 아이디 오류
+//		int idCode=userService.idCheck(userId);
+//		if(idCode == 401)
+//			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"아이디 길이는 4자이상 16자이하로 해주세요."));
+//		else if(idCode == 402)
+//			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"아이디가 중복됩니다. 다른 아이디로 가입해주세요."));
 
 		//3. 비밀번호 오류
 		int passCode=userService.pwdCheck(userPwd);
@@ -90,6 +116,8 @@ public class UserController {
 
 		// 회원 가입
 		User user = userService.createUser(registerInfo);
+		stackService.CreateStack(registerInfo.getStacks(), user);
+
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
@@ -145,9 +173,9 @@ public class UserController {
 		 * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
 		 */
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-		String userId = userDetails.getUsername();
-//		User user = userService.getUserByUserId(userId);
-		User user=null;
+		String email = userDetails.getUsername();
+		User user = userService.getUserByEmail(email);
+//		User user=null;
 
 		return ResponseEntity.status(200).body(UserRes.of(user));
 	}
@@ -161,21 +189,21 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<UserLoginPostRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
-		String userId = loginInfo.getId();
+		String email= loginInfo.getEmail();
 		String password = loginInfo.getPassword();
 
-//		User user = userService.getUserByUserId(userId);
-		User user=null;
+		User user = userService.getUserByEmail(email);
+//		User user=null;
 		// 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
 
 		if (user==null){
-			return ResponseEntity.status(200).body(UserLoginPostRes.of(404, "존재하는 아이디가 없습니다.", null));
+			return ResponseEntity.status(200).body(UserLoginPostRes.of(404, "존재하는 이메일이 없습니다.", null));
 		}
 		if(passwordEncoder.matches(password, user.getPassword())) {
 			// 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-			return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(userId)));
+			return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(email)));
 		}
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-		return ResponseEntity.status(200).body(UserLoginPostRes.of(401, "아이디 혹은 비밀번호가 일치하지 않습니다.", null));
+		return ResponseEntity.status(200).body(UserLoginPostRes.of(401, "이메일 혹은 비밀번호가 일치하지 않습니다.", null));
 	}
 }

@@ -48,8 +48,8 @@ public class User extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private UserPosition position;  // 사용자 포지션 [FRONTEND, BACKEND,  MOBILE, EMBEDDED]
 
-    @Column(name = "stack_id")
-    private Long stackId;
+    @OneToMany(mappedBy = "user")
+    private List<StackGrade> stackGrades=new ArrayList<>();
 
     private String link;
 

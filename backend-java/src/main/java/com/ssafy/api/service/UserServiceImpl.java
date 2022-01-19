@@ -32,12 +32,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
-//		user.setUserId(userRegisterInfo.getId());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
 		user.setEmail(userRegisterInfo.getEmail());
 		user.setPhone(userRegisterInfo.getPhone());
 		user.setName(userRegisterInfo.getName());
+		user.setBirthday(userRegisterInfo.getBirthday());
+		user.setDescription(userRegisterInfo.getDescription());
+		user.setNickname(userRegisterInfo.getNickname());
+		user.setGeneration(userRegisterInfo.getGeneration());
+		user.setLink(userRegisterInfo.getLink());
+		user.setStudentId(userRegisterInfo.getStudentId());
+//
+//		System.out.println(user.getStackId());
+//		user.setStackId();
 		return userRepository.save(user);
 	}
 
@@ -50,6 +58,11 @@ public class UserServiceImpl implements UserService {
 //		User user = userRepositorySupport.findUserByUserId(userId).get();
 //		return user;
 //	}
+
+	@Override
+	public User getUserByEmail(String email) {
+		return userRepositorySupport.findUserByEmail(email);
+	}
 //
 //	@Override
 //	public int idCheck(String userId) {

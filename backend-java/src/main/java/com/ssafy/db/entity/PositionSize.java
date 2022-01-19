@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -15,18 +12,15 @@ import javax.persistence.OneToOne;
 @NoArgsConstructor
 public class PositionSize extends BaseEntity{
 
-    private int frontend;
+    private String name;
 
-    private int backend;
+    private int size;
 
-    private int embedded;
-
-    private int mobile;
-
-    @JoinColumn(name = "user_club")
-    @OneToOne(mappedBy = "positionSize")
+    @JoinColumn(name = "user_club_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private UserClub userClub;
 
-    @OneToOne(mappedBy = "positionSize")
+    @JoinColumn(name = "club_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Club club;
 }
