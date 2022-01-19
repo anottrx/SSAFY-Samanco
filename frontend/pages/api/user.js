@@ -69,7 +69,7 @@ async function checkCodeAPI(code) {
 async function getUserInfo(token) {
   // 내 정보 조회
   return await getAuth(token)
-    .get("/api/users/me")
+    .get("/api/user/me")
     //   .get("/api/user/me")
     .then((res) => res.data)
     .catch((err) => err.response.data);
@@ -159,6 +159,7 @@ async function getAllUserInfoAPI() {
 }
 
 async function checkNicknameAPI(nickname) {
+  // 닉네임 중복 체크
   return await api
     .get("/api/user/nick-check/" + nickname)
     .then((res) => res.data)
@@ -166,6 +167,7 @@ async function checkNicknameAPI(nickname) {
 }
 
 async function checkMemberAPI(inputState) {
+  // 싸피생 확인
   return await api
     .post("/api/user/delete", {
       student_id: inputState.student_id,
@@ -176,6 +178,7 @@ async function checkMemberAPI(inputState) {
 }
 
 async function idCheckAPI(id) {
+  // 아이디 중복체크 -> 이제는 필요 없음
   return await api
     .get("/api/v1/users/idcheck/" + id)
     .then((res) => res.data)
