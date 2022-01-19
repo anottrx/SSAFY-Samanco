@@ -56,34 +56,34 @@ public class UserController {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 
-//		String userId = registerInfo.getId();
-		String userPwd = registerInfo.getPassword();
-		String userName = registerInfo.getName();
-		String userEmail = registerInfo.getEmail();
-		String userPhone = registerInfo.getPhone();
-//		System.out.println(registerInfo.getStacks());
-//		System.out.println(registerInfo.getStacks().size());
-
       /*
          Todo : BE - 회원가입시 유효성검사
-         1. id 디비에서 중복된거 있는지 체크
-         2. id 길이 4자이상 ~ 16자 이하
+         1. nickname 디비에서 중복된거 있는지 체크
+         2. nickname 길이 2자이상 ~ 16자 이하
          3. 비밀번호 8자이상 ~ 16자 이하
          4. 비밀번호 영어, 숫자, 특수문자 필수포함
          5. 이메일은 @ 필수적으로 포함
          6. 전화번호는 01012341234 형식
          */
-//
-//
-//		//1. 아이디 오류
-//		int idCode=userService.idCheck(userId);
-//		if(idCode == 401)
-//			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"아이디 길이는 4자이상 16자이하로 해주세요."));
-//		else if(idCode == 402)
-//			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"아이디가 중복됩니다. 다른 아이디로 가입해주세요."));
+
+		//1. 이메일 오류
+		int emailCode=userService.emailCheck(registerInfo.getEmail());
+		if(emailCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"이메일을 입력해주세요"));
+		else if(emailCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 이메일 형식으로 입력해주세요."));
+		else if(emailCode == 403)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(403,"이메일이 중복됩니다. 다른 이메일로 가입해주세요."));
+
+//		//2. 닉네임 오류
+		int nickCode=userService.nickCheck(registerInfo.getNickname());
+		if(nickCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"닉네임 길이는 2자이상 16자이하로 해주세요."));
+		else if(nickCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"닉네임이 중복됩니다. 다른 닉네임로 가입해주세요."));
 
 		//3. 비밀번호 오류
-		int passCode=userService.pwdCheck(userPwd);
+		int passCode=userService.pwdCheck(registerInfo.getPassword());
 		if(passCode == 401)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"비밀번호를 입력해주세요"));
 		else if(passCode == 402)
@@ -91,24 +91,17 @@ public class UserController {
 
 
 		//4. 이름 오류
-		int nameCode=userService.nameCheck((userName));
+		int nameCode=userService.nameCheck(registerInfo.getName());
 		if(nameCode == 401)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"이름을 입력해주세요"));
 		else if(nameCode == 402)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"이름은 한글로 입력해주세요."));
 
 
-		//5. 이메일 오류
-		int emailCode=userService.emailCheck((userEmail));
-		if(emailCode == 401)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"이메일을 입력해주세요"));
-		else if(emailCode == 402)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 이메일 형식으로 입력해주세요."));
-
 
 
 		//6. 전화번호 오류
-		int phoneCode=userService.phoneCheck((userPhone));
+		int phoneCode=userService.phoneCheck(registerInfo.getPhone());
 		if(phoneCode == 401)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"전화번호를 입력해주세요"));
 		else if(phoneCode == 402)
@@ -121,45 +114,45 @@ public class UserController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
-//	@GetMapping("idcheck/{userId}")
-//	@ApiOperation(value = "아이디 유효성 검사", notes = "<strong>회원 가입 시 아이디</strong>의 유효성을 검사한다.")
-//	@ApiResponses({
-//			@ApiResponse(code = 200, message = "성공"),
-//			@ApiResponse(code = 401, message = "글자 길이 제한"),
-//			@ApiResponse(code = 402, message = "중복 아이디"),
-//			@ApiResponse(code = 500, message = "서버 오류")
-//	})
-//	public ResponseEntity<? extends BaseResponseBody> idCheck(@PathVariable("userId") @ApiParam(value="아이디", required = true) String id) {
-//		//200 일때 사용 가능
-//		int idCode=userService.idCheck(id);
-//		if(idCode == 401)
-//			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"아이디 길이는 4자이상 16자이하로 해주세요."));
-//		else if(idCode == 402)
-//			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"아이디가 중복됩니다. 다른 아이디로 가입해주세요."));
-//
-//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "아이디 사용 가능합니다."));
-//	}
-
-	@PostMapping("passcheck")
-	@ApiOperation(value = "비밀번호 유효성 검사", notes = "<strong>회원 가입 시 비밀번호</strong>의 유효성을 검사한다. 아이디는 무시하세요.")
+	@GetMapping("nickcheck/{nickname}")
+	@ApiOperation(value = "닉네임 유효성 검사", notes = "<strong>회원 가입 시 닉네임</strong>의 유효성을 검사한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
 			@ApiResponse(code = 401, message = "글자 길이 제한"),
-			@ApiResponse(code = 402, message = "비밀번호 요건 미충족"),
+			@ApiResponse(code = 402, message = "중복 아이디"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> passCheck(@RequestBody @ApiParam(value="비밀번호", required = true) UserLoginPostReq loginInfo) {
+	public ResponseEntity<? extends BaseResponseBody> idCheck(@PathVariable("nickname") @ApiParam(value="닉네임", required = true) String nickname) {
 		//200 일때 사용 가능
-		int passCode=userService.pwdCheck(loginInfo.getPassword());
-		if(passCode == 401)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"비밀번호를 입력해주세요."));
-		else if(passCode == 402)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"비밀번호는 영문, 숫자, 특수문자 포함 8~16자로 입력해주세요."));
+		int nickCode=userService.nickCheck(nickname);
+		if(nickCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"닉네임 길이는 2자 이상 16자이하로 해주세요."));
+		else if(nickCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"닉네임이 중복됩니다. 다른 닉네임으로 가입해주세요."));
 
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "비밀번호 사용 가능합니다."));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "닉네임 사용 가능합니다."));
 	}
 
-	@GetMapping("/me")
+//	@PostMapping("passcheck")
+//	@ApiOperation(value = "비밀번호 유효성 검사", notes = "<strong>회원 가입 시 비밀번호</strong>의 유효성을 검사한다. 아이디는 무시하세요.")
+//	@ApiResponses({
+//			@ApiResponse(code = 200, message = "성공"),
+//			@ApiResponse(code = 401, message = "글자 길이 제한"),
+//			@ApiResponse(code = 402, message = "비밀번호 요건 미충족"),
+//			@ApiResponse(code = 500, message = "서버 오류")
+//	})
+//	public ResponseEntity<? extends BaseResponseBody> passCheck(@RequestBody @ApiParam(value="비밀번호", required = true) UserLoginPostReq loginInfo) {
+//		//200 일때 사용 가능
+//		int passCode=userService.pwdCheck(loginInfo.getPassword());
+//		if(passCode == 401)
+//			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"비밀번호를 입력해주세요."));
+//		else if(passCode == 402)
+//			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"비밀번호는 영문, 숫자, 특수문자 포함 8~16자로 입력해주세요."));
+//
+//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "비밀번호 사용 가능합니다."));
+//	}
+
+	@GetMapping("/auth")
 	@ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
@@ -175,7 +168,6 @@ public class UserController {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String email = userDetails.getUsername();
 		User user = userService.getUserByEmail(email);
-//		User user=null;
 
 		return ResponseEntity.status(200).body(UserRes.of(user));
 	}
@@ -193,7 +185,6 @@ public class UserController {
 		String password = loginInfo.getPassword();
 
 		User user = userService.getUserByEmail(email);
-//		User user=null;
 		// 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
 
 		if (user==null){

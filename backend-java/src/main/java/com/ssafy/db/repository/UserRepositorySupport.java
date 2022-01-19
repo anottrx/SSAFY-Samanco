@@ -30,4 +30,8 @@ public class UserRepositorySupport {
                 .where(qUser.email.eq(email)).fetchOne();
     }
 
+    public User findUserByNickname(String nickname) {
+        return jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.nickname.eq(nickname)).fetchOne();
+    }
 }

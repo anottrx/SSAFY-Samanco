@@ -63,21 +63,22 @@ public class UserServiceImpl implements UserService {
 	public User getUserByEmail(String email) {
 		return userRepositorySupport.findUserByEmail(email);
 	}
-//
-//	@Override
-//	public int idCheck(String userId) {
-//		//아이디 길이가 안맞으면 401에러 리턴
-//		if(userId.length()<4 || userId.length()>16){
-//			return 401;
-//		}
-//		//디비에서 userId로 찾아봤는데 null이 아니면 (값이 있으면) 중복되므로 402에러리턴
-//		else if(userRepositorySupport.findUserByUserId(userId).isPresent()){
-//			return 402;
-//		}
-//		//아이디가 길이도 맞고 중복되지도 않다면 성공 200
-//		return 200;
-//
-//	}
+
+	@Override
+	public int nickCheck(String nickname) {
+		System.out.println(userRepositorySupport.findUserByNickname(nickname));
+		//아이디 길이가 안맞으면 401에러 리턴
+		if(nickname.length()<2||nickname.length()>16){
+			return 401;
+		}
+		//디비에서 userId로 찾아봤는데 null이 아니면 (값이 있으면) 중복되므로 402에러 리턴
+		else if(userRepositorySupport.findUserByNickname(nickname)!=null){
+			return 402;
+		}
+		//아이디가 길이도 맞고 중복되지도 않다면 성공 200
+		return 200;
+
+	}
 
 	@Override
 	public int pwdCheck(String userPwd) {
@@ -106,12 +107,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int emailCheck(String userEmail) {
-		if(userEmail == null)
+		if(userEmail==null)
 			return 401;
 		Pattern emailPattern = Pattern.compile("^[0-9a-zA-Z_-]+@[0-9a-zA-Z]+\\.[a-zA-Z]{2,6}$");
 		Matcher emailMatcher = emailPattern.matcher(userEmail);
 		if(!emailMatcher.find())
 			return 402;
+		if (userRepositorySupport.findUserByEmail(userEmail)!=null)	return 403;
 
 		return 200;
 	}

@@ -10,9 +10,10 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 //	User getUserByUserId(String userId);
 	User getUserByEmail(String email);
-//	int idCheck(String userId);
 	int pwdCheck(String userPwd);
 	int nameCheck(String userName);
 	int emailCheck(String userEmail);
 	int phoneCheck(String userPhone);
+
+    int nickCheck(String nickname);
 }
