@@ -6,6 +6,7 @@ import {LocalizationProvider } from '@mui/lab';
 import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
 import StackSelect from "../../components/Common/Stack/StackSelect";
 import DateAdapter from '@mui/lab/AdapterDateFns';
+import { useState, useRef, useEffect } from "react";
 
 
 function ProjectRegist() {
@@ -16,6 +17,15 @@ function ProjectRegist() {
         & > div {
             margin: 10px 0px;
         }
+
+        & .registBtn{
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        & .imgInput{
+            display:none;
+        }
     `
     const DatePickerWrapper = styled.div`
         display: flex;
@@ -23,28 +33,100 @@ function ProjectRegist() {
             flex: 1;
             margin: 10px 5px;
         }
-
     `
+
+    const ImgUploadBtn = styled(Button)`
+        padding: 20px;
+        border: 1px dashed grey;
+        min-width: 150px;
+        min-height: 150px; 
+        margin: 10px 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    `
+    const [files, setFiles] = useState('');
+
+    const onImgChange = (event) => {
+        let formData = new FormData();
+        
+        const file = event.target.files[0];
+        setFiles(file)
+        console.log(file)
+    }
+
+    const uploadRef = useRef(null);
+
+    useEffect(() => {
+        preview();
+    });
+
+    const preview = () => {
+        if (!files) return false;
+
+        const imgEl = document.querySelector("#img_box");
+        const reader = new FileReader();
+
+        reader.onload = () => (
+            imgEl.style.backgroundImage = `url(${reader.result})`
+        )
+
+        imgEl.innerText  = "";
+        reader.readAsDataURL(files)
+    }
+
+    const [inputValue, setInputValue] = useState({
+        title: "",
+        collect_status: "",
+        schedule: "",
+        size: 0,
+        description: "",
+        image: "",
+        start_date: "",
+        end_date: "",
+        stack: [],
+        likes: 0,
+        position: [],
+        host: "",
+        hit: 0,
+        tag: "PROJECT"
+    });
+
+    const changeHandle = (e) => {
+        const {value, name} = e.target;
+        setInputValue({...inputValue, [name]:value});
+        console.log(value, name)
+    }
 
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
         <Layout>
             <h1>Project Regist</h1>
             <CusPaper>   
-                <Box component="span" style={{ padding: 2, border: '1px dashed grey', height: 100, width: 100}}>
-                    <Button>Image Upload</Button>
-                </Box>
+                <ImgUploadBtn id="img_box" onClick={(event) => {
+                    event.preventDefault();
+                    uploadRef.current.click();
+                }}>Image Upload</ImgUploadBtn>
+                
+                <input ref={uploadRef} type="file"
+                    className="imgInput" id="projectImg"
+                    accept="image/*" name="file"
+                    onChange={onImgChange}></input>
 
-                <TextField fullWidth id="filled-basic" label="프로젝트 이름"/>
+                <TextField fullWidth name="title" label="프로젝트 이름"/>
                 <TextField
                     id="outlined-textarea"
+                    name="description"
                     label="프로젝트 설명"
                     placeholder="프로젝트 설명"
                     fullWidth
                     rows={4}
                     multiline
                 />
-                <TextField fullWidth id="filled-basic" label="스케쥴"/>
+                <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴"/>
                 
                 <StackLevelSelect></StackLevelSelect>
                 <StackSelect></StackSelect>
@@ -53,6 +135,12 @@ function ProjectRegist() {
                     <DatePicker label="시작 날짜"/>
                     <DatePicker label="종료 날짜"/>
                 </DatePickerWrapper>
+
+                <div className="registBtn">
+                    <Button variant="outlined" onClick={() => {
+                        alert("")
+                    }}>등록하기</Button>
+                </div>
             </CusPaper>
         </Layout>
         </LocalizationProvider>
