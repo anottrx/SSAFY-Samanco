@@ -13,7 +13,7 @@ export default function PositionList(props) {
                 Object.keys(props.positionData).map(key => {
                     return (
                         props.positionData[key] > 0 ?
-                            <div>{key} <StackChip label={props.positionData[key]} size="small"></StackChip></div>
+                            <div key={key}>{key} <StackChip label={props.positionData[key]} size="small"></StackChip></div>
                             :
                             null
                         )

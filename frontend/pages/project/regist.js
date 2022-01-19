@@ -7,6 +7,9 @@ import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
 import StackSelect from "../../components/Common/Stack/StackSelect";
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import { useState, useRef, useEffect } from "react";
+import React from "react";
+import Counter from "../../components/Common/PositionSelect";
+var FormData = require('form-data');
 
 
 function ProjectRegist() {
@@ -48,13 +51,19 @@ function ProjectRegist() {
         background-repeat: no-repeat;
         background-size: contain;
     `
+
+    const [inputValue, setInputValue] = useState({});
+
+    const [formData, changeFormData] = useState(new FormData());
     const [files, setFiles] = useState('');
 
     const onImgChange = (event) => {
-        let formData = new FormData();
-        
         const file = event.target.files[0];
         setFiles(file)
+
+        const newData = formData;
+        newData.append("file", file);
+        changeFormData(newData);
         console.log(file)
     }
 
@@ -78,27 +87,9 @@ function ProjectRegist() {
         reader.readAsDataURL(files)
     }
 
-    const [inputValue, setInputValue] = useState({
-        title: "",
-        collect_status: "",
-        schedule: "",
-        size: 0,
-        description: "",
-        image: "",
-        start_date: "",
-        end_date: "",
-        stack: [],
-        likes: 0,
-        position: [],
-        host: "",
-        hit: 0,
-        tag: "PROJECT"
-    });
-
-    const changeHandle = (e) => {
-        const {value, name} = e.target;
-        setInputValue({...inputValue, [name]:value});
-        console.log(value, name)
+    const changeHandle = (value, name) => {
+        inputValue[name] = value;
+        // 리렌더링 X
     }
 
     return (
@@ -116,7 +107,8 @@ function ProjectRegist() {
                     accept="image/*" name="file"
                     onChange={onImgChange}></input>
 
-                <TextField fullWidth name="title" label="프로젝트 이름"/>
+                <TextField fullWidth name="title" label="프로젝트 이름" onChange={(e) => changeHandle(e.target.value, "title")}
+                    value={inputValue.title}/>
                 <TextField
                     id="outlined-textarea"
                     name="description"
@@ -125,20 +117,25 @@ function ProjectRegist() {
                     fullWidth
                     rows={4}
                     multiline
+                    onChange={(e) => changeHandle(e.target.value, "description")}
+                    value={inputValue.description}
                 />
-                <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴"/>
+                <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴" onChange={(e) => changeHandle(e.target.value, "schedule")}
+                    value={inputValue.schedule}/>
                 
-                <StackLevelSelect></StackLevelSelect>
-                <StackSelect></StackSelect>
+                {/* <StackLevelSelect></StackLevelSelect> */}
+                <StackSelect changeHandle={changeHandle}></StackSelect>
                 
                 <DatePickerWrapper>
-                    <DatePicker label="시작 날짜"/>
-                    <DatePicker label="종료 날짜"/>
+                    <DatePicker changeHandle={changeHandle} label="시작 날짜"/>
+                    <DatePicker changeHandle={changeHandle} label="종료 날짜"/>
                 </DatePickerWrapper>
+
+                <Counter changeHandle={changeHandle}></Counter>
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
-                        alert("")
+                        console.log(inputValue);
                     }}>등록하기</Button>
                 </div>
             </CusPaper>
@@ -148,4 +145,4 @@ function ProjectRegist() {
     )
 }
 
-export default ProjectRegist;
+export default React.memo(ProjectRegist);

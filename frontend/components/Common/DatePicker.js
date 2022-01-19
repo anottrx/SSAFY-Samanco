@@ -1,11 +1,11 @@
 import {DesktopDatePicker, } from '@mui/lab';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField } from '@mui/material';
 
 export let getDateValue;
 
 export default function DatePicker(props){
-    const [dateValue, setDateValue] = useState(new Date());
+    const [dateValue, setDateValue] = useState(new Date().toJSON().split("T")[0]);
 
     getDateValue = () => dateValue;
     
@@ -13,6 +13,14 @@ export default function DatePicker(props){
         let result = e.toJSON().split("T")[0];
         setDateValue(result)
     };
+
+    useEffect(() => {
+        if (props.label.includes("시작")) {
+            props.changeHandle(dateValue,"start_date")
+        } else if (props.label.includes("종료")) {
+            props.changeHandle(dateValue,"end_date")
+        }
+    }, [dateValue])
 
     return (
         <Datepicker 
@@ -26,8 +34,7 @@ export default function DatePicker(props){
         return (
          <DesktopDatePicker
              label={props.label}
-            //  inputFormat="yyyy/MM/dd"
-             inputFormat="dd/MM/yyyy"
+             inputFormat="yyyy/MM/dd"
              value={props.value}
              onChange={(e) => props.dateHandleChange(e, props.label)}
              renderInput={(params) => <TextField {...params} />}

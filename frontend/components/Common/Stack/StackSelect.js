@@ -1,6 +1,6 @@
 import { Box, FormControl, OutlinedInput, InputLabel, MenuItem, Select, Chip } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 
 const stacks = [
@@ -44,7 +44,7 @@ function getStyles(name, stackName, theme) {
     };
 }  
 
-function StackSelect(){
+function StackSelect(props){
     const [stackName, setStackName] = useState([]);
     const theme = useTheme();
 
@@ -61,6 +61,13 @@ function StackSelect(){
             cursor: pointer;
         }
     `
+    useEffect(() => {
+        let stackArray = [];
+        stackName.map(stack => {
+            stackArray.push({[stack]:1});
+        })
+        props.changeHandle(stackArray,"stack");
+    }, [stackName])
 
     return(
         <div>
