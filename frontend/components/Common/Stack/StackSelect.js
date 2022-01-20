@@ -47,9 +47,11 @@ function getStyles(name, stackName, theme) {
 function StackSelect(props){
     
     let initArray = [];
-    props.initData.map(data=>{
-        initArray.push(Object.keys(data)[0])
-    })
+    if (props.initData){
+        props.initData.map(data=>{
+            initArray.push(Object.keys(data)[0])
+        })
+    }
 
     const [stackName, setStackName] = useState(
         props.initData? initArray: []);

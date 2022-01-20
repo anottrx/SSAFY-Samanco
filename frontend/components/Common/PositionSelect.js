@@ -14,11 +14,14 @@ const position = [
 
 function PositionSelect(props) {
     let initArray = [];
-    props.initData.map(data=>{
-        let name = Object.keys(data)[0];
-        let count = data[name];
-        initArray.push({name: name, count: count});
-    })
+
+    if (props.initData) {
+        props.initData.map(data=>{
+            let name = Object.keys(data)[0];
+            let count = data[name];
+            initArray.push({name: name, count: count});
+        })
+    }
 
     const [positions, setPositions] = useState(props.initData? initArray:[]);
 
