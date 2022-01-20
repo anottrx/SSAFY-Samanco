@@ -4,6 +4,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 
 import Layout from "../../components/layout";
 import BoardList from "./BoardList";
@@ -66,6 +68,20 @@ export default function Board() {
               <Tab label="사람구해요" {...a11yProps(4)} />
             </Tabs>
           </Box>
+          <div className={styles.searchTab}>
+            <Stack direction="row" spacing={2}>
+              <Box
+                  component="form"
+                  sx={{
+                      '& > :not(style)': { m: 1, width: '25ch' },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                  >
+                      <TextField id="search" label="search" variant="standard" />
+                  </Box>
+            </Stack>
+          </div>
           <TabPanel value={value} index={0}>
             <BoardList tag="notice"/>
           </TabPanel>
@@ -76,6 +92,7 @@ export default function Board() {
             <BoardList tag="qna"/>
           </TabPanel>
         </Box>
+        
       </div>
   </Layout>
     

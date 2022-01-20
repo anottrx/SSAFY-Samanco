@@ -32,8 +32,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function BoardList(props) {
     let [articles,setArticles] = useState(Data);
 
-    
-
     return (
         <div>
             <TableContainer component={Paper}>
