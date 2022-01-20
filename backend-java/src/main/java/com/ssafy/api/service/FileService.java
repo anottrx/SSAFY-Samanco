@@ -7,4 +7,6 @@ import java.io.IOException;
 public interface FileService {
 
     void userSaveFile(MultipartFile[] files, Long userId) throws IOException;
+
+    void userUpdateFile(MultipartFile[] files, Long id) throws IOException;
 }

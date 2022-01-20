@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.db.entity.Files;
 import com.ssafy.db.repository.FileRepository;
+import com.ssafy.db.repository.FileRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,9 @@ public class FileServiceImpl implements FileService{
 
     @Autowired
     FileRepository fileRepository;
+
+    @Autowired
+    FileRepositorySupport fileRepositorySupport;
 
     @Override
     public void userSaveFile(MultipartFile[] files, Long userId) throws IOException {
@@ -54,5 +58,11 @@ public class FileServiceImpl implements FileService{
 
             }
         }
+    }
+
+    @Override
+    public void userUpdateFile(MultipartFile[] files, Long userId) throws IOException {
+        fileRepositorySupport.userDeleteFile(userId);
+        userSaveFile(files, userId);
     }
 }

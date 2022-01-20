@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.FileRegisterPostReq;
+import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
 import com.ssafy.db.entity.StackGrade;
@@ -127,7 +128,72 @@ public class UserController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
-	@GetMapping("nickcheck/{nickname}")
+	@PostMapping("/update")
+	@ApiOperation(value = "회원 정보 수정")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> update(
+			@RequestBody @ApiParam(value="회원 정보", required = true) UserUpdatePostReq updateInfo,
+			@RequestPart(required = false) MultipartFile[] files) throws IOException {
+
+		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
+
+		//1. 이메일 오류
+		int emailCode=userService.emailCheck(updateInfo.getEmail());
+		if(emailCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"이메일을 입력해주세요"));
+		else if(emailCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 이메일 형식으로 입력해주세요."));
+		else if(emailCode == 403)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(403,"이메일이 중복됩니다. 다른 이메일로 가입해주세요."));
+
+//		//2. 닉네임 오류
+		int nickCode=userService.nickCheck(updateInfo.getNickname());
+		if(nickCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"닉네임 길이는 2자이상 16자이하로 해주세요."));
+		else if(nickCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"닉네임이 중복됩니다. 다른 닉네임로 가입해주세요."));
+
+		//3. 비밀번호 오류
+		int passCode=userService.pwdCheck(updateInfo.getPassword());
+		if(passCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"비밀번호를 입력해주세요"));
+		else if(passCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"비밀번호는 영문, 숫자, 특수문자 포함 8~16자로 입력해주세요."));
+
+
+		//4. 이름 오류
+		int nameCode=userService.nameCheck(updateInfo.getName());
+		if(nameCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"이름을 입력해주세요"));
+		else if(nameCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"이름은 한글로 입력해주세요."));
+
+		//6. 전화번호 오류
+		int phoneCode=userService.phoneCheck(updateInfo.getPhone());
+		if(phoneCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"전화번호를 입력해주세요"));
+		else if(phoneCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 전화번호 형식으로 입력해주세요."));
+
+
+		// 회원 수정
+		userService.updateUser(updateInfo);
+		Long userId= updateInfo.getUserId();
+		// 회원 스택 수정
+		stackService.updateStack(updateInfo.getStacks(), userId);
+		// 회원 이미지 입력
+		fileService.userUpdateFile(files, userId);
+
+
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+	}
+
+	@GetMapping("/nickcheck/{nickname}")
 	@ApiOperation(value = "닉네임 유효성 검사", notes = "<strong>회원 가입 시 닉네임</strong>의 유효성을 검사한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),

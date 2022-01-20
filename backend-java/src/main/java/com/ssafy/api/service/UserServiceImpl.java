@@ -1,7 +1,6 @@
 package com.ssafy.api.service;
 
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.ssafy.api.request.UserUpdatePostReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +75,12 @@ public class UserServiceImpl implements UserService {
 		}
 		//아이디가 길이도 맞고 중복되지도 않다면 성공 200
 		return 200;
+
+	}
+
+	@Override
+	public void updateUser(UserUpdatePostReq userUpdateInfo) {
+		userRepositorySupport.updateUser(userUpdateInfo);
 
 	}
 

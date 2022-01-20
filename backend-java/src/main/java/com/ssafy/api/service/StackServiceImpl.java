@@ -35,4 +35,11 @@ public class StackServiceImpl implements StackService{
             }
         }
     }
+
+    @Override
+    public void updateStack(List<Map<String, Integer>> stacks, Long userId) {
+        stackRepositorySupport.deleteStack(userId);
+        createStack(stacks, userId);
+
+    }
 }

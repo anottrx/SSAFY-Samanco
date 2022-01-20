@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.db.entity.User;
 
 /**
@@ -16,4 +17,6 @@ public interface UserService {
 	int phoneCheck(String userPhone);
 
     int nickCheck(String nickname);
+
+    void updateUser(UserUpdatePostReq registerInfo);
 }
