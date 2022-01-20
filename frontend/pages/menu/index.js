@@ -24,7 +24,7 @@ const menu = () => {
         <a className={styles.link}>미팅룸</a>
       </Link>
       <Link href="/board">
-        <a className={styles.link}> 게시판</a>
+        <a className={styles.link}>게시판</a>
       </Link>
       {userId === "admin" ? <Link href="/"><a className={styles.link}>회원관리</a></Link> :null}
     </div>

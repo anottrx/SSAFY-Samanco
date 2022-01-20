@@ -36,15 +36,36 @@ export default function Regist() {
     email: "",
     phone: "",
     nickname: "",
-    class: "",
+    userClass: "",
     birthday: "",
     generation: "",
-    student_id: "",
-    stack_id: "",
+    studentId: "",
+    stacks: "",
     position: "",
     link: "",
     description: "",
     image_id: "",
+  });
+
+  const [stackScore, setStackScore] = useState({
+    HTML: "",
+    CSS: "",
+    JavaScript: "",
+    VueJS: "",
+    React: "",
+    Angular: "",
+    Python: "",
+    Java: "",
+    C: "",
+    Spring: "",
+    MySQL: "",
+    Git: "",
+    AWS: "",
+    Docker: "",
+    Linux: "",
+    Jira: "",
+    Django: "",
+    Redis: "",
   });
 
   const generationOptions = [
@@ -65,10 +86,10 @@ export default function Regist() {
   ];
 
   const positionGroup = [
-    { value: "JAVA", label: "자바반" },
-    { value: "PYTHON", label: "파이썬반" },
-    { value: "MOBILE", label: "모바일반" },
-    { value: "EMBEDDED", label: "임베디드반" },
+    { value: "frontend", label: "프론트엔드" },
+    { value: "backend", label: "백엔드" },
+    { value: "mobile", label: "모바일" },
+    { value: "embedded", label: "임베디드" },
   ];
 
   const stackGroup = [
@@ -80,7 +101,7 @@ export default function Regist() {
     { value: "Angular", label: "Angular" },
     { value: "Python", label: "Python" },
     { value: "Java", label: "Java" },
-    { value: "C", label: "C/C++" },
+    { value: "C/C++/C#", label: "C/C++/C#" },
     { value: "Spring boot", label: "Spring boot" },
     { value: "MySQL", label: "MySQL" },
     { value: "Git", label: "Git" },
@@ -169,8 +190,8 @@ export default function Regist() {
       //   console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
       //   sendEmailCodeAPI(value).then((res) => {
-          setShowEmailCodeCheck(true);
-          setAuthFin(false);
+      setShowEmailCodeCheck(true);
+      setAuthFin(false);
       //   });
     }
   };
@@ -268,9 +289,12 @@ export default function Regist() {
     } else if (!inputState.nickname) {
       isNormal = false;
       msg = "닉네임을 입력해주세요.";
-    } else if (!inputState.student_id) {
+    } else if (!inputState.studentId) {
       isNormal = false;
       msg = "학번을 입력해주세요.";
+    } else if (!inputState.userClass) {
+      isNormal = false;
+      msg = "반을 입력해주세요.";
     } else {
       isNormal = true;
     }
@@ -329,7 +353,6 @@ export default function Regist() {
             placeholder="4~8자리"
             required=""
           ></input>
-
           {/* 아이디 유효성 결과 */}
           {/* 1. 사용 가능 */}
           {inputState.id != "" && idCheckRes && idCheckRes.code == 200 ? (
@@ -454,8 +477,8 @@ export default function Regist() {
           <label className="">학번</label>
           <input
             type="text"
-            id="student_id"
-            value={inputState.student_id}
+            id="studentId"
+            value={inputState.studentId}
             onChange={handleChange}
             className=""
             placeholder="싸피에서 제공받은 학번"
@@ -464,6 +487,7 @@ export default function Regist() {
           {/* 반 */}
           <SelectClassBox
             options={classOptions}
+            value={inputState.userClass}
           ></SelectClassBox>
         </div>
         {/* 이름 */}
@@ -541,7 +565,7 @@ export default function Regist() {
             required=""
           ></input>
         </div>
-
+        
         {/* 가입 버튼 */}
         <button type="submit" className="">
           가입하기

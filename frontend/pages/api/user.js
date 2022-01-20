@@ -88,7 +88,7 @@ async function getOtherInfoAPI(nickname) {
 async function sendEmailPWCodeAPI(email) {
   // 비밀번호 재설정 위해 이메일로 인증번호 보내기
   return await api
-    .post("/api/user/find-pass", {
+    .post("/api/user/findpass", {
       email: email,
     })
     .then((res) => res.data)
@@ -98,7 +98,7 @@ async function sendEmailPWCodeAPI(email) {
 async function checkEmailPWAPI(code) {
   // 비밀번호 재설정 위해 받은 인증번호 확인하기
   return await api
-    .post("/api/user/pass-code", {
+    .post("/api/user/passcode", {
       code: code,
     })
     .then((res) => res.data)
@@ -161,7 +161,7 @@ async function getAllUserInfoAPI() {
 async function checkNicknameAPI(nickname) {
   // 닉네임 중복 체크
   return await api
-    .get("/api/user/nick-check/" + nickname)
+    .get("/api/user/nickcheck/" + nickname)
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }

@@ -19,6 +19,7 @@ import Button from "@mui/material/Button";
 export default function Login() {
   const [inputState, setInputState] = useState({
     id: "",
+    email: "",
     password: "",
     showPassword: false,
   });
@@ -47,9 +48,9 @@ export default function Login() {
     let isNormal = true;
     let msg = "";
 
-    if (!inputState.id) {
+    if (!inputState.email) {
       isNormal = false;
-      msg = "아이디를 입력해주세요.";
+      msg = "이메일을 입력해주세요.";
     } else if (!inputState.password) {
       isNormal = false;
       msg = "비밀번호를 입력해주세요.";
@@ -69,7 +70,7 @@ export default function Login() {
             getUserInfo(res.accessToken).then((res) => {
               console.log(res);
               sessionStorage.setItem("userId", inputState.id);
-              sessionStorage.setItem("email", res.email);
+              sessionStorage.setItem("email", inputState.email);
               sessionStorage.setItem("nickname", res.nickname);
             });
             // Router.push("/");
@@ -110,9 +111,9 @@ export default function Login() {
         <br />
         <FormControl sx={{ width: 280 }}>
           <OutlinedInput
-            id="id"
+            id="email"
             placeholder="이메일"
-            value={inputState.id}
+            value={inputState.email}
             onChange={handleChange}
           />
         </FormControl>
@@ -145,10 +146,9 @@ export default function Login() {
         <br />
         <div flexDirection="row">
           <Link href="/findpw">비밀번호 찾기</Link>
-           <span> | </span> 
+          <span> | </span>
           <Link href="/regist">회원가입</Link>
         </div>
-
         <br />
       </Box>
 
