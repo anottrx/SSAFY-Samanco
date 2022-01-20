@@ -95,9 +95,7 @@ function CusPaper(props){
     `
     
     function DeletePosition(name){
-        console.log("Delete")
         let newPos = props.positions.filter(pos => pos.name !== name);
-        console.log("newPos",newPos)
         props.setPositions(newPos);
     }
 

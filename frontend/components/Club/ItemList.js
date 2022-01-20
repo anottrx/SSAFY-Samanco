@@ -12,9 +12,36 @@ import * as projectActions from '../../store/module/project';
 import StackList from "./StackList"
 import stackData from "../../data/StackData.json"
 
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
+
 function ItemList() {
     const [page, setPage] = useState(1);
-    const purPage = useRef(6);
+
+    const theme = useTheme();
+    
+    const xsMaches = useMediaQuery(theme.breakpoints.up('xs'));
+    const smMatches = useMediaQuery(theme.breakpoints.up('sm'));
+    const mdMatches = useMediaQuery(theme.breakpoints.up('md'));
+    const lgMatches = useMediaQuery(theme.breakpoints.up('lg'));
+    
+    let purPage = useRef();
+
+    if (lgMatches) {
+        purPage.current = 8;
+    }
+    else if (mdMatches) {
+        purPage.current = 6;
+    } 
+    else if (smMatches) {
+        purPage.current = 4;
+    } 
+    else if (xsMaches) {
+        purPage.current = 2;
+    }
+
+
     let allPage = parseInt(projectData.length / purPage.current);
     if (projectData.length % purPage.current > 0) allPage += 1;
 
@@ -41,11 +68,11 @@ function ItemList() {
 
     return (
         <>
-        <CusGrid container maxWidth="md" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
+        <CusGrid container maxWidth="lg" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
             {
                 projectData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
-                        <Grid item xs={12} sm={6} md={4} key={data.no}  onClick={()=>{
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={data.no}  onClick={()=>{
                             Router.push("/project/"+data.no);
                             setDetail({detail: data});
                         }}>
@@ -60,7 +87,7 @@ function ItemList() {
     )
 }
 
-function Item(props) {
+export function Item(props) {
     let data = props.data;
 
     const Container = styled.div`

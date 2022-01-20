@@ -2,6 +2,7 @@ import Layout from "../../components/layout";
 import Items from "../../components/Club/ItemList";
 import SearchBar from "../../components/Common/Search";
 import StackTagList from "../../components/Club/StackTagList";
+import Carousel from "../../components/Club/Carousel";
 
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
@@ -32,7 +33,7 @@ export default function Project() {
   return (
     <Layout>
       <h1>Project</h1>
-      <ItemWrapper>
+      <ItemWrapper >
         <ProjectActions>
           <SearchBar></SearchBar>
           <CusButton variant="outlined" size="medium"
@@ -42,10 +43,12 @@ export default function Project() {
             등록하기
           </CusButton>
         </ProjectActions>
-
         <StackTagList></StackTagList>
         <Items></Items>
       </ItemWrapper>
+    
+      <Carousel label="인기 많은 프로젝트"></Carousel>
+      <Carousel label="곧 마감 되는 프로젝트"></Carousel>
     </Layout>
   );
 }
