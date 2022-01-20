@@ -2,6 +2,7 @@ import { useState } from "react";
 import { getUserInfo, loginAPI } from "../../pages/api/user";
 import Link from "next/link";
 import Router from "next/router";
+import { useCookies } from "react-cookie";
 
 // import styles from "../../styles/Login.module.css";
 
@@ -18,9 +19,12 @@ import Button from "@mui/material/Button";
 export default function Login() {
   const [inputState, setInputState] = useState({
     id: "",
+    email: "",
     password: "",
     showPassword: false,
   });
+
+  const [cookies, setCookie, removeCookies] = useCookies(["userToken"]);
 
   const handleChange = (e) => {
     // setInputState({ ...inputState, [prop]: e.target.value });
@@ -38,19 +42,15 @@ export default function Login() {
     });
   };
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
     let isNormal = true;
     let msg = "";
 
-    if (!inputState.id) {
+    if (!inputState.email) {
       isNormal = false;
-      msg = "아이디를 입력해주세요.";
+      msg = "이메일을 입력해주세요.";
     } else if (!inputState.password) {
       isNormal = false;
       msg = "비밀번호를 입력해주세요.";
@@ -63,12 +63,18 @@ export default function Login() {
         switch (res.statusCode) {
           case 200: // 로그인 성공
             alert(`로그인 성공: ${res.accessToken}`);
-            sessionStorage.setItem("userToken", res.accessToken);
+            // sessionStorage.setItem("userToken", res.accessToken);
+            setCookie("userToken", res.accessToken); // 쿠키 설정
 
+            console.log(res);
             getUserInfo(res.accessToken).then((res) => {
-              sessionStorage.setItem("userId", res.userId);
+              console.log(res);
+              sessionStorage.setItem("userId", inputState.id);
+              sessionStorage.setItem("email", inputState.email);
+              sessionStorage.setItem("nickname", res.nickname);
             });
-            Router.push("/");
+            // Router.push("/");
+            window.location.replace("/");
             break;
           case 401: // 비밀번호 틀림
             alert("비밀번호를 확인해주세요.");
@@ -105,9 +111,9 @@ export default function Login() {
         <br />
         <FormControl sx={{ width: 280 }}>
           <OutlinedInput
-            id="id"
+            id="email"
             placeholder="이메일"
-            value={inputState.id}
+            value={inputState.email}
             onChange={handleChange}
           />
         </FormControl>
@@ -131,7 +137,6 @@ export default function Login() {
                 </IconButton>
               </InputAdornment>
             }
-            label="Password"
           />
         </FormControl>
         <br />
@@ -140,10 +145,10 @@ export default function Login() {
         </Button>
         <br />
         <div flexDirection="row">
-          <Link href="/project">비밀번호 찾기</Link>
+          <Link href="/findpw">비밀번호 찾기</Link>
+          <span> | </span>
           <Link href="/regist">회원가입</Link>
         </div>
-
         <br />
       </Box>
 
