@@ -1,6 +1,6 @@
 import Login from "../../components/User/Login";
 
-export default function FirstPost() {
+export default function LoginPage() {
     return <Login />;
   }
   

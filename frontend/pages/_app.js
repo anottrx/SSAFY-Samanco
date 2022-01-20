@@ -7,7 +7,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Router from "next/router";
-
+import Button from '@mui/material/Button';
 import Cookies from "universal-cookie";
 
 const styles = {
@@ -55,9 +55,6 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     setIsLogin(cookies.get("userToken"));
-    // setIsLogin(sessionStorage.getItem("userToken"));
-    // console.log(sessionStorage.getItem("userToken"));
-    // console.log(cookies.get("userToken"));
     setUserId(sessionStorage.getItem("userId"));
   }, [isLogin, userId]);
 
@@ -110,12 +107,18 @@ function MyApp({ Component, pageProps }) {
             </>
           ) : (
             <>
-              <Link href="/login" style={styles.link}>
+              <Button variant="outlined" href="/login">
+                로그인
+              </Button>
+              <Button variant="outlined" href="/regist">
+                회원가입
+              </Button>
+              {/* <Link href="/login" style={styles.link}>
                 로그인
               </Link>
               <Link href="/regist" style={styles.link}>
                 회원가입
-              </Link>
+              </Link> */}
             </>
           )}
         </div>
@@ -124,4 +127,4 @@ function MyApp({ Component, pageProps }) {
   }
 }
 
-export default wrapper.withRedux(MyApp)
+export default wrapper.withRedux(MyApp);

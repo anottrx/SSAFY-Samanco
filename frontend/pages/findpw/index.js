@@ -1,6 +1,6 @@
 import FindPassword from "../../components/User/FindPw";
 
-export default function FindPW() {
+export default function FindPWPage() {
     return <FindPassword />;
   }
   

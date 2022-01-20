@@ -1,6 +1,6 @@
-import AdminPage from "../../components/User/AdminPage";
+import Admin from "../../components/User/AdminPage";
 
-export default function FirstPost() {
-    return <AdminPage />;
+export default function AdminPage() {
+    return <Admin />;
   }
   
