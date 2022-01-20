@@ -1,16 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-
+import {Tabs, Tab, Typography, Box, Button, InputBase, IconButton, Paper, SearchIcon} from '@mui/material';
+import styled from "@emotion/styled";
+import Router from "next/router";
 import Layout from "../../components/layout";
+import SearchBar from "../../components/Common/Search";
+
 import BoardList from "./BoardList";
 import styles from "../../styles/Board.module.css"
-import Link from "next/link";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -53,6 +50,25 @@ export default function Board() {
     setValue(newValue);
   };
 
+  const ItemWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+  `
+
+  const ProjectActions = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  `
+
+  const CusButton = styled(Button)`
+    height: fit-content;
+  `
 
   return (
     <Layout>
@@ -68,20 +84,17 @@ export default function Board() {
               <Tab label="사람구해요" {...a11yProps(4)} />
             </Tabs>
           </Box>
-          <div className={styles.searchTab}>
-            <Stack direction="row" spacing={2}>
-              <Box
-                  component="form"
-                  sx={{
-                      '& > :not(style)': { m: 1, width: '25ch' },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                  >
-                      <TextField id="search" label="search" variant="standard" />
-                  </Box>
-            </Stack>
-          </div>
+          <ItemWrapper>
+            <ProjectActions>
+              <SearchBar></SearchBar>
+              <CusButton variant="outlined" size="medium"
+                onClick={() => {
+                  Router.push("/");
+                }}>
+                등록하기
+              </CusButton>
+            </ProjectActions>
+          </ItemWrapper>
           <TabPanel value={value} index={0}>
             <BoardList tag="notice"/>
           </TabPanel>

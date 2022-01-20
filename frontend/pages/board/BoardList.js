@@ -1,16 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Paper, Pagination} from '@mui/material';
 
-import Data from "./data.js";
+import Datas from "./data.js";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 [`&.${tableCellClasses.head}`]: {
@@ -30,7 +22,31 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export default function BoardList(props) {
-    let [articles,setArticles] = useState(Data);
+    let [articles,setArticles] = useState([]);
+    
+    useEffect(()=>{
+        var articlesArray = [];
+        Datas.map((data)=>{
+            if(data.tag === props.tag){
+                articlesArray.push(data);
+            }
+        })
+        setArticles(articlesArray);
+    },[]);
+
+
+    const [page, setPage] = useState(1);
+    const purPage = useRef(10);
+    let allPage = parseInt(articles.length / purPage.current);
+    if (articles.length % purPage.current > 0) allPage += 1;
+
+    const handleChange = (index,value) => {
+        setPage(value);
+    };
+
+    const CusPagination = styled(Pagination)`
+        margin-top: 20px;
+    `;
 
     return (
         <div>
@@ -46,9 +62,8 @@ export default function BoardList(props) {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {articles.map((article) => (
-                        article.tag === props.tag
-                        ? <StyledTableRow key={article.board_id}>
+                    {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
+                        <StyledTableRow key={article.board_id}>
                         <StyledTableCell component="th" scope="row">
                             {article.title}
                         </StyledTableCell>
@@ -57,14 +72,11 @@ export default function BoardList(props) {
                         <StyledTableCell align="right">{article.likes}</StyledTableCell>
                         <StyledTableCell align="right">{article.hit}</StyledTableCell>
                         </StyledTableRow>
-                        :null
                     ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Stack spacing={2}>
-                <Pagination count={10} size="large" />
-            </Stack>
+            <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />
         </div>
     );
 }
