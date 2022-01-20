@@ -2,7 +2,9 @@ package com.ssafy.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -20,10 +22,6 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id = null;
-
     @CreatedDate
     @Column(name = "created_date", updatable = false)
     LocalDateTime createdDate;
@@ -32,6 +30,12 @@ public class BaseEntity {
     @Column(name = "modified_date")
     LocalDateTime modifiedDate;
 
-    @Column(name="is_deleted")
     Boolean isDeleted=false;
+
+    @CreatedBy
+    @Column(name = "created_by", updatable = false)
+    Long createdBy;
+
+    @LastModifiedBy
+    Long modifiedBy;
 }

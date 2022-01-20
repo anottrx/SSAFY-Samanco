@@ -12,14 +12,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class BoardComment extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    private Long board_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long user_id;
 
 }

@@ -22,6 +22,10 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor
 public class User extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String email;
 
     private String nickname;
@@ -36,40 +40,19 @@ public class User extends BaseEntity{
 
     private String phone;
 
-    @JoinColumn(name = "class")
     @Enumerated(EnumType.STRING)
     private UserClass userClass;
 
     private int generation;
 
-    @Column(name = "student_id")
     private String studentId;
 
     @Enumerated(EnumType.STRING)
     private UserPosition position;  // 사용자 포지션 [FRONTEND, BACKEND,  MOBILE, EMBEDDED]
 
-    @OneToMany(mappedBy = "user")
-    private List<StackGrade> stackGrades=new ArrayList<>();
-
     private String link;
 
     private String description;
 
-    @JoinColumn(name="image_id")
-    @OneToOne
-    private ImageFile image;
-
-    @JoinColumn(name = "room_id")
-    @OneToOne(mappedBy = "host", fetch = LAZY)
-    private Room room;
-
-    @OneToMany(mappedBy = "user")
-    private List<UserClub> userClubs=new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<Board> boards=new ArrayList<>();
-
-
-
+    private Long image_id;
 }

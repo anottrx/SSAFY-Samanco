@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface StackService {
 
-    void CreateStack(List<Map<String, Integer>> stacks, User user);
+    void CreateStack(List<Map<String, Integer>> stacks, Long userId);
 }

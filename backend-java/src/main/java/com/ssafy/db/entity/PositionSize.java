@@ -12,15 +12,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class PositionSize extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
 
     private int size;
 
-    @JoinColumn(name = "user_club_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UserClub userClub;
+    private Long userClub_id;
 
-    @JoinColumn(name = "club_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Club club;
+    private Long club_id;
 }

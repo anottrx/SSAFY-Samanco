@@ -12,17 +12,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class File extends BaseEntity{
 
-    @Column(name = "save_folder")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String saveFolder;
 
-    @Column(name = "save_file")
     private String saveFile;
 
-    @Column(name = "origin_file")
     private String originFile;
 
-    @JoinColumn(name="board_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Board board;
+    private Long board_id;
 
 }

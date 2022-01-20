@@ -11,6 +11,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Room extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -18,13 +22,10 @@ public class Room extends BaseEntity{
 
     private int size;
 
-    @Column(name = "is_secret")
     private Boolean isSecret;
 
     private String password;
 
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private User host;
+    private Long host_id;
 
 }

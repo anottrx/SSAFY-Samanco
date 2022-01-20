@@ -15,9 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 public class Club extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
 
-    @Column(name="collect_status")
+    @Enumerated(EnumType.STRING)
     private CollectStatus collectStatus;
 
     private String schedule;
@@ -26,33 +30,19 @@ public class Club extends BaseEntity{
 
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private ImageFile image;
+    private Long image_id;
 
-    @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "end_date")
     private LocalDateTime endDate;
-
-    @OneToMany(mappedBy = "club")
-    private List<StackGrade> stackGrades=new ArrayList<>();
 
     private Long likes;
 
-    @OneToMany(mappedBy = "club")
-    private List<PositionSize> positionSizes=new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="host")
-    private User host;
+    private Long host_id;
 
     private Long hit;
 
     @Enumerated(EnumType.STRING)
     private ClubTag clubTag;
-
-    @OneToMany(mappedBy = "club")
-    private List<UserClub> userClubs=new ArrayList<>();
 
 }

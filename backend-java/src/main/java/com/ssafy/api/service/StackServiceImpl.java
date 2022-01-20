@@ -22,7 +22,7 @@ public class StackServiceImpl implements StackService{
     StackRepositorySupport stackRepositorySupport;
 
     @Override
-    public void CreateStack(List<Map<String, Integer>> stacks, User user) {
+    public void CreateStack(List<Map<String, Integer>> stacks, Long userId) {
         for (Map<String, Integer> stack: stacks){
             for (Map.Entry<String, Integer>entry: stack.entrySet()){
                 String name= entry.getKey();
@@ -30,7 +30,7 @@ public class StackServiceImpl implements StackService{
                 StackGrade stackGrade=new StackGrade();
                 stackGrade.setName(name);
                 stackGrade.setGrade(grade);
-                stackGrade.setUser(user);
+                stackGrade.setUserId(userId);
                 stackRepository.save(stackGrade);
             }
         }

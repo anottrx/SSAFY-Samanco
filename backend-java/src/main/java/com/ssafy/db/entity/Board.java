@@ -15,27 +15,24 @@ import java.util.List;
 @NoArgsConstructor
 public class Board extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Long userId;
 
     private BoardTag tag;
 
-    @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "end_date")
     private LocalDateTime endDate;
 
     private Long likes;
 
     private Long hit;
-
-    @OneToMany(mappedBy = "board")
-    private List<File> files=new ArrayList<>();
 
 }

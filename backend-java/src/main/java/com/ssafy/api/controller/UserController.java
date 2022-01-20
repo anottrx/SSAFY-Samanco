@@ -109,7 +109,7 @@ public class UserController {
 
 		// 회원 가입
 		User user = userService.createUser(registerInfo);
-		stackService.CreateStack(registerInfo.getStacks(), user);
+		stackService.CreateStack(registerInfo.getStacks(), user.getId());
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}

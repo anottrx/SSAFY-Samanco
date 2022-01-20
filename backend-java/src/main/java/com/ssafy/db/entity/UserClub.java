@@ -13,20 +13,14 @@ import java.util.List;
 @NoArgsConstructor
 public class UserClub extends BaseEntity{
 
-    @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @JoinColumn(name = "club_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Club club;
+    private Long userId;
 
-    @OneToMany(mappedBy = "userClub")
-    private List<PositionSize> positionSizes;
+    private Long clubId;
 
     @Enumerated(EnumType.STRING)
     private UserJoinClubStatus joinStatus;
-
-
-
 }
