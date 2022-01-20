@@ -1,12 +1,12 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useLayoutEffect, useEffect } from "react";
 
 import styled from "@emotion/styled"
 import { Grid, Skeleton, Card, CardContent, Typography, Pagination } from '@mui/material';
 
-import projectData from "../../data/projectData.json"
+import projectJSONData from "../../data/projectData.json"
 import Router from "next/router";
 
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
 
 import StackList from "./StackList"
@@ -17,8 +17,29 @@ import { useTheme } from '@mui/material/styles';
 
 
 function ItemList() {
+    //-------------- redux dispatch로 값 저장, selector로 불러오기
+    let projectData = useSelector(({ project }) => project.projectList);
+
+    const dispatch = useDispatch();
+
+    const setDetail = useCallback(
+        ({detail}) => {
+            dispatch(projectActions.setProjectDetail({detail}))
+        },
+        [dispatch],
+    )
+
+    const setList = useCallback(
+        ({list}) => {
+            dispatch(projectActions.setProjectList({list}))
+        },
+        [dispatch],
+    )
+
+    // 페이지네이션 페이지
     const [page, setPage] = useState(1);
 
+    // 미디어 쿼리에 따라 화면에 보여지는 그리드 수 변경
     const theme = useTheme();
     
     const xsMaches = useMediaQuery(theme.breakpoints.up('xs'));
@@ -26,7 +47,9 @@ function ItemList() {
     const mdMatches = useMediaQuery(theme.breakpoints.up('md'));
     const lgMatches = useMediaQuery(theme.breakpoints.up('lg'));
     
-    let purPage = useRef();
+    let purPage = useRef(1);
+    let allPage = parseInt(projectData.length / purPage.current);
+    if (projectData.length % purPage.current > 0) allPage += 1;
 
     if (lgMatches) {
         purPage.current = 8;
@@ -41,22 +64,20 @@ function ItemList() {
         purPage.current = 2;
     }
 
-
-    let allPage = parseInt(projectData.length / purPage.current);
-    if (projectData.length % purPage.current > 0) allPage += 1;
+    // 화면에 요소를 그리기 전에 store에 저장된 아이템 리스트가 있는지 확인
+    // 없으면 store에 저장
+    useLayoutEffect(() => {
+        if (projectData.length == 0) {
+            // 빈 배열이면 배열 요청
+            // To Do : 나중에 api로 값 가져오게 수정
+            setList({list: projectJSONData});
+        }
+    }, [])
 
     const handleChange = (index,value) => {
         setPage(value);
     };
 
-    const dispatch = useDispatch();
-
-    const setDetail = useCallback(
-        ({detail}) => {
-            dispatch(projectActions.setProjectDetail({detail}))
-        },
-        [dispatch],
-    )
 
     const CusPagination = styled(Pagination)`
         margin-top: 20px;
