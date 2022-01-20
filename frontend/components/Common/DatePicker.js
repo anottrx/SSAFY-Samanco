@@ -5,7 +5,13 @@ import { TextField } from '@mui/material';
 export let getDateValue;
 
 export default function DatePicker(props){
-    const [dateValue, setDateValue] = useState(new Date().toJSON().split("T")[0]);
+    
+    const [dateValue, setDateValue] = useState(
+        props.initDate?
+        props.initDate
+        :
+        new Date().toJSON().split("T")[0]
+    );
 
     getDateValue = () => dateValue;
     

@@ -78,7 +78,7 @@ function Item(props) {
                     {data.title}
                     </Typography>
                     
-                    <StackList stackData={stackData}></StackList>
+                    <StackList stackData={data.stacks}></StackList>
                 
                 </CardContent>
             </Card>

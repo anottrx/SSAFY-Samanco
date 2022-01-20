@@ -13,7 +13,14 @@ const position = [
 ]
 
 function PositionSelect(props) {
-    const [positions, setPositions] = useState([]);
+    let initArray = [];
+    props.initData.map(data=>{
+        let name = Object.keys(data)[0];
+        let count = data[name];
+        initArray.push({name: name, count: count});
+    })
+
+    const [positions, setPositions] = useState(props.initData? initArray:[]);
 
     const handleChange = (event) => {
         const name = event.target.innerText;
