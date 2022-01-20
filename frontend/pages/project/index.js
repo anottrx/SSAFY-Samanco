@@ -1,9 +1,11 @@
 import Layout from "../../components/layout";
-import Items from "../../components/Project/ItemList";
+import Items from "../../components/Club/ItemList";
 import SearchBar from "../../components/Common/Search";
-import StackTagList from "../../components/Project/StackTagList";
+import StackTagList from "../../components/Club/StackTagList";
+
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
+
 import Router from "next/router";
 
 export default function Project() {

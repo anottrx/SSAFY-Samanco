@@ -9,7 +9,7 @@ import Router from "next/router";
 import { useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
 
-import StackList from "../../components/Project/StackList"
+import StackList from "./StackList"
 import stackData from "../../data/StackData.json"
 
 function ItemList() {

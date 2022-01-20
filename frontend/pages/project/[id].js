@@ -2,9 +2,9 @@ import Layout from "../../components/layout";
 import { useSelector } from 'react-redux';
 
 import styled from "@emotion/styled";
-import StackList from "../../components/Project/StackList"
+import StackList from "../../components/Club/StackList"
 import stackData from "../../data/StackData.json"
-import PositionList from "../../components/Project/PositionList"
+import PositionList from "../../components/Club/PositionList"
 import positionData from "../../data/positionData.json"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';

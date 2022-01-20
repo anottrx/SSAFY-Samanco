@@ -1,5 +1,5 @@
 
-import StackItem from "../../components/Common/Stack/item"
+import StackItem from "../Common/Stack/item"
 
 export default function StackList(props) {
     return(

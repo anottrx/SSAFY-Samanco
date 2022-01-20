@@ -13,7 +13,7 @@ function StackTagList() {
             {
                 StackTagListData.map(name => {
                     return (
-                        <Stack title={name}></Stack>
+                        <Stack key={name} title={name}></Stack>
                     )
                 })
             }
