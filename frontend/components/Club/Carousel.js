@@ -55,9 +55,9 @@ export default function Carousel(props) {
         <h2>{props.label}</h2>
         <Slider {...settings}>
         {
-            projectData.slice(0, 6).map((data) => {
+            projectData.slice(0, 6).map((data, index) => {
                 return (
-                    <Item data={data}></Item> 
+                    <Item key={index} data={data}></Item> 
                 )
             })
         }

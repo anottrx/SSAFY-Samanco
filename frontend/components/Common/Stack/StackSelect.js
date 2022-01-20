@@ -57,7 +57,8 @@ function StackSelect(props){
         props.initData? initArray: []);
     const theme = useTheme();
 
-    const handleChange = (event) => {
+    // 선택된 Select가 바뀌었을 경우 처리
+    const handleSelectChange = (event) => {
         const {target: { value },} = event;
         setStackName(
             typeof value === 'string' ? value.split(',') : value,
@@ -75,6 +76,7 @@ function StackSelect(props){
         stackName.map(stack => {
             stackArray.push({[stack]:1});
         })
+        // 상위 컴포넌트에게 바뀐 스택 전달
         props.changeHandle(stackArray,"stack");
     }, [stackName])
 
@@ -87,7 +89,7 @@ function StackSelect(props){
                     id="demo-multiple-chip"
                     multiple
                     value={stackName}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
                     renderValue={(selected) => (
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
