@@ -1,0 +1,20 @@
+import { InputBase, IconButton, Paper } from "@mui/material"
+import SearchIcon from '@mui/icons-material/Search';
+
+function SearchBar() {
+    return (
+        <Paper
+            component="form"
+            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', alignSelf: "flex-start", width:"100%", maxWidth: 400, justifyContent: "space-between", margin: "10px 0px" }}>
+            <InputBase
+                sx={{ ml: 1, flex: 1 }}
+                placeholder="검색어를 입력해주세요."
+                inputProps={{ 'aria-label': 'search google maps' }}/>
+            <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+                <SearchIcon />
+            </IconButton>
+      </Paper>
+    )
+}
+
+export default SearchBar;
