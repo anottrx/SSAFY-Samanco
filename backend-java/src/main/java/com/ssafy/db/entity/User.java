@@ -54,5 +54,4 @@ public class User extends BaseEntity{
 
     private String description;
 
-    private Long image_id;
 }

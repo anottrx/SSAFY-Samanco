@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class File extends BaseEntity{
+public class Files extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,8 @@ public class File extends BaseEntity{
 
     private String originFile;
 
-    private Long board_id;
+    private Long boardId;
+    private Long userId;
+    private Long clubId;
 
 }

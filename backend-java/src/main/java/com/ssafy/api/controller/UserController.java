@@ -1,5 +1,7 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.FileRegisterPostReq;
+import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
 import com.ssafy.db.entity.StackGrade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -41,6 +48,9 @@ public class UserController {
 	StackService stackService;
 
 	@Autowired
+	FileService fileService;
+
+	@Autowired
 	PasswordEncoder passwordEncoder;
 
 	@PostMapping()
@@ -52,7 +62,8 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> register(
-			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
+			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo,
+			@RequestPart(required = false) MultipartFile[] files) throws IOException {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 
@@ -97,9 +108,6 @@ public class UserController {
 		else if(nameCode == 402)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"이름은 한글로 입력해주세요."));
 
-
-
-
 		//6. 전화번호 오류
 		int phoneCode=userService.phoneCheck(registerInfo.getPhone());
 		if(phoneCode == 401)
@@ -107,9 +115,14 @@ public class UserController {
 		else if(phoneCode == 402)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 전화번호 형식으로 입력해주세요."));
 
+
 		// 회원 가입
 		User user = userService.createUser(registerInfo);
-		stackService.CreateStack(registerInfo.getStacks(), user.getId());
+		// 회원 스택 입력
+		stackService.createStack(registerInfo.getStacks(), user.getId());
+		// 회원 이미지 입력
+		fileService.userSaveFile(files, user.getId());
+
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}

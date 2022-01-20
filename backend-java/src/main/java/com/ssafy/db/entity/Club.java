@@ -30,15 +30,13 @@ public class Club extends BaseEntity{
 
     private String description;
 
-    private Long image_id;
-
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
 
     private Long likes;
 
-    private Long host_id;
+    private Long hostId;
 
     private Long hit;
 

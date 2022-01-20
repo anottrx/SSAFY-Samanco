@@ -26,6 +26,6 @@ public class Room extends BaseEntity{
 
     private String password;
 
-    private Long host_id;
+    private Long hostId;
 
 }

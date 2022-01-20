@@ -22,7 +22,7 @@ public class StackServiceImpl implements StackService{
     StackRepositorySupport stackRepositorySupport;
 
     @Override
-    public void CreateStack(List<Map<String, Integer>> stacks, Long userId) {
+    public void createStack(List<Map<String, Integer>> stacks, Long userId) {
         for (Map<String, Integer> stack: stacks){
             for (Map.Entry<String, Integer>entry: stack.entrySet()){
                 String name= entry.getKey();
