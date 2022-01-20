@@ -17,7 +17,7 @@ async function loginAPI(inputState) {
     // .post("/api/user/login", {
     // email: inputState.email,
     // password: inputState.password
-    // }
+    // })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }

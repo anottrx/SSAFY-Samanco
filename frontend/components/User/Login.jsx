@@ -48,13 +48,13 @@ export default function Login() {
     let isNormal = true;
     let msg = "";
 
-    if (!inputState.email) {
-      isNormal = false;
-      msg = "이메일을 입력해주세요.";
-    } else if (!inputState.password) {
-      isNormal = false;
-      msg = "비밀번호를 입력해주세요.";
-    }
+    // if (!inputState.email) {
+    //   isNormal = false;
+    //   msg = "이메일을 입력해주세요.";
+    // } else if (!inputState.password) {
+    //   isNormal = false;
+    //   msg = "비밀번호를 입력해주세요.";
+    // }
 
     if (isNormal) {
       // 유효성 검사 통과 시 login API 요청
@@ -70,7 +70,7 @@ export default function Login() {
             getUserInfo(res.accessToken).then((res) => {
               console.log(res);
               sessionStorage.setItem("userId", inputState.id);
-              sessionStorage.setItem("email", inputState.email);
+              sessionStorage.setItem("email", res.email);
               sessionStorage.setItem("nickname", res.nickname);
             });
             // Router.push("/");
@@ -111,9 +111,9 @@ export default function Login() {
         <br />
         <FormControl sx={{ width: 280 }}>
           <OutlinedInput
-            id="email"
+            id="id"
             placeholder="이메일"
-            value={inputState.email}
+            value={inputState.id}
             onChange={handleChange}
           />
         </FormControl>

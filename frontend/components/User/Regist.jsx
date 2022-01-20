@@ -163,6 +163,10 @@ export default function Regist() {
     }));
   };
 
+  const ShowCalendar = () => (
+    <div>달력</div>
+  )
+
   const idHandleChange = (e) => {
     const value = e.target.value;
     idCheckAPI(value).then((res) => {
@@ -518,7 +522,7 @@ export default function Regist() {
         <div className="mb-6">
           <label className="">생년월일</label>
           <button onClick={showCalendarClick}>선택</button>
-          <>{setShowCalendar ? <showCalendar /> : null}</>
+          <>{setShowCalendar ? <ShowCalendar /> : null}</>
           {/* <Calendar
             locale={ko}
             dateFormat="yyyy년 MM월 dd일"
@@ -565,7 +569,7 @@ export default function Regist() {
             required=""
           ></input>
         </div>
-        
+
         {/* 가입 버튼 */}
         <button type="submit" className="">
           가입하기
