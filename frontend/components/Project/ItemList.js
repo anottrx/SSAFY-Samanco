@@ -14,7 +14,7 @@ import stackData from "../../data/StackData.json"
 
 function ItemList() {
     const [page, setPage] = useState(1);
-    const purPage = useRef(4);
+    const purPage = useRef(6);
     let allPage = parseInt(projectData.length / purPage.current);
     if (projectData.length % purPage.current > 0) allPage += 1;
 
@@ -35,13 +35,17 @@ function ItemList() {
         margin-top: 20px;
     `;
 
+    const CusGrid = styled(Grid)`
+        min-height: 530px;
+    `
+
     return (
         <>
-        <Grid container maxWidth="md" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
+        <CusGrid container maxWidth="md" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
             {
                 projectData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
-                        <Grid item xs={12} sm={6} key={data.no}  onClick={()=>{
+                        <Grid item xs={12} sm={6} md={4} key={data.no}  onClick={()=>{
                             Router.push("/project/"+data.no);
                             setDetail({detail: data});
                         }}>
@@ -50,7 +54,7 @@ function ItemList() {
                     )
                 })
             }
-        </Grid>
+        </CusGrid>
         <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />
         </>
     )
