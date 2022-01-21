@@ -1,18 +1,22 @@
+import React, { useState, useRef, useEffect } from "react";
+import { useSelector } from 'react-redux';
+
 import Layout from "../../components/layout"
 import { Paper, TextField, Box, Button } from "@mui/material";
-import styled from "@emotion/styled";
-import DatePicker from "../../components/Common/DatePicker";
-import {LocalizationProvider } from '@mui/lab';
-import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
-import StackSelect from "../../components/Common/Stack/StackSelect";
 import DateAdapter from '@mui/lab/AdapterDateFns';
-import { useState, useRef, useEffect } from "react";
-import React from "react";
+import {LocalizationProvider } from '@mui/lab';
+
+import DatePicker from "../../components/Common/DatePicker";
+import StackSelect from "../../components/Common/Stack/StackSelect";
 import Counter from "../../components/Common/PositionSelect";
+
+import styled from "@emotion/styled";
+
 var FormData = require('form-data');
 
+function projectUpdate() {
+    const detail = useSelector(({ project }) => project.projectDetail);
 
-function ProjectRegist() {
     const CusPaper = styled(Paper)`
         width: 100%;
         padding: 10px;
@@ -52,7 +56,15 @@ function ProjectRegist() {
         background-size: contain;
     `
 
-    const [inputValue, setInputValue] = useState({});
+    const [inputValue, setInputValue] = useState({
+        title: detail.title,
+        description: detail.description,
+        schedule: detail.schedule,
+        start_date: detail.start_date,
+        end_date: detail.end_date,
+        stacks: detail.stacks,
+        positions: detail.positions
+    });
 
     const [formData, changeFormData] = useState(new FormData());
     const [files, setFiles] = useState('');
@@ -61,9 +73,10 @@ function ProjectRegist() {
         const file = event.target.files[0];
         setFiles(file)
 
-        const newData = new FormData();
+        const newData = formData;
         newData.append("file", file);
         changeFormData(newData);
+        console.log(file)
     }
 
     const uploadRef = useRef(null);
@@ -94,7 +107,7 @@ function ProjectRegist() {
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
         <Layout>
-            <h1>Project Regist</h1>
+            <h1>Project Update</h1>
             <CusPaper>   
                 <ImgUploadBtn id="img_box" onClick={(event) => {
                     event.preventDefault();
@@ -123,24 +136,19 @@ function ProjectRegist() {
                     value={inputValue.schedule}/>
                 
                 {/* <StackLevelSelect></StackLevelSelect> */}
-                <StackSelect changeHandle={changeHandle} label="프로젝트 스택"></StackSelect>
+                <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="프로젝트 스택"></StackSelect>
                 
                 <DatePickerWrapper>
-                    <DatePicker changeHandle={changeHandle} label="시작 날짜"/>
-                    <DatePicker changeHandle={changeHandle} label="종료 날짜"/>
+                    <DatePicker initDate={inputValue.start_date} changeHandle={changeHandle} label="시작 날짜"/>
+                    <DatePicker initDate={inputValue.end_date}  changeHandle={changeHandle} label="종료 날짜"/>
                 </DatePickerWrapper>
 
-                <Counter changeHandle={changeHandle}></Counter>
+                <Counter changeHandle={changeHandle} initData={inputValue.positions}></Counter>
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
                         console.log(inputValue);
-                    
-                        for (var pair of formData.entries()) {
-                            console.log(pair[1]);
-                        }
-                    }}
-                    >등록하기</Button>
+                    }}>수정하기</Button>
                 </div>
             </CusPaper>
         </Layout>
@@ -149,4 +157,4 @@ function ProjectRegist() {
     )
 }
 
-export default React.memo(ProjectRegist);
+export default React.memo(projectUpdate);

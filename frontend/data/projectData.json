@@ -9,7 +9,16 @@
         "image_id": "1",
         "start_date": "2021-01-18",
         "end_date": "2021-03-31",
-        "stack_id": "1",
+        "stacks": [
+            {"java": 1},
+            {"React": 1},
+            {"MySQL": 1},
+            {"Python": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
         "like": "3",
         "host": "3",
         "hit": "23",
@@ -25,7 +34,17 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Vue": 1},
+            {"Spring Boot": 1},
+            {"Angular": 1},
+            {"CSS": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -41,7 +60,13 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Kotlin": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -57,7 +82,17 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"C/C++/C#": 1},
+            {"React": 1},
+            {"Jira": 1},
+            {"Git": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -73,7 +108,16 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Git": 1},
+            {"JavaScript": 1},
+            {"Jira": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -89,7 +133,15 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Vue3": 1},
+            {"Docker": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -105,7 +157,16 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Vue": 1},
+            {"Spring Boot": 1},
+            {"MySQL": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -121,7 +182,16 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Vue": 1},
+            {"Spring Boot": 1},
+            {"MySQL": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -137,7 +207,16 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Vue": 1},
+            {"Spring Boot": 1},
+            {"MySQL": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -153,7 +232,16 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Vue": 1},
+            {"Spring Boot": 1},
+            {"MySQL": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",
@@ -169,7 +257,66 @@
         "image_id": "2",
         "start_date": "2021-01-20",
         "end_date": "2021-05-31",
-        "stack_id": "2",
+        "stacks": [
+            {"Vue": 1},
+            {"Spring Boot": 1},
+            {"MySQL": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
+        "like": "34",
+        "host": "2",
+        "hit": "2",
+        "tag": "PROJECT"
+    },
+    {
+        "no": 12,
+        "title": "프로젝트 12",
+        "collect_status": "ING",
+        "schedule":"매주 화요일",
+        "size": "3",
+        "description":"이거 해유",
+        "image_id": "2",
+        "start_date": "2021-01-20",
+        "end_date": "2021-05-31",
+        "stacks": [
+            {"Vue": 1},
+            {"Spring Boot": 1},
+            {"MySQL": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
+        "like": "34",
+        "host": "2",
+        "hit": "2",
+        "tag": "PROJECT"
+    },
+    {
+        "no": 13,
+        "title": "프로젝트 13",
+        "collect_status": "ING",
+        "schedule":"매주 화요일",
+        "size": "3",
+        "description":"이거 해유",
+        "image_id": "2",
+        "start_date": "2021-01-20",
+        "end_date": "2021-05-31",
+        "stacks": [
+            {"Vue": 1},
+            {"Spring Boot": 1},
+            {"MySQL": 1}
+        ],
+        "positions": [
+            {"frontend": 3},
+            {"backend": 2}
+        ],
+        
         "like": "34",
         "host": "2",
         "hit": "2",

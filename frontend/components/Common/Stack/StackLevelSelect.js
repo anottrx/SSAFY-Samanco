@@ -25,7 +25,7 @@ const stacks = [
 
 function StackLevelSelect(){
     const [stackName, setStackName] = useState([]);
-    const handleChange = (event) => {
+    const handleAutocompleteChange = (event) => {
         const name = event.target.innerText;
         setStackName([
             ...stackName, 
@@ -39,7 +39,7 @@ function StackLevelSelect(){
             id="free-solo-demo"
             freeSolo
             options={stacks.map((stack) => stack.name)}
-            onChange={handleChange}
+            onChange={handleAutocompleteChange}
             renderInput={(params) => <TextField {...params} label="프로젝트 스택" />}
         />
         <Stack>

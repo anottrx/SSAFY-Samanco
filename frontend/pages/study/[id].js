@@ -15,8 +15,8 @@ import { useState } from "react";
 import Router from "next/router";
 
 
-const ProjectDetail = () => { 
-    const detail = useSelector(({ project }) => project.projectDetail);
+const StudyDetail = () => { 
+    const detail = useSelector(({ study }) => study.studyDetail);
 
     const DetailWrapper = styled.div`
         display: flex;
@@ -65,9 +65,9 @@ const ProjectDetail = () => {
             </DetailHeader>
             <DetailWrapper maxWidth="sm">
                 <CusSkeleton variant="rectangular" animation={false} />
-                <ProjectInfo detail={detail}></ProjectInfo>
+                <StudyInfo detail={detail}></StudyInfo>
             </DetailWrapper>    
-            <ProjectDetail></ProjectDetail>
+            <StudyDetail></StudyDetail>
         </CusContainer>
     </Layout>);
 
@@ -82,7 +82,7 @@ const ProjectDetail = () => {
             <>
             <ButtonGroup variant="outlined">
                 <Button onClick={() => {
-                    Router.push("/project/update");
+                    Router.push("/study/update");
                 }}>수정</Button>
                 <Button onClick={JoinDialogOpen}>삭제</Button>
             </ButtonGroup>
@@ -104,7 +104,7 @@ const ProjectDetail = () => {
         )
     }
 
-    function ProjectInfo(){
+    function StudyInfo(){
         return (
             <ContentWrapper>
                 <div>기술 스택</div>
@@ -116,7 +116,7 @@ const ProjectDetail = () => {
         )
     }
 
-    function ProjectDetail() {
+    function StudyDetail() {
         const CusCard = styled(Card)`
             margin-top: 10px;
         `
@@ -236,4 +236,4 @@ const ProjectDetail = () => {
 } 
 
 
-export default ProjectDetail;
+export default StudyDetail;

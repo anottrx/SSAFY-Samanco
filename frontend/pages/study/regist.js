@@ -1,18 +1,20 @@
+import React from "react";
+import { useState, useRef, useEffect } from "react";
+
 import Layout from "../../components/layout"
-import { Paper, TextField, Box, Button } from "@mui/material";
-import styled from "@emotion/styled";
+import Counter from "../../components/Common/PositionSelect";
 import DatePicker from "../../components/Common/DatePicker";
-import {LocalizationProvider } from '@mui/lab';
 import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
 import StackSelect from "../../components/Common/Stack/StackSelect";
+
+import { Paper, TextField, Box, Button } from "@mui/material";
+import {LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
-import { useState, useRef, useEffect } from "react";
-import React from "react";
-import Counter from "../../components/Common/PositionSelect";
+import styled from "@emotion/styled";
+
 var FormData = require('form-data');
 
-
-function ProjectRegist() {
+function StudyRegist() {
     const CusPaper = styled(Paper)`
         width: 100%;
         padding: 10px;
@@ -94,7 +96,7 @@ function ProjectRegist() {
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
         <Layout>
-            <h1>Project Regist</h1>
+            <h1>Study Regist</h1>
             <CusPaper>   
                 <ImgUploadBtn id="img_box" onClick={(event) => {
                     event.preventDefault();
@@ -102,17 +104,17 @@ function ProjectRegist() {
                 }}>Image Upload</ImgUploadBtn>
                 
                 <input ref={uploadRef} type="file"
-                    className="imgInput" id="projectImg"
+                    className="imgInput" id="studyImg"
                     accept="image/*" name="file"
                     onChange={onImgChange}></input>
 
-                <TextField fullWidth name="title" label="프로젝트 이름" onChange={(e) => changeHandle(e.target.value, "title")}
+                <TextField fullWidth name="title" label="스터디 이름" onChange={(e) => changeHandle(e.target.value, "title")}
                     value={inputValue.title}/>
                 <TextField
                     id="outlined-textarea"
                     name="description"
-                    label="프로젝트 설명"
-                    placeholder="프로젝트 설명"
+                    label="스터디 설명"
+                    placeholder="스터디 설명"
                     fullWidth
                     rows={4}
                     multiline
@@ -123,30 +125,30 @@ function ProjectRegist() {
                     value={inputValue.schedule}/>
                 
                 {/* <StackLevelSelect></StackLevelSelect> */}
-                <StackSelect changeHandle={changeHandle} label="프로젝트 스택"></StackSelect>
+                <StackSelect changeHandle={changeHandle} label="스터디 스택"></StackSelect>
                 
                 <DatePickerWrapper>
                     <DatePicker changeHandle={changeHandle} label="시작 날짜"/>
                     <DatePicker changeHandle={changeHandle} label="종료 날짜"/>
                 </DatePickerWrapper>
 
-                <Counter changeHandle={changeHandle}></Counter>
+                {/* 스터디 등록엔 포지션 필요 X */}
+                {/* <Counter changeHandle={changeHandle}></Counter> */}
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
                         console.log(inputValue);
-                    
+                        
                         for (var pair of formData.entries()) {
                             console.log(pair[1]);
                         }
-                    }}
-                    >등록하기</Button>
+                    }}>등록하기</Button>
                 </div>
             </CusPaper>
         </Layout>
         </LocalizationProvider>
-
     )
 }
 
-export default React.memo(ProjectRegist);
+
+export default React.memo(StudyRegist);

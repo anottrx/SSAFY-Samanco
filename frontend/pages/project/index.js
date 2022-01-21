@@ -1,8 +1,12 @@
 import Layout from "../../components/layout";
-import Items from "../../components/Project/ItemList";
+import ItemList from "../../components/Club/ItemList";
 import SearchBar from "../../components/Common/Search";
+import StackTagList from "../../components/Club/StackTagList";
+import Carousel from "../../components/Club/Carousel";
+
 import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
+
 import Router from "next/router";
 
 export default function Project() {
@@ -25,11 +29,15 @@ export default function Project() {
   const CusButton = styled(Button)`
     height: fit-content;
   `
+
+  const CusDivider = styled(Divider)`
+    margin: 20px 0px;
+  `
   
   return (
     <Layout>
       <h1>Project</h1>
-      <ItemWrapper>
+      <ItemWrapper >
         <ProjectActions>
           <SearchBar></SearchBar>
           <CusButton variant="outlined" size="medium"
@@ -39,8 +47,14 @@ export default function Project() {
             등록하기
           </CusButton>
         </ProjectActions>
-        <Items></Items>
+        <StackTagList></StackTagList>
+        <ItemList></ItemList>
       </ItemWrapper>
+    
+      <CusDivider variant="middle" />
+
+      <Carousel label="인기 많은 프로젝트"></Carousel>
+      <Carousel label="곧 마감 되는 프로젝트"></Carousel>
     </Layout>
   );
 }
