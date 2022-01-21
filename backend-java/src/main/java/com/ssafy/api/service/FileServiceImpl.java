@@ -52,8 +52,10 @@ public class FileServiceImpl implements FileService{
                     if (flag==1){
                         newFile.setUserId(id);
                     } else if(flag==2){
-                        newFile.setClubId(id);
+                        newFile.setProjectId(id);
                     } else if(flag==3){
+                        newFile.setStudyId(id);
+                    } else if(flag==4){
                         newFile.setBoardId(id);
                     }
 

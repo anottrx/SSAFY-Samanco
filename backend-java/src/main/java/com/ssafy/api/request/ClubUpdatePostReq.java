@@ -14,8 +14,11 @@ import java.util.Map;
 @ApiModel("ClubUpdatePostReq")
 public class ClubUpdatePostReq {
 
-    @ApiModelProperty(name="id", example="1")
+    @ApiModelProperty(name="club id", example="10")
     Long id;
+
+    @ApiModelProperty(name="user id", example="1")
+    Long userId;
 
     @ApiModelProperty(name="title", example="싸피사만코 같이 하실분 구함")
     String title;

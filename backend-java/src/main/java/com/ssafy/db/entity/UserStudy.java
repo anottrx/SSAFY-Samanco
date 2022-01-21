@@ -7,20 +7,17 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
-@Table(name = "image")
-public class ImageFile extends BaseEntity{
+public class UserStudy extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String saveFolder;
+    private Long userId;
 
-    private String saveFile;
+    private Long studyId;
 
-    private String originFile;
-
+    private String studyJoinStatus;  // BEFORE, OK, NO, CANCEL
 }

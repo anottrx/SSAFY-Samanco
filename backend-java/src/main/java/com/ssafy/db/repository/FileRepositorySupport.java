@@ -24,8 +24,10 @@ public class FileRepositorySupport {
         if (flag==1){
             results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.userId.eq(id)).fetch();
         } else if(flag==2){
-            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.clubId.eq(id)).fetch();
+            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.projectId.eq(id)).fetch();
         } else if (flag==3){
+            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.studyId.eq(id)).fetch();
+        } else if (flag==4){
             results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.boardId.eq(id)).fetch();
         }
         for (Files file: results){

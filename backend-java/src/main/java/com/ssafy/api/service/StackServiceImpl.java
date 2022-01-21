@@ -33,7 +33,9 @@ public class StackServiceImpl implements StackService{
                 if (flag==1) {
                     stackGrade.setUserId(id);
                 } else if (flag==2) {
-                    stackGrade.setClubId(id);
+                    stackGrade.setProjectId(id);
+                } else if (flag==3) {
+                    stackGrade.setStudyId(id);
                 }
                 stackRepository.save(stackGrade);
             }

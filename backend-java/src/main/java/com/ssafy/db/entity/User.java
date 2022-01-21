@@ -50,5 +50,7 @@ public class User extends BaseEntity{
     private String link;
 
     private String description;
+    private Long projectId;
+    private String projectJoinStatus;
 
 }

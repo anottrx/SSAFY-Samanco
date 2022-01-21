@@ -6,7 +6,7 @@ import com.ssafy.api.service.ClubService;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
 import com.ssafy.common.model.response.BaseResponseBody;
-import com.ssafy.db.entity.Club;
+import com.ssafy.db.entity.Study;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,11 +43,11 @@ public class ClubController {
             @RequestPart(required = false) MultipartFile[] files) throws IOException {
 
         // club 가입
-        Club club = clubService.createClub(registerInfo);
+        Study study = clubService.createClub(registerInfo);
         // club 스택 입력
-        stackService.createStack(registerInfo.getStacks(), club.getId(), 2);
+        stackService.createStack(registerInfo.getStacks(), study.getId(), 2);
         // club 이미지 입력
-        fileService.saveFile(files, club.getId(), 2);
+        fileService.saveFile(files, study.getId(), 2);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -55,8 +55,6 @@ public class ClubController {
     @ApiOperation(value = "club update")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> update(

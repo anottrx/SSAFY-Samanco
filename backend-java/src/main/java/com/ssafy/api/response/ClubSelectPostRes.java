@@ -1,4 +1,4 @@
-package com.ssafy.api.request;
+package com.ssafy.api.response;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,8 +10,8 @@ import java.util.Map;
 
 @Getter
 @Setter
-@ApiModel("ClubRegisterPstReq")
-public class ClubRegisterPostReq {
+@ApiModel("ClubSelectPostRes")
+public class ClubSelectPostRes {
 
     @ApiModelProperty(name="user id", example="1")
     Long userId;

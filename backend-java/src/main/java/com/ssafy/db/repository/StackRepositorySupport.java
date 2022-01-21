@@ -24,7 +24,9 @@ public class StackRepositorySupport {
         if (flag==1){
             results=jpaQueryFactory.selectFrom(qStackGrade).where(qStackGrade.userId.eq(id)).fetch();
         } else if(flag==2){
-            results=jpaQueryFactory.selectFrom(qStackGrade).where(qStackGrade.clubId.eq(id)).fetch();
+            results=jpaQueryFactory.selectFrom(qStackGrade).where(qStackGrade.projectId.eq(id)).fetch();
+        } else if(flag==3){
+            results=jpaQueryFactory.selectFrom(qStackGrade).where(qStackGrade.studyId.eq(id)).fetch();
         }
 
         for (StackGrade stackGrade: results) {

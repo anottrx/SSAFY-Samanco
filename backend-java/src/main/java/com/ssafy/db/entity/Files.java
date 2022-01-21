@@ -24,6 +24,7 @@ public class Files extends BaseEntity{
 
     private Long boardId;
     private Long userId;
-    private Long clubId;
+    private Long studyId;
+    private Long projectId;
 
 }

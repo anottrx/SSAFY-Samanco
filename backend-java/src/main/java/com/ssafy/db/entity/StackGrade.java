@@ -19,7 +19,8 @@ public class StackGrade extends BaseEntity{
 
     private int grade;
 
-    private Long clubId;
+    private Long studyId;
+    private Long projectId;
 
     private Long userId;
 
