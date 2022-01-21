@@ -121,19 +121,15 @@ function StudyRegist() {
                     onChange={(e) => changeHandle(e.target.value, "description")}
                     value={inputValue.description}
                 />
+                <TextField fullWidth name="size" label="스터디 인원" 
+                    onChange={(e) => changeHandle(e.target.value, "size")}
+                    value={inputValue.size}/>
+
                 <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴" onChange={(e) => changeHandle(e.target.value, "schedule")}
                     value={inputValue.schedule}/>
                 
-                {/* <StackLevelSelect></StackLevelSelect> */}
                 <StackSelect changeHandle={changeHandle} label="스터디 스택"></StackSelect>
-                
-                <DatePickerWrapper>
-                    <DatePicker changeHandle={changeHandle} label="시작 날짜"/>
-                    <DatePicker changeHandle={changeHandle} label="종료 날짜"/>
-                </DatePickerWrapper>
-
-                {/* 스터디 등록엔 포지션 필요 X */}
-                {/* <Counter changeHandle={changeHandle}></Counter> */}
+            
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {

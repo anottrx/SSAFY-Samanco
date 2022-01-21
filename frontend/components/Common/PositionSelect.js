@@ -1,4 +1,4 @@
-import {Autocomplete, TextField, Stack, Paper, ButtonGroup, Button } from "@mui/material"
+import {Autocomplete, TextField, Stack, Paper, ButtonGroup, Button, Tooltip, Box } from "@mui/material"
 import {useState, useEffect} from "react"
 import styled from "@emotion/styled";
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -55,6 +55,8 @@ function PositionSelect(props) {
 
     return (
         <>
+        <Tooltip title="본인의 포지션을 포함해 인원 수를 선택해주세요. " placement="top-end">
+        <Box>
          <Autocomplete
              id="free-solo-demo"
              freeSolo
@@ -62,6 +64,8 @@ function PositionSelect(props) {
              onChange={handleAutocompleteChange}
              renderInput={(params) => <TextField {...params} label="포지션" />}
          />
+         </Box>
+         </Tooltip>
          <Stack>
              {
                  positions.length > 0? 
