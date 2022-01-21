@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useLayoutEffect, useEffect } from "react";
 
 import styled from "@emotion/styled"
-import { Grid, Skeleton, Card, CardContent, Typography, Pagination } from '@mui/material';
+import { Grid, Skeleton, Card, CardContent, Typography, Pagination, Badge } from '@mui/material';
 
 import projectJSONData from "../../data/projectData.json"
 import Router from "next/router";
@@ -117,10 +117,17 @@ export function Item(props) {
         text-align: left;
     `
 
+    const CusBadge = styled(Badge)`
+        top: 30px;
+        right: 30px;
+    ` 
+
     return (
         <Container>
+            <CusBadge badgeContent={data.size+" / "+data.size} color="primary"></CusBadge>
             <Card>
                 <Skeleton variant="rectangular" height={150} animation={false} />
+                
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                         {data.title}

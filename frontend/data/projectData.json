@@ -12,7 +12,8 @@
         "stacks": [
             {"java": 1},
             {"React": 1},
-            {"MySQL": 1}
+            {"MySQL": 1},
+            {"Python": 1}
         ],
         "positions": [
             {"frontend": 3},
@@ -36,7 +37,8 @@
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
-            {"MySQL": 1}
+            {"Angular": 1},
+            {"CSS": 1}
         ],
         "positions": [
             {"frontend": 3},
@@ -83,6 +85,7 @@
         "stacks": [
             {"C/C++/C#": 1},
             {"React": 1},
+            {"Jira": 1},
             {"Git": 1}
         ],
         "positions": [
