@@ -3,13 +3,14 @@ import userData from "../../data/userData.json";
 import Router from "next/router";
 import Cookies from "universal-cookie";
 import { deleteUserAPI } from "../../pages/api/user";
-import { Box } from "@mui/icons-material";
+import { TextField } from "@mui/icons-material";
 
 export default function MyInfo() {
+  const userNumber = 1;
+
   const {
-    id,
+    userId,
     name,
-    password,
     email,
     phone,
     nickname,
@@ -22,12 +23,45 @@ export default function MyInfo() {
     link,
     description,
     image_id,
-  } = userData[0];
+  } = userData[userNumber];
+
+  const [authChange, setAuthChange] = useState(false);
+  const [onlyView, setOnlyView] = useState(true);
+  const [finishUpdate, setFinishUpdate] = useState(false);
+
+  const [inputState, setInputState] = useState({
+    id: userId,
+    name: name,
+    email: email,
+    phone: phone,
+    nickname: nickname,
+    userClass: userClass,
+    birthday: birthday,
+    generation: generation,
+    studentId: studentId,
+    stacks: stacks,
+    position: position,
+    link: link,
+    description: description,
+    image_id: image_id,
+  });
+
+  if (authChange) {
+    
+  }
 
   const cookies = new Cookies();
 
-  const handleGoUpdateClick = (event) => {
-    Router.push("/");
+  const handleUpdateClick = (e) => {
+    setAuthChange(true);
+    setOnlyView(false);
+    setFinishUpdate(true);
+  };
+
+  const handleUpdateFinishClick = (e) => {
+    setAuthChange(false);
+    setOnlyView(true);
+    setFinishUpdate(false);
   };
 
   const handleQuitClick = (event) => {
@@ -49,14 +83,111 @@ export default function MyInfo() {
     }
   };
 
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setInputState((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+  };
+
   return (
     <>
       <div>
         <h1>내정보</h1>
-        <button onClick={handleGoUpdateClick}>수정하기</button>
+        {finishUpdate ? (
+          <button onClick={handleUpdateFinishClick}>수정완료</button>
+        ) : (
+          <button onClick={handleUpdateClick}>수정하기</button>
+        )}
         <div className="mb-6">
-          <label className="">이메일</label>
-          <text>{email}</text>
+          <label>이메일</label>
+          <input
+            id="email"
+            type="email"
+            value={inputState.email}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-6">
+          <label>닉네임</label>
+          <input
+            id="nickname"
+            value={inputState.nickname}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-6">
+          <label>기수</label>
+          <input value={inputState.generation} disabled />
+        </div>
+        <div className="mb-6">
+          <label>반</label>
+          <input value={inputState.userClass} disabled />
+        </div>
+        <div className="mb-6">
+          <label>학번</label>
+          <input value={inputState.studentId} disabled />
+        </div>
+        <div className="mb-6">
+          <label>이름</label>
+          <input value={inputState.name} disabled />
+        </div>
+        <div className="mb-6">
+          <label>분야</label>
+          <input
+            id="position"
+            value={inputState.position}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-6">
+          <label>생년월일</label>
+          <input value={inputState.birthday} disabled />
+        </div>
+        <div className="mb-6">
+          <label>전화번호</label>
+          <input
+            id="phone"
+            value={inputState.phone}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-6">
+          <label>링크</label>
+          <input
+            id="link"
+            value={inputState.link}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="mb-6">
+          <label>스택</label>
+          {/* {stacks.map((item) => {
+            if (item.HTML > 0) {
+              console.log("dd")
+            }
+          })} */}
+        </div>
+        <div className="mb-6">
+          <label>자기소개</label>
+          {/* <TextField
+            id="outlined-textarea"
+            placeholder="자기자신에 대해 소개해주세요"
+            fullWidth
+            rows={4}
+            multiline
+            value={inputState.description}
+            disabled={onlyView ? true : false}/> */}
+        </div>
+        <div className="mb-6">
+          <label>이미지</label>
+          <text>{image_id}</text>
         </div>
       </div>
       <button onClick={handleQuitClick}>탈퇴하기</button>
