@@ -41,9 +41,7 @@ public class UserServiceImpl implements UserService {
 		user.setGeneration(userRegisterInfo.getGeneration());
 		user.setLink(userRegisterInfo.getLink());
 		user.setStudentId(userRegisterInfo.getStudentId());
-//
-//		System.out.println(user.getStackId());
-//		user.setStackId();
+
 		return userRepository.save(user);
 	}
 
@@ -82,6 +80,17 @@ public class UserServiceImpl implements UserService {
 	public void updateUser(UserUpdatePostReq userUpdateInfo) {
 		userRepositorySupport.updateUser(userUpdateInfo);
 
+	}
+
+	@Override
+	public void deleteUser(Long userId) {
+		userRepositorySupport.deleteUser(userId);
+	}
+
+
+	@Override
+	public void addProject(Long userId, Long projectId) {
+		userRepositorySupport.updateUserProject(userId, projectId);
 	}
 
 	@Override

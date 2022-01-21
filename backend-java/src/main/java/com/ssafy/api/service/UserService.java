@@ -19,4 +19,6 @@ public interface UserService {
     int nickCheck(String nickname);
 
     void updateUser(UserUpdatePostReq registerInfo);
+	void deleteUser(Long userId);
+    void addProject(Long userId, Long projectId);
 }

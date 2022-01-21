@@ -10,39 +10,28 @@ import java.util.Map;
 
 @Getter
 @Setter
-@ApiModel("ClubRegisterPstReq")
-public class ClubRegisterPostReq {
+@ApiModel("ProjectRegisterPstReq")
+public class StudyRegisterPostReq {
 
     @ApiModelProperty(name="user id", example="1")
-    Long userId;
+    private Long hostId;
 
     @ApiModelProperty(name="title", example="싸피사만코 같이 하실분 구함")
-    String title;
+    private String title;
 
     @ApiModelProperty(name="collect status", example="ING")
-    String collectStatus;
+    private String collectStatus;
 
     @ApiModelProperty(name="schedule", example="평일 9시~6시")
-    String schedule;
+    private String schedule;
 
     @ApiModelProperty(name="description", example="싸피사만코는 설명설명..")
-    String description;
-
-    @ApiModelProperty(name="start date", example="2022-01-19")
-    String startDate;
-
-    @ApiModelProperty(name="end date", example="2022-02-19")
-    String endDate;
+    private String description;
 
     @ApiModelProperty(name="size", example="5")
-    int size;
+    private int size;
 
     @ApiModelProperty(name="stack", example="[{java: 3}, {HTML: 2}]")
-    List<Map<String, Integer>> stacks;
+    private List<Map<String, Integer>> stacks;
 
-    @ApiModelProperty(name="position", example="[{java: 1}, {HTML: 1}]")
-    List<Map<String, Integer>> position;
-
-    @ApiModelProperty(name="tag", example="STUDY")
-    String tag;
 }

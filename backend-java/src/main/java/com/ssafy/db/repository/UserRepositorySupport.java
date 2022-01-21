@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 /**
@@ -16,9 +17,11 @@ import javax.transaction.Transactional;
  */
 @Repository
 public class UserRepositorySupport {
+
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
+
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -30,14 +33,31 @@ public class UserRepositorySupport {
 //        return Optional.ofNullable(user);
 //    }
 
+    public boolean isValid(Long userId){
+        User user = jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
+        if (user==null){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isProjectValid(Long userId){
+        User user = jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false), qUser.projectId.eq(0l)).fetchOne();
+        if (user==null){
+            return false;
+        }
+        return true;
+    }
     public User findUserByEmail(String email){
         return jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.email.eq(email)).fetchOne();
+                .where(qUser.email.eq(email), qUser.isDeleted.eq(false)).fetchOne();
     }
 
     public User findUserByNickname(String nickname) {
         return jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.nickname.eq(nickname)).fetchOne();
+                .where(qUser.nickname.eq(nickname), qUser.isDeleted.eq(false)).fetchOne();
     }
 
     @Transactional
@@ -46,19 +66,35 @@ public class UserRepositorySupport {
 //                .where(qUser.id.eq(userUpdateInfo.getUserId())).fetchOne();
 
         Long userId=userUpdateInfo.getUserId();
-        String password=passwordEncoder.encode(userUpdateInfo.getPassword());
-        String phone=userUpdateInfo.getPhone();
-        String name=userUpdateInfo.getName();
-        String birthday=(userUpdateInfo.getBirthday());
-        String description=(userUpdateInfo.getDescription());
-        String nickname=(userUpdateInfo.getNickname());
-        int generation=(userUpdateInfo.getGeneration());
-        String link=(userUpdateInfo.getLink());
-        String studentId=(userUpdateInfo.getStudentId());
+        if (isValid(userId)) {
+            String password = passwordEncoder.encode(userUpdateInfo.getPassword());
+            String phone = userUpdateInfo.getPhone();
+            String name = userUpdateInfo.getName();
+            String birthday = (userUpdateInfo.getBirthday());
+            String description = (userUpdateInfo.getDescription());
+            String nickname = (userUpdateInfo.getNickname());
+            int generation = (userUpdateInfo.getGeneration());
+            String link = (userUpdateInfo.getLink());
+            String studentId = (userUpdateInfo.getStudentId());
 
+            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                    .set(qUser.name, name).set(qUser.password, password).set(qUser.phone, phone).set(qUser.birthday, birthday)
+                    .set(qUser.description, description).set(qUser.description, description).set(qUser.nickname, nickname)
+                    .set(qUser.generation, generation).set(qUser.link, link).set(qUser.studentId, studentId).execute();
+        }
+    }
+
+    @Transactional
+    public void updateUserProject(Long userId, Long projectId) {
+        if (isProjectValid(userId)) {
+            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                    .set(qUser.projectId, projectId).execute();
+        }
+    }
+
+    @Transactional
+    public void deleteUser(Long userId){
         jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
-                .set(qUser.name, name).set(qUser.password, password).set(qUser.phone, phone).set(qUser.birthday, birthday)
-                .set(qUser.description, description).set(qUser.description, description).set(qUser.nickname, nickname)
-                .set(qUser.generation, generation).set(qUser.link, link).set(qUser.studentId, studentId).execute();
+                .set(qUser.isDeleted, true).execute();
     }
 }

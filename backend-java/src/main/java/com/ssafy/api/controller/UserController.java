@@ -1,7 +1,6 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.request.FileRegisterPostReq;
-import com.ssafy.api.request.UserUpdatePostReq;
+import com.ssafy.api.request.*;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
 import com.ssafy.db.entity.StackGrade;
@@ -12,8 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import com.ssafy.api.request.UserLoginPostReq;
-import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.UserService;
@@ -190,6 +187,21 @@ public class UserController {
 		fileService.updateFile(files, userId, 1);
 
 
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+	}
+
+	@PostMapping("/delete")
+	@ApiOperation(value = "회원 정보 삭제")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> delete(
+			@RequestBody @ApiParam(value="회원 아이디", required = true) UserIdPostReq userId,
+			@RequestPart(required = false) MultipartFile[] files) throws IOException {
+
+		// 회원 삭제 : isDeleted=true
+		userService.deleteUser(userId.getUserId());
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
