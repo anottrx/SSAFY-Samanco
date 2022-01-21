@@ -61,10 +61,9 @@ function ProjectRegist() {
         const file = event.target.files[0];
         setFiles(file)
 
-        const newData = formData;
+        const newData = new FormData();
         newData.append("file", file);
         changeFormData(newData);
-        console.log(file)
     }
 
     const uploadRef = useRef(null);
@@ -124,7 +123,7 @@ function ProjectRegist() {
                     value={inputValue.schedule}/>
                 
                 {/* <StackLevelSelect></StackLevelSelect> */}
-                <StackSelect changeHandle={changeHandle}></StackSelect>
+                <StackSelect changeHandle={changeHandle} label="프로젝트 스택"></StackSelect>
                 
                 <DatePickerWrapper>
                     <DatePicker changeHandle={changeHandle} label="시작 날짜"/>
@@ -136,7 +135,12 @@ function ProjectRegist() {
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
                         console.log(inputValue);
-                    }}>등록하기</Button>
+                    
+                        for (var pair of formData.entries()) {
+                            console.log(pair[1]);
+                        }
+                    }}
+                    >등록하기</Button>
                 </div>
             </CusPaper>
         </Layout>
