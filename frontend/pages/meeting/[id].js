@@ -1,10 +1,6 @@
-import Layout from "../../components/layout";
-
 function meetingDetail() {
     return (
-        <Layout>
-
-        </Layout>
+    <div></div>        
     )
 }
 
