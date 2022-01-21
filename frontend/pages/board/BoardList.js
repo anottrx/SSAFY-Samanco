@@ -49,32 +49,34 @@ export default function BoardList(props) {
     `;
 
     return (
-        <TableContainer>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                <TableHead>
-                <TableRow>
-                    <StyledTableCell>제목</StyledTableCell>
-                    <StyledTableCell align="right">아이디</StyledTableCell>
-                    <StyledTableCell align="right">날짜</StyledTableCell>
-                    <StyledTableCell align="right">좋아요</StyledTableCell>
-                    <StyledTableCell align="right">조회수</StyledTableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
-                {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
-                    <StyledTableRow key={article.board_id}>
-                    <StyledTableCell component="th" scope="row">
-                        {article.title}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{article.user_id}</StyledTableCell>
-                    <StyledTableCell align="right">{article.start_date}</StyledTableCell>
-                    <StyledTableCell align="right">{article.likes}</StyledTableCell>
-                    <StyledTableCell align="right">{article.hit}</StyledTableCell>
-                    </StyledTableRow>
-                ))}
-                </TableBody>
-            </Table>
-            <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />
-        </TableContainer>
+        <div>
+            <TableContainer>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <TableHead>
+                    <TableRow>
+                        <StyledTableCell>제목</StyledTableCell>
+                        <StyledTableCell align="right">아이디</StyledTableCell>
+                        <StyledTableCell align="right">날짜</StyledTableCell>
+                        <StyledTableCell align="right">좋아요</StyledTableCell>
+                        <StyledTableCell align="right">조회수</StyledTableCell>
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
+                        <StyledTableRow key={article.board_id}>
+                        <StyledTableCell component="th" scope="row">
+                            {article.title}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">{article.user_id}</StyledTableCell>
+                        <StyledTableCell align="right">{article.start_date}</StyledTableCell>
+                        <StyledTableCell align="right">{article.likes}</StyledTableCell>
+                        <StyledTableCell align="right">{article.hit}</StyledTableCell>
+                        </StyledTableRow>
+                    ))}
+                    </TableBody>
+                </Table>
+                <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />
+            </TableContainer>
+        </div>
     );
 }
