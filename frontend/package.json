@@ -37,5 +37,8 @@
     "msw": "^0.36.5",
     "redux-devtools-extension": "^2.13.9",
     "redux-logger": "^3.0.6"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

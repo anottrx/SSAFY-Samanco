@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   sendEmailPWCodeAPI,
   checkEmailPWAPI,
@@ -7,14 +7,7 @@ import {
 import Link from "next/link";
 import Router from "next/router";
 import FormControl, { useFormControl } from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import Box from "@mui/material/Box";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
+import {OutlinedInput, Box, Visibility, VisibilityOff, InputLabel, InputAdornment, IconButton, Button} from "@mui/icons-material";
 
 export default function FindPassword() {
   // 비밀번호 재설정
@@ -38,6 +31,13 @@ export default function FindPassword() {
   const [showEmailAgainText, setShowEmailAgainText] = useState(false);
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [sendEmailButton, setSendEmailButton] = useState(true);
+
+  useEffect(() => {
+    if(sessionStorage.getItem("userId")) {
+      alert('로그인된 상태입니다');
+      Router.push('/');
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -203,7 +203,7 @@ export default function FindPassword() {
             label="Password"
           />
         </FormControl>
-        <br /> */}
+         */}
         {sendEmailButton ? (
           <>
             <Button
@@ -225,7 +225,6 @@ export default function FindPassword() {
             </Button>
           </>
         )}
-        <br />
       </Box>
     </div>
   );

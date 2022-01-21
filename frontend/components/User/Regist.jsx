@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   registAPI,
   idCheckAPI,
@@ -7,11 +7,11 @@ import {
   checkNicknameAPI,
   checkMemberAPI,
 } from "../../pages/api/user";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { ko } from "date-fns";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import { Paper, TextField, Box, Button } from "@mui/material";
+import DatePicker from "../../components/Common/DatePicker";
+import styled from "@emotion/styled";
+import { LocalizationProvider } from "@mui/lab";
+import DateAdapter from "@mui/lab/AdapterDateFns";
 
 export default function Regist() {
   // id, password 유효성 검사 반환 결과 : idCheckRes, pwCheckRes
@@ -25,7 +25,6 @@ export default function Regist() {
   const [emailCodeRes, setEmailCodeRes] = useState(null);
   const [emailCodeCompareRes, setEmailCodeCompareRes] = useState(null);
   const [showEmailCodeCheck, setShowEmailCodeCheck] = useState(false);
-  const [calendarShow, setCalendarShow] = useState(true);
 
   const [inputState, setInputState] = useState({
     id: "",
@@ -85,11 +84,11 @@ export default function Regist() {
     { value: "EMBEDDED", name: "임베디드반" },
   ];
 
-  const positionGroup = [
-    { value: "frontend", label: "프론트엔드" },
-    { value: "backend", label: "백엔드" },
-    { value: "mobile", label: "모바일" },
-    { value: "embedded", label: "임베디드" },
+  const positionOptions = [
+    { value: "frontend", name: "프론트엔드" },
+    { value: "backend", name: "백엔드" },
+    { value: "mobile", name: "모바일" },
+    { value: "embedded", name: "임베디드" },
   ];
 
   const stackGroup = [
@@ -112,6 +111,14 @@ export default function Regist() {
     { value: "Django", label: "Django" },
     { value: "Redis", label: "Redis" },
   ];
+
+  const DatePickerWrapper = styled.div`
+    display: flex;
+    & > div {
+      flex: 1;
+      margin: 10px 5px;
+    }
+  `;
 
   const SelectGenerationBox = (props) => {
     const genHandleChange = (e) => {
@@ -163,10 +170,6 @@ export default function Regist() {
     }));
   };
 
-  const ShowCalendar = () => (
-    <div>달력</div>
-  )
-
   const idHandleChange = (e) => {
     const value = e.target.value;
     idCheckAPI(value).then((res) => {
@@ -195,9 +198,14 @@ export default function Regist() {
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
       //   sendEmailCodeAPI(value).then((res) => {
       setShowEmailCodeCheck(true);
-      setAuthFin(false);
+      setAuthFin(true);
       //   });
     }
+  };
+
+  const sendEmailCodeAgainClick = (e) => {
+    setShowEmailCodeCheck(false);
+    setAuthFin(false);
   };
 
   const compareEmailCodeClick = (e) => {
@@ -215,10 +223,6 @@ export default function Regist() {
       setAuthFin(true);
       //   });
     }
-  };
-
-  const showCalendarClick = (e) => {
-    e.preventDefault();
   };
 
   const pwHandleChange = (e) => {
@@ -250,6 +254,8 @@ export default function Regist() {
 
   const phoneReg = /^[0-9]{8,13}$/;
   // 전화번호 정규표현식
+
+  const koreanReg = /[ㄱ-ㅎㅏ-ㅣ가-힇ㆍ ᆢ]/g;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -290,17 +296,21 @@ export default function Regist() {
     } else if (!inputState.name) {
       isNormal = false;
       msg = "이름을 입력해주세요.";
+    } else if (!koreanReg.test(inputState.name)) {
+      isNormal = false;
+      msg = "이름 양식을 확인해주세요";
     } else if (!inputState.nickname) {
       isNormal = false;
       msg = "닉네임을 입력해주세요.";
+    } else if (!koreanReg.test(inputState.nickname)) {
+      isNormal = false;
+      msg = "닉네임 양식을 확인해주세요";
     } else if (!inputState.studentId) {
       isNormal = false;
       msg = "학번을 입력해주세요.";
     } else if (!inputState.userClass) {
       isNormal = false;
       msg = "반을 입력해주세요.";
-    } else {
-      isNormal = true;
     }
 
     if (isNormal) {
@@ -335,13 +345,21 @@ export default function Regist() {
     </div>
   );
 
-  const setShowCalendar = () => {
-    <div>보이기</div>;
-  };
-
   return (
     <div className="container mx-auto max-w-xl cols-6">
-      <form onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        noValidate
+        autoComplete="off"
+        display="flex"
+        justifyContent="center"
+        flexDirection="column"
+        alignItems="center"
+        minHeight="70vh"
+        onSubmit={handleSubmit}
+      >
+        <h1>회원가입</h1>
+        {/* <form > */}
         {/* 아이디 */}
         <div className="mb-6">
           <label className="">아이디</label>
@@ -384,8 +402,18 @@ export default function Regist() {
             required=""
             disabled={authFin ? true : false}
           ></input>
-          <button onClick={sendEmailCodeClick}>이메일 확인</button>
+          <button
+            onClick={sendEmailCodeClick}
+            disabled={authFin ? true : false}
+          >
+            이메일 확인
+          </button>
           <>{showEmailCodeCheck ? <CheckEmailCode /> : null}</>
+          {authFin ? (
+            <button onClick={sendEmailCodeAgainClick}>
+              인증번호 다시 받기
+            </button>
+          ) : null}
         </div>
         {/* 닉네임 */}
         <div className="mb-6">
@@ -475,8 +503,14 @@ export default function Regist() {
         <div className="mb-6">
           <SelectGenerationBox
             options={generationOptions}
+            value={inputState.generation}
             defaultValue="6"
           ></SelectGenerationBox>
+          {/* 반 */}
+          <SelectClassBox
+            options={classOptions}
+            value={inputState.userClass}
+          ></SelectClassBox>
           {/* 학번 */}
           <label className="">학번</label>
           <input
@@ -488,11 +522,6 @@ export default function Regist() {
             placeholder="싸피에서 제공받은 학번"
             required=""
           ></input>
-          {/* 반 */}
-          <SelectClassBox
-            options={classOptions}
-            value={inputState.userClass}
-          ></SelectClassBox>
         </div>
         {/* 이름 */}
         <div className="mb-6">
@@ -506,37 +535,23 @@ export default function Regist() {
             placeholder="이름은 한글만 가능합니다."
             required=""
           ></input>
-          <button>싸피생 확인</button>
+          {/* <button>싸피생 확인</button> */}
         </div>
         {/* 분야 */}
         <div className="mb-6">
           <label className="">분야</label>
-          <input
-            id="position"
-            onChange={handleChange}
-            type="radio"
-            required=""
-          ></input>
+          <SelectClassBox
+            options={positionOptions}
+            value={inputState.position}
+          ></SelectClassBox>
         </div>
         {/* 생년월일 */}
         <div className="mb-6">
-          <label className="">생년월일</label>
-          <button onClick={showCalendarClick}>선택</button>
-          <>{setShowCalendar ? <ShowCalendar /> : null}</>
-          {/* <Calendar
-            locale={ko}
-            dateFormat="yyyy년 MM월 dd일"
-            selected={inputState.date}
-            onChange={(date) => setInputState(date)}
-            maxDate={new Date()}
-          /> */}
-          {/* <DatePicker
-            locale={ko}
-            dateFormat="yyyy년 MM월 dd일"
-            selected={inputState.date}
-            onChange={(date) => setInputState(date)}
-            maxDate={new Date()}
-          /> */}
+          <LocalizationProvider dateAdapter={DateAdapter}>
+            <DatePickerWrapper>
+              <DatePicker label="생년월일" value={inputState.birthday} />
+            </DatePickerWrapper>
+          </LocalizationProvider>
         </div>
         {/* 전화번호 */}
         <div className="mb-6">
@@ -559,22 +574,35 @@ export default function Regist() {
         {/* 자기소개 */}
         <div className="mb-6">
           <label className="">자기소개</label>
-          <input
-            type="textarea"
-            id="description"
+          <TextField
+            id="outlined-textarea"
+            placeholder="자기자신에 대해 소개해주세요"
+            fullWidth
+            rows={4}
+            multiline
             value={inputState.description}
             onChange={handleChange}
-            className=""
-            placeholder="자기자신에 대해 소개해주세요"
-            required=""
-          ></input>
+          />
         </div>
-
+        {/* 이미지 업로드 */}
+        <Box
+          component="span"
+          style={{
+            padding: 2,
+            border: "1px dashed grey",
+            height: 100,
+            width: 100,
+          }}
+        >
+          <Button>Image Upload</Button>
+        </Box>
+        <br />
         {/* 가입 버튼 */}
         <button type="submit" className="">
           가입하기
         </button>
-      </form>
+        {/* </form> */}
+      </Box>
     </div>
   );
 }

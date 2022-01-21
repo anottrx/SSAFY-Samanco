@@ -86,7 +86,7 @@ function MyApp({ Component, pageProps }) {
           {props.isLogin ? (
             <>
               <span className="mr-5">{props.userId}님, 안녕하세요</span>
-              <Link href="/" className="site-nav-item" style={styles.link}>
+              <Link href="/myinfo" className="site-nav-item" style={styles.link}>
                 마이페이지
               </Link>
               <span

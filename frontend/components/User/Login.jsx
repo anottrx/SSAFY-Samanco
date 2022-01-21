@@ -39,6 +39,11 @@ export default function Login() {
   };
 
   useEffect(() => {
+    if(sessionStorage.getItem("userId")) {
+      alert('로그인된 상태입니다');
+      Router.push('/');
+    }
+
     if (cookies.userEmail !== "undefined") {
       setInputState({
         id: cookies.userEmail,
@@ -50,9 +55,7 @@ export default function Login() {
   }, []);
 
   const handleRememberIdCheck = (e) => {
-    setRememberId(e.target.checked);
-    
-    
+    setRememberId(e.target.checked);    
   };
 
   const handleClickShowPassword = () => {
