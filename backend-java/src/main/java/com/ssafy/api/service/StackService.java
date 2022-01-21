@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface StackService {
 
-    void createStack(List<Map<String, Integer>> stacks, Long userId);
-    void updateStack(List<Map<String, Integer>> stacks, Long userId);
+    void createStack(List<Map<String, Integer>> stacks, Long id, int flag);
+    void updateStack(List<Map<String, Integer>> stacks, Long id, int flag);
 }

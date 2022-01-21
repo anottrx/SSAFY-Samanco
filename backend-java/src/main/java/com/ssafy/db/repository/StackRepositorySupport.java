@@ -19,8 +19,14 @@ public class StackRepositorySupport {
     QStackGrade qStackGrade=QStackGrade.stackGrade;
 
     @Transactional
-    public void deleteStack(Long userId) {
-        List<StackGrade> results = jpaQueryFactory.selectFrom(qStackGrade).where(qStackGrade.userId.eq(userId)).fetch();
+    public void deleteStack(Long id, int flag) {
+        List<StackGrade> results = null;
+        if (flag==1){
+            results=jpaQueryFactory.selectFrom(qStackGrade).where(qStackGrade.userId.eq(id)).fetch();
+        } else if(flag==2){
+            results=jpaQueryFactory.selectFrom(qStackGrade).where(qStackGrade.clubId.eq(id)).fetch();
+        }
+
         for (StackGrade stackGrade: results) {
             jpaQueryFactory.delete(qStackGrade).where(qStackGrade.eq(stackGrade)).execute();
         }

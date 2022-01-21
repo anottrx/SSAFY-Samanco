@@ -19,8 +19,15 @@ public class FileRepositorySupport {
     QFiles qFiles=QFiles.files;
 
     @Transactional
-    public void userDeleteFile(Long userId) {
-        List<Files> results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.userId.eq(userId)).fetch();
+    public void deleteFile(Long id, int flag) {
+        List<Files> results=null;
+        if (flag==1){
+            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.userId.eq(id)).fetch();
+        } else if(flag==2){
+            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.clubId.eq(id)).fetch();
+        } else if (flag==3){
+            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.boardId.eq(id)).fetch();
+        }
         for (Files file: results){
             jpaQueryFactory.delete(qFiles).where(qFiles.eq(file)).execute();
         }

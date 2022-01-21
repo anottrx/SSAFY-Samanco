@@ -20,7 +20,7 @@ public class PositionSize extends BaseEntity{
 
     private int size;
 
-    private Long userClub_id;
+    private Long userClubId;
 
-    private Long club_id;
+    private Long clubId;
 }

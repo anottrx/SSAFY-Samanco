@@ -40,16 +40,13 @@ public class User extends BaseEntity{
 
     private String phone;
 
-    @Enumerated(EnumType.STRING)
-    private UserClass userClass;
+    private String userClass;   // JAVA, PYTHON, EMBEDDED, MOBILE
 
     private int generation;
 
     private String studentId;
 
-    @Enumerated(EnumType.STRING)
-    private UserPosition position;  // 사용자 포지션 [FRONTEND, BACKEND,  MOBILE, EMBEDDED]
-
+    private String position;  // 사용자 포지션 [FRONTEND, BACKEND,  MOBILE, EMBEDDED]
     private String link;
 
     private String description;

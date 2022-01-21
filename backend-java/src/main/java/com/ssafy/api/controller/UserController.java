@@ -120,9 +120,9 @@ public class UserController {
 		// 회원 가입
 		User user = userService.createUser(registerInfo);
 		// 회원 스택 입력
-		stackService.createStack(registerInfo.getStacks(), user.getId());
+		stackService.createStack(registerInfo.getStacks(), user.getId(), 1);
 		// 회원 이미지 입력
-		fileService.userSaveFile(files, user.getId());
+		fileService.saveFile(files, user.getId(), 1);
 
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
@@ -185,9 +185,9 @@ public class UserController {
 		userService.updateUser(updateInfo);
 		Long userId= updateInfo.getUserId();
 		// 회원 스택 수정
-		stackService.updateStack(updateInfo.getStacks(), userId);
+		stackService.updateStack(updateInfo.getStacks(), userId, 1);
 		// 회원 이미지 입력
-		fileService.userUpdateFile(files, userId);
+		fileService.updateFile(files, userId, 1);
 
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));

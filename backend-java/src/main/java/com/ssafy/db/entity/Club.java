@@ -21,8 +21,7 @@ public class Club extends BaseEntity{
 
     private String title;
 
-    @Enumerated(EnumType.STRING)
-    private CollectStatus collectStatus;
+    private String collectStatus="ING";     // ING, END
 
     private String schedule;
 
@@ -30,17 +29,15 @@ public class Club extends BaseEntity{
 
     private String description;
 
-    private LocalDateTime startDate;
+    private String startDate;
 
-    private LocalDateTime endDate;
+    private String endDate;
 
-    private Long likes;
+    private Long likes=0l;
 
     private Long hostId;
 
-    private Long hit;
+    private Long hit=0l;
 
-    @Enumerated(EnumType.STRING)
-    private ClubTag clubTag;
-
+    private String tag;     // STUDY, PROJECT;
 }

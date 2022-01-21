@@ -23,7 +23,7 @@ public class FileServiceImpl implements FileService{
     FileRepositorySupport fileRepositorySupport;
 
     @Override
-    public void userSaveFile(MultipartFile[] files, Long userId) throws IOException {
+    public void saveFile(MultipartFile[] files, Long id, int flag) throws IOException {
         if(files!=null&&!files[0].isEmpty()) {
 
             // 프로젝트 디렉터리 내의 저장을 위한 절대 경로 설정
@@ -49,7 +49,13 @@ public class FileServiceImpl implements FileService{
                     newFile.setSaveFolder(today);
                     newFile.setOriginFile(originalFileName);
                     newFile.setSaveFile(saveFileName);
-                    newFile.setUserId(userId);
+                    if (flag==1){
+                        newFile.setUserId(id);
+                    } else if(flag==2){
+                        newFile.setClubId(id);
+                    } else if(flag==3){
+                        newFile.setBoardId(id);
+                    }
 
                     System.out.println(("원본 파일 이름 : {"+mfile.getOriginalFilename()+"}, 실제 저장 파일 이름 : {"+saveFileName+"}"));
                     mfile.transferTo(new File(folder, saveFileName));
@@ -61,8 +67,9 @@ public class FileServiceImpl implements FileService{
     }
 
     @Override
-    public void userUpdateFile(MultipartFile[] files, Long userId) throws IOException {
-        fileRepositorySupport.userDeleteFile(userId);
-        userSaveFile(files, userId);
+    public void updateFile(MultipartFile[] files, Long id, int flag) throws IOException {
+        fileRepositorySupport.deleteFile(id, flag);
+        saveFile(files, id, flag);
     }
+
 }

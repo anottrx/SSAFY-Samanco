@@ -6,7 +6,13 @@ import java.io.IOException;
 
 public interface FileService {
 
-    void userSaveFile(MultipartFile[] files, Long userId) throws IOException;
+    void saveFile(MultipartFile[] files, Long id, int flag) throws IOException;
 
-    void userUpdateFile(MultipartFile[] files, Long id) throws IOException;
+    void updateFile(MultipartFile[] files, Long id, int flag) throws IOException;
+
+//    void clubSaveFile(MultipartFile[] files, Long id) throws IOException;
+//    void clubUpdateFile(MultipartFile[] files, Long id) throws IOException;
+//    void boardSaveFile(MultipartFile[] files, Long id) throws IOException;
+//    void boardUpdateFile(MultipartFile[] files, Long id) throws IOException;
+
 }

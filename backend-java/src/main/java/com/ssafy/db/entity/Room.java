@@ -17,9 +17,7 @@ public class Room extends BaseEntity{
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private RoomType type;
-
+    private String type;    // STUDY, PROJECT, BOARD
     private int size;
 
     private Boolean isSecret;

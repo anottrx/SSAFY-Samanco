@@ -25,11 +25,11 @@ public class Board extends BaseEntity{
 
     private Long userId;
 
-    private BoardTag tag;
+    private String tag;     // QNA, EXAM, JOB, FREE, NOTICE, SCHEDULE
 
-    private LocalDateTime startDate;
+    private String startDate;
 
-    private LocalDateTime endDate;
+    private String endDate;
 
     private Long likes;
 

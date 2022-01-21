@@ -18,8 +18,8 @@ public class BoardComment extends BaseEntity{
 
     private String content;
 
-    private Long board_id;
+    private Long boardId;
 
-    private Long user_id;
+    private Long userId;
 
 }

@@ -21,6 +21,5 @@ public class UserClub extends BaseEntity{
 
     private Long clubId;
 
-    @Enumerated(EnumType.STRING)
-    private UserJoinClubStatus joinStatus;
+    private String joinStatus;  // BEFORE, OK, NO, CANCEL
 }
