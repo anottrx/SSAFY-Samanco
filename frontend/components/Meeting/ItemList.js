@@ -14,6 +14,7 @@ import { useTheme } from '@mui/material/styles';
 
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LockIcon from '@mui/icons-material/Lock';
 
 function ItemList() {
     //-------------- redux dispatch로 값 저장, selector로 불러오기
@@ -93,7 +94,7 @@ function ItemList() {
                 meetingData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={data.no}  onClick={()=>{
-                            Router.push("/meeting/"+data.no);
+                            window.open("/meeting/"+data.no, "_blank", "toolbar=no, menubar=no, status=no, scrollbars=no,resizable=yes,top=10,left=10,width=1000,height=600");
                             setDetail({detail: data});
                         }}>
                             <Item data={data}></Item> 
@@ -114,6 +115,10 @@ export function Item(props) {
         display: flex;
         flex-direction: column;
         text-align: left;
+
+        & .title{
+            font-weight: bolder;
+        }
     `
 
     const ChipWrapper = styled.div`
@@ -124,8 +129,8 @@ export function Item(props) {
     const CusChip = styled(Chip)`
         width: fit-content;
         transform: translate(-10px, 45px);
-
     `
+
 
     return (
         <Container>
@@ -134,12 +139,22 @@ export function Item(props) {
             </ChipWrapper>
             <Card>
                 <Skeleton variant="rectangular" height={150} animation={false} />
+                      
                 
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        {data.title}
+                    <Typography className="title" gutterBottom variant="h5" component="div">
+                    {
+                        data.isPrivate? 
+                            <LockIcon />
+                        :
+                        null
+                    }  {data.title}
                     </Typography>
-                    <div>{data.host}</div>
+                    <div>
+                        {
+                            data.isPrivate?"-":data.host
+                        }
+                    </div>
                     <div>
                         <AccessTimeIcon style={{marginRight: "5px"}}/>
                         {data.startTime}분 / {data.timeLimit}분
