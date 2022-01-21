@@ -5,9 +5,18 @@ import {
   resetPWAPI,
 } from "../../pages/api/user";
 import Link from "next/link";
-import Router from "next/router";
+
 import FormControl, { useFormControl } from "@mui/material/FormControl";
-import {OutlinedInput, Box, Visibility, VisibilityOff, InputLabel, InputAdornment, IconButton, Button} from "@mui/icons-material";
+import {
+  OutlinedInput,
+  Box,
+  Visibility,
+  VisibilityOff,
+  InputLabel,
+  InputAdornment,
+  IconButton,
+  Button,
+} from "@mui/icons-material";
 
 export default function FindPassword() {
   // 비밀번호 재설정
@@ -31,13 +40,6 @@ export default function FindPassword() {
   const [showEmailAgainText, setShowEmailAgainText] = useState(false);
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [sendEmailButton, setSendEmailButton] = useState(true);
-
-  useEffect(() => {
-    if(sessionStorage.getItem("userId")) {
-      alert('로그인된 상태입니다');
-      Router.push('/');
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;

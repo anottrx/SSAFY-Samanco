@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import userData from "../../data/userData.json";
 import Router from "next/router";
 import Cookies from "universal-cookie";
-import { deleteUserAPI } from "../../pages/api/user";
+import { updateUserAPI, deleteUserAPI } from "../../pages/api/user";
 import { TextField } from "@mui/icons-material";
 
 export default function MyInfo() {
@@ -53,9 +53,61 @@ export default function MyInfo() {
   const cookies = new Cookies();
 
   const handleUpdateClick = (e) => {
-    setAuthChange(true);
-    setOnlyView(false);
-    setFinishUpdate(true);
+    e.preventDefault();
+
+    let isNormal = true;
+    let msg = "";
+
+    if (!inputState.id) {
+      isNormal = false;
+      msg = "아이디를 입력해주세요.";
+    } else if (!idReg.test(inputState.id)) {
+      isNormal = false;
+      msg = "아이디의 양식을 확인해주세요.";
+    } else if (!inputState.password) {
+      isNormal = false;
+      msg = "비밀번호를 입력해주세요.";
+    } else if (!pwReg.test(inputState.password)) {
+      isNormal = false;
+      msg = "비밀번호 양식을 확인해주세요.";
+    } else if (inputState.password != inputState.passwordConfirm) {
+      isNormal = false;
+      msg = "비밀번호가 동일하지 않습니다.";
+    } else if (!emailReg.test(inputState.email)) {
+      isNormal = false;
+      msg = "이메일 양식을 확인해주세요.";
+    } else if (!inputState.phone) {
+      isNormal = false;
+      msg = "전화번호를 입력해주세요.";
+    } else if (!phoneReg.test(inputState.phone)) {
+      isNormal = false;
+      msg = "전화번호 양식을 확인해주세요.";
+    } else if (!inputState.name) {
+      isNormal = false;
+      msg = "이름을 입력해주세요.";
+    } else if (!koreanReg.test(inputState.name)) {
+      isNormal = false;
+      msg = "이름 양식을 확인해주세요";
+    } else if (!inputState.nickname) {
+      isNormal = false;
+      msg = "닉네임을 입력해주세요.";
+    } else if (!koreanReg.test(inputState.nickname)) {
+      isNormal = false;
+      msg = "닉네임 양식을 확인해주세요";
+    }
+
+    if (isNormal) {
+      // updateUserAPI(inputState).then((res) => {
+      if (res.statusCode == 200) {
+        setAuthChange(true);
+        setOnlyView(false);
+        setFinishUpdate(true);
+        // } else alert(`${res.message}`);
+        // });
+      } else {
+        alert(msg);
+      }
+    }
   };
 
   const handleUpdateFinishClick = (e) => {
