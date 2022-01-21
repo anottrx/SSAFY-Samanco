@@ -5,14 +5,13 @@ import { useCookies } from "react-cookie";
 
 export default function AdminPage() {
   const [cookies, setCookie] = useCookies(["userEmail"]);
-  
+
   useEffect(() => {
     if (cookies.userEmail !== "admin") {
-      alert('접근 권한이 없습니다');
+      alert("접근 권한이 없습니다");
       Router.push("/");
     }
   }, []);
 
-    return <Admin />;
-  }
-  
+  return <Admin />;
+}

@@ -19,7 +19,7 @@ const styles = {
   },
   header: {
     color: "white",
-    backgroundColor: "black",
+    backgroundColor: "#A2C2DC",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -43,7 +43,7 @@ const styles = {
   },
   footer: {
     color: "white",
-    backgroundColor: "black",
+    backgroundColor: "#A2C2DC",
   },
 };
 
@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps }) {
   const cookies = new Cookies();
 
   useEffect(() => {
-    setIsLogin(cookies.get("userToken"));
+    setIsLogin(cookies.get("userToken" || ""));
     setUserId(sessionStorage.getItem("userId"));
   }, [isLogin, userId]);
 

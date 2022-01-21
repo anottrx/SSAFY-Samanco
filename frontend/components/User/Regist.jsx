@@ -353,7 +353,7 @@ export default function Regist() {
         autoComplete="off"
         display="flex"
         justifyContent="center"
-        flexDirection="column"
+        sx={{ flexDirection: "column" }}
         alignItems="center"
         minHeight="70vh"
         onSubmit={handleSubmit}

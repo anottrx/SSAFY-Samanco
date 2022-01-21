@@ -7,16 +7,16 @@ import {
 import Link from "next/link";
 
 import FormControl, { useFormControl } from "@mui/material/FormControl";
-import {
-  OutlinedInput,
-  Box,
-  Visibility,
-  VisibilityOff,
-  InputLabel,
-  InputAdornment,
-  IconButton,
-  Button,
-} from "@mui/icons-material";
+import Button from "@mui/material/Button";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Box from "@mui/material/Box";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export default function FindPassword() {
   // 비밀번호 재설정
@@ -50,11 +50,12 @@ export default function FindPassword() {
   };
 
   const codeHandleChange = (e) => {
-    const { id, value } = e.target;
-    setInputState((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
+    setCode(e.target.value);
+  //   const { id, value } = e.target;
+  //   setInputState((prevState) => ({
+  //     ...prevState,
+  //     [id]: value,
+  //   }));
   };
 
   const sendEmailClick = (e) => {
@@ -81,9 +82,9 @@ export default function FindPassword() {
 
   const checkCodeClick = (e) => {
     e.preventDefault();
-    const value = inputState.code;
+    const value = code;
 
-    if (!inputState.code) {
+    if (!code) {
       alert("인증번호를 입력해주세요.");
     } else {
       //   console.log(value);
@@ -91,7 +92,7 @@ export default function FindPassword() {
       //   sendEmailCodeAPI(value).then((res) => {
       // setInputState.email(false);
       //   });
-      console.log("인증번호 " + inputState.code);
+      console.log("인증번호 " + code);
       setAuthFin(true);
       // setSendEmailButton(false); // 인증완료로 바꿔야함
     }
@@ -103,7 +104,7 @@ export default function FindPassword() {
       <input
         type="text"
         id="code"
-        value={inputState.code}
+        value={code}
         placeholder="인증번호"
         onChange={codeHandleChange}
         required=""
@@ -111,10 +112,18 @@ export default function FindPassword() {
     </div>
   );
 
+  const setSendEmailButtonWork =()=> {
+    setSendEmailButton(true);
+    setShowEmailAgainText(false);
+    setAuthFin(false);
+    setShowCodeInput(false);
+  }
+
   const ShowEmailAgain = () => (
     <div>
-      <label>인증번호 재발급</label>
-      <button>인증코드를 못 받으셨나요?</button>
+      <button onClick={setSendEmailButtonWork}>
+        인증코드를 못 받으셨나요?
+      </button>
     </div>
   );
 
@@ -160,10 +169,10 @@ export default function FindPassword() {
         autoComplete="off"
         display="flex"
         justifyContent="center"
-        flexDirection="column"
+        sx={{ flexDirection: "column" }}
         alignItems="center"
         minHeight="70vh"
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <h1>비밀번호 재설정</h1>
         <h4>가입하신 이메일 주소를 입력해주세요</h4>

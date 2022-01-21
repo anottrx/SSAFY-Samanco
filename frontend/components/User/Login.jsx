@@ -15,6 +15,9 @@ import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 export default function Login() {
   const [inputState, setInputState] = useState({
@@ -24,10 +27,7 @@ export default function Login() {
     showPassword: false,
   });
 
-  const [cookies, setCookie] = useCookies([
-    "userToken",
-    "userEmail",
-  ]);
+  const [cookies, setCookie] = useCookies(["userToken", "userEmail"]);
   const [rememberId, setRememberId] = useState(false);
 
   const handleChange = (e) => {
@@ -39,12 +39,12 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if(sessionStorage.getItem("userId")) {
-      alert('로그인된 상태입니다');
-      Router.push('/');
+    if (sessionStorage.getItem("userId")) {
+      alert("로그인된 상태입니다");
+      Router.push("/");
     }
 
-    if (cookies.userEmail !== "undefined") {
+    if (cookies.userEmail !== "") {
       setInputState({
         id: cookies.userEmail,
       });
@@ -55,7 +55,7 @@ export default function Login() {
   }, []);
 
   const handleRememberIdCheck = (e) => {
-    setRememberId(e.target.checked);    
+    setRememberId(e.target.checked);
   };
 
   const handleClickShowPassword = () => {
@@ -92,7 +92,7 @@ export default function Login() {
             if (rememberId) {
               setCookie("userEmail", inputState.id);
             } else {
-              setCookie("userEmail");
+              setCookie("userEmail", "");
             }
             getUserInfo(res.accessToken).then((res) => {
               console.log(res);
@@ -129,10 +129,10 @@ export default function Login() {
         autoComplete="off"
         display="flex"
         justifyContent="center"
-        flexDirection="column"
         alignItems="center"
         minHeight="70vh"
         onSubmit={handleSubmit}
+        sx={{ flexDirection: "column" }}
       >
         <h1>로그인</h1>
         <br />
@@ -166,7 +166,15 @@ export default function Login() {
             }
           />
         </FormControl>
-        <div>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox />}
+            onChange={handleRememberIdCheck}
+            checked={rememberId}
+            label="아이디 저장하기"
+          />
+        </FormGroup>
+        {/* <div>
           <label>
             <input
               type="checkbox"
@@ -175,13 +183,13 @@ export default function Login() {
             />
             아이디 저장하기
           </label>
-        </div>
+        </div> */}
         <Button type="submit" variant="contained" sx={{ width: 280 }}>
           로그인
         </Button>
         <br />
 
-        <div flexDirection="row">
+        <div sx={{ flexDirection: "row" }}>
           <Link href="/findpw">비밀번호 찾기</Link>
           <span> | </span>
           <Link href="/regist">회원가입</Link>
