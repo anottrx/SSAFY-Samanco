@@ -1,13 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {Tabs, Tab, Typography, Box, Button, InputBase, IconButton, Paper, SearchIcon} from '@mui/material';
+import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
 import styled from "@emotion/styled";
 import Router from "next/router";
 import Layout from "../../components/layout";
 import SearchBar from "../../components/Common/Search";
 
 import BoardList from "./BoardList";
-import styles from "../../styles/Board.module.css"
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,7 +71,6 @@ export default function Board() {
 
   return (
     <Layout>
-      <div className={styles.main}>
         <h1>Board</h1>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -89,7 +87,7 @@ export default function Board() {
               <SearchBar></SearchBar>
               <CusButton variant="outlined" size="medium"
                 onClick={() => {
-                  Router.push("/");
+                  Router.push("/board/BoardRegist");
                 }}>
                 등록하기
               </CusButton>
@@ -104,10 +102,7 @@ export default function Board() {
           <TabPanel value={value} index={2}>
             <BoardList tag="qna"/>
           </TabPanel>
-        </Box>
-        
-      </div>
-  </Layout>
-    
+      </Box>
+    </Layout>
   );
 }

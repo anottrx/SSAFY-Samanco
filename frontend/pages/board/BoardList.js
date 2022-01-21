@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import { styled } from '@mui/material/styles';
-import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Paper, Pagination} from '@mui/material';
+import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination} from '@mui/material';
 
 import Datas from "./data.js";
 
@@ -49,34 +49,32 @@ export default function BoardList(props) {
     `;
 
     return (
-        <div>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                    <TableRow>
-                        <StyledTableCell>제목</StyledTableCell>
-                        <StyledTableCell align="right">아이디</StyledTableCell>
-                        <StyledTableCell align="right">날짜</StyledTableCell>
-                        <StyledTableCell align="right">좋아요</StyledTableCell>
-                        <StyledTableCell align="right">조회수</StyledTableCell>
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
-                        <StyledTableRow key={article.board_id}>
-                        <StyledTableCell component="th" scope="row">
-                            {article.title}
-                        </StyledTableCell>
-                        <StyledTableCell align="right">{article.user_id}</StyledTableCell>
-                        <StyledTableCell align="right">{article.start_date}</StyledTableCell>
-                        <StyledTableCell align="right">{article.likes}</StyledTableCell>
-                        <StyledTableCell align="right">{article.hit}</StyledTableCell>
-                        </StyledTableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+        <TableContainer>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                <TableRow>
+                    <StyledTableCell>제목</StyledTableCell>
+                    <StyledTableCell align="right">아이디</StyledTableCell>
+                    <StyledTableCell align="right">날짜</StyledTableCell>
+                    <StyledTableCell align="right">좋아요</StyledTableCell>
+                    <StyledTableCell align="right">조회수</StyledTableCell>
+                </TableRow>
+                </TableHead>
+                <TableBody>
+                {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
+                    <StyledTableRow key={article.board_id}>
+                    <StyledTableCell component="th" scope="row">
+                        {article.title}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{article.user_id}</StyledTableCell>
+                    <StyledTableCell align="right">{article.start_date}</StyledTableCell>
+                    <StyledTableCell align="right">{article.likes}</StyledTableCell>
+                    <StyledTableCell align="right">{article.hit}</StyledTableCell>
+                    </StyledTableRow>
+                ))}
+                </TableBody>
+            </Table>
             <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />
-        </div>
+        </TableContainer>
     );
 }
