@@ -1,6 +1,7 @@
 import Admin from "../../components/User/AdminPage";
 import React, { useEffect } from "react";
 import Router from "next/router";
+import { useCookies } from "react-cookie";
 
 export default function AdminPage() {
   const [cookies, setCookie] = useCookies(["userEmail"]);

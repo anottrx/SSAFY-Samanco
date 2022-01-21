@@ -41,12 +41,10 @@ export default function UserInfo() {
           <label>자기소개</label>
           {/* <TextField
             id="outlined-textarea"
-            placeholder="자기자신에 대해 소개해주세요"
             fullWidth
             rows={4}
             multiline
-            value={inputState.description}
-            disabled={onlyView ? true : false}/> */}
+            value={inputState.description} */}
         </div>
         <div className="mb-6">
           <label>이미지</label>
