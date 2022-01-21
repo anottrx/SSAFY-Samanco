@@ -1,11 +1,11 @@
 import Layout from "../../components/layout";
-import Items from "../../components/Club/ItemList";
+import ItemList from "../../components/Club/ItemList";
 import SearchBar from "../../components/Common/Search";
 import StackTagList from "../../components/Club/StackTagList";
 import Carousel from "../../components/Club/Carousel";
 
 import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 
 import Router from "next/router";
 
@@ -29,6 +29,10 @@ export default function Project() {
   const CusButton = styled(Button)`
     height: fit-content;
   `
+
+  const CusDivider = styled(Divider)`
+    margin: 20px 0px;
+  `
   
   return (
     <Layout>
@@ -44,9 +48,11 @@ export default function Project() {
           </CusButton>
         </ProjectActions>
         <StackTagList></StackTagList>
-        <Items></Items>
+        <ItemList></ItemList>
       </ItemWrapper>
     
+      <CusDivider variant="middle" />
+
       <Carousel label="인기 많은 프로젝트"></Carousel>
       <Carousel label="곧 마감 되는 프로젝트"></Carousel>
     </Layout>

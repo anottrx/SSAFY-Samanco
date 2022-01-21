@@ -1,9 +1,11 @@
 import Layout from "../../components/layout";
-import Items from "../../components/Club/ItemList";
+import ItemList from "../../components/Club/ItemList";
 import SearchBar from "../../components/Common/Search";
 import StackTagList from "../../components/Club/StackTagList";
+import Carousel from "../../components/Club/Carousel";
+
 import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import Router from "next/router";
 
 export default function Study() {
@@ -26,6 +28,10 @@ export default function Study() {
   const CusButton = styled(Button)`
     height: fit-content;
   `
+
+  const CusDivider = styled(Divider)`
+    margin: 20px 0px;
+  `
   
   return (
     <Layout>
@@ -37,13 +43,18 @@ export default function Study() {
             onClick={() => {
               Router.push("/study/regist");
             }}>
-            등록하기
+            등록
           </CusButton>
         </StudyActions>
 
         <StackTagList></StackTagList>
-        <Items></Items>
+        <ItemList></ItemList>
       </ItemWrapper>
+
+      <CusDivider variant="middle" />
+
+      <Carousel label="인기 많은 스터디"></Carousel>
+      <Carousel label="곧 마감 되는 스터디"></Carousel>
     </Layout>
   );
 }
