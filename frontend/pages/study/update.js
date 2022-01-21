@@ -119,13 +119,13 @@ function studyUpdate() {
                     accept="image/*" name="file"
                     onChange={onImgChange}></input>
 
-                <TextField fullWidth name="title" label="프로젝트 이름" onChange={(e) => changeHandle(e.target.value, "title")}
+                <TextField fullWidth name="title" label="스터디 이름" onChange={(e) => changeHandle(e.target.value, "title")}
                     value={inputValue.title}/>
                 <TextField
                     id="outlined-textarea"
                     name="description"
-                    label="프로젝트 설명"
-                    placeholder="프로젝트 설명"
+                    label="스터디 설명"
+                    placeholder="스터디 설명"
                     fullWidth
                     rows={4}
                     multiline
@@ -136,14 +136,15 @@ function studyUpdate() {
                     value={inputValue.schedule}/>
                 
                 {/* <StackLevelSelect></StackLevelSelect> */}
-                <StackSelect changeHandle={changeHandle} initData={inputValue.stacks}></StackSelect>
+                <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="스터디 스택"></StackSelect>
                 
                 <DatePickerWrapper>
                     <DatePicker initDate={inputValue.start_date} changeHandle={changeHandle} label="시작 날짜"/>
                     <DatePicker initDate={inputValue.end_date}  changeHandle={changeHandle} label="종료 날짜"/>
                 </DatePickerWrapper>
 
-                <Counter changeHandle={changeHandle} initData={inputValue.positions}></Counter>
+                {/* 스터디엔 포지션 선택 필요 X */}
+                {/* <Counter changeHandle={changeHandle} initData={inputValue.positions}></Counter> */}
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {

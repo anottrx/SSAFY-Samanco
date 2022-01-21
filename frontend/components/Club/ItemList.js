@@ -123,11 +123,10 @@ export function Item(props) {
                 <Skeleton variant="rectangular" height={150} animation={false} />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                    {data.title}
+                        {data.title}
                     </Typography>
                     
                     <StackList stackData={data.stacks}></StackList>
-                
                 </CardContent>
             </Card>
         </Container>

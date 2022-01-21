@@ -136,7 +136,7 @@ function projectUpdate() {
                     value={inputValue.schedule}/>
                 
                 {/* <StackLevelSelect></StackLevelSelect> */}
-                <StackSelect changeHandle={changeHandle} initData={inputValue.stacks}></StackSelect>
+                <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="프로젝트 스택"></StackSelect>
                 
                 <DatePickerWrapper>
                     <DatePicker initDate={inputValue.start_date} changeHandle={changeHandle} label="시작 날짜"/>

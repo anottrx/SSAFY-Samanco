@@ -83,7 +83,7 @@ function StackSelect(props){
     return(
         <div>
             <FormControl fullWidth>
-                <InputLabel id="demo-multiple-chip-label">프로젝트 스택</InputLabel>
+                <InputLabel id="demo-multiple-chip-label">{props.label}</InputLabel>
                 <Select
                     labelId="demo-multiple-chip-label"
                     id="demo-multiple-chip"
