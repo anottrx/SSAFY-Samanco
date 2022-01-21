@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { getUserInfo, loginAPI } from "../../pages/api/user";
 import Link from "next/link";
-import Router from "next/router";
 import { useCookies } from "react-cookie";
 
 // import styles from "../../styles/Login.module.css";
 
 import FormControl, { useFormControl } from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import Box from "@mui/material/Box";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
-import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Box,
+  OutlinedInput,
+  InputLabel,
+  InputAdornment,
+  IconButton,
+  Button,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 
 export default function Login() {
   const [inputState, setInputState] = useState({
@@ -39,11 +39,6 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem("userId")) {
-      alert("로그인된 상태입니다");
-      Router.push("/");
-    }
-
     if (cookies.userEmail !== "") {
       setInputState({
         id: cookies.userEmail,
@@ -157,7 +152,6 @@ export default function Login() {
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
-                  //   onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
                   {inputState.showPassword ? <VisibilityOff /> : <Visibility />}
@@ -174,23 +168,13 @@ export default function Login() {
             label="아이디 저장하기"
           />
         </FormGroup>
-        {/* <div>
-          <label>
-            <input
-              type="checkbox"
-              onChange={handleRememberIdCheck}
-              checked={rememberId}
-            />
-            아이디 저장하기
-          </label>
-        </div> */}
         <Button type="submit" variant="contained" sx={{ width: 280 }}>
           로그인
         </Button>
         <br />
 
         <div sx={{ flexDirection: "row" }}>
-          <Link href="/findpw">비밀번호 찾기</Link>
+          <Link href="/user/password">비밀번호 찾기</Link>
           <span> | </span>
           <Link href="/regist">회원가입</Link>
         </div>

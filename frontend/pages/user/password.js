@@ -1,4 +1,4 @@
-import FindPassword from "../../components/User/Findpw";
+import LostPassword from "../../components/User/LostPassword";
 import React, { useEffect } from "react";
 import Router from "next/router";
 
@@ -11,5 +11,5 @@ export default function FindPasswordPage() {
     }
   }, []);
 
-  return <FindPassword />;
+  return <LostPassword />;
 }

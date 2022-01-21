@@ -26,7 +26,7 @@ export default function FindPassword() {
     /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
 
   const [inputState, setInputState] = useState({
-    email: "",
+    // email: "",
     // code: "",
     password: "",
     passwordConfirm: "",
@@ -34,6 +34,7 @@ export default function FindPassword() {
     showPasswordConfirm: false,
   });
 
+  const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
 
   const [authFin, setAuthFin] = useState(false);
@@ -49,22 +50,26 @@ export default function FindPassword() {
     }));
   };
 
+  const emailHandleChange = (e) => {
+    setEmail(e.target.value);
+  };
+
   const codeHandleChange = (e) => {
     setCode(e.target.value);
-  //   const { id, value } = e.target;
-  //   setInputState((prevState) => ({
-  //     ...prevState,
-  //     [id]: value,
-  //   }));
+    //   const { id, value } = e.target;
+    //   setInputState((prevState) => ({
+    //     ...prevState,
+    //     [id]: value,
+    //   }));
   };
 
   const sendEmailClick = (e) => {
     e.preventDefault();
-    const value = inputState.email;
+    const value = email;
 
-    if (!inputState.email) {
+    if (!email) {
       alert("이메일을 입력해주세요.");
-    } else if (!emailReg.test(inputState.email)) {
+    } else if (!emailReg.test(email)) {
       alert("이메일 양식을 확인해 주세요.");
     } else {
       //   console.log(value);
@@ -72,7 +77,6 @@ export default function FindPassword() {
       //   sendEmailCodeAPI(value).then((res) => {
       // setInputState.email(false);
       //   });
-      console.log("이메일 " + inputState.email);
       setShowCodeInput(true);
       setAuthFin(true);
       setShowEmailAgainText(true);
@@ -112,12 +116,12 @@ export default function FindPassword() {
     </div>
   );
 
-  const setSendEmailButtonWork =()=> {
+  const setSendEmailButtonWork = () => {
     setSendEmailButton(true);
     setShowEmailAgainText(false);
     setAuthFin(false);
     setShowCodeInput(false);
-  }
+  };
 
   const ShowEmailAgain = () => (
     <div>
@@ -147,10 +151,9 @@ export default function FindPassword() {
     let isNormal = true;
     let msg = "";
 
-    if (!inputState.email) {
+    if (!email) {
       isNormal = false;
       msg = "이메일을 입력해주세요.";
-      alert(inputState.email);
     } else if (!emailReg.test(inputState.email)) {
       isNormal = false;
       msg = "이메일 양식을 확인해 주세요.";
@@ -172,7 +175,6 @@ export default function FindPassword() {
         sx={{ flexDirection: "column" }}
         alignItems="center"
         minHeight="70vh"
-        onSubmit={handleSubmit}
       >
         <h1>비밀번호 재설정</h1>
         <h4>가입하신 이메일 주소를 입력해주세요</h4>
@@ -182,15 +184,15 @@ export default function FindPassword() {
             id="email"
             type="email"
             placeholder="이메일"
-            value={inputState.email}
-            onChange={handleChange}
+            value={email}
+            onChange={emailHandleChange}
             disabled={authFin ? true : false}
           />
         </FormControl>
         <br />
-        <>{showEmailAgainText ? <ShowEmailAgain /> : null}</>
+        {showEmailAgainText ? <ShowEmailAgain /> : null}
         <br />
-        <> {showCodeInput ? <ShowCodeInputCheck /> : null}</>
+         {showCodeInput ? <ShowCodeInputCheck /> : null}
         <br />
         {/* <FormControl sx={{ width: 280 }}>
           <OutlinedInput
