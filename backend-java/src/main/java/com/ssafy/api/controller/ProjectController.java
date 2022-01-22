@@ -43,8 +43,11 @@ public class ProjectController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> register(
-            @RequestBody @ApiParam(value="project info", required = true) ProjectRegisterPostReq registerInfo,
-            @RequestPart(required = false) MultipartFile[] files) throws IOException {
+            @RequestPart @ApiParam(value="project info", required = true) ProjectRegisterPostReq registerInfo,
+            @RequestPart(required = false, value="file") MultipartFile files) throws IOException {
+
+//        System.out.println(registerInfo);
+        System.out.println(files.getOriginalFilename());
 
         // project 가입
         Project project = projectService.createProject(registerInfo);
@@ -54,7 +57,7 @@ public class ProjectController {
         // project 스택 입력
         stackService.createStack(registerInfo.getStacks(), project.getId(), 2);
         // project 이미지 입력
-        fileService.saveFile(files, project.getId(), 2);
+//        fileService.saveFile(files, project.getId(), 2);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
