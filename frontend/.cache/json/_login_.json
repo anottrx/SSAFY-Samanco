@@ -1,1 +1,0 @@
-{"errors":[{"message":"Variable \"$slug\" of required type \"String!\" was not provided.","locations":[{"line":72,"column":85}]}],"pageContext":{}}

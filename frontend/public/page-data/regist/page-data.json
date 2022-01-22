@@ -1,5 +1,0 @@
-{
-    "componentChunkName": "component---src-pages-regist-js",
-    "path": "/regist/",
-    "result": {"errors":[{"message":"Variable \"$slug\" of required type \"String!\" was not provided.","locations":[{"line":72,"column":86}]}],"pageContext":{}},
-    "staticQueryHashes": ["176528973","2358152166","2561578252","2731221146","4145280475"]}
