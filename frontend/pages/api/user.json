@@ -1,0 +1,15 @@
+{
+  "birthday": 970410,
+  "description": "JPA 완전 정복..!",
+  "email": "email@email.com",
+  "generation": 6,
+  "link": "https://kjin41@github.com/",
+  "name": "김싸피",
+  "nickname": "싸피사만코",
+  "password": "your_password",
+  "phone": "01012345678",
+  "position": "FRONTEND",
+  "stacks": [{ "name": "HTML", "grade": 1 }, { "name": "JavaScript", "grade": 2 }],
+  "studentId": "0643163",
+  "userClass": "JAVA"
+}
