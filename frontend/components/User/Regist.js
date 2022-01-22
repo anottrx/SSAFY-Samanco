@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Router from "next/router";
 import CheckEmailCode from "./CheckEmailCode";
+import PositionList from "../Club/PositionList";
+
 import {
   registAPI,
   idCheckAPI,
@@ -39,8 +41,7 @@ export default function Regist() {
   const [emailCodeCompareRes, setEmailCodeCompareRes] = useState(null);
   const [showEmailCodeCheck, setShowEmailCodeCheck] = useState(false);
 
-
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState("");
   const [inputState, setInputState] = useState({
     name: "",
     password: "",
@@ -58,6 +59,8 @@ export default function Regist() {
     description: "",
     image_id: "",
   });
+
+  const [userClass2, setUserClass2] = useState("");
 
   const [stackScore, setStackScore] = useState({
     HTML: "",
@@ -104,6 +107,13 @@ export default function Regist() {
     { value: "embedded", name: "임베디드" },
   ];
 
+  const positionData = [
+    { value: "frontend", name: "프론트엔드" },
+    { value: "backend", name: "백엔드" },
+    { value: "mobile", name: "모바일" },
+    { value: "embedded", name: "임베디드" },
+  ];
+
   const stackGroup = [
     { value: "HTML", label: "HTML" },
     { value: "CSS", label: "CSS" },
@@ -131,6 +141,13 @@ export default function Regist() {
       flex: 1;
       margin: 10px 5px;
     }
+  `;
+
+  const ContentWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 0px 30px;
+    flex: 1;
   `;
 
   const SelectGenerationBox = (props) => {
@@ -175,12 +192,17 @@ export default function Regist() {
     );
   };
 
-  const EmailCodeSource = (props)=>{
-    return(
-<CheckEmailCode />
+  const EmailCodeSource = (props) => {
+    return (
+      <CheckEmailCode />
       // <Button onClick={compareEmailCodeClick}>확인</Button>
-    )
-  }
+    );
+  };
+
+  //   const changeHandle = (value, name) => {
+  //     inputValue[name] = value;
+  //     // 리렌더링 X
+  // }
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -188,6 +210,18 @@ export default function Regist() {
       ...prevState,
       [id]: value,
     }));
+  };
+
+  const generationHandleChange = (e) => {
+    inputState.generation = e.target.value;
+  };
+
+  const classHandleChange = (e) => {
+    inputState.userClass = e.target.value;
+  };
+
+  const positionHandleChange = (e) => {
+    inputState.position = e.target.value;
   };
 
   const nicknameHandleChange = (e) => {
@@ -250,7 +284,6 @@ export default function Regist() {
     );
   };
 
-
   const pwSameCheck = (e) => {
     const value = e.target.value;
     setPwSameRes(inputState.password == value ? true : false);
@@ -304,20 +337,21 @@ export default function Regist() {
     } else if (!inputState.nickname) {
       isNormal = false;
       msg = "닉네임을 입력해주세요.";
+    } else if (!inputState.studentId) {
+      isNormal = false;
+      msg = "학번을 입력해주세요.";
+    } else if (!inputState.userClass) {
+      isNormal = false;
+      msg = "반을 입력해주세요.";
+    } else if (!inputState.generation) {
+      isNormal = false;
+      msg = "기수를 입력해주세요.";
     }
-    //  else if (!inputState.studentId) {
-    //   isNormal = false;
-    //   msg = "학번을 입력해주세요.";
-    // } else if (!inputState.userClass) {
-    //   isNormal = false;
-    //   msg = "반을 입력해주세요.";
-    // }
 
     console.log(inputState);
     if (isNormal) {
       registAPI(inputState).then((res) => {
         console.log(res);
-        alert("dd");
         if (res.statusCode == 200) {
           // 가입 성공 시
           alert("가입이 되었습니다!");
@@ -331,9 +365,6 @@ export default function Regist() {
       alert(msg);
     }
   };
-  
-
- 
 
   return (
     <div className="container mx-auto max-w-xl cols-6">
@@ -460,7 +491,11 @@ export default function Regist() {
         <div className="mb-6">
           <label>기수</label>
           <x sx={{ m: 1, minWidth: 120 }}>
-            <Select id="generation" onChange={handleChange} defaultValue="">
+            <Select
+              id="generation"
+              onChange={generationHandleChange}
+              defaultValue=""
+            >
               {generationOptions.map((opt) => {
                 return (
                   <MenuItem key={opt.value} value={opt.value}>
@@ -473,7 +508,7 @@ export default function Regist() {
           {/* 반 */}
           <label>반</label>
           <x sx={{ m: 1, minWidth: 280 }}>
-            <Select id="userClass" onChange={handleChange} defaultValue="">
+            <Select id="userClass" onChange={classHandleChange} defaultValue="">
               {classOptions.map((opt) => {
                 return (
                   <MenuItem key={opt.value} value={opt.value}>
@@ -517,12 +552,12 @@ export default function Regist() {
           <x sx={{ m: 1, minWidth: 120 }}>
             <Select
               id="position"
-              onChange={handleChange}
+              onChange={positionHandleChange}
               // key={inputState.position}
-              defaultValue={inputState.position}
+              // defaultValue={inputState.position}
               // value={inputState.position}
               // onBlur={handleChange}
-              // defaultValue=""
+              defaultValue=""
             >
               {positionOptions.map((u, i) => {
                 return (
@@ -596,6 +631,7 @@ export default function Regist() {
         <button type="submit" className="">
           가입하기
         </button>
+
         {/* </form> */}
       </Box>
     </div>
