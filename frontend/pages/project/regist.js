@@ -79,7 +79,8 @@ function ProjectRegist() {
         setFiles(file)
 
         const newData = new FormData();
-        newData.append("file", file);
+        newData.append('files[]', file, file.name)
+        // newData.append("files", file);
         changeFormData(newData);
     }
 
@@ -168,7 +169,10 @@ function ProjectRegist() {
                             console.log(pair[1]);
                         }
 
+                        console.log(formData)
+
                         registAPI(inputValue, formData);
+                        // registAPI(inputValue);
                     }}
                     >등록하기</Button>
                 </div>
