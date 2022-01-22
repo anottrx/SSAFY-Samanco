@@ -1,22 +1,24 @@
 package com.ssafy.api.request;
 
-import com.google.gson.JsonArray;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 유저 회원가입 API ([POST] /api/users) 요청에 필요한 리퀘스트 바디 정의.
+ * 유저 회원수정 API ([POST] /api/user/update) 요청에 필요한 리퀘스트 바디 정의.
  */
 @Getter
 @Setter
-@ApiModel("UserRegisterPostRequest")
-public class UserRegisterPostReq {
+@ApiModel("UserUpdatePostRequest")
+public class UserUpdatePostReq {
+
+	@ApiModelProperty(name="유저 id", example="1")
+	Long userId;
+
 	@ApiModelProperty(name="유저 email", example="email@email.com")
 	String email;
 
