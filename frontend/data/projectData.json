@@ -2,13 +2,13 @@
     {
         "no": 1,
         "title": "프로젝트 1",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 월요일",
         "size": "6",
         "description":"이거이거 해유",
         "image_id": "1",
-        "start_date": "2021-01-18",
-        "end_date": "2021-03-31",
+        "startDate": "2021-01-18",
+        "endDate": "2021-03-31",
         "stacks": [
             {"java": 1},
             {"React": 1},
@@ -16,25 +16,28 @@
             {"Python": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "3",
         "host": "3",
-        "hit": "23",
-        "tag": "PROJECT"
+        "hit": "23"
     },
     {
         "no": 2,
         "title": "프로젝트 2",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
@@ -42,48 +45,54 @@
             {"CSS": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 3,
         "title": "프로젝트 3",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Kotlin": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "3",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 4,
         "title": "프로젝트 4",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"C/C++/C#": 1},
             {"React": 1},
@@ -91,237 +100,267 @@
             {"Git": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 5,
         "title": "프로젝트 5",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Git": 1},
             {"JavaScript": 1},
             {"Jira": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 6,
         "title": "프로젝트 6",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue3": 1},
             {"Docker": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 7,
         "title": "프로젝트 7",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
             {"MySQL": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 8,
         "title": "프로젝트 8",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
             {"MySQL": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 9,
         "title": "프로젝트 9",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
             {"MySQL": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 10,
         "title": "프로젝트 10",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
             {"MySQL": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 11,
         "title": "프로젝트 11",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
             {"MySQL": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 12,
         "title": "프로젝트 12",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
             {"MySQL": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     },
     {
         "no": 13,
         "title": "프로젝트 13",
-        "collect_status": "ING",
+        "collectStatus": "ING",
         "schedule":"매주 화요일",
         "size": "3",
         "description":"이거 해유",
         "image_id": "2",
-        "start_date": "2021-01-20",
-        "end_date": "2021-05-31",
+        "startDate": "2021-01-20",
+        "endDate": "2021-05-31",
         "stacks": [
             {"Vue": 1},
             {"Spring Boot": 1},
             {"MySQL": 1}
         ],
         "positions": [
-            {"frontend": 3},
-            {"backend": 2}
+            {"Front-end": 3},
+            {"Back-end": 2}
         ],
-        "hostPosition": "frontend",
+        "totalBack-endSize": 2,
+        "totalEmbeddedSize": 1,
+        "totalFront-endSize": 3,
+        "totalMobileSize": 0,
+        "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
-        "hit": "2",
-        "tag": "PROJECT"
+        "hit": "2"
     }
 ]
