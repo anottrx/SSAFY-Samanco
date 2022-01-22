@@ -7,8 +7,8 @@ async function registAPI(formData) {
     , {headers: {
         'Content-Type': 'multipart/form-data'
       }})
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
 }
 
 export {
