@@ -5,6 +5,8 @@ import ItemList from "../../components/Meeting/ItemList";
 import { Button } from "@mui/material";
 import styled from "@emotion/styled";
 
+import Router from "next/router";
+
 export default function Meeting() {
   const ItemWrapper = styled.div`
     display: flex;
@@ -34,7 +36,7 @@ export default function Meeting() {
           <SearchBar></SearchBar>
           <CusButton variant="outlined" size="medium"
             onClick={() => {
-              Router.push("/study/regist");
+              Router.push("/meeting/regist");
             }}>
             등록
           </CusButton>
