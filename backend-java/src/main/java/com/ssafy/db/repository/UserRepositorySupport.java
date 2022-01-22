@@ -1,27 +1,100 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 /**
  * 유저 모델 관련 디비 쿼리 생성을 위한 구현 정의.
  */
 @Repository
 public class UserRepositorySupport {
+
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
 
-    public Optional<User> findUserByUserId(String userId) {
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+//    public Optional<User> findUserByUserId(String email) {
+//        User user = jpaQueryFactory.select(qUser).from(qUser)
+//                .where(qUser.email.eq(email)).fetchOne();
+//        if(user == null) return Optional.empty();
+//        return Optional.ofNullable(user);
+//    }
+
+    public boolean isValid(Long userId){
         User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.userId.eq(userId)).fetchOne();
-        if(user == null) return Optional.empty();
-        return Optional.ofNullable(user);
+                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
+        if (user==null){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isProjectValid(Long userId){
+        User user = jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false), qUser.projectId.eq(0l)).fetchOne();
+        if (user==null){
+            return false;
+        }
+        return true;
+    }
+    public User findUserByEmail(String email){
+        return jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.email.eq(email), qUser.isDeleted.eq(false)).fetchOne();
+    }
+
+    public User findUserByNickname(String nickname) {
+        return jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.nickname.eq(nickname), qUser.isDeleted.eq(false)).fetchOne();
+    }
+
+    @Transactional
+    public void updateUser(UserUpdatePostReq userUpdateInfo) {
+//        User user=jpaQueryFactory.select(qUser).from(qUser)
+//                .where(qUser.id.eq(userUpdateInfo.getUserId())).fetchOne();
+
+        Long userId=userUpdateInfo.getUserId();
+        if (isValid(userId)) {
+            String password = passwordEncoder.encode(userUpdateInfo.getPassword());
+            String phone = userUpdateInfo.getPhone();
+            String name = userUpdateInfo.getName();
+            String birthday = (userUpdateInfo.getBirthday());
+            String description = (userUpdateInfo.getDescription());
+            String nickname = (userUpdateInfo.getNickname());
+            int generation = (userUpdateInfo.getGeneration());
+            String link = (userUpdateInfo.getLink());
+            String studentId = (userUpdateInfo.getStudentId());
+
+            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                    .set(qUser.name, name).set(qUser.password, password).set(qUser.phone, phone).set(qUser.birthday, birthday)
+                    .set(qUser.description, description).set(qUser.description, description).set(qUser.nickname, nickname)
+                    .set(qUser.generation, generation).set(qUser.link, link).set(qUser.studentId, studentId).execute();
+        }
+    }
+
+    @Transactional
+    public void updateUserProject(Long userId, Long projectId) {
+        if (isProjectValid(userId)) {
+            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                    .set(qUser.projectId, projectId).execute();
+        }
+    }
+
+    @Transactional
+    public void deleteUser(Long userId){
+        jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                .set(qUser.isDeleted, true).execute();
     }
 }

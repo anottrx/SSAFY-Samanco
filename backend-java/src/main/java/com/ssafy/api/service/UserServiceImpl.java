@@ -1,7 +1,6 @@
 package com.ssafy.api.service;
 
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.ssafy.api.request.UserUpdatePostReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,38 +30,67 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
-		user.setUserId(userRegisterInfo.getId());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
 		user.setEmail(userRegisterInfo.getEmail());
 		user.setPhone(userRegisterInfo.getPhone());
 		user.setName(userRegisterInfo.getName());
+		user.setBirthday(userRegisterInfo.getBirthday());
+		user.setDescription(userRegisterInfo.getDescription());
+		user.setNickname(userRegisterInfo.getNickname());
+		user.setGeneration(userRegisterInfo.getGeneration());
+		user.setLink(userRegisterInfo.getLink());
+		user.setStudentId(userRegisterInfo.getStudentId());
+
 		return userRepository.save(user);
 	}
 
+//	@Override
+//	public User getUserByUserId(String userId) {
+//		// 디비에 유저 정보 조회 (userId 를 통한 조회).
+//		if (!userRepositorySupport.findUserByUserId(userId).isPresent()){
+//			return null;
+//		}
+//		User user = userRepositorySupport.findUserByUserId(userId).get();
+//		return user;
+//	}
+
 	@Override
-	public User getUserByUserId(String userId) {
-		// 디비에 유저 정보 조회 (userId 를 통한 조회).
-		if (!userRepositorySupport.findUserByUserId(userId).isPresent()){
-			return null;
-		}
-		User user = userRepositorySupport.findUserByUserId(userId).get();
-		return user;
+	public User getUserByEmail(String email) {
+		return userRepositorySupport.findUserByEmail(email);
 	}
 
 	@Override
-	public int idCheck(String userId) {
+	public int nickCheck(String nickname) {
+		System.out.println(userRepositorySupport.findUserByNickname(nickname));
 		//아이디 길이가 안맞으면 401에러 리턴
-		if(userId.length()<4 || userId.length()>16){
+		if(nickname.length()<2||nickname.length()>16){
 			return 401;
 		}
-		//디비에서 userId로 찾아봤는데 null이 아니면 (값이 있으면) 중복되므로 402에러리턴
-		else if(userRepositorySupport.findUserByUserId(userId).isPresent()){
+		//디비에서 userId로 찾아봤는데 null이 아니면 (값이 있으면) 중복되므로 402에러 리턴
+		else if(userRepositorySupport.findUserByNickname(nickname)!=null){
 			return 402;
 		}
 		//아이디가 길이도 맞고 중복되지도 않다면 성공 200
 		return 200;
 
+	}
+
+	@Override
+	public void updateUser(UserUpdatePostReq userUpdateInfo) {
+		userRepositorySupport.updateUser(userUpdateInfo);
+
+	}
+
+	@Override
+	public void deleteUser(Long userId) {
+		userRepositorySupport.deleteUser(userId);
+	}
+
+
+	@Override
+	public void addProject(Long userId, Long projectId) {
+		userRepositorySupport.updateUserProject(userId, projectId);
 	}
 
 	@Override
@@ -93,12 +120,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int emailCheck(String userEmail) {
-		if(userEmail == null)
+		if(userEmail==null)
 			return 401;
 		Pattern emailPattern = Pattern.compile("^[0-9a-zA-Z_-]+@[0-9a-zA-Z]+\\.[a-zA-Z]{2,6}$");
 		Matcher emailMatcher = emailPattern.matcher(userEmail);
 		if(!emailMatcher.find())
 			return 402;
+		if (userRepositorySupport.findUserByEmail(userEmail)!=null)	return 403;
 
 		return 200;
 	}

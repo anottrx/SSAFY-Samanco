@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from 'react-redux';
 
 import Layout from "../../components/layout"
-import { Paper, TextField, Box, Button } from "@mui/material";
+import { Paper, TextField, Box, Button, Autocomplete } from "@mui/material";
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import {LocalizationProvider } from '@mui/lab';
 
@@ -13,6 +13,13 @@ import Counter from "../../components/Common/PositionSelect";
 import styled from "@emotion/styled";
 
 var FormData = require('form-data');
+
+const position = [
+    {name:"Front-end", count: 0},
+    {name:"Back-end", count: 0},
+    {name:"Embedded", count: 0},
+    {name:"Mobile", count: 0}
+]
 
 function projectUpdate() {
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -63,8 +70,11 @@ function projectUpdate() {
         start_date: detail.start_date,
         end_date: detail.end_date,
         stacks: detail.stacks,
-        positions: detail.positions
+        positions: detail.positions,
+        hostPosition: detail.hostPosition
     });
+
+    console.log(detail)
 
     const [formData, changeFormData] = useState(new FormData());
     const [files, setFiles] = useState('');
@@ -104,6 +114,11 @@ function projectUpdate() {
         // 리렌더링 X
     }
 
+    const handleAutocompleteChange = (event) => {
+        const name = event.target.innerText;
+        inputValue["hostPosition"] = name;
+    };
+
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
         <Layout>
@@ -132,9 +147,7 @@ function projectUpdate() {
                     onChange={(e) => changeHandle(e.target.value, "description")}
                     value={inputValue.description}
                 />
-                <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴" onChange={(e) => changeHandle(e.target.value, "schedule")}
-                    value={inputValue.schedule}/>
-                
+
                 {/* <StackLevelSelect></StackLevelSelect> */}
                 <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="프로젝트 스택"></StackSelect>
                 
@@ -142,6 +155,15 @@ function projectUpdate() {
                     <DatePicker initDate={inputValue.start_date} changeHandle={changeHandle} label="시작 날짜"/>
                     <DatePicker initDate={inputValue.end_date}  changeHandle={changeHandle} label="종료 날짜"/>
                 </DatePickerWrapper>
+
+                <Autocomplete
+                    id="free-solo-demo"
+                    freeSolo
+                    value={inputValue.hostPosition}
+                    options={position.map((stack) => stack.name)}
+                    onChange={handleAutocompleteChange}
+                    renderInput={(params) => <TextField {...params} label="본인 포지션" />}
+                />
 
                 <Counter changeHandle={changeHandle} initData={inputValue.positions}></Counter>
 
