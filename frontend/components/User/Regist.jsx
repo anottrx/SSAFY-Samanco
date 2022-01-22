@@ -433,20 +433,19 @@ export default function Regist() {
         {/* 비밀번호 */}
         <div className="mb-6">
           <label className="">비밀번호</label>
-          <input
+          <br />
+          <OutlinedInput
             type="password"
             id="password"
+            placeholder="8~16자리, 영문자, 숫자, 특수문자"
             value={inputState.password}
             onChange={(e) => {
               handleChange(e);
               pwHandleChange(e);
             }}
-            className=""
-            placeholder="8~16자리, 영문자, 숫자, 특수문자"
-            required=""
-          ></input>
-          {/* 비밀번호 유효성 결과 */}
-          {/* 1. 사용 가능 */}
+            sx={{ width: 240 }}
+          />
+          {/* 1. 비밀번호 사용 가능 */}
           {inputState.password != "" && pwCheckRes && pwCheckRes.code == 200 ? (
             <div className="" role="alert">
               <span className="font-medium">{pwCheckRes.msg}</span>
@@ -462,7 +461,8 @@ export default function Regist() {
         {/* 비밀번호 확인 */}
         <div className="mb-6">
           <label className="">비밀번호 확인</label>
-          <input
+          <br />
+          <OutlinedInput
             type="password"
             id="passwordConfirm"
             value={inputState.passwordConfirm}
@@ -470,10 +470,8 @@ export default function Regist() {
               handleChange(e);
               pwSameCheck(e);
             }}
-            className=""
-            placeholder=""
-            required=""
-          ></input>
+            sx={{ width: 240 }}
+          />
           {/* 비밀번호 동일 체크 */}
           {inputState.passwordConfirm == "" || pwSameRes ? null : (
             <div className="" role="alert">
@@ -485,7 +483,7 @@ export default function Regist() {
         <div className="mb-6">
           <label>기수</label>
           <x sx={{ m: 1, minWidth: 120 }}>
-            <Select id="generation" onChange={handleChange}>
+            <Select id="generation" onChange={handleChange} defaultValue="">
               {generationOptions.map((opt) => {
                 return (
                   <MenuItem key={opt.value} value={opt.value}>
@@ -498,7 +496,7 @@ export default function Regist() {
           {/* 반 */}
           <label>반</label>
           <x sx={{ m: 1, minWidth: 280 }}>
-            <Select id="userClass" onChange={handleChange}>
+            <Select id="userClass" onChange={handleChange} defaultValue="">
               {classOptions.map((opt) => {
                 return (
                   <MenuItem key={opt.value} value={opt.value}>
@@ -511,14 +509,15 @@ export default function Regist() {
           {/* 학번 */}
           <div className="mb-6">
             <label>학번</label>
-            <input
+            <br />
+            <OutlinedInput
               type="text"
               id="studentId"
               value={inputState.studentId}
-              onChange={handleChange}
               placeholder="싸피에서 제공받은 학번"
-              required=""
-            ></input>
+              onChange={handleChange}
+              sx={{ width: 240 }}
+            />
           </div>
         </div>
         {/* 이름 */}
@@ -539,7 +538,7 @@ export default function Regist() {
         <div className="mb-6">
           <label>분야</label>
           <x sx={{ m: 1, minWidth: 120 }}>
-            <Select id="position" onChange={handleChange}>
+            <Select id="position" onChange={handleChange} defaultValue="">
               {positionOptions.map((opt) => {
                 return (
                   <MenuItem key={opt.value} value={opt.value}>
@@ -577,15 +576,16 @@ export default function Regist() {
         </div>
         {/* 링크 */}
         <div className="mb-6">
-          <label className="">링크</label>
+          <label>링크</label>
           <br />
-          <button className="">추가</button>
+          <button>추가</button>
+          <label></label>
         </div>
         {/* 자기소개 */}
         <div className="mb-6">
           <label className="">자기소개</label>
           <TextField
-            id="outlined-textarea"
+            id="description"
             placeholder="자기자신에 대해 소개해주세요"
             fullWidth
             rows={4}

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import userData from "../../data/userData.json";
 import Router from "next/router";
 import Cookies from "universal-cookie";
-import { updateUserAPI, deleteUserAPI } from "../../pages/api/user";
+import { useCookies } from "react-cookie";
+import { getUserInfo, updateUserAPI, deleteUserAPI } from "../../pages/api/user";
 import { TextField } from "@mui/icons-material";
 
 export default function MyInfo() {
@@ -46,10 +47,39 @@ export default function MyInfo() {
     image_id: image_id,
   });
 
-  if (authChange) {
-  }
+  const [inputState2, setInputState2] = useState({
+    id: "",
+    name: "",
+    email: "",
+    phone: "",
+    nickname: "",
+    userClass: "",
+    birthday: "",
+    generation: "",
+    studentId: "",
+    stacks: [],
+    position: "",
+    link: "",
+    description: "",
+    image_id: "",
+  });
 
   const cookies = new Cookies();
+  const [cookie, setCookie] = useCookies(["userToken"]);
+
+  useEffect(() => {
+
+    getUserInfo(cookie.userToken).then((res) => {
+      console.log(res);
+      if (res.statusCode == 200) {
+        
+      } else alert(`${res.message}`);
+    });
+
+    
+  }, []);
+
+
 
   const handleUpdateClick = (e) => {
     e.preventDefault();
@@ -57,13 +87,7 @@ export default function MyInfo() {
     let isNormal = true;
     let msg = "";
 
-    if (!inputState.id) {
-      isNormal = false;
-      msg = "아이디를 입력해주세요.";
-    } else if (!idReg.test(inputState.id)) {
-      isNormal = false;
-      msg = "아이디의 양식을 확인해주세요.";
-    } else if (!inputState.password) {
+    if (!inputState.password) {
       isNormal = false;
       msg = "비밀번호를 입력해주세요.";
     } else if (!pwReg.test(inputState.password)) {
@@ -72,29 +96,26 @@ export default function MyInfo() {
     } else if (inputState.password != inputState.passwordConfirm) {
       isNormal = false;
       msg = "비밀번호가 동일하지 않습니다.";
+    } else if (!inputState.name) {
+      isNormal = false;
+      msg = "이름을 입력해주세요.";
+    } else if (!inputState.email) {
+      isNormal = false;
+      msg = "이메일을 입력해주세요.";
     } else if (!emailReg.test(inputState.email)) {
       isNormal = false;
       msg = "이메일 양식을 확인해주세요.";
-    } else if (!inputState.phone) {
-      isNormal = false;
-      msg = "전화번호를 입력해주세요.";
     } else if (!phoneReg.test(inputState.phone)) {
       isNormal = false;
       msg = "전화번호 양식을 확인해주세요.";
     } else if (!inputState.name) {
       isNormal = false;
       msg = "이름을 입력해주세요.";
-    } else if (!koreanReg.test(inputState.name)) {
-      isNormal = false;
-      msg = "이름 양식을 확인해주세요";
     } else if (!inputState.nickname) {
       isNormal = false;
       msg = "닉네임을 입력해주세요.";
-    } else if (!koreanReg.test(inputState.nickname)) {
-      isNormal = false;
-      msg = "닉네임 양식을 확인해주세요";
     }
-
+    
     if (isNormal) {
       // updateUserAPI(inputState).then((res) => {
       if (res.statusCode == 200) {
