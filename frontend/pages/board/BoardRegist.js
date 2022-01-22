@@ -1,8 +1,9 @@
 import Layout from "../../components/layout"
-import { Paper, TextField, Box, Button } from "@mui/material";
+import { Paper, TextField, Box, Button, MenuItem} from "@mui/material";
 import styled from "@emotion/styled";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
+import styles from "../../styles/Board.module.css"
 var FormData = require('form-data');
 
 
@@ -25,7 +26,28 @@ function BoardRegist() {
             display:none;
         }
     `
-    
+    const currencies = [
+        {
+            value: 'notice',
+            label: '공지사항',
+        },
+        {
+            value: 'free',
+            label: '자유게시판',
+        },
+        {
+            value: 'qna',
+            label: '질문게시판',
+        },
+        {
+            value: 'exam',
+            label: '정보공유',
+        },
+        {
+            value: 'job',
+            label: '사람구해요',
+        },
+    ];
 
     const [inputValue, setInputValue] = useState({});
 
@@ -38,6 +60,20 @@ function BoardRegist() {
         <Layout>
             <h1>Board Regist</h1>
             <CusPaper>   
+                <TextField
+                    className={styles.boardRegistTag}
+                    id="filled-select-currency"
+                    select
+                    label="태그"
+                    
+                    onChange={(e) => changeHandle(e.target.value, "tag")}
+                    >
+                    {currencies.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
 
                 <TextField fullWidth name="title" label="제목" onChange={(e) => changeHandle(e.target.value, "title")}
                     value={inputValue.title}/>
