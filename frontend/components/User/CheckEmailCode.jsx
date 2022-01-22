@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { OutlinedInput, Button } from "@mui/material";
+import { OutlinedInput, InputAdornment, Button } from "@mui/material";
 import { checkEmailPWAPI } from "../../pages/api/user";
 
 export default function CheckEmailCode() {
@@ -39,8 +39,12 @@ export default function CheckEmailCode() {
         onChange={codeHandleChange}
         sx={{ width: 240 }}
         disabled={authFin ? true : false}
+        endAdornment={
+          <InputAdornment position="end">
+            <Button onClick={compareEmailCodeClick}>확인</Button>
+          </InputAdornment>
+        }
       />
-      <Button onClick={compareEmailCodeClick}>확인</Button>
     </div>
   );
 }

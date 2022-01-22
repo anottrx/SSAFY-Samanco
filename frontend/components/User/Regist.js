@@ -16,10 +16,23 @@ import {
   InputLabel,
   TextField,
   Box,
+  Avatar,
   OutlinedInput,
+  ListItem,
+  DialogContentText,
+  DialogContent,
+  List,
+  DialogActions,
   Button,
+  DialogTitle,
+  ListItemAvatar,
+  ListItemText,
+  Dialog,
+  Select,
 } from "@mui/material";
-import Select from "@mui/material/Select";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import PersonIcon from "@mui/icons-material/Person";
+import AddIcon from "@mui/icons-material/Add";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import DatePicker from "../../components/Common/DatePicker";
@@ -60,8 +73,6 @@ export default function Regist() {
     image_id: "",
   });
 
-  const [userClass2, setUserClass2] = useState("");
-
   const [stackScore, setStackScore] = useState({
     HTML: "",
     CSS: "",
@@ -101,13 +112,6 @@ export default function Regist() {
   ];
 
   const positionOptions = [
-    { value: "frontend", name: "프론트엔드" },
-    { value: "backend", name: "백엔드" },
-    { value: "mobile", name: "모바일" },
-    { value: "embedded", name: "임베디드" },
-  ];
-
-  const positionData = [
     { value: "frontend", name: "프론트엔드" },
     { value: "backend", name: "백엔드" },
     { value: "mobile", name: "모바일" },
@@ -272,6 +276,31 @@ export default function Regist() {
     }
   };
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleAddLinkClick = (props) => {
+    // 링크 추가 버튼을 누르면
+    // const { onClose, selectedValue, open } = props;
+
+    // const handleClose = () => {
+    //   onClose(selectedValue);
+    // };
+
+    // const handleListItemClick = (value) => {
+    //   onClose(value);
+    // };
+
+    return <></>;
+  };
+
   const pwHandleChange = (e) => {
     const value = e.target.value; // 입력한 값
     setPwCheckRes(
@@ -358,7 +387,6 @@ export default function Regist() {
           // 페이지 이동
           window.history.forward();
           Router.push("/login");
-          // navigate("/login", { replace: true });
         } else alert(`${res.message}`);
       });
     } else {
@@ -393,16 +421,21 @@ export default function Regist() {
             onChange={handleChange}
             disabled={authFin ? true : false}
             sx={{ width: 240 }}
+            
+            endAdornment={
+              <InputAdornment position="end">
+                <Button
+                  onClick={sendEmailCodeClick}
+                  disabled={authFin ? true : false}
+                >
+                  인증받기
+                </Button>
+              </InputAdornment>
+            }
           />
-          <Button
-            onClick={sendEmailCodeClick}
-            disabled={authFin ? true : false}
-          >
-            인증받기
-          </Button>
           <>{showEmailCodeCheck ? <EmailCodeSource /> : null}</>
           {authFin ? (
-            <Button onClick={sendEmailCodeAgainClick}>인증 다시 받기</Button>
+            <Button onClick={sendEmailCodeAgainClick}>이메일 변경 및 인증 다시 받기</Button>
           ) : null}
         </div>
         {/* 닉네임 */}
@@ -597,9 +630,37 @@ export default function Regist() {
         {/* 링크 */}
         <div className="mb-6">
           <label>링크</label>
-          <br />
-          <button>추가</button>
+          <Button onClick={handleClickOpen}>추가</Button>
           <label></label>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>링크</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                나를 소개할 수 있는 링크를 추가해주세요 (예: 깃허브, 블로그,
+                페이스북)
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="links"
+                // label="Email Address"
+                type="text"
+                fullWidth
+                variant="standard"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Button>추가</Button>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </DialogContent>
+            <DialogActions>
+              {/* <Button onClick={handleClose}>취소하기</Button> */}
+              <Button onClick={handleClose}>완료하기</Button>
+            </DialogActions>
+          </Dialog>
         </div>
         {/* 자기소개 */}
         <div className="mb-6">
@@ -628,9 +689,7 @@ export default function Regist() {
         </Box>
         <br />
         {/* 가입 버튼 */}
-        <button type="submit" className="">
-          가입하기
-        </button>
+        <button type="submit">가입하기</button>
 
         {/* </form> */}
       </Box>

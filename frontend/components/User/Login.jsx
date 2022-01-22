@@ -21,7 +21,6 @@ import {
 
 export default function Login() {
   const [inputState, setInputState] = useState({
-    // id: "",
     email: "",
     password: "",
     showPassword: false,
@@ -76,7 +75,6 @@ export default function Login() {
 
     if (isNormal) {
       // 유효성 검사 통과 시 login API 요청
-
       loginAPI(inputState).then((res) => {
         switch (res.statusCode) {
           case 200: // 로그인 성공
