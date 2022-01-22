@@ -96,6 +96,7 @@ export default function Login() {
               sessionStorage.setItem("nickname", res.nickname);
             });
             // Router.push("/");
+            window.history.forward();
             window.location.replace("/");
             break;
           case 401: // 비밀번호 틀림
@@ -133,13 +134,14 @@ export default function Login() {
         <br />
         <FormControl sx={{ width: 280 }}>
           <OutlinedInput
-            id="id"
+            // id="id"
+            id="margin-none"
             placeholder="이메일"
             value={inputState.id}
             onChange={handleChange}
           />
         </FormControl>
-        <br />
+        {/* <br /> */}
         <FormControl sx={{ width: 280 }}>
           <OutlinedInput
             id="password"

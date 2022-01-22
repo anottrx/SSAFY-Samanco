@@ -7,7 +7,14 @@ import {
   checkNicknameAPI,
   checkMemberAPI,
 } from "../../pages/api/user";
-import { Paper, TextField, Box, Button } from "@mui/material";
+import {
+  Paper,
+  InputLabel,
+  TextField,
+  Box,
+  OutlinedInput,
+  Button,
+} from "@mui/material";
 import DatePicker from "../../components/Common/DatePicker";
 import styled from "@emotion/styled";
 import { LocalizationProvider } from "@mui/lab";
@@ -319,6 +326,7 @@ export default function Regist() {
           // 가입 성공 시
           alert("가입이 되었습니다!");
           // 페이지 이동
+          window.history.forward();
           navigate("/login", { replace: true });
         } else alert(`${res.message}`);
       });
@@ -330,7 +338,7 @@ export default function Regist() {
   const CheckEmailCode = () => (
     <div>
       <label className="">인증번호 확인</label>
-      <input
+      {/* <input
         type="text"
         id="code"
         value={inputState.code}
@@ -340,8 +348,19 @@ export default function Regist() {
         className=""
         placeholder="이메일 인증번호"
         required=""
-      ></input>
-      <button onClick={compareEmailCodeClick}>인증번호 확인하기</button>
+      ></input> */}
+      <br />
+      <OutlinedInput
+        type="text"
+        id="code"
+        placeholder="이메일 인증번호"
+        value={inputState.code}
+        onChange={(e) => {
+          handleChange(e);
+        }}
+        sx={{ width: 240 }}
+      />
+      <Button onClick={compareEmailCodeClick}>확인</Button>
     </div>
   );
 
@@ -390,9 +409,9 @@ export default function Regist() {
           ) : null}
         </div>
         {/* 이메일 */}
-        <div className="mb-6">
-          <label className="">이메일</label>
-          <input
+        <div>
+          <label>이메일</label>
+          {/* <input
             type="email"
             id="email"
             value={inputState.email}
@@ -401,24 +420,47 @@ export default function Regist() {
             placeholder=""
             required=""
             disabled={authFin ? true : false}
-          ></input>
-          <button
+          ></input> */}
+          <br />
+          <OutlinedInput
+            type="email"
+            id="email"
+            placeholder="이메일"
+            value={inputState.email}
+            onChange={handleChange}
+            disabled={authFin ? true : false}
+            sx={{ width: 240 }}
+            
+          />
+          <Button
             onClick={sendEmailCodeClick}
             disabled={authFin ? true : false}
           >
-            이메일 확인
-          </button>
+            인증받기
+          </Button>
           <>{showEmailCodeCheck ? <CheckEmailCode /> : null}</>
           {authFin ? (
-            <button onClick={sendEmailCodeAgainClick}>
-              인증번호 다시 받기
-            </button>
+            <Button onClick={sendEmailCodeAgainClick}>
+              인증 다시 받기
+            </Button>
           ) : null}
         </div>
         {/* 닉네임 */}
         <div className="mb-6">
           <label className="">닉네임</label>
-          <input
+          <br />
+          <OutlinedInput
+            type="text"
+            id="nickname"
+            placeholder="닉네임은 한글 2자리 이상"
+            value={inputState.nickname}
+            onChange={(e) => {
+              handleChange(e);
+              nicknameHandleChange(e);
+            }}
+            sx={{ width: 240 }}
+          />
+          {/* <input
             type="text"
             id="nickname"
             value={inputState.nickname}
@@ -429,7 +471,7 @@ export default function Regist() {
             className=""
             placeholder=""
             required=""
-          ></input>
+          ></input> */}
           {/* 닉네임 유효성 결과 */}
           {/* 1. 사용 가능 */}
           {inputState.nickname != "" &&
