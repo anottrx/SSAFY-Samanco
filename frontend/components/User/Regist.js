@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Router from "next/router";
+import CheckEmailCode from "./CheckEmailCode";
 import {
   registAPI,
   idCheckAPI,
@@ -38,11 +39,12 @@ export default function Regist() {
   const [emailCodeCompareRes, setEmailCodeCompareRes] = useState(null);
   const [showEmailCodeCheck, setShowEmailCodeCheck] = useState(false);
 
+
+  const [code, setCode] = useState('');
   const [inputState, setInputState] = useState({
     name: "",
     password: "",
     passwordConfirm: "",
-    code: "",
     email: "",
     phone: "",
     nickname: "",
@@ -173,19 +175,19 @@ export default function Regist() {
     );
   };
 
+  const EmailCodeSource = (props)=>{
+    return(
+<CheckEmailCode />
+      // <Button onClick={compareEmailCodeClick}>확인</Button>
+    )
+  }
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setInputState((prevState) => ({
       ...prevState,
       [id]: value,
     }));
-  };
-
-  const idHandleChange = (e) => {
-    const value = e.target.value;
-    idCheckAPI(value).then((res) => {
-      setIdCheckRes({ code: res.statusCode, msg: res.message });
-    });
   };
 
   const nicknameHandleChange = (e) => {
@@ -222,9 +224,9 @@ export default function Regist() {
   const compareEmailCodeClick = (e) => {
     // 이메일로 받은 인증번호 입력해서 확인하기 + 확인 완료되면 폼 닫고 이메일 입력 못 받게 바꾸기
     e.preventDefault();
-    const value = inputState.code;
+    const value = code;
 
-    if (!inputState.code) {
+    if (!value) {
       alert("인증번호를 입력해주세요.");
     } else {
       // console.log(value);
@@ -247,6 +249,7 @@ export default function Regist() {
           }
     );
   };
+
 
   const pwSameCheck = (e) => {
     const value = e.target.value;
@@ -328,35 +331,9 @@ export default function Regist() {
       alert(msg);
     }
   };
+  
 
-  const CheckEmailCode = () => (
-    <div>
-      <label className="">인증번호 확인</label>
-      {/* <input
-        type="text"
-        id="code"
-        value={inputState.code}
-        onChange={(e) => {
-          handleChange(e);
-        }}
-        className=""
-        placeholder="이메일 인증번호"
-        required=""
-      ></input> */}
-      <br />
-      <OutlinedInput
-        type="text"
-        id="code"
-        placeholder="이메일 인증번호"
-        value={inputState.code}
-        onChange={(e) => {
-          handleChange(e);
-        }}
-        sx={{ width: 240 }}
-      />
-      <Button onClick={compareEmailCodeClick}>확인</Button>
-    </div>
-  );
+ 
 
   return (
     <div className="container mx-auto max-w-xl cols-6">
@@ -392,7 +369,7 @@ export default function Regist() {
           >
             인증받기
           </Button>
-          <>{showEmailCodeCheck ? <CheckEmailCode /> : null}</>
+          <>{showEmailCodeCheck ? <EmailCodeSource /> : null}</>
           {authFin ? (
             <Button onClick={sendEmailCodeAgainClick}>인증 다시 받기</Button>
           ) : null}
@@ -538,11 +515,19 @@ export default function Regist() {
         <div className="mb-6">
           <label>분야</label>
           <x sx={{ m: 1, minWidth: 120 }}>
-            <Select id="position" onChange={handleChange} defaultValue="">
-              {positionOptions.map((opt) => {
+            <Select
+              id="position"
+              onChange={handleChange}
+              // key={inputState.position}
+              defaultValue={inputState.position}
+              // value={inputState.position}
+              // onBlur={handleChange}
+              // defaultValue=""
+            >
+              {positionOptions.map((u, i) => {
                 return (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.name}
+                  <MenuItem key={i} value={u.value}>
+                    {u.name}
                   </MenuItem>
                 );
               })}
