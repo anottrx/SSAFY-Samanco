@@ -15,9 +15,6 @@ import styled from "@emotion/styled";
 
 import { registAPI } from "../api/project"
 
-
-var FormData = require('form-data');
-
 const position = [
     {name:"Front-end", count: 0},
     {name:"Back-end", count: 0},
@@ -71,18 +68,21 @@ function ProjectRegist() {
         "hostId": 1,
     });
 
-    const [formData, changeFormData] = useState(new FormData());
+    // const formData = new FormData();
     const [files, setFiles] = useState('');
 
     const onImgChange = (event) => {
         const file = event.target.files[0];
         setFiles(file)
 
-        const newData = new FormData();
-        newData.append('files[]', file, file.name)
-        // newData.append("files", file);
-        changeFormData(newData);
+        // formData.append("file", file);
+        // console.log("formData:", formData)
     }
+
+    useEffect(() => {
+      console.log(files);
+    }, [files]);
+    
 
     const uploadRef = useRef(null);
 
@@ -126,7 +126,7 @@ function ProjectRegist() {
                 
                 <input ref={uploadRef} type="file"
                     className="imgInput" id="projectImg"
-                    accept="image/*" name="file"
+                    accept="image/*" name="file" encType="multipart/form-data"
                     onChange={onImgChange}></input>
 
                 <TextField fullWidth name="title" label="프로젝트 이름" onChange={(e) => changeHandle(e.target.value, "title")}
@@ -163,16 +163,21 @@ function ProjectRegist() {
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
-                        console.log(inputValue);
-                    
-                        for (var pair of formData.entries()) {
-                            console.log(pair[1]);
-                        }
+                        const formData = new FormData();
 
-                        console.log(formData)
+                        Object.keys(inputValue).map(key => {
+                            let value = inputValue[key];
+                            formData.append(key, JSON.stringify(value));
+                        })
 
-                        registAPI(inputValue, formData);
-                        // registAPI(inputValue);
+                        formData.append("file",files);
+
+                        for(var key of formData.entries())
+                        {
+                            console.log(`${key}`);
+                        } 
+
+                        registAPI(formData);
                     }}
                     >등록하기</Button>
                 </div>
