@@ -1,10 +1,13 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.ProjectDeletePostReq;
 import com.ssafy.api.request.ProjectRegisterPostReq;
 import com.ssafy.api.request.ProjectUpdatePostReq;
 import com.ssafy.db.entity.Project;
+import com.ssafy.db.repository.FileRepositorySupport;
 import com.ssafy.db.repository.ProjectRepository;
 import com.ssafy.db.repository.ProjectRepositorySupport;
+import com.ssafy.db.repository.StackRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     ProjectRepositorySupport projectRepositorySupport;
+
+    @Autowired
+    StackRepositorySupport stackRepositorySupport;
+
+    @Autowired
+    FileRepositorySupport fileRepositorySupport;
 
     @Override
     public Project createProject(ProjectRegisterPostReq projectRegisterPostReq) {
@@ -39,5 +48,17 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public int updateProject(ProjectUpdatePostReq updateInfo) {
         return projectRepositorySupport.updateProject(updateInfo);
+    }
+
+    @Override
+    public void deleteProject(Long userId, Long projectId) {
+        projectRepositorySupport.deleteProject(userId, projectId);
+        stackRepositorySupport.deleteStack(projectId, 2);
+        fileRepositorySupport.deleteFile(projectId, 2);
+    }
+
+    @Override
+    public Project selectByHost(Long userId) {
+        return projectRepositorySupport.selectByHost(userId);
     }
 }

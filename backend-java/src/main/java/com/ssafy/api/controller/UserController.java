@@ -197,8 +197,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> delete(
-			@RequestBody @ApiParam(value="회원 아이디", required = true) UserIdPostReq userId,
-			@RequestPart(required = false) MultipartFile[] files) throws IOException {
+			@RequestBody @ApiParam(value="회원 아이디", required = true) UserIdPostReq userId) throws IOException {
 
 		// 회원 삭제 : isDeleted=true
 		userService.deleteUser(userId.getUserId());

@@ -13,7 +13,6 @@ import java.util.Map;
 @Setter
 @ToString
 @ApiModel("ProjectRegisterPstReq")
-@ToString
 public class ProjectRegisterPostReq {
 
     @ApiModelProperty(name="host id", example="1")

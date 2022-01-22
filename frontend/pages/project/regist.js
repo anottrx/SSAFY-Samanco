@@ -79,7 +79,8 @@ function ProjectRegist() {
         setFiles(file)
 
         const newData = new FormData();
-        newData.append('files[]', file, file.name)
+        newData.append('file', file, file.name)
+        console.log
         // newData.append("files", file);
         changeFormData(newData);
     }
@@ -126,7 +127,7 @@ function ProjectRegist() {
                 
                 <input ref={uploadRef} type="file"
                     className="imgInput" id="projectImg"
-                    accept="image/*" name="file"
+                    accept="image/*" name="file" encType="multipart/form-data"
                     onChange={onImgChange}></input>
 
                 <TextField fullWidth name="title" label="프로젝트 이름" onChange={(e) => changeHandle(e.target.value, "title")}

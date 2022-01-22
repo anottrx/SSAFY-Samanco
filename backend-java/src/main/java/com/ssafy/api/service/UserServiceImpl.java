@@ -1,14 +1,14 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserUpdatePostReq;
+import com.ssafy.db.entity.Project;
+import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.UserRepository;
-import com.ssafy.db.repository.UserRepositorySupport;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +23,15 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
+
+	@Autowired
+	StackRepositorySupport stackRepositorySupport;
+
+	@Autowired
+	FileRepositorySupport fileRepositorySupport;
+
+	@Autowired
+	ProjectRepositorySupport projectRepositorySupport;
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -83,7 +92,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteUser(Long userId) {
+		// stack, file, project, study, board, comment 다 지우기.
 		userRepositorySupport.deleteUser(userId);
+		stackRepositorySupport.deleteStack(userId, 1);
+		fileRepositorySupport.deleteFile(userId, 1);
+		Project project=projectRepositorySupport.selectByHost(userId);
+		if (project!=null){
+			projectRepositorySupport.deleteProject(userId, project.getId());
+		}
+
 	}
 
 

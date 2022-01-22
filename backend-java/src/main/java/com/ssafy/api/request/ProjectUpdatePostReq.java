@@ -21,6 +21,9 @@ public class ProjectUpdatePostReq {
     @ApiModelProperty(name="user id", example="1")
     private Long hostId;
 
+    @ApiModelProperty(name="host position", example="FRONTEND")
+    private String hostPosition;
+
     @ApiModelProperty(name="title", example="싸피사만코 같이 하실분 구함")
     private String title;
 

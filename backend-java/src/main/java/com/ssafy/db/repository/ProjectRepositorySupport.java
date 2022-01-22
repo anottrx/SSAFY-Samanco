@@ -1,9 +1,11 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.api.request.ProjectDeletePostReq;
 import com.ssafy.api.request.ProjectUpdatePostReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.entity.QProject;
+import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,8 @@ public class ProjectRepositorySupport {
 
     QProject qProject=QProject.project;
 
+    QUser qUser=QUser.user;
+
     public boolean isValid(Long id){
         Project project = jpaQueryFactory.select(qProject).from(qProject)
                 .where(qProject.id.eq(id), qProject.isDeleted.eq(false)).fetchOne();
@@ -28,9 +32,13 @@ public class ProjectRepositorySupport {
     }
 
     @Transactional
-    public void deleteProject(Long id) {
+    public void deleteProject(Long userId, Long projectId) {
         // isDelete=true
-        jpaQueryFactory.update(qProject).where(qProject.id.eq(id))
+
+        jpaQueryFactory.update(qProject).where(
+                qProject.id.eq(projectId),
+                        qProject.hostId.eq(userId)
+                )
                 .set(qProject.isDeleted, true).execute();
     }
 
@@ -38,7 +46,8 @@ public class ProjectRepositorySupport {
     public int updateProject(ProjectUpdatePostReq projectUpdateInfo){
 
         Long projectId=projectUpdateInfo.getId();
-        if (isValid(projectId)) {
+        Long hostId=projectUpdateInfo.getHostId();
+        if (isValid(hostId)&&isValid(projectId)) {
             String collectStatus=(projectUpdateInfo.getCollectStatus());
             String description=(projectUpdateInfo.getDescription());
             int size=(projectUpdateInfo.getSize());
@@ -61,5 +70,15 @@ public class ProjectRepositorySupport {
             return 200;
         }
         return 401;
+    }
+
+    public Project selectByHost(Long userId) {
+        if (isValid(userId)){
+            Long projectId = jpaQueryFactory.select(qUser.projectId).from(qUser).fetchOne();
+            if (isValid(projectId)) {
+                return jpaQueryFactory.selectFrom(qProject).where(qProject.id.eq(projectId)).fetchOne();
+            }
+        }
+        return null;
     }
 }
