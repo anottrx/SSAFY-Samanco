@@ -1,0 +1,19 @@
+.menus {
+  display: flex;
+  justify-content: left;
+  margin: 10px 0px;
+}
+
+.link:first-child {
+  padding: 0px 10px 0px 0px;
+}
+
+.link {
+  padding: 0px 10px;
+  border-right: 1px solid #909090;
+}
+
+.link:last-child {
+  padding: 0px 0px 0px 10px;
+  border: none;
+}
