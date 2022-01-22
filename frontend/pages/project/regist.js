@@ -75,17 +75,8 @@ function ProjectRegist() {
     const onImgChange = (event) => {
         const file = event.target.files[0];
         setFiles(file)
-
-        // formData.append("file", file);
-        // console.log("formData:", formData)
     }
-
-    useEffect(() => {
-        if (files!='')
-          console.log(files);
-    }, [files]);
     
-
     const uploadRef = useRef(null);
 
     useEffect(() => {

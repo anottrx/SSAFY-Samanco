@@ -11,6 +11,27 @@ async function registAPI(formData) {
     .catch((err) => err.response.data);
 }
 
+async function updateAPI(formData) {
+    return await fileUrl
+    .post("/api/project/update", 
+        formData
+    , {headers: {
+        'Content-Type': 'multipart/form-data'
+      }})
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
+async function deleteAPI(data) {
+    return await url
+    .post("/api/project/delete", {
+        "id": data.id,
+        "user_id": data.userId,
+    })
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
 export {
-    registAPI
+    registAPI, updateAPI, deleteAPI
 }
