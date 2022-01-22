@@ -77,9 +77,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void updateUser(UserUpdatePostReq userUpdateInfo) {
-		userRepositorySupport.updateUser(userUpdateInfo);
-
+	public int updateUser(UserUpdatePostReq userUpdateInfo) {
+		return userRepositorySupport.updateUser(userUpdateInfo);
 	}
 
 	@Override
@@ -89,8 +88,8 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public void addProject(Long userId, Long projectId) {
-		userRepositorySupport.updateUserProject(userId, projectId);
+	public int addProject(Long userId, Long projectId) {
+		return userRepositorySupport.updateUserProject(userId, projectId);
 	}
 
 	@Override

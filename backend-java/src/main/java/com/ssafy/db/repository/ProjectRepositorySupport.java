@@ -35,7 +35,7 @@ public class ProjectRepositorySupport {
     }
 
     @Transactional
-    public void updateProject(ProjectUpdatePostReq projectUpdateInfo){
+    public int updateProject(ProjectUpdatePostReq projectUpdateInfo){
 
         Long projectId=projectUpdateInfo.getId();
         if (isValid(projectId)) {
@@ -57,6 +57,9 @@ public class ProjectRepositorySupport {
                     .set(qProject.totalFrontendSize, totalFrontendSize)
                     .set(qProject.totalMobileSize, totalMobileSize)
                     .set(qProject.totalEmbeddedSize, totalEmbeddedSize).execute();
+
+            return 200;
         }
+        return 401;
     }
 }

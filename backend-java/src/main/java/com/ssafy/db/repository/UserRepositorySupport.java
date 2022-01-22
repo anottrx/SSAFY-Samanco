@@ -61,7 +61,7 @@ public class UserRepositorySupport {
     }
 
     @Transactional
-    public void updateUser(UserUpdatePostReq userUpdateInfo) {
+    public int updateUser(UserUpdatePostReq userUpdateInfo) {
 //        User user=jpaQueryFactory.select(qUser).from(qUser)
 //                .where(qUser.id.eq(userUpdateInfo.getUserId())).fetchOne();
 
@@ -81,15 +81,20 @@ public class UserRepositorySupport {
                     .set(qUser.name, name).set(qUser.password, password).set(qUser.phone, phone).set(qUser.birthday, birthday)
                     .set(qUser.description, description).set(qUser.description, description).set(qUser.nickname, nickname)
                     .set(qUser.generation, generation).set(qUser.link, link).set(qUser.studentId, studentId).execute();
+
+            return 200;
         }
+        return 401;
     }
 
     @Transactional
-    public void updateUserProject(Long userId, Long projectId) {
+    public int updateUserProject(Long userId, Long projectId) {
         if (isProjectValid(userId)) {
             jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
                     .set(qUser.projectId, projectId).execute();
+            return 200;
         }
+        return 401;
     }
 
     @Transactional

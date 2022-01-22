@@ -69,11 +69,33 @@ public class ProjectController {
             @RequestPart(required = false) MultipartFile[] files) throws IOException {
 
         // project update
-        projectService.updateProject(updateInfo);
+        int projectCode=projectService.updateProject(updateInfo);
         // project 스택 입력
         stackService.updateStack(updateInfo.getStacks(), updateInfo.getId(), 2);
         // project 이미지 입력
         fileService.updateFile(files, updateInfo.getId(), 2);
+        if (projectCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트는 유효하지 않습니다."));
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @PostMapping("/delete")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> delete(
+            @RequestBody @ApiParam(value="project info", required = true) ProjectUpdatePostReq updateInfo,
+            @RequestPart(required = false) MultipartFile[] files) throws IOException {
+
+        // project update
+//        int projectCode = projectService.deleteProject(updateInfo);
+        // project 스택 입력
+        stackService.updateStack(updateInfo.getStacks(), updateInfo.getId(), 2);
+        // project 이미지 입력
+        fileService.updateFile(files, updateInfo.getId(), 2);
+
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 }

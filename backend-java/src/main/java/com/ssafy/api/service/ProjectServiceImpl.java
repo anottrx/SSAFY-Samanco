@@ -37,7 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void updateProject(ProjectUpdatePostReq updateInfo) {
-        projectRepositorySupport.updateProject(updateInfo);
+    public int updateProject(ProjectUpdatePostReq updateInfo) {
+        return projectRepositorySupport.updateProject(updateInfo);
     }
 }

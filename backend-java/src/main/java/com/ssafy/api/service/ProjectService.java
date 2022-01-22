@@ -8,5 +8,5 @@ public interface ProjectService {
 
     Project createProject(ProjectRegisterPostReq projectRegisterPostReq);
 
-    void updateProject(ProjectUpdatePostReq updateInfo);
+    int updateProject(ProjectUpdatePostReq updateInfo);
 }
