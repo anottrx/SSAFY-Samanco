@@ -1,14 +1,21 @@
+import React from "react";
+import { useState, useRef, useEffect } from "react";
+
 import Layout from "../../components/layout"
-import { Paper, TextField, Button, Autocomplete } from "@mui/material";
-import styled from "@emotion/styled";
 import DatePicker from "../../components/Common/DatePicker";
-import {LocalizationProvider } from '@mui/lab';
 import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
 import StackSelect from "../../components/Common/Stack/StackSelect";
-import DateAdapter from '@mui/lab/AdapterDateFns';
-import { useState, useRef, useEffect } from "react";
-import React from "react";
 import Counter from "../../components/Common/PositionSelect";
+
+import { Paper, TextField, Button, Autocomplete } from "@mui/material";
+import {LocalizationProvider } from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+
+import styled from "@emotion/styled";
+
+import { registAPI } from "../api/project"
+
+
 var FormData = require('form-data');
 
 const position = [
@@ -58,7 +65,11 @@ function ProjectRegist() {
         background-size: contain;
     `
 
-    const [inputValue, setInputValue] = useState({});
+    // To Do : 나중에 hostId는 로그인 한 userId로 변경하기!
+    const [inputValue, setInputValue] = useState({
+        "collectStatus": "ING",
+        "hostId": 1,
+    });
 
     const [formData, changeFormData] = useState(new FormData());
     const [files, setFiles] = useState('');
@@ -156,6 +167,8 @@ function ProjectRegist() {
                         for (var pair of formData.entries()) {
                             console.log(pair[1]);
                         }
+
+                        registAPI(inputValue, formData);
                     }}
                     >등록하기</Button>
                 </div>

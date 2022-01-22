@@ -45,12 +45,26 @@ function PositionSelect(props) {
         }
     };
     useEffect(() => {
-        let positionArray = [];
-        positions.map(pos => {
-            positionArray.push({[pos.name]:pos.count})
-        })
         // 상위 컴포넌트에게 바뀐 포지션 전달
-        props.changeHandle(positionArray, "positions")
+        positions.map(pos => {
+            switch (pos.name) {
+                case "Front-end":
+                    props.changeHandle(pos.count, "totalFrontendSize")
+                    break;
+                case "Back-end":
+                    props.changeHandle(pos.count, "totalBackendSize")
+                    break;
+                case "Embedded":
+                    props.changeHandle(pos.count, "totalEmbeddedSize")
+                    break;
+                case "Mobile":
+                    props.changeHandle(pos.count, "totalMobileSize")
+                    break;
+                default:
+                    break;
+            }
+        })
+
     }, [positions])
 
     return (

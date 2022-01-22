@@ -46,6 +46,7 @@ public class ProjectController {
             @RequestBody @ApiParam(value="project info", required = true) ProjectRegisterPostReq registerInfo,
             @RequestPart(required = false) MultipartFile[] files) throws IOException {
 
+        System.out.println(registerInfo);
         // project 가입
         Project project = projectService.createProject(registerInfo);
         // project host 추가
