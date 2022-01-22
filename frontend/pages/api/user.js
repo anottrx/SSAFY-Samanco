@@ -10,14 +10,10 @@ async function checkLoginTokenInfo(token) {
 
 async function loginAPI(inputState) {
   return await api
-    .post("/api/v1/auth/login", {
-      id: inputState.id,
+    .post("/api/user/login", {
+      email: inputState.email,
       password: inputState.password,
     })
-    // .post("/api/user/login", {
-    // email: inputState.email,
-    // password: inputState.password
-    // })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }

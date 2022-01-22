@@ -21,7 +21,7 @@ import {
 
 export default function Login() {
   const [inputState, setInputState] = useState({
-    id: "",
+    // id: "",
     email: "",
     password: "",
     showPassword: false,
@@ -41,7 +41,7 @@ export default function Login() {
   useEffect(() => {
     if (cookies.userEmail !== "") {
       setInputState({
-        id: cookies.userEmail,
+        email: cookies.userEmail,
       });
       setRememberId(true);
     } else {
@@ -66,7 +66,7 @@ export default function Login() {
     let isNormal = true;
     let msg = "";
 
-    if (!inputState.id) {
+    if (!inputState.email) {
       isNormal = false;
       msg = "이메일을 입력해주세요.";
     } else if (!inputState.password) {
@@ -85,14 +85,14 @@ export default function Login() {
             setCookie("userToken", res.accessToken); // 쿠키 설정
 
             if (rememberId) {
-              setCookie("userEmail", inputState.id);
+              setCookie("userEmail", inputState.email);
             } else {
               setCookie("userEmail", "");
             }
             getUserInfo(res.accessToken).then((res) => {
-              console.log(res);
-              sessionStorage.setItem("userId", inputState.id);
-              sessionStorage.setItem("email", res.email);
+              alert(res);
+              sessionStorage.setItem("userId", res.id);
+              sessionStorage.setItem("email", inputState.email);
               sessionStorage.setItem("nickname", res.nickname);
             });
             // Router.push("/");
@@ -134,10 +134,10 @@ export default function Login() {
         <br />
         <FormControl sx={{ width: 280 }}>
           <OutlinedInput
-            // id="id"
-            id="margin-none"
+            id="email"
+            // id="margin-none"
             placeholder="이메일"
-            value={inputState.id}
+            value={inputState.email}
             onChange={handleChange}
           />
         </FormControl>
