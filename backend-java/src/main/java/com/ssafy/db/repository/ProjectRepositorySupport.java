@@ -1,6 +1,8 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.api.model.PositionDto;
+import com.ssafy.api.model.ProjectDto;
 import com.ssafy.api.request.ProjectDeletePostReq;
 import com.ssafy.api.request.ProjectUpdatePostReq;
 import com.ssafy.db.entity.Project;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ProjectRepositorySupport {
@@ -80,5 +84,14 @@ public class ProjectRepositorySupport {
             }
         }
         return null;
+    }
+
+    public ProjectDto selectProject(Long projectId) {
+        Project result = jpaQueryFactory.selectFrom(qProject).where(qProject.id.eq(projectId)).fetchOne();
+        List<PositionDto> positionDtos=new ArrayList<>();
+        positionDtos.add(new PositionDto("FRONTEND", result.getTotalFrontendSize()));
+
+//                [{"total_frontend": 3}, {"current_frontend": 1}]
+
     }
 }

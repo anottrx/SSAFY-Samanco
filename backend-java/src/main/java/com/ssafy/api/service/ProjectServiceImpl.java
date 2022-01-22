@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.model.PositionDto;
+import com.ssafy.api.model.ProjectDto;
 import com.ssafy.api.request.ProjectDeletePostReq;
 import com.ssafy.api.request.ProjectRegisterPostReq;
 import com.ssafy.api.request.ProjectUpdatePostReq;
@@ -10,6 +12,8 @@ import com.ssafy.db.repository.ProjectRepositorySupport;
 import com.ssafy.db.repository.StackRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -60,5 +64,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project selectByHost(Long userId) {
         return projectRepositorySupport.selectByHost(userId);
+    }
+
+    @Override
+    public ProjectDto selectProject(Long projectId) {
+        return projectRepositorySupport.selectProject(projectId);
     }
 }

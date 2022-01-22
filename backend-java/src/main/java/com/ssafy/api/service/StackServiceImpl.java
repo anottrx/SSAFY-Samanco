@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.model.StackGradeDto;
 import com.ssafy.db.entity.StackGrade;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.StackRepository;
@@ -47,5 +48,10 @@ public class StackServiceImpl implements StackService{
         stackRepositorySupport.deleteStack(id, flag);
         createStack(stacks, id, flag);
 
+    }
+
+    @Override
+    public List<StackGradeDto> selectStack(Long id, int flag) {
+        return stackRepositorySupport.selectStack(id, flag);
     }
 }
