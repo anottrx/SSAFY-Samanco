@@ -47,7 +47,6 @@ export default function MyInfo() {
   });
 
   if (authChange) {
-    
   }
 
   const cookies = new Cookies();
@@ -119,17 +118,18 @@ export default function MyInfo() {
   const handleQuitClick = (event) => {
     const userId = sessionStorage.getItem("userId");
     if (window.confirm("탈퇴하시겠습니까?")) {
-      // deleteUserAPI(userId).then((res) => {
-      // if (res.statusCode == 200) {
-      // 탈퇴 성공 시
-      alert("다음에는 오프라인에서 함께 코딩해요!");
-      sessionStorage.clear();
-      cookies.set("userToken", "");
-      cookies.set("userEmail", "");
-      // 페이지 이동
-      document.location.href = "/";
-      // } else alert(`${res.message}`);
-      // });
+      deleteUserAPI(userId).then((res) => {
+        if (res.statusCode == 200) {
+          // 탈퇴 성공 시
+          alert("다음에는 오프라인에서 함께 코딩해요!");
+          sessionStorage.clear();
+          cookies.set("userToken", "");
+          cookies.set("userEmail", "");
+          // 페이지 이동
+          window.history.forward();
+          document.location.href = "/";
+        } else alert(`${res.message}`);
+      });
     } else {
       alert("좋아요! 싸피사만코와 오래오래 코딩해요!");
     }

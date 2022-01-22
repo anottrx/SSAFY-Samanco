@@ -90,8 +90,9 @@ export default function Login() {
               setCookie("userEmail", "");
             }
             getUserInfo(res.accessToken).then((res) => {
+              // console.log(res);
               alert(res);
-              sessionStorage.setItem("userId", res.id);
+              sessionStorage.setItem("userId", res.userId);
               sessionStorage.setItem("email", inputState.email);
               sessionStorage.setItem("nickname", res.nickname);
             });

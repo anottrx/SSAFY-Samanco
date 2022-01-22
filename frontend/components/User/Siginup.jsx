@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Router from "next/router";
 import {
   registAPI,
   idCheckAPI,
@@ -16,14 +15,13 @@ import {
   OutlinedInput,
   Button,
 } from "@mui/material";
-import Select from "@mui/material/Select";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
+import Select from '@mui/material/Select';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
 import DatePicker from "../../components/Common/DatePicker";
 import styled from "@emotion/styled";
 import { LocalizationProvider } from "@mui/lab";
 import DateAdapter from "@mui/lab/AdapterDateFns";
-import MenuItem from "@mui/material/MenuItem";
 
 export default function Regist() {
   // id, password 유효성 검사 반환 결과 : idCheckRes, pwCheckRes
@@ -39,6 +37,7 @@ export default function Regist() {
   const [showEmailCodeCheck, setShowEmailCodeCheck] = useState(false);
 
   const [inputState, setInputState] = useState({
+    id: "",
     name: "",
     password: "",
     passwordConfirm: "",
@@ -50,7 +49,7 @@ export default function Regist() {
     birthday: "",
     generation: "",
     studentId: "",
-    stacks: [],
+    stacks: "",
     position: "",
     link: "",
     description: "",
@@ -301,15 +300,16 @@ export default function Regist() {
     } else if (!inputState.nickname) {
       isNormal = false;
       msg = "닉네임을 입력해주세요.";
+    } else if (!koreanReg.test(inputState.nickname)) {
+      isNormal = false;
+      msg = "닉네임 양식을 확인해주세요";
+    } else if (!inputState.studentId) {
+      isNormal = false;
+      msg = "학번을 입력해주세요.";
+    } else if (!inputState.userClass) {
+      isNormal = false;
+      msg = "반을 입력해주세요.";
     }
-    //  else if (!inputState.studentId) {
-    //   isNormal = false;
-    //   msg = "학번을 입력해주세요.";
-    // } else if (!inputState.userClass) {
-    //   isNormal = false;
-    //   msg = "반을 입력해주세요.";
-    // }
-
     console.log(inputState);
     if (isNormal) {
       registAPI(inputState).then((res) => {
@@ -320,8 +320,7 @@ export default function Regist() {
           alert("가입이 되었습니다!");
           // 페이지 이동
           window.history.forward();
-          Router.push("/login");
-          // navigate("/login", { replace: true });
+          navigate("/login", { replace: true });
         } else alert(`${res.message}`);
       });
     } else {
@@ -373,9 +372,48 @@ export default function Regist() {
       >
         <h1>회원가입</h1>
         {/* <form > */}
+        {/* 아이디 */}
+        <div className="mb-6">
+          <label className="">아이디</label>
+          {/* <input
+            type="text"
+            id="id"
+            value={inputState.id}
+            onChange={(e) => {
+              handleChange(e);
+              idHandleChange(e);
+            }}
+            className=""
+            placeholder="4~8자리"
+            required=""
+          ></input> */}
+          {/* 아이디 유효성 결과 */}
+          {/* 1. 사용 가능 */}
+          {/* {inputState.id != "" && idCheckRes && idCheckRes.code == 200 ? (
+            <div className="" role="alert">
+              <span className="font-medium">{idCheckRes.msg}</span>
+            </div>
+          ) : null} */}
+          {/* 2. 사용 불가능 */}
+          {/* {inputState.id != "" && idCheckRes && idCheckRes.code != 200 ? (
+            <div className="" role="alert">
+              <span className="font-medium">{idCheckRes.msg}</span>
+            </div>
+          ) : null} */}
+        </div>
         {/* 이메일 */}
         <div>
           <label>이메일</label>
+          {/* <input
+            type="email"
+            id="email"
+            value={inputState.email}
+            onChange={handleChange}
+            className=""
+            placeholder=""
+            required=""
+            disabled={authFin ? true : false}
+          ></input> */}
           <br />
           <OutlinedInput
             type="email"
@@ -404,7 +442,7 @@ export default function Regist() {
           <OutlinedInput
             type="text"
             id="nickname"
-            placeholder=""
+            placeholder="닉네임은 한글 2자리 이상"
             value={inputState.nickname}
             onChange={(e) => {
               handleChange(e);
@@ -412,6 +450,18 @@ export default function Regist() {
             }}
             sx={{ width: 240 }}
           />
+          {/* <input
+            type="text"
+            id="nickname"
+            value={inputState.nickname}
+            onChange={(e) => {
+              handleChange(e);
+              nicknameHandleChange(e);
+            }}
+            className=""
+            placeholder=""
+            required=""
+          ></input> */}
           {/* 닉네임 유효성 결과 */}
           {/* 1. 사용 가능 */}
           {inputState.nickname != "" &&
@@ -483,77 +533,68 @@ export default function Regist() {
         </div>
         {/* 기수 */}
         <div className="mb-6">
-          <label>기수</label>
-          <x sx={{ m: 1, minWidth: 120 }}>
-            <Select id="generation" onChange={handleChange}>
-              {generationOptions.map((opt) => {
-                return (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </x>
-          {/* 반 */}
-          <label>반</label>
-          <x sx={{ m: 1, minWidth: 280 }}>
-            <Select id="userClass" onChange={handleChange}>
-              {classOptions.map((opt) => {
-                return (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </x>
-          {/* 학번 */}
-          <div className="mb-6">
-            <label>학번</label>
-            <input
-              type="text"
-              id="studentId"
-              value={inputState.studentId}
+          <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <Select
+              value={inputState.generation}
               onChange={handleChange}
-              placeholder="싸피에서 제공받은 학번"
-              required=""
-            ></input>
-          </div>
+              displayEmpty
+              // inputProps ={generationOptions}
+              // inputProps={{ "aria-label": "Without label" }}
+              // options={generationOptions}
+              MenuItem={generationOptions}
+            >
+              {/* <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem> */}
+            </Select>
+            <FormHelperText>Without label</FormHelperText>
+          </FormControl>
+          <SelectGenerationBox
+            options={generationOptions}
+            value={inputState.generation}
+          ></SelectGenerationBox>
+          {/* 반 */}
+          <SelectClassBox
+            options={classOptions}
+            value={inputState.userClass}
+          ></SelectClassBox>
+          {/* 학번 */}
+          <label className="">학번</label>
+          <input
+            type="text"
+            id="studentId"
+            value={inputState.studentId}
+            onChange={handleChange}
+            placeholder="싸피에서 제공받은 학번"
+            required=""
+          ></input>
         </div>
         {/* 이름 */}
         <div className="mb-6">
           <label className="">이름</label>
-          <br />
-          <OutlinedInput
+          <input
             type="text"
             id="name"
             value={inputState.name}
-            onChange={(e) => {
-              handleChange(e);
-            }}
-            sx={{ width: 240 }}
-          />
+            onChange={handleChange}
+            className=""
+            placeholder="이름은 한글만 가능합니다."
+            required=""
+          ></input>
         </div>
         {/* 분야 */}
         <div className="mb-6">
-          <label>분야</label>
-          <x sx={{ m: 1, minWidth: 120 }}>
-            <Select id="position" onChange={handleChange}>
-              {positionOptions.map((opt) => {
-                return (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </x>
+          <label className="">분야</label>
+          <SelectClassBox
+            options={positionOptions}
+            value={inputState.position}
+          ></SelectClassBox>
         </div>
         {/* 생년월일 */}
         <div className="mb-6">
-          <label>생년월일</label>
-          <br />
           <LocalizationProvider dateAdapter={DateAdapter}>
             <DatePickerWrapper>
               <DatePicker label="생년월일" value={inputState.birthday} />
@@ -564,21 +605,18 @@ export default function Regist() {
         <div className="mb-6">
           <label className="">전화번호</label>
           <br />
-          <OutlinedInput
+          <input
             type="number"
             id="phone"
-            placeholder="01012345678"
             value={inputState.phone}
-            onChange={(e) => {
-              handleChange(e);
-            }}
-            sx={{ width: 240 }}
-          />
+            onChange={handleChange}
+            placeholder="'-' 없이 입력해주세요"
+            required=""
+          ></input>
         </div>
         {/* 링크 */}
         <div className="mb-6">
           <label className="">링크</label>
-          <br />
           <button className="">추가</button>
         </div>
         {/* 자기소개 */}

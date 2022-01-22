@@ -20,23 +20,23 @@ async function loginAPI(inputState) {
 
 async function registAPI(inputState) {
   return await api
-    .post("/api/v1/users", {
-      // .post("/api/user", {
-      id: inputState.id,
+    // .post("/api/v1/users", {
+    .post("/api/user", {
+      // id: inputState.id,
       email: inputState.email,
       name: inputState.name,
       password: inputState.password,
       phone: inputState.phone,
-      //   nickname: inputState.nickname,
-      //   birthday: inputState.birthday,
-      //   generation: inputState.generation,
-      //   userClass: inputState.userClass,
-      //   studentId: inputState.studentId,
-      //   stacks: inputState.stacks, // array
-      //   position: inputState.position,
-      //   link: inputState.link, // ,로 자르기
-      //   description: inputState.description,
-      //   image_id: inputState.image_id,
+      nickname: inputState.nickname,
+      birthday: inputState.birthday,
+      generation: inputState.generation,
+      userClass: inputState.userClass,
+      studentId: inputState.studentId,
+      stacks: inputState.stacks, // array
+      position: inputState.position,
+      link: inputState.link, // ,로 자르기
+      description: inputState.description,
+      image_id: inputState.image_id,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
@@ -63,10 +63,10 @@ async function checkCodeAPI(code) {
 }
 
 async function getUserInfo(token) {
-  // 내 정보 조회
+  // 내 정보를 조회 -> 이중에서 email, nickname, userId 받음
+  // return await api
   return await getAuth(token)
-    .post("/api/user/me")
-    //   .get("/api/user/me")
+    .get("/api/user/auth")
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
