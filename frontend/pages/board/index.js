@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
-import styled from "@emotion/styled";
+
 import Router from "next/router";
 import Layout from "../../components/layout";
 import SearchBar from "../../components/Common/Search";
@@ -49,25 +49,6 @@ export default function Board() {
     setValue(newValue);
   };
 
-  const ItemWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: left;
-  `
-
-  const ProjectActions = styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  `
-
-  const CusButton = styled(Button)`
-    height: fit-content;
-  `
 
   return (
     <Layout>
@@ -82,17 +63,6 @@ export default function Board() {
               <Tab label="사람구해요" {...a11yProps(4)} />
             </Tabs>
           </Box>
-          <ItemWrapper>
-            <ProjectActions>
-              <SearchBar></SearchBar>
-              <CusButton variant="outlined" size="medium"
-                onClick={() => {
-                  Router.push("/board/BoardRegist");
-                }}>
-                등록하기
-              </CusButton>
-            </ProjectActions>
-          </ItemWrapper>
           <TabPanel value={value} index={0}>
             <BoardList tag="notice"/>
           </TabPanel>

@@ -3,7 +3,6 @@ import { Paper, TextField, Box, Button } from "@mui/material";
 import styled from "@emotion/styled";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
-import Counter from "../../components/Common/PositionSelect";
 var FormData = require('form-data');
 
 
@@ -30,20 +29,15 @@ function BoardRegist() {
 
     const [inputValue, setInputValue] = useState({});
 
-    const [formData, changeFormData] = useState(new FormData());
-    const [files, setFiles] = useState('');
-
 
     const changeHandle = (value, name) => {
         inputValue[name] = value;
-        // 리렌더링 X
     }
 
     return (
         <Layout>
             <h1>Board Regist</h1>
             <CusPaper>   
-                <Counter changeHandle={changeHandle}></Counter>
 
                 <TextField fullWidth name="title" label="제목" onChange={(e) => changeHandle(e.target.value, "title")}
                     value={inputValue.title}/>
@@ -73,4 +67,4 @@ function BoardRegist() {
     )
 }
 
-export default React.memo(BoardRegist);
+export default BoardRegist;
