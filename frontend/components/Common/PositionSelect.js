@@ -28,6 +28,8 @@ function PositionSelect(props) {
     // 선택된 포지션이 바뀔 때마다 처리
     const handleAutocompleteChange = (event) => {
         const name = event.target.innerText;
+
+        if (!name) return false;
         let isInclude = false;
 
         positions.map(row => {
@@ -45,12 +47,36 @@ function PositionSelect(props) {
         }
     };
     useEffect(() => {
-        let positionArray = [];
-        positions.map(pos => {
-            positionArray.push({[pos.name]:pos.count})
-        })
         // 상위 컴포넌트에게 바뀐 포지션 전달
-        props.changeHandle(positionArray, "positions")
+        let [FE, BE, EBD, MB] = [false, false, false, false];
+        positions.map(pos => {
+            switch (pos.name) {
+                case "Front-end":
+                    props.changeHandle(pos.count, "totalFrontendSize")
+                    FE = true;
+                    break;
+                case "Back-end":
+                    props.changeHandle(pos.count, "totalBackendSize")
+                    BE = true;
+                    break;
+                case "Embedded":
+                    props.changeHandle(pos.count, "totalEmbeddedSize")
+                    EBD = true;
+                    break;
+                case "Mobile":
+                    props.changeHandle(pos.count, "totalMobileSize")
+                    MB = true;
+                    break;
+                default:
+                    break;
+            }
+        })
+
+        if (!FE) props.changeHandle(0, "totalFrontendSize")
+        if (!BE) props.changeHandle(0, "totalBackendSize")
+        if (!EBD) props.changeHandle(0, "totalEmbeddedSize")
+        if (!MB) props.changeHandle(0, "totalMobileSize")
+
     }, [positions])
 
     return (
@@ -62,7 +88,7 @@ function PositionSelect(props) {
              freeSolo
              options={position.map((stack) => stack.name)}
              onChange={handleAutocompleteChange}
-             renderInput={(params) => <TextField {...params} label="포지션" />}
+             renderInput={(params) => <TextField {...params} label="포지션 *" />}
          />
          </Box>
          </Tooltip>

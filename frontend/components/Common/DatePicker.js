@@ -22,9 +22,9 @@ export default function DatePicker(props){
 
     useEffect(() => {
         if (props.label.includes("시작")) {
-            props.changeHandle(dateValue,"start_date")
+            props.changeHandle(dateValue,"startDate")
         } else if (props.label.includes("종료")) {
-            props.changeHandle(dateValue,"end_date")
+            props.changeHandle(dateValue,"endDate")
         }
     }, [dateValue])
 

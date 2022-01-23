@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from 'react-redux';
 
 import Layout from "../../components/layout"
-import { Paper, TextField, Box, Button, Autocomplete } from "@mui/material";
+import { Paper, TextField, Button, Autocomplete, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import {LocalizationProvider } from '@mui/lab';
 
@@ -11,8 +11,7 @@ import StackSelect from "../../components/Common/Stack/StackSelect";
 import Counter from "../../components/Common/PositionSelect";
 
 import styled from "@emotion/styled";
-
-var FormData = require('form-data');
+import { updateAPI } from "../api/project"
 
 const position = [
     {name:"Front-end", count: 0},
@@ -64,14 +63,12 @@ function projectUpdate() {
     `
 
     const [inputValue, setInputValue] = useState({
-        title: detail.title,
-        description: detail.description,
         schedule: detail.schedule,
-        start_date: detail.start_date,
-        end_date: detail.end_date,
+        startDate: detail.startDate,
+        endDate: detail.endDate,
         stacks: detail.stacks,
         positions: detail.positions,
-        hostPosition: detail.hostPosition
+        hostPosition: detail.hostPosition,
     });
 
     console.log(detail)
@@ -82,11 +79,6 @@ function projectUpdate() {
     const onImgChange = (event) => {
         const file = event.target.files[0];
         setFiles(file)
-
-        const newData = formData;
-        newData.append("file", file);
-        changeFormData(newData);
-        console.log(file)
     }
 
     const uploadRef = useRef(null);
@@ -119,6 +111,27 @@ function projectUpdate() {
         inputValue["hostPosition"] = name;
     };
 
+    async function validateCheck() {
+        let [check, msg] = [true, ""]
+        if (typeof(inputValue.title)=='undefined')
+            inputValue["title"] = detail.title;
+        else if (inputValue.title=="")
+            [check, msg] = [false, "프로젝트 이름을 입력해주세요."]
+        else if (typeof(inputValue.description)=='undefined')
+            inputValue["description"] = detail.description;
+        else if (typeof(inputValue.stacks)=='undefined' || inputValue.stacks.length == 0)   
+            [check, msg] = [false, "프로젝트 스택을 한가지 이상 선택해주세요."]
+        else if (typeof(inputValue.hostPosition)=='undefined')   
+            [check, msg] = [false, "본인의 포지션을 선택해주세요."]
+        else if (inputValue.totalFrontendSize + inputValue.totalBackendSize + 
+            inputValue.totalEmbeddedSize + inputValue.totalMobileSize <= 1)   
+            [check, msg] = [false, "팀원은 한 명이상 존재해야 합니다."]
+        
+        if (!check)
+            alert(msg)
+        return check;
+    }
+
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
         <Layout>
@@ -131,11 +144,32 @@ function projectUpdate() {
                 
                 <input ref={uploadRef} type="file"
                     className="imgInput" id="projectImg"
-                    accept="image/*" name="file"
+                    accept="image/*" name="file" encType="multipart/form-data"
                     onChange={onImgChange}></input>
 
-                <TextField fullWidth name="title" label="프로젝트 이름" onChange={(e) => changeHandle(e.target.value, "title")}
-                    value={inputValue.title}/>
+                <FormControl>
+                    <InputLabel id="status-select-label">모집 상태</InputLabel>
+                    <Select
+                        labelId="status-select-label"
+                        id="status-select"
+                        name="collectStatus"
+                        defaultValue={detail.collectStatus}
+                        value={inputValue.collectStatus}
+                        label="모집 상태"
+                        onChange={(e) => changeHandle(e.target.value, "collectStatus")}
+                    >
+                        <MenuItem value={"ING"}>모집중</MenuItem>
+                        <MenuItem value={"END"}>모집 완료</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <TextField 
+                    fullWidth name="title" 
+                    label="프로젝트 이름" 
+                    onChange={(e) => changeHandle(e.target.value, "title")}
+                    defaultValue={detail.title}
+                    value={inputValue.title}
+                    />
                 <TextField
                     id="outlined-textarea"
                     name="description"
@@ -145,6 +179,7 @@ function projectUpdate() {
                     rows={4}
                     multiline
                     onChange={(e) => changeHandle(e.target.value, "description")}
+                    defaultValue={detail.description}
                     value={inputValue.description}
                 />
 
@@ -152,8 +187,8 @@ function projectUpdate() {
                 <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="프로젝트 스택"></StackSelect>
                 
                 <DatePickerWrapper>
-                    <DatePicker initDate={inputValue.start_date} changeHandle={changeHandle} label="시작 날짜"/>
-                    <DatePicker initDate={inputValue.end_date}  changeHandle={changeHandle} label="종료 날짜"/>
+                    <DatePicker initDate={inputValue.startDate} changeHandle={changeHandle} label="시작 날짜"/>
+                    <DatePicker initDate={inputValue.endDate}  changeHandle={changeHandle} label="종료 날짜"/>
                 </DatePickerWrapper>
 
                 <Autocomplete
@@ -169,7 +204,29 @@ function projectUpdate() {
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
-                        console.log(inputValue);
+                        if (validateCheck()) {
+                            const formData = new FormData();
+
+                            Object.keys(inputValue).map(key => {
+                                let value = inputValue[key];
+                                formData.append(key, JSON.stringify(value));
+                            })
+
+                            formData.append("file",files);
+
+                            for(var key of formData.entries())
+                            {
+                                console.log(`${key}`);
+                            } 
+
+                            updateAPI(formData).then((res) => {
+                                if (res.statusCode == 200) {
+                                    alert("프로젝트가 수정되었습니다.")
+                                    // To do: 해당 페이지로 이동
+                                    Router.push("/project");
+                                }
+                            });
+                        }
                     }}>수정하기</Button>
                 </div>
             </CusPaper>

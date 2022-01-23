@@ -14,6 +14,8 @@ import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Di
 import { useState } from "react";
 import Router from "next/router";
 
+import { deleteAPI } from "../api/project";
+
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -74,8 +76,19 @@ const ProjectDetail = () => {
     function DetailOperation() {
         const [open, setOpen] = useState(false);
 
-        const JoinDialogOpen = () => { setOpen(true) }
-        const JoinDialogClose = () => { setOpen(false) }
+        const deleteDialogOpen = () => { setOpen(true) }
+        const deleteOperation = () => {
+            // To do: projectId, userId 수정해야함!
+            let data = {id: 1, userId: 1};
+            deleteAPI(data)
+            .then(res => {
+                if (res.statusCode == 200)
+                    console.log("삭제")
+            })
+            .catch(err => console.log(err))
+            setOpen(false);
+        }
+        const deleteDialogClose = () => { setOpen(false) }
 
 
         return (
@@ -84,18 +97,18 @@ const ProjectDetail = () => {
                 <Button onClick={() => {
                     Router.push("/project/update");
                 }}>수정</Button>
-                <Button onClick={JoinDialogOpen}>삭제</Button>
+                <Button onClick={deleteDialogOpen}>삭제</Button>
             </ButtonGroup>
             <Dialog
                 open={open}
-                onClose={JoinDialogClose}
+                onClose={deleteDialogClose}
                 >
                 <DialogTitle>
                     {"삭제 하시겠습니까?"}
                 </DialogTitle>
                 <DialogActions>
-                <Button onClick={JoinDialogClose}>취소</Button>
-                <Button onClick={JoinDialogClose} autoFocus>
+                <Button onClick={deleteDialogClose}>취소</Button>
+                <Button onClick={deleteOperation} autoFocus>
                     확인
                 </Button>
                 </DialogActions>
@@ -110,6 +123,7 @@ const ProjectDetail = () => {
                 <div>기술 스택</div>
                 <StackList stackData={detail.stacks}></StackList>
                 <br />
+                {/* To Do : BE 받는 데이터 변경되면 수정 */}
                 <div>모집 팀원</div>
                 <PositionList positionData={detail.positions}></PositionList>        
             </ContentWrapper>
@@ -157,7 +171,7 @@ const ProjectDetail = () => {
                         진행 기간
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} >
-                        {detail.start_date} ~  {detail.end_date}
+                        {detail.startDate} ~  {detail.endDate}
                     </Typography>
                 </div>
                 <div>

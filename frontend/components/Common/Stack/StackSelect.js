@@ -77,7 +77,7 @@ function StackSelect(props){
             stackArray.push({[stack]:1});
         })
         // 상위 컴포넌트에게 바뀐 스택 전달
-        props.changeHandle(stackArray,"stack");
+        props.changeHandle(stackArray,"stacks");
     }, [stackName])
 
     return(

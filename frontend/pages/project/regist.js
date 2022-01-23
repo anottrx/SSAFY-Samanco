@@ -1,15 +1,20 @@
+import React from "react";
+import { useState, useRef, useEffect } from "react";
+
 import Layout from "../../components/layout"
-import { Paper, TextField, Button, Autocomplete } from "@mui/material";
-import styled from "@emotion/styled";
 import DatePicker from "../../components/Common/DatePicker";
-import {LocalizationProvider } from '@mui/lab';
 import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
 import StackSelect from "../../components/Common/Stack/StackSelect";
-import DateAdapter from '@mui/lab/AdapterDateFns';
-import { useState, useRef, useEffect } from "react";
-import React from "react";
 import Counter from "../../components/Common/PositionSelect";
-var FormData = require('form-data');
+
+import { Paper, TextField, Button, Autocomplete } from "@mui/material";
+import {LocalizationProvider } from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+
+import styled from "@emotion/styled";
+
+import { registAPI } from "../api/project"
+import Router from "next/router";
 
 const position = [
     {name:"Front-end", count: 0},
@@ -58,20 +63,20 @@ function ProjectRegist() {
         background-size: contain;
     `
 
-    const [inputValue, setInputValue] = useState({});
+    // To Do : 나중에 hostId는 로그인 한 userId로 변경하기!
+    const [inputValue, setInputValue] = useState({
+        "collectStatus": "ING",
+        "hostId": 1,
+    });
 
-    const [formData, changeFormData] = useState(new FormData());
+    // const formData = new FormData();
     const [files, setFiles] = useState('');
 
     const onImgChange = (event) => {
         const file = event.target.files[0];
         setFiles(file)
-
-        const newData = new FormData();
-        newData.append("file", file);
-        changeFormData(newData);
     }
-
+    
     const uploadRef = useRef(null);
 
     useEffect(() => {
@@ -102,6 +107,23 @@ function ProjectRegist() {
         inputValue["hostPosition"] = name;
     };
 
+    async function validateCheck() {
+        let [check, msg] = [true, ""]
+        if (typeof(inputValue.title)=='undefined')
+            [check, msg] = [false, "프로젝트 이름을 입력해주세요."]
+        else if (typeof(inputValue.stacks)=='undefined' || inputValue.stacks.length == 0)   
+            [check, msg] = [false, "프로젝트 스택을 한가지 이상 선택해주세요."]
+        else if (typeof(inputValue.hostPosition)=='undefined')   
+            [check, msg] = [false, "본인의 포지션을 선택해주세요."]
+        else if (inputValue.totalFrontendSize + inputValue.totalBackendSize + 
+            inputValue.totalEmbeddedSize + inputValue.totalMobileSize <= 1)   
+            [check, msg] = [false, "팀원은 한 명이상 존재해야 합니다."]
+        
+        if (!check)
+            alert(msg)
+        return check;
+    }
+
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
         <Layout>
@@ -114,10 +136,10 @@ function ProjectRegist() {
                 
                 <input ref={uploadRef} type="file"
                     className="imgInput" id="projectImg"
-                    accept="image/*" name="file"
+                    accept="image/*" name="file" encType="multipart/form-data"
                     onChange={onImgChange}></input>
 
-                <TextField fullWidth name="title" label="프로젝트 이름" onChange={(e) => changeHandle(e.target.value, "title")}
+                <TextField required fullWidth name="title" label="프로젝트 이름" onChange={(e) => changeHandle(e.target.value, "title")}
                     value={inputValue.title}/>
                 <TextField
                     id="outlined-textarea"
@@ -131,7 +153,7 @@ function ProjectRegist() {
                     value={inputValue.description}
                 />
 
-                <StackSelect changeHandle={changeHandle} label="프로젝트 스택"></StackSelect>
+                <StackSelect changeHandle={changeHandle} label="프로젝트 스택 *"></StackSelect>
                 
                 <DatePickerWrapper>
                     <DatePicker changeHandle={changeHandle} label="시작 날짜"/>
@@ -144,17 +166,34 @@ function ProjectRegist() {
                     freeSolo
                     options={position.map((stack) => stack.name)}
                     onChange={handleAutocompleteChange}
-                    renderInput={(params) => <TextField {...params} label="본인 포지션" />}
+                    renderInput={(params) => <TextField {...params} label="본인 포지션 *" />}
                 />
 
                 <Counter changeHandle={changeHandle}></Counter>
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
-                        console.log(inputValue);
-                    
-                        for (var pair of formData.entries()) {
-                            console.log(pair[1]);
+                        if (validateCheck()) {
+                            const formData = new FormData();
+
+                            Object.keys(inputValue).map(key => {
+                                let value = inputValue[key];
+                                formData.append(key, JSON.stringify(value));
+                            })
+
+                            formData.append("file",files);
+
+                            for(var key of formData.entries())
+                            {
+                                console.log(`${key}`);
+                            } 
+
+                            registAPI(formData).then((res) => {
+                                if (res.statusCode == 200) {
+                                    alert("프로젝트가 등록되었습니다.")
+                                    Router.push("/project");
+                                }
+                            });
                         }
                     }}
                     >등록하기</Button>
