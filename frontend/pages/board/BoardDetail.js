@@ -7,6 +7,7 @@ import styles from "../../styles/Board.module.css"
 
 export default function BoardDetail(props) {
     const router = useRouter();
+    const no = router.query.board_id;
 
     const CusPaper = styled(Paper)`
         width: 100%;
@@ -28,7 +29,7 @@ export default function BoardDetail(props) {
     `
 
     useEffect(()=>{
-        console.log("아이디는"+router.query.board_id);
+        console.log("아이디는"+no);
     });
 
     return (
@@ -45,7 +46,6 @@ export default function BoardDetail(props) {
                     multiline
                 />
             </CusPaper>
-            
         </Layout>
     )
 }
