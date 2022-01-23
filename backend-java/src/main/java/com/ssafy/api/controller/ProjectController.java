@@ -1,9 +1,9 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.request.ProjectDeletePostReq;
-import com.ssafy.api.request.ProjectRegisterPostReq;
-import com.ssafy.api.request.ProjectUpdatePostReq;
-import com.ssafy.api.request.UserIdPostReq;
+import com.ssafy.api.model.ProjectDto;
+import com.ssafy.api.request.*;
+import com.ssafy.api.response.ProjectSelectAllPostRes;
+import com.ssafy.api.response.ProjectSelectPostRes;
 import com.ssafy.api.service.ProjectService;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.ssafy.common.util.JsonUtil.getListMapFromString;
 
@@ -50,7 +51,8 @@ public class ProjectController {
     public ResponseEntity<? extends BaseResponseBody> register(
             @RequestParam("hostId") Long hostId, @RequestParam("hostPosition") String hostPosition,
             @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam("title") String title,
-            @RequestParam("description") String description, @RequestParam("collectStatus") String collectStatus,
+            @RequestParam("description") String description,
+            @RequestParam(required = false, value="collectStatus", defaultValue="ING") String collectStatus,
             @RequestParam(required = false, value="stacks") String stacks,
             @RequestParam(required = false, value="totalFrontendSize", defaultValue = "0") int totalFrontendSize,
             @RequestParam(required = false, value="totalBackendSize", defaultValue = "0") int totalBackendSize,
@@ -70,7 +72,7 @@ public class ProjectController {
         registerInfo.setTotalBackendSize(totalBackendSize);
         registerInfo.setTotalMobileSize(totalMobileSize);
         registerInfo.setTotalEmbeddedSize(totalEmbeddedSize);
-        registerInfo.setStacks(getListMapFromString(stacks));
+//        registerInfo.setStacks(getListMapFromString(stacks));
 
         if (files!=null) {
             System.out.println(files[0].getOriginalFilename());
@@ -79,10 +81,14 @@ public class ProjectController {
         // project 가입
         Project project = projectService.createProject(registerInfo);
         // project host 추가
-        userService.addProject(project.getHostId(), project.getId());
+        int addProjectCode=userService.addProject(project.getHostId(), project.getId());
 
+        if (addProjectCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 중복하여 등록할 수 없습니다."));
+        }
         // project 스택 입력
-        if (registerInfo.getStacks()!=null) {
+        if (stacks!=null) {
+            registerInfo.setStacks(getListMapFromString(stacks));
             stackService.createStack(registerInfo.getStacks(), project.getId(), 2);
         }
         // project 이미지 입력
@@ -147,7 +153,9 @@ public class ProjectController {
         updateInfo.setTotalBackendSize(totalBackendSize);
         updateInfo.setTotalMobileSize(totalMobileSize);
         updateInfo.setTotalEmbeddedSize(totalEmbeddedSize);
-        updateInfo.setStacks(getListMapFromString(stacks));
+        if (stacks!=null) {
+            updateInfo.setStacks(getListMapFromString(stacks));
+        }
         // project update
         int projectCode=projectService.updateProject(updateInfo);
         // project 스택 update
@@ -178,15 +186,79 @@ public class ProjectController {
     @PostMapping("/host")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectProjectByHost(
             @RequestBody @ApiParam(value="host id", required = true) UserIdPostReq userInfo) throws IOException {
 
-        Project project=projectService.selectByHost(userInfo.getUserId());
+        ProjectDto project=projectService.selectByHost(userInfo.getUserId());
+        if (project==null){
+            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "유효하지 않은 프로젝트입니다.", null));
+        }
+        return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
+    }
 
+    @PostMapping("/user")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectProjectByUser(
+            @RequestBody @ApiParam(value="user id", required = true) UserIdPostReq userInfo) throws IOException {
+
+        ProjectDto project=projectService.selectByUser(userInfo.getUserId());
+        if (project==null){
+            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "유효하지 않은 프로젝트입니다.", null));
+        }
+        return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
+    }
+
+    @PostMapping("/view")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectProject(
+            @RequestBody @ApiParam(value="project id", required = true) ProjectIdPostReq projectInfo) throws IOException {
+
+        ProjectDto project=projectService.selectProject(projectInfo.getId());
+        if (project==null){
+            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "유효하지 않은 프로젝트입니다.", null));
+        }
+        return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
+    }
+
+    @PostMapping("/join")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> joinProject(
+            @RequestBody @ApiParam(value="project id", required = true) ProjectJoinPostReq projectInfo) throws IOException {
+
+        Long projectId=projectInfo.getId();
+        Long userId=projectInfo.getUserId();
+        String position= projectInfo.getPosition();
+        int projectJoinCode=projectService.joinProject(projectId, userId, position);
+        if (projectJoinCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트에 가입할 수 없습니다."));
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
+    @GetMapping
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectProjectAll() throws IOException {
 
+        List<ProjectDto> projects=projectService.selectProjectAll();
+        return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+    }
 }

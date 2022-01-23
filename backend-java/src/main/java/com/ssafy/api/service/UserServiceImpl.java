@@ -96,9 +96,9 @@ public class UserServiceImpl implements UserService {
 		userRepositorySupport.deleteUser(userId);
 		stackRepositorySupport.deleteStack(userId, 1);
 		fileRepositorySupport.deleteFile(userId, 1);
-		Project project=projectRepositorySupport.selectByHost(userId);
-		if (project!=null){
-			projectRepositorySupport.deleteProject(userId, project.getId());
+		Long projectId=projectRepositorySupport.selectByHost(userId);
+		if (projectId!=null){
+			projectRepositorySupport.deleteProject(userId, projectId);
 		}
 
 	}
@@ -106,7 +106,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int addProject(Long userId, Long projectId) {
-		return userRepositorySupport.updateUserProject(userId, projectId);
+		int updateUserProjectCode=userRepositorySupport.updateUserProject(userId, projectId);
+		if (updateUserProjectCode==401){
+			projectRepositorySupport.deleteProject(userId, projectId);
+		}
+		return updateUserProjectCode;
 	}
 
 	@Override

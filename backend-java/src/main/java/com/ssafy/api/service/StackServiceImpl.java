@@ -24,6 +24,9 @@ public class StackServiceImpl implements StackService{
 
     @Override
     public void createStack(List<Map<String, Integer>> stacks, Long id, int flag) {
+        if (stacks==null){
+            return;
+        }
         for (Map<String, Integer> stack: stacks){
             for (Map.Entry<String, Integer>entry: stack.entrySet()){
                 String name= entry.getKey();
@@ -45,8 +48,12 @@ public class StackServiceImpl implements StackService{
 
     @Override
     public void updateStack(List<Map<String, Integer>> stacks, Long id, int flag) {
+        if (stacks==null){
+            return;
+        }
         stackRepositorySupport.deleteStack(id, flag);
         createStack(stacks, id, flag);
+
 
     }
 

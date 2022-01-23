@@ -10,6 +10,7 @@ import com.ssafy.db.entity.QProject;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -76,22 +77,70 @@ public class ProjectRepositorySupport {
         return 401;
     }
 
-    public Project selectByHost(Long userId) {
+    public Long selectByHost(Long userId) {
         if (isValid(userId)){
-            Long projectId = jpaQueryFactory.select(qUser.projectId).from(qUser).fetchOne();
-            if (isValid(projectId)) {
-                return jpaQueryFactory.selectFrom(qProject).where(qProject.id.eq(projectId)).fetchOne();
-            }
+            return jpaQueryFactory.select(qUser.projectId).from(qUser).where(qUser.id.eq(userId)).fetchOne();
         }
         return null;
     }
 
     public ProjectDto selectProject(Long projectId) {
-        Project result = jpaQueryFactory.selectFrom(qProject).where(qProject.id.eq(projectId)).fetchOne();
-        List<PositionDto> positionDtos=new ArrayList<>();
-        positionDtos.add(new PositionDto("FRONTEND", result.getTotalFrontendSize()));
+        Project result = jpaQueryFactory.selectFrom(qProject)
+                .where(qProject.id.eq(projectId), qProject.isDeleted.eq(false)).fetchOne();
+        if (result==null){
+            return null;
+        }
+        List<PositionDto> positions=new ArrayList<>();
+        positions.add(new PositionDto("totalFrontend", result.getTotalFrontendSize()));
+        positions.add(new PositionDto("totalBackend", result.getTotalBackendSize()));
+        positions.add(new PositionDto("totalMobile", result.getTotalMobileSize()));
+        positions.add(new PositionDto("totalEmbedded", result.getTotalEmbeddedSize()));
+        positions.add(new PositionDto("currentFrontend", result.getCurrentFrontendSize()));
+        positions.add(new PositionDto("currentBackend", result.getCurrentBackendSize()));
+        positions.add(new PositionDto("currentMobile", result.getCurrentMobileSize()));
+        positions.add(new PositionDto("currentEmbedded", result.getCurrentEmbeddedSize()));
+        positions.add(new PositionDto("totalSize", result.getSize()));
+        ProjectDto projectDto=new ProjectDto();
+        projectDto.setDescription(result.getDescription());
+        projectDto.setEndDate(result.getEndDate());
+        projectDto.setHostId(result.getHostId());
+        projectDto.setHit(result.getHit());
+        projectDto.setStartDate(result.getStartDate());
+        projectDto.setTitle(result.getTitle());
+        projectDto.setCollectStatus(result.getCollectStatus());
+        projectDto.setId(result.getId());
+        projectDto.setLikes(result.getLikes());
+        projectDto.setPositions(positions);
 
-//                [{"total_frontend": 3}, {"current_frontend": 1}]
+        return projectDto;
+    }
 
+    public Long selectByUser(Long userId) {
+        if (isValid(userId)){
+            return jpaQueryFactory.select(qUser.projectId).from(qUser).where(qUser.id.eq(userId)).fetchOne();
+        }
+        return null;
+    }
+
+    public List<Project> selectProjectAll() {
+        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false)).fetch();
+    }
+
+    @Transactional
+    public int joinProject(Long projectId, String position) {
+        if ("frontend".equalsIgnoreCase(position)){
+            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+                .set(qProject.currentFrontendSize, qProject.currentFrontendSize.add(1)).execute();
+        } else if ("backend".equalsIgnoreCase(position)){
+            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+                    .set(qProject.currentBackendSize, qProject.currentBackendSize.add(1)).execute();
+        } else if ("mobile".equalsIgnoreCase(position)){
+            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+                    .set(qProject.currentMobileSize, qProject.currentMobileSize.add(1)).execute();
+        } else if ("embedded".equalsIgnoreCase(position)){
+            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+                    .set(qProject.currentEmbeddedSize, qProject.currentEmbeddedSize.add(1)).execute();
+        }
+        return 200;
     }
 }
