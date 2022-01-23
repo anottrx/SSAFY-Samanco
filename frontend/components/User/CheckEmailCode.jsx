@@ -34,24 +34,30 @@ export default function CheckEmailCode() {
 
   return (
     <div>
-      <Typography display="inline" sx={{ fontSize: 14 }}>
-        인증번호 확인
-      </Typography>
-      <br />
-      <OutlinedInput
-        type="text"
-        id="code"
-        placeholder="이메일 인증번호"
-        value={code}
-        onChange={codeHandleChange}
-        sx={{ width: 370 }}
-        disabled={authFin ? true : false}
-        endAdornment={
-          <InputAdornment position="end">
-            <Button onClick={compareEmailCodeClick}>확인</Button>
-          </InputAdornment>
-        }
-      />
+      {authFin ? (
+        <></>
+      ) : (
+        <>
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            인증번호 확인
+          </Typography>
+          <br />
+          <OutlinedInput
+            type="text"
+            id="code"
+            placeholder="이메일 인증번호"
+            value={code}
+            onChange={codeHandleChange}
+            sx={{ width: 370 }}
+            disabled={authFin ? true : false}
+            endAdornment={
+              <InputAdornment position="end">
+                <Button onClick={compareEmailCodeClick}>확인</Button>
+              </InputAdornment>
+            }
+          />
+        </>
+      )}
     </div>
   );
 }
