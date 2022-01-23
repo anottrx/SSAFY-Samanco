@@ -107,10 +107,10 @@ function MyApp({ Component, pageProps }) {
             </>
           ) : (
             <>
-              <Button variant="outlined" href="/login">
+              <Button href="/login" sx={{fontSize:12}}>
                 로그인
               </Button>
-              <Button variant="outlined" href="/regist">
+              <Button href="/regist" sx={{fontSize:12}}>
                 회원가입
               </Button>
               {/* <Link href="/login" style={styles.link}>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Router from "next/router";
 import CheckEmailCode from "./CheckEmailCode";
 import PositionList from "../Club/PositionList";
+import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
 
 import {
   registAPI,
@@ -73,27 +74,26 @@ export default function Regist() {
     image_id: "",
   });
 
-  const [stackScore, setStackScore] = useState({
-    HTML: "",
-    CSS: "",
-    JavaScript: "",
-    VueJS: "",
-    React: "",
-    Angular: "",
-    Python: "",
-    Java: "",
-    C: "",
-    Spring: "",
-    MySQL: "",
-    Git: "",
-    AWS: "",
-
-    Docker: "",
-    Linux: "",
-    Jira: "",
-    Django: "",
-    Redis: "",
-  });
+  // const [stackScore, setStackScore] = useState({
+  //   HTML: "",
+  //   CSS: "",
+  //   JavaScript: "",
+  //   VueJS: "",
+  //   React: "",
+  //   Angular: "",
+  //   Python: "",
+  //   Java: "",
+  //   C: "",
+  //   Spring: "",
+  //   MySQL: "",
+  //   Git: "",
+  //   AWS: "",
+  //   Docker: "",
+  //   Linux: "",
+  //   Jira: "",
+  //   Django: "",
+  //   Redis: "",
+  // });
 
   const generationOptions = [
     { value: "1", name: "1기" },
@@ -119,32 +119,33 @@ export default function Regist() {
     { value: "embedded", name: "임베디드" },
   ];
 
-  const stackGroup = [
-    { value: "HTML", label: "HTML" },
-    { value: "CSS", label: "CSS" },
-    { value: "JavaScript", label: "JavaScript" },
-    { value: "VueJS", label: "VueJS" },
-    { value: "React", label: "React" },
-    { value: "Angular", label: "Angular" },
-    { value: "Python", label: "Python" },
-    { value: "Java", label: "Java" },
-    { value: "C/C++/C#", label: "C/C++/C#" },
-    { value: "Spring boot", label: "Spring boot" },
-    { value: "MySQL", label: "MySQL" },
-    { value: "Git", label: "Git" },
-    { value: "AWS", label: "AWS" },
-    { value: "Docker", label: "Docker" },
-    { value: "Linux", label: "Linux" },
-    { value: "Jira", label: "Jira" },
-    { value: "Django", label: "Django" },
-    { value: "Redis", label: "Redis" },
-  ];
+  // const stackGroup = [
+  //   { value: "HTML", label: "HTML" },
+  //   { value: "CSS", label: "CSS" },
+  //   { value: "JavaScript", label: "JavaScript" },
+  //   { value: "VueJS", label: "VueJS" },
+  //   { value: "React", label: "React" },
+  //   { value: "Angular", label: "Angular" },
+  //   { value: "Python", label: "Python" },
+  //   { value: "Java", label: "Java" },
+  //   { value: "C/C++/C#", label: "C/C++/C#" },
+  //   { value: "Spring boot", label: "Spring boot" },
+  //   { value: "MySQL", label: "MySQL" },
+  //   { value: "Git", label: "Git" },
+  //   { value: "AWS", label: "AWS" },
+  //   { value: "Docker", label: "Docker" },
+  //   { value: "Linux", label: "Linux" },
+  //   { value: "Jira", label: "Jira" },
+  //   { value: "Django", label: "Django" },
+  //   { value: "Redis", label: "Redis" },
+  // ];
 
   const DatePickerWrapper = styled.div`
     display: flex;
     & > div {
       flex: 1;
-      margin: 10px 5px;
+      width: 370px;
+      margin: 0px 0px;
     }
   `;
 
@@ -155,48 +156,6 @@ export default function Regist() {
     flex: 1;
   `;
 
-  const SelectGenerationBox = (props) => {
-    const genHandleChange = (e) => {
-      setInputState({
-        ...inputState,
-        generation: e.target.value,
-      });
-      console.log(inputState.generation);
-    };
-    return (
-      <select onChange={genHandleChange}>
-        {props.options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-            defaultValue={props.defaultValue === option.value}
-          >
-            {option.name}
-          </option>
-        ))}
-      </select>
-    );
-  };
-
-  const SelectClassBox = (props) => {
-    const classHandleChange = (e) => {
-      // console.log(e.target.value);
-    };
-    return (
-      <select onChange={classHandleChange}>
-        {props.options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-            defaultValue={props.defaultValue === option.value}
-          >
-            {option.name}
-          </option>
-        ))}
-      </select>
-    );
-  };
-
   const EmailCodeSource = (props) => {
     return (
       <CheckEmailCode />
@@ -204,10 +163,10 @@ export default function Regist() {
     );
   };
 
-  //   const changeHandle = (value, name) => {
-  //     inputValue[name] = value;
-  //     // 리렌더링 X
-  // }
+    const changeHandle = (value, name) => {
+      inputState[name] = value;
+      // 리렌더링 X
+  }
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -532,12 +491,12 @@ export default function Regist() {
         </div>
         {/* 기수 */}
         <div className="mb-6">
-        <div sx={{ flexDirection: "row" }}>
+          <div sx={{ flexDirection: "row" }}>
             <Typography display="inline" sx={{ fontSize: 14, mr: 20.5 }}>
-            기수
+              기수
             </Typography>
             <Typography display="inline" sx={{ fontSize: 14 }}>
-            반
+              반
             </Typography>
           </div>
           <Select
@@ -545,7 +504,7 @@ export default function Regist() {
             onChange={generationHandleChange}
             defaultValue={generationOptions[5].value}
             value={generationOptions.value}
-            sx={{ width: 180, mr: 1.25,fontSize: 14 }}
+            sx={{ width: 180, mr: 1.25, fontSize: 14 }}
           >
             {generationOptions.map((opt) => {
               return (
@@ -628,6 +587,18 @@ export default function Regist() {
             sx={{ width: 370, fontSize: 14 }}
           />
         </div>
+        {/* 생년월일 */}
+        <div className="mb-6" >
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            생년월일
+          </Typography>
+          <br />
+          <LocalizationProvider dateAdapter={DateAdapter} >
+     <DatePickerWrapper>
+              <DatePicker label="생년월일"   value={inputState.birthday} ></DatePicker>
+            </DatePickerWrapper>
+          </LocalizationProvider>
+        </div>
         {/* 분야 */}
         <div className="mb-6">
           <Typography display="inline" sx={{ fontSize: 14 }}>
@@ -653,17 +624,15 @@ export default function Regist() {
             })}
           </Select>
         </div>
-        {/* 생년월일 */}
+        {/* 기술 스택 */}
         <div className="mb-6">
           <Typography display="inline" sx={{ fontSize: 14 }}>
-            생년월일
+            기술 스택
           </Typography>
-          <br />
-          <LocalizationProvider dateAdapter={DateAdapter}>
-            <DatePickerWrapper>
-              <DatePicker label="생년월일" value={inputState.birthday} />
-            </DatePickerWrapper>
-          </LocalizationProvider>
+          <StackLevelSelect
+            changeHandle={changeHandle}
+            label="프로젝트 스택"
+          ></StackLevelSelect>
         </div>
         {/* 링크 */}
         <div className="mb-6">
@@ -695,6 +664,7 @@ export default function Regist() {
                   ),
                 }}
               />
+              <></>
             </DialogContent>
             <DialogActions>
               {/* <Button onClick={handleClose}>취소하기</Button> */}
