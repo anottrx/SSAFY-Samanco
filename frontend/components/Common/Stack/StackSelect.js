@@ -45,10 +45,20 @@ function getStyles(name, stackName, theme) {
 }  
 
 function StackSelect(props){
-    const [stackName, setStackName] = useState([]);
+    
+    let initArray = [];
+    if (props.initData){
+        props.initData.map(data=>{
+            initArray.push(Object.keys(data)[0])
+        })
+    }
+
+    const [stackName, setStackName] = useState(
+        props.initData? initArray: []);
     const theme = useTheme();
 
-    const handleChange = (event) => {
+    // 선택된 Select가 바뀌었을 경우 처리
+    const handleSelectChange = (event) => {
         const {target: { value },} = event;
         setStackName(
             typeof value === 'string' ? value.split(',') : value,
@@ -66,19 +76,20 @@ function StackSelect(props){
         stackName.map(stack => {
             stackArray.push({[stack]:1});
         })
+        // 상위 컴포넌트에게 바뀐 스택 전달
         props.changeHandle(stackArray,"stack");
     }, [stackName])
 
     return(
         <div>
             <FormControl fullWidth>
-                <InputLabel id="demo-multiple-chip-label">프로젝트 스택</InputLabel>
+                <InputLabel id="demo-multiple-chip-label">{props.label}</InputLabel>
                 <Select
                     labelId="demo-multiple-chip-label"
                     id="demo-multiple-chip"
                     multiple
                     value={stackName}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                     input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
                     renderValue={(selected) => (
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

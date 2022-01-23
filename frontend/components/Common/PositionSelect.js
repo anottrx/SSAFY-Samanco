@@ -1,4 +1,4 @@
-import {Autocomplete, TextField, Stack, Paper, ButtonGroup, Button } from "@mui/material"
+import {Autocomplete, TextField, Stack, Paper, ButtonGroup, Button, Tooltip, Box } from "@mui/material"
 import {useState, useEffect} from "react"
 import styled from "@emotion/styled";
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -13,9 +13,20 @@ const position = [
 ]
 
 function PositionSelect(props) {
-    const [positions, setPositions] = useState([]);
+    let initArray = [];
 
-    const handleChange = (event) => {
+    if (props.initData) {
+        props.initData.map(data=>{
+            let name = Object.keys(data)[0];
+            let count = data[name];
+            initArray.push({name: name, count: count});
+        })
+    }
+
+    const [positions, setPositions] = useState(props.initData? initArray:[]);
+
+    // 선택된 포지션이 바뀔 때마다 처리
+    const handleAutocompleteChange = (event) => {
         const name = event.target.innerText;
         let isInclude = false;
 
@@ -38,18 +49,23 @@ function PositionSelect(props) {
         positions.map(pos => {
             positionArray.push({[pos.name]:pos.count})
         })
+        // 상위 컴포넌트에게 바뀐 포지션 전달
         props.changeHandle(positionArray, "positions")
     }, [positions])
 
     return (
         <>
+        <Tooltip title="본인의 포지션을 포함해 인원 수를 선택해주세요. " placement="top-end">
+        <Box>
          <Autocomplete
              id="free-solo-demo"
              freeSolo
              options={position.map((stack) => stack.name)}
-             onChange={handleChange}
+             onChange={handleAutocompleteChange}
              renderInput={(params) => <TextField {...params} label="포지션" />}
          />
+         </Box>
+         </Tooltip>
          <Stack>
              {
                  positions.length > 0? 
@@ -84,14 +100,12 @@ function CusPaper(props){
         }
     `
     
-    function DeletePosition(name){
-        console.log("Delete")
+    function DeletePosition(name){ // 포지션 삭제
         let newPos = props.positions.filter(pos => pos.name !== name);
-        console.log("newPos",newPos)
         props.setPositions(newPos);
     }
 
-    function plusCount(name){
+    function plusCount(name){ // 포지션 수 증가
         // 객체는 깊은 복사를 해야함!
         // 왜냐하면 리액트는 객체 변화를 레퍼런스 기준으로 감지해서 리렌더링하기 때문
         let newPos = JSON.parse(JSON.stringify(props.positions))
@@ -99,12 +113,11 @@ function CusPaper(props){
             if (pos.name === name) {
                 pos.count++;
             }
-            
         });
         props.setPositions(newPos);
     }
 
-    function minusCount(name){
+    function minusCount(name){ // 포지션 수 감소
         let newPos = JSON.parse(JSON.stringify(props.positions))
         let count;
         newPos.map(pos => {
@@ -114,9 +127,9 @@ function CusPaper(props){
             }
         });
 
-        if (count <= 0) {
+        if (count <= 0) {   // 수 감소시키다가 0개가 되면 삭제
             newPos = props.positions.filter(pos => pos.name !== name);
-         }
+        }
         props.setPositions(newPos);
     }
     

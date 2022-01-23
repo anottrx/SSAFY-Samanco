@@ -2,9 +2,9 @@ import Layout from "../../components/layout";
 import { useSelector } from 'react-redux';
 
 import styled from "@emotion/styled";
-import StackList from "../../components/Project/StackList"
+import StackList from "../../components/Club/StackList"
 import stackData from "../../data/StackData.json"
-import PositionList from "../../components/Project/PositionList"
+import PositionList from "../../components/Club/PositionList"
 import positionData from "../../data/positionData.json"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -12,6 +12,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup } from "@mui/material";
 import { useState } from "react";
+import Router from "next/router";
+
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -39,12 +41,28 @@ const ProjectDetail = () => {
     const CusContainer = styled(Container)`
         float: left
     `
+
+    const DetailHeader = styled.div`
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0px; 
+        & > h2 {
+            margin: 0;
+        }
+        & > div {
+            height: fit-content;
+        }
+    `
     
     return (
     <Layout>
         <CusContainer maxWidth="md">
             <br></br>
-            <h2>{detail.title}</h2>
+            <DetailHeader>
+                <h2>{detail.title}</h2>
+                <DetailOperation></DetailOperation>
+            </DetailHeader>
             <DetailWrapper maxWidth="sm">
                 <CusSkeleton variant="rectangular" animation={false} />
                 <ProjectInfo detail={detail}></ProjectInfo>
@@ -53,14 +71,47 @@ const ProjectDetail = () => {
         </CusContainer>
     </Layout>);
 
+    function DetailOperation() {
+        const [open, setOpen] = useState(false);
+
+        const JoinDialogOpen = () => { setOpen(true) }
+        const JoinDialogClose = () => { setOpen(false) }
+
+
+        return (
+            <>
+            <ButtonGroup variant="outlined">
+                <Button onClick={() => {
+                    Router.push("/project/update");
+                }}>수정</Button>
+                <Button onClick={JoinDialogOpen}>삭제</Button>
+            </ButtonGroup>
+            <Dialog
+                open={open}
+                onClose={JoinDialogClose}
+                >
+                <DialogTitle>
+                    {"삭제 하시겠습니까?"}
+                </DialogTitle>
+                <DialogActions>
+                <Button onClick={JoinDialogClose}>취소</Button>
+                <Button onClick={JoinDialogClose} autoFocus>
+                    확인
+                </Button>
+                </DialogActions>
+            </Dialog>
+            </>
+        )
+    }
+
     function ProjectInfo(){
         return (
             <ContentWrapper>
                 <div>기술 스택</div>
-                <StackList stackData={stackData}></StackList>
+                <StackList stackData={detail.stacks}></StackList>
                 <br />
                 <div>모집 팀원</div>
-                <PositionList positionData={positionData}></PositionList>        
+                <PositionList positionData={detail.positions}></PositionList>        
             </ContentWrapper>
         )
     }

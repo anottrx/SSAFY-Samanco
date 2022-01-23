@@ -1,0 +1,38 @@
+[
+    {
+        "no": 1,
+        "title": "리액트 스터디",
+        "host": "김싸피",
+        "startTime": "3",
+        "timeLimit": "60", 
+        "size": "3",
+        "isPrivate": false
+    },
+    {
+        "no": 2,
+        "title": "알고리즘 고수분 와주세요ㅠ",
+        "host": "이알고",
+        "startTime": "23",
+        "timeLimit": "60", 
+        "size": "2",
+        "isPrivate": false
+    },
+    {
+        "no": 3,
+        "title": "쉿 비밀방",
+        "host": "박비밀",
+        "startTime": "54",
+        "timeLimit": "60", 
+        "size": "6",
+        "isPrivate": true
+    },
+    {
+        "no": 4,
+        "title": "JS 뿌시기",
+        "host": "강사비",
+        "startTime": "3",
+        "timeLimit": "60", 
+        "size": "5",
+        "isPrivate": false
+    }
+]

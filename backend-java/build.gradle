@@ -31,7 +31,7 @@ plugins {
 }
 
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'eclipse'
+//apply plugin: 'eclipse'
 apply plugin: 'com.github.node-gradle.node'
 //이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.
 //apply plugin: 'com.ewerk.gradle.plugins.querydsl'
@@ -100,6 +100,7 @@ processResources {
 
 //이클립스인 경우를 위한 QueryDSL 설정. IntelliJ는 불필요. [시작]
 //def querydslDir = 'src/main/generated'
+//def querydslDir = "$buildDir/generated"
 //querydsl {
 //    library = "com.querydsl:querydsl-apt"
 //    jpa = true
@@ -184,6 +185,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    // file
+    implementation("commons-io:commons-io:2.6")
 }
 
 test {

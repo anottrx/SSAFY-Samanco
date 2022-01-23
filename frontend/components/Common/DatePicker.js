@@ -5,11 +5,17 @@ import { TextField } from '@mui/material';
 export let getDateValue;
 
 export default function DatePicker(props){
-    const [dateValue, setDateValue] = useState(new Date().toJSON().split("T")[0]);
+    
+    const [dateValue, setDateValue] = useState(
+        props.initDate?
+        props.initDate
+        :
+        new Date().toJSON().split("T")[0]
+    );
 
     getDateValue = () => dateValue;
     
-    const dateHandleChange = (e, label) => {
+    const handleDateChange = (e, label) => {
         let result = e.toJSON().split("T")[0];
         setDateValue(result)
     };
@@ -25,7 +31,7 @@ export default function DatePicker(props){
     return (
         <Datepicker 
             label={props.label} 
-            dateHandleChange={dateHandleChange} 
+            handleDateChange={handleDateChange} 
             value={dateValue}>
         </Datepicker>
     )
@@ -36,7 +42,7 @@ export default function DatePicker(props){
              label={props.label}
              inputFormat="yyyy/MM/dd"
              value={props.value}
-             onChange={(e) => props.dateHandleChange(e, props.label)}
+             onChange={(e) => props.handleDateChange(e, props.label)}
              renderInput={(params) => <TextField {...params} />}
              />
         )

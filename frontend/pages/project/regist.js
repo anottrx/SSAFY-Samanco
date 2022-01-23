@@ -1,5 +1,5 @@
 import Layout from "../../components/layout"
-import { Paper, TextField, Box, Button } from "@mui/material";
+import { Paper, TextField, Button, Autocomplete } from "@mui/material";
 import styled from "@emotion/styled";
 import DatePicker from "../../components/Common/DatePicker";
 import {LocalizationProvider } from '@mui/lab';
@@ -11,6 +11,12 @@ import React from "react";
 import Counter from "../../components/Common/PositionSelect";
 var FormData = require('form-data');
 
+const position = [
+    {name:"Front-end", count: 0},
+    {name:"Back-end", count: 0},
+    {name:"Embedded", count: 0},
+    {name:"Mobile", count: 0}
+]
 
 function ProjectRegist() {
     const CusPaper = styled(Paper)`
@@ -61,10 +67,9 @@ function ProjectRegist() {
         const file = event.target.files[0];
         setFiles(file)
 
-        const newData = formData;
+        const newData = new FormData();
         newData.append("file", file);
         changeFormData(newData);
-        console.log(file)
     }
 
     const uploadRef = useRef(null);
@@ -91,6 +96,11 @@ function ProjectRegist() {
         inputValue[name] = value;
         // 리렌더링 X
     }
+
+    const handleAutocompleteChange = (event) => {
+        const name = event.target.innerText;
+        inputValue["hostPosition"] = name;
+    };
 
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
@@ -120,23 +130,34 @@ function ProjectRegist() {
                     onChange={(e) => changeHandle(e.target.value, "description")}
                     value={inputValue.description}
                 />
-                <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴" onChange={(e) => changeHandle(e.target.value, "schedule")}
-                    value={inputValue.schedule}/>
-                
-                {/* <StackLevelSelect></StackLevelSelect> */}
-                <StackSelect changeHandle={changeHandle}></StackSelect>
+
+                <StackSelect changeHandle={changeHandle} label="프로젝트 스택"></StackSelect>
                 
                 <DatePickerWrapper>
                     <DatePicker changeHandle={changeHandle} label="시작 날짜"/>
                     <DatePicker changeHandle={changeHandle} label="종료 날짜"/>
                 </DatePickerWrapper>
 
+                {/* 본인 포지션 선택 */}
+                <Autocomplete
+                    id="free-solo-demo"
+                    freeSolo
+                    options={position.map((stack) => stack.name)}
+                    onChange={handleAutocompleteChange}
+                    renderInput={(params) => <TextField {...params} label="본인 포지션" />}
+                />
+
                 <Counter changeHandle={changeHandle}></Counter>
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
                         console.log(inputValue);
-                    }}>등록하기</Button>
+                    
+                        for (var pair of formData.entries()) {
+                            console.log(pair[1]);
+                        }
+                    }}
+                    >등록하기</Button>
                 </div>
             </CusPaper>
         </Layout>
