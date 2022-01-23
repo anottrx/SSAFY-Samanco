@@ -77,8 +77,8 @@ function BoardRegist() {
                 <TextField fullWidth name="title" label="제목" onChange={(e) => changeHandle(e.target.value, "title")}
                     value={inputValue.title}/>
 
-                <TextField fullWidth name="user_id" label="아이디" onChange={(e) => changeHandle(e.target.value, "user_id")}
-                    value={inputValue.user_id}/>    
+                <TextField fullWidth name="userId" label="아이디" onChange={(e) => changeHandle(e.target.value, "userId")}
+                    value={inputValue.userId}/>    
                 <TextField
                     id="outlined-textarea"
                     name="content"
