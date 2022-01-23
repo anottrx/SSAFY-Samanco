@@ -14,8 +14,8 @@ import styled from "@emotion/styled";
 import { updateAPI } from "../api/project"
 
 const position = [
-    {name:"Front-end", count: 0},
-    {name:"Back-end", count: 0},
+    {name:"Frontend", count: 0},
+    {name:"Backend", count: 0},
     {name:"Embedded", count: 0},
     {name:"Mobile", count: 0}
 ]
@@ -123,8 +123,8 @@ function projectUpdate() {
             [check, msg] = [false, "프로젝트 스택을 한가지 이상 선택해주세요."]
         else if (typeof(inputValue.hostPosition)=='undefined')   
             [check, msg] = [false, "본인의 포지션을 선택해주세요."]
-        else if (inputValue.totalFrontendSize + inputValue.totalBackendSize + 
-            inputValue.totalEmbeddedSize + inputValue.totalMobileSize <= 1)   
+        else if (inputValue.positions.totalFrontendSize + inputValue.positions.totalBackendSize + 
+            inputValue.totalEmbeddedSize + inputValue.positions.totalMobileSize <= 1)   
             [check, msg] = [false, "팀원은 한 명이상 존재해야 합니다."]
         
         if (!check)
@@ -208,8 +208,10 @@ function projectUpdate() {
                             const formData = new FormData();
 
                             Object.keys(inputValue).map(key => {
-                                let value = inputValue[key];
-                                formData.append(key, JSON.stringify(value));
+                                if (key!=="positions"){
+                                    let value = inputValue[key];
+                                    formData.append(key, JSON.stringify(value));
+                                }
                             })
 
                             formData.append("file",files);

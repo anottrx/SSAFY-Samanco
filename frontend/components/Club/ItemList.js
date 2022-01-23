@@ -122,10 +122,19 @@ export function Item(props) {
         right: 30px;
     ` 
 
+    let totalSize = 0;
+    let currSize = data.positions.reduce((acc, curr) => {
+        if (curr.position.includes("current")) {
+            acc += curr.size;
+        }
+        if (curr.position === "totalSize") totalSize = curr.size;
+        return acc;
+    }, 0)
+
     return (
         <Container>
             {/* To Do: current 주어지면 변경하기 */}
-            <CusBadge badgeContent={data.size+" / "+data.size} color="primary"></CusBadge>
+            <CusBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusBadge>
             <Card>
                 <Skeleton variant="rectangular" height={150} animation={false} />
                 

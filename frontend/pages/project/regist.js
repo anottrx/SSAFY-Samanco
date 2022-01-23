@@ -17,8 +17,8 @@ import { registAPI } from "../api/project"
 import Router from "next/router";
 
 const position = [
-    {name:"Front-end", count: 0},
-    {name:"Back-end", count: 0},
+    {name:"Frontend", count: 0},
+    {name:"Backend", count: 0},
     {name:"Embedded", count: 0},
     {name:"Mobile", count: 0}
 ]

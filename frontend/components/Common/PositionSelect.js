@@ -6,8 +6,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const position = [
-    {name:"Front-end", count: 0},
-    {name:"Back-end", count: 0},
+    {name:"Frontend", count: 0},
+    {name:"Backend", count: 0},
     {name:"Embedded", count: 0},
     {name:"Mobile", count: 0}
 ]
@@ -17,9 +17,10 @@ function PositionSelect(props) {
 
     if (props.initData) {
         props.initData.map(data=>{
-            let name = Object.keys(data)[0];
-            let count = data[name];
-            initArray.push({name: name, count: count});
+            if (data.position.includes("current") && data.size > 0) {
+                let name = data.position.split("current")[1];
+                initArray.push({name: name, count: data.size})
+            }
         })
     }
 
@@ -51,11 +52,11 @@ function PositionSelect(props) {
         let [FE, BE, EBD, MB] = [false, false, false, false];
         positions.map(pos => {
             switch (pos.name) {
-                case "Front-end":
+                case "Frontend":
                     props.changeHandle(pos.count, "totalFrontendSize")
                     FE = true;
                     break;
-                case "Back-end":
+                case "Backend":
                     props.changeHandle(pos.count, "totalBackendSize")
                     BE = true;
                     break;
