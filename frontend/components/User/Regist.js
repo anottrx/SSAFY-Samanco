@@ -62,9 +62,9 @@ export default function Regist() {
     email: "",
     phone: "",
     nickname: "",
-    userClass: "",
+    userClass: "JAVA",
     birthday: "",
-    generation: "",
+    generation: "6",
     studentId: "",
     stacks: [],
     position: "",
@@ -87,6 +87,7 @@ export default function Regist() {
     MySQL: "",
     Git: "",
     AWS: "",
+
     Docker: "",
     Linux: "",
     Jira: "",
@@ -542,7 +543,8 @@ export default function Regist() {
           <Select
             id="generation"
             onChange={generationHandleChange}
-            defaultValue=""
+            defaultValue={generationOptions[5].value}
+            value={generationOptions.value}
             sx={{ width: 180, mr: 1.25,fontSize: 14 }}
           >
             {generationOptions.map((opt) => {
@@ -561,8 +563,10 @@ export default function Regist() {
           <Select
             id="userClass"
             onChange={classHandleChange}
-            defaultValue=""
+            defaultValue={classOptions[0].value}
+            value={classOptions.value}
             sx={{ width: 180, fontSize: 14 }}
+            // displayEmpty
           >
             {classOptions.map((opt) => {
               return (
