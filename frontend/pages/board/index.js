@@ -1,16 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
+import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
 
+import Router from "next/router";
 import Layout from "../../components/layout";
+import SearchBar from "../../components/Common/Search";
+
 import BoardList from "./BoardList";
-import styles from "../../styles/Board.module.css"
-import Link from "next/link";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,7 +52,6 @@ export default function Board() {
 
   return (
     <Layout>
-      <div className={styles.main}>
         <h1>Board</h1>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -68,20 +63,6 @@ export default function Board() {
               <Tab label="사람구해요" {...a11yProps(4)} />
             </Tabs>
           </Box>
-          <div className={styles.searchTab}>
-            <Stack direction="row" spacing={2}>
-              <Box
-                  component="form"
-                  sx={{
-                      '& > :not(style)': { m: 1, width: '25ch' },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                  >
-                      <TextField id="search" label="search" variant="standard" />
-                  </Box>
-            </Stack>
-          </div>
           <TabPanel value={value} index={0}>
             <BoardList tag="notice"/>
           </TabPanel>
@@ -91,10 +72,7 @@ export default function Board() {
           <TabPanel value={value} index={2}>
             <BoardList tag="qna"/>
           </TabPanel>
-        </Box>
-        
-      </div>
-  </Layout>
-    
+      </Box>
+    </Layout>
   );
 }
