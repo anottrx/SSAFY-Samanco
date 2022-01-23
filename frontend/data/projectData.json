@@ -16,13 +16,43 @@
             {"Python": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "3",
         "host": "3",
@@ -45,13 +75,43 @@
             {"CSS": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -71,13 +131,43 @@
             {"Kotlin": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "3",
         "host": "2",
@@ -100,13 +190,43 @@
             {"Git": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -128,13 +248,43 @@
             {"Jira": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -155,13 +305,43 @@
             {"Docker": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -183,13 +363,43 @@
             {"MySQL": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -211,13 +421,43 @@
             {"MySQL": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -239,13 +479,43 @@
             {"MySQL": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -267,13 +537,43 @@
             {"MySQL": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -295,13 +595,43 @@
             {"MySQL": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -323,13 +653,43 @@
             {"MySQL": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",
@@ -351,13 +711,43 @@
             {"MySQL": 1}
         ],
         "positions": [
-            {"Front-end": 3},
-            {"Back-end": 2}
+            {
+              "position": "totalFrontend",
+              "size": 3
+            },
+            {
+              "position": "totalBackend",
+              "size": 2
+            },
+            {
+              "position": "totalMobile",
+              "size": 0
+            },
+            {
+              "position": "totalEmbedded",
+              "size": 1
+            },
+            {
+              "position": "currentFrontend",
+              "size": 0
+            },
+            {
+              "position": "currentBackend",
+              "size": 0
+            },
+            {
+              "position": "currentMobile",
+              "size": 0
+            },
+            {
+              "position": "currentEmbedded",
+              "size": 1
+            },
+            {
+              "position": "totalSize",
+              "size": 5
+            }
         ],
-        "totalBack-endSize": 2,
-        "totalEmbeddedSize": 1,
-        "totalFront-endSize": 3,
-        "totalMobileSize": 0,
         "hostPosition": "Front-end",
         "like": "34",
         "host": "2",

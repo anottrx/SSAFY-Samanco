@@ -123,6 +123,7 @@ const ProjectDetail = () => {
                 <div>기술 스택</div>
                 <StackList stackData={detail.stacks}></StackList>
                 <br />
+                {/* To Do : BE 받는 데이터 변경되면 수정 */}
                 <div>모집 팀원</div>
                 <PositionList positionData={detail.positions}></PositionList>        
             </ContentWrapper>

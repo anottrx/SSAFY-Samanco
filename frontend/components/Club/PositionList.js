@@ -7,19 +7,38 @@ export default function PositionList(props) {
         margin-left: 10px;
     `
 
+    // let positionNames = ["Frontend", "Backend", "Embedded", "Mobile"];
+    let Item = {}
+
+    props.positionData.map(data => {
+        // data.position: 포지션 이름 / data.size: 포지션 인원수
+
+
+        if (data.position.includes("total")) {
+            let name = data.position.split("total")[1]
+            Item[`${name}`] = [0, data.size];
+        }
+
+        if (data.position.includes("current")) {
+            let name = data.position.split("current")[1];
+            Item[`${name}`][0] = data.size;
+        }
+    })
+
     return (
         <div>
             {
-            Object.values(props.positionData).map((data, index) => {
-                let position = Object.keys(data)[0];
-                let size = data[Object.keys(data)[0]]
+            Object.keys(Item).map((position, index) => {
+                let size = Item[position]
                 return (
+                    position!=="Size" && size[1] > 0? 
                     <div key={index}>{position}
-                    <StackChip label={size} size="small"></StackChip>
+                    <StackChip label={size[0]+" / "+size[1]} size="small"></StackChip>
                     </div>
+                    : null
                 )
             })
         }
-        </div>
+        </div> 
     )
 }
