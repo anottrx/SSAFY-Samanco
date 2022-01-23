@@ -3,9 +3,7 @@ import { useSelector } from 'react-redux';
 
 import styled from "@emotion/styled";
 import StackList from "../../components/Club/StackList"
-import stackData from "../../data/StackData.json"
 import PositionList from "../../components/Club/PositionList"
-import positionData from "../../data/positionData.json"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -13,6 +11,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup } from "@mui/material";
 import { useState } from "react";
 import Router from "next/router";
+
+import { deleteAPI } from "../api/study";
 
 
 const StudyDetail = () => { 
@@ -74,8 +74,19 @@ const StudyDetail = () => {
     function DetailOperation() {
         const [open, setOpen] = useState(false);
 
-        const JoinDialogOpen = () => { setOpen(true) }
-        const JoinDialogClose = () => { setOpen(false) }
+        const deleteDialogOpen = () => { setOpen(true) }
+        const deleteOperation = () => {
+            // To do: projectId, userId 수정해야함!
+            let data = {id: 1, userId: 1};
+            deleteAPI(data)
+            .then(res => {
+                if (res.statusCode == 200)
+                    console.log("삭제")
+            })
+            .catch(err => console.log(err))
+            setOpen(false);
+        }
+        const deleteDialogClose = () => { setOpen(false) }
 
 
         return (
@@ -84,18 +95,18 @@ const StudyDetail = () => {
                 <Button onClick={() => {
                     Router.push("/study/update");
                 }}>수정</Button>
-                <Button onClick={JoinDialogOpen}>삭제</Button>
+                <Button onClick={deleteDialogOpen}>삭제</Button>
             </ButtonGroup>
             <Dialog
                 open={open}
-                onClose={JoinDialogClose}
+                onClose={deleteDialogClose}
                 >
                 <DialogTitle>
                     {"삭제 하시겠습니까?"}
                 </DialogTitle>
                 <DialogActions>
-                <Button onClick={JoinDialogClose}>취소</Button>
-                <Button onClick={JoinDialogClose} autoFocus>
+                <Button onClick={deleteDialogClose}>취소</Button>
+                <Button onClick={deleteOperation} autoFocus>
                     확인
                 </Button>
                 </DialogActions>
@@ -105,6 +116,7 @@ const StudyDetail = () => {
     }
 
     function StudyInfo(){
+        
         return (
             <ContentWrapper>
                 <div>기술 스택</div>

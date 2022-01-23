@@ -2,17 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from 'react-redux';
 
 import Layout from "../../components/layout"
-import { Paper, TextField, Box, Button } from "@mui/material";
+import { Paper, TextField, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import {LocalizationProvider } from '@mui/lab';
 
-import DatePicker from "../../components/Common/DatePicker";
-import StackSelect from "../../components/Common/Club/StackSelect";
-import Counter from "../../components/Common/PositionSelect";
+import StackSelect from "../../components/Common/Stack/StackSelect";
 
 import styled from "@emotion/styled";
-
-var FormData = require('form-data');
 
 function studyUpdate() {
     const detail = useSelector(({ study }) => study.studyDetail);
@@ -34,13 +30,6 @@ function studyUpdate() {
             display:none;
         }
     `
-    const DatePickerWrapper = styled.div`
-        display: flex;
-        & > div{
-            flex: 1;
-            margin: 10px 5px;
-        }
-    `
 
     const ImgUploadBtn = styled(Button)`
         padding: 20px;
@@ -57,8 +46,6 @@ function studyUpdate() {
     `
 
     const [inputValue, setInputValue] = useState({
-        title: detail.title,
-        description: detail.description,
         schedule: detail.schedule,
         startDate: detail.startDate,
         endDate: detail.endDate,
@@ -66,17 +53,11 @@ function studyUpdate() {
         positions: detail.positions
     });
 
-    const [formData, changeFormData] = useState(new FormData());
     const [files, setFiles] = useState('');
 
     const onImgChange = (event) => {
         const file = event.target.files[0];
         setFiles(file)
-
-        const newData = formData;
-        newData.append("file", file);
-        changeFormData(newData);
-        console.log(file)
     }
 
     const uploadRef = useRef(null);
@@ -104,6 +85,25 @@ function studyUpdate() {
         // 리렌더링 X
     }
 
+    async function validateCheck() {
+        let [check, msg] = [true, ""]
+        if (typeof(inputValue.title)=='undefined') 
+            inputValue["title"] = detail.title;
+        else if (inputValue.title=="")
+            [check, msg] = [false, "스터디 이름을 입력해주세요."]
+        else if (typeof(inputValue.size)=='undefined' || inputValue.size == 0)   
+            [check, msg] = [false, "스터디 인원은 한 명 이상이여야 합니다."]
+        else if (typeof(inputValue.schedule)=='undefined' || inputValue.schedule == "")   
+            [check, msg] = [false, "스터디가 진행될 스케쥴을 입력해주세요."]
+        else if (typeof(inputValue.stacks)=='undefined' || inputValue.stacks.length == 0)   
+            [check, msg] = [false, "스터디 주제를 선택해주세요."]
+
+        if (!check)
+            alert(msg)
+        return check;
+    }
+
+
     return (
         <LocalizationProvider dateAdapter={DateAdapter}>
         <Layout>
@@ -116,10 +116,30 @@ function studyUpdate() {
                 
                 <input ref={uploadRef} type="file"
                     className="imgInput" id="studyImg"
-                    accept="image/*" name="file"
+                    accept="image/*" name="file" encType="multipart/form-data"
                     onChange={onImgChange}></input>
 
-                <TextField fullWidth name="title" label="스터디 이름" onChange={(e) => changeHandle(e.target.value, "title")}
+                <FormControl>
+                    <InputLabel id="status-select-label">모집 상태</InputLabel>
+                    <Select
+                        labelId="status-select-label"
+                        id="status-select"
+                        name="collectStatus"
+                        defaultValue={detail.collectStatus}
+                        value={inputValue.collectStatus}
+                        label="모집 상태"
+                        onChange={(e) => changeHandle(e.target.value, "collectStatus")}
+                    >
+                        <MenuItem value={"ING"}>모집중</MenuItem>
+                        <MenuItem value={"END"}>모집 완료</MenuItem>
+                    </Select>
+                </FormControl>
+
+                <TextField 
+                    fullWidth name="title" 
+                    label="스터디 이름" 
+                    onChange={(e) => changeHandle(e.target.value, "title")}
+                    defaultValue={detail.title}
                     value={inputValue.title}/>
                 <TextField
                     id="outlined-textarea"
@@ -130,16 +150,48 @@ function studyUpdate() {
                     rows={4}
                     multiline
                     onChange={(e) => changeHandle(e.target.value, "description")}
+                    defaultValue={detail.description}
                     value={inputValue.description}
                 />
+
+                <TextField fullWidth name="size" label="스터디 인원" 
+                    onChange={(e) => changeHandle(e.target.value, "size")}
+                    defaultValue={detail.size}
+                    value={inputValue.size}/>
+
                 <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴" onChange={(e) => changeHandle(e.target.value, "schedule")}
+                    defaultValue={detail.schedule}
                     value={inputValue.schedule}/>
                 
                 <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="스터디 스택"></StackSelect>
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
-                        console.log(inputValue);
+                        if (validateCheck()) {
+                            const formData = new FormData();
+
+                            Object.keys(inputValue).map(key => {
+                                if (key!=="positions"){
+                                    let value = inputValue[key];
+                                    formData.append(key, JSON.stringify(value));
+                                }
+                            })
+
+                            formData.append("file",files);
+
+                            for(var key of formData.entries())
+                            {
+                                console.log(`${key}`);
+                            } 
+
+                            // updateAPI(formData).then((res) => {
+                            //     if (res.statusCode == 200) {
+                            //         alert("프로젝트가 수정되었습니다.")
+                            //         // To do: 해당 페이지로 이동
+                            //         Router.push("/study");
+                            //     }
+                            // });
+                        }
                     }}>수정하기</Button>
                 </div>
             </CusPaper>
