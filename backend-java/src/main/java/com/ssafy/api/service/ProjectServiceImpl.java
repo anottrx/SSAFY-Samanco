@@ -9,6 +9,7 @@ import com.ssafy.api.request.ProjectUpdatePostReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,8 +30,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     FileRepositorySupport fileRepositorySupport;
 
-    @Autowired
-    UserRepositorySupport userRepositorySupport;
+//    @Autowired
+//    UserRepositorySupport userRepositorySupport;
+
+//    @Autowired
+//    PasswordEncoder passwordEncoder;
 
     @Override
     public Project createProject(ProjectRegisterPostReq projectRegisterPostReq) {
@@ -103,6 +107,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectDto> selectProjectAll() {
         List<Project> results = projectRepositorySupport.selectProjectAll();
+        if (results==null){
+            return null;
+        }
         List<ProjectDto> projects=new ArrayList<>();
         for (Project result: results) {
             List<PositionDto> positions = new ArrayList<>();
@@ -136,10 +143,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public int joinProject(Long projectId, Long userId, String position) {
-        int userUpdateProjectCode=userRepositorySupport.updateUserProject(userId, projectId);
-        if (userUpdateProjectCode==401){
-            return 401;
-        }
+//        int userUpdateProjectCode=userRepositorySupport.updateUserProject(userId, projectId);
+//        if (userUpdateProjectCode==401){
+//            return 401;
+//        }
         return projectRepositorySupport.joinProject(projectId, position);
     }
 }

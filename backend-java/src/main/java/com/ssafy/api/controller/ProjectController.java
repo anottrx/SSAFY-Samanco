@@ -92,7 +92,9 @@ public class ProjectController {
             stackService.createStack(registerInfo.getStacks(), project.getId(), 2);
         }
         // project 이미지 입력
-        fileService.saveFile(files, project.getId(), 2);
+        if (files!=null) {
+            fileService.saveFile(files, project.getId(), 2);
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -231,24 +233,24 @@ public class ProjectController {
         return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
     }
 
-    @PostMapping("/join")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity<? extends BaseResponseBody> joinProject(
-            @RequestBody @ApiParam(value="project id", required = true) ProjectJoinPostReq projectInfo) throws IOException {
-
-        Long projectId=projectInfo.getId();
-        Long userId=projectInfo.getUserId();
-        String position= projectInfo.getPosition();
-        int projectJoinCode=projectService.joinProject(projectId, userId, position);
-        if (projectJoinCode==401){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트에 가입할 수 없습니다."));
-        }
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-    }
+//    @PostMapping("/join")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "성공"),
+//            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+//            @ApiResponse(code = 500, message = "서버 오류")
+//    })
+//    public ResponseEntity<? extends BaseResponseBody> joinProject(
+//            @RequestBody @ApiParam(value="project id", required = true) ProjectJoinPostReq projectInfo) throws IOException {
+//
+//        Long projectId=projectInfo.getId();
+//        Long userId=projectInfo.getUserId();
+//        String position= projectInfo.getPosition();
+//        int projectJoinCode=projectService.joinProject(projectId, userId, position);
+//        if (projectJoinCode==401){
+//            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트에 가입할 수 없습니다."));
+//        }
+//        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+//    }
 
     @GetMapping
     @ApiResponses({
@@ -259,6 +261,9 @@ public class ProjectController {
     public ResponseEntity<? extends BaseResponseBody> selectProjectAll() throws IOException {
 
         List<ProjectDto> projects=projectService.selectProjectAll();
+        if (projects==null){
+            return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "등록된 프로젝트가 없습니다.", null));
+        }
         return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.repository.*;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,6 +114,42 @@ public class UserServiceImpl implements UserService {
 			projectRepositorySupport.deleteProject(userId, projectId);
 		}
 		return updateUserProjectCode;
+	}
+
+	@Override
+	public int updatePasswordUser(UserUpdatePostReq updateInfo) {
+		return userRepositorySupport.updatePasswordUserProject(updateInfo);
+	}
+
+	@Override
+	public List<UserDto> selectUserAll() {
+		List<User> results=userRepositorySupport.selectUserAll();
+		if (results==null){
+			return null;
+		}
+		List<UserDto> users=new ArrayList<>();
+		for (User user: results){
+			UserDto userDto=new UserDto();
+			userDto.setId(user.getId());
+			userDto.setPassword(user.getPassword());
+			userDto.setDescription(user.getDescription());
+			userDto.setUserClass(user.getUserClass());
+			userDto.setBirthday(user.getBirthday());
+			userDto.setEmail(user.getEmail());
+			userDto.setGeneration(user.getGeneration());
+			userDto.setLink(user.getLink());
+			userDto.setNickname(user.getNickname());
+			userDto.setName(user.getName());
+			userDto.setPhone(user.getPhone());
+			userDto.setPosition(user.getPosition());
+			userDto.setProjectJoinStatus(user.getProjectJoinStatus());
+			userDto.setStudentId(user.getStudentId());
+			userDto.setProjectId(user.getProjectId());
+			userDto.setStacks(stackRepositorySupport.selectStack(user.getId(), 1));
+			users.add(userDto);
+		}
+
+		return users;
 	}
 
 	@Override
