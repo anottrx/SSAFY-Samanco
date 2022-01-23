@@ -2,6 +2,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import Link from "next/link";
 import { styled } from '@mui/material/styles';
 import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination} from '@mui/material';
+import Router from "next/router";
 
 import Datas from "./data.js";
 
@@ -65,8 +66,9 @@ export default function BoardList(props) {
                     <TableBody>
                     {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
                         <StyledTableRow key={article.board_id}>
-                        <StyledTableCell component="th" scope="row">
-                            <Link href={`/board/BoardRegist/${article.board_id}`}>{article.title}</Link>
+                        <StyledTableCell component="th" scope="row" onClick={()=>{Router.push({
+                                pathname: '/board/BoardDetail', query : {board_id : article.board_id}}
+                            )}}>{article.title}
                         </StyledTableCell>
                         <StyledTableCell align="right">{article.user_id}</StyledTableCell>
                         <StyledTableCell align="right">{article.start_date}</StyledTableCell>

@@ -4,7 +4,6 @@ import styled from "@emotion/styled";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
 import styles from "../../styles/Board.module.css"
-var FormData = require('form-data');
 
 
 function BoardRegist() {
