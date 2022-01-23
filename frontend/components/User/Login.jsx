@@ -10,7 +10,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   OutlinedInput,
-  InputLabel,
+  Typography,
   InputAdornment,
   IconButton,
   Button,
@@ -79,7 +79,6 @@ export default function Login() {
         switch (res.statusCode) {
           case 200: // 로그인 성공
             alert(`로그인 성공: ${res.accessToken}`);
-            // sessionStorage.setItem("userToken", res.accessToken);
             setCookie("userToken", res.accessToken); // 쿠키 설정
 
             if (rememberId) {
@@ -88,7 +87,6 @@ export default function Login() {
               setCookie("userEmail", "");
             }
             getUserInfo(res.accessToken).then((res) => {
-              // console.log(res);
               alert(res);
               sessionStorage.setItem("userId", res.userId);
               sessionStorage.setItem("email", inputState.email);
@@ -131,29 +129,31 @@ export default function Login() {
       >
         <h1>로그인</h1>
         <br />
-        <FormControl sx={{ width: 280 }}>
+        <FormControl sx={{ width: 300 }}>
           <OutlinedInput
             id="email"
             // id="margin-none"
             placeholder="이메일"
             value={inputState.email}
             onChange={handleChange}
+            sx={{ fontSize: 14 }}
           />
         </FormControl>
-        {/* <br /> */}
-        <FormControl sx={{ width: 280 }}>
+        <FormControl sx={{ width: 300 }}>
           <OutlinedInput
             id="password"
             placeholder="비밀번호"
             type={inputState.showPassword ? "text" : "password"}
             value={inputState.password}
             onChange={handleChange}
+            sx={{ fontSize: 14 }}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={handleClickShowPassword}
                   edge="end"
+                  sx={{ mr: -0.5 }}
                 >
                   {inputState.showPassword ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
@@ -166,18 +166,35 @@ export default function Login() {
             control={<Checkbox />}
             onChange={handleRememberIdCheck}
             checked={rememberId}
+            sx={{ width: 260, mt: 1, font: 20 }}
             label="아이디 저장하기"
           />
         </FormGroup>
-        <Button type="submit" variant="contained" sx={{ width: 280 }}>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ width: 300, mb: 2, mt: 1, py: 1.2, fontSize: 14 }}
+        >
           로그인
         </Button>
-        <br />
-
         <div sx={{ flexDirection: "row" }}>
-          <Link href="/user/password">비밀번호 찾기</Link>
-          <span> | </span>
-          <Link href="/regist">회원가입</Link>
+          <Typography
+            variant="h6"
+            display="inline"
+            gutterBottom
+            sx={{ width: 300, fontSize: 13.5, mr: 2 }}
+          >
+            <Link href="/user/password">비밀번호 재설정</Link>{" "}
+          </Typography>
+          <span> </span>
+          <Typography
+            variant="h6"
+            display="inline"
+            gutterBottom
+            sx={{ width: 300, fontSize: 13.5, mr: 2 }}
+          >
+            <Link href="/regist">회원가입</Link>
+          </Typography>
         </div>
         <br />
       </Box>
