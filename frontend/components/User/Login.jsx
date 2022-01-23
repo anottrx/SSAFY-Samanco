@@ -134,7 +134,7 @@ export default function Login() {
             id="email"
             // id="margin-none"
             placeholder="이메일"
-            value={inputState.email}
+            value={inputState.email || ''}
             onChange={handleChange}
             sx={{ fontSize: 14 }}
           />
@@ -144,7 +144,7 @@ export default function Login() {
             id="password"
             placeholder="비밀번호"
             type={inputState.showPassword ? "text" : "password"}
-            value={inputState.password}
+            value={inputState.password || ''}
             onChange={handleChange}
             sx={{ fontSize: 14 }}
             endAdornment={
