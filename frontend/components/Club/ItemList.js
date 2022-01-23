@@ -8,6 +8,7 @@ import Router from "next/router";
 
 import { useSelector, useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
+import * as studyActions from '../../store/module/study';
 
 import StackList from "./StackList"
 import stackData from "../../data/StackData.json"
@@ -16,26 +17,47 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 
-function ItemList() {
+function ItemList(props) {
     //-------------- redux dispatch로 값 저장, selector로 불러오기
-    let projectData = useSelector(({ project }) => project.projectList);
-
+    
+    
     const dispatch = useDispatch();
+    
+    let clubData, setDetail, setList;
+    
+    if (props.from === "project") {
+        clubData = useSelector(({ project }) => project.projectList);
+        setDetail = useCallback(
+            ({detail}) => {
+                dispatch(projectActions.setProjectDetail({detail}))
+            },
+            [dispatch],
+        )
+    
+        setList = useCallback(
+            ({list}) => {
+                dispatch(projectActions.setProjectList({list}))
+            },
+            [dispatch],
+        )
+    } else if (props.from === "study") {
+        clubData = useSelector(({ study }) => study.studyList);
+        setDetail = useCallback(
+            ({detail}) => {
+                dispatch(studyActions.setStudyDetail({detail}))
+            },
+            [dispatch],
+        )
+    
+        setList = useCallback(
+            ({list}) => {
+                dispatch(studyActions.setStudyList({list}))
+            },
+            [dispatch],
+        )
+    }
 
-    const setDetail = useCallback(
-        ({detail}) => {
-            dispatch(projectActions.setProjectDetail({detail}))
-        },
-        [dispatch],
-    )
-
-    const setList = useCallback(
-        ({list}) => {
-            dispatch(projectActions.setProjectList({list}))
-        },
-        [dispatch],
-    )
-
+    
     // 페이지네이션 페이지
     const [page, setPage] = useState(1);
 
@@ -48,8 +70,8 @@ function ItemList() {
     const lgMatches = useMediaQuery(theme.breakpoints.up('lg'));
     
     let purPage = useRef(1);
-    let allPage = parseInt(projectData.length / purPage.current);
-    if (projectData.length % purPage.current > 0) allPage += 1;
+    let allPage = parseInt(clubData.length / purPage.current);
+    if (clubData.length % purPage.current > 0) allPage += 1;
 
     if (lgMatches) {
         purPage.current = 8;
@@ -67,7 +89,7 @@ function ItemList() {
     // 화면에 요소를 그리기 전에 store에 저장된 아이템 리스트가 있는지 확인
     // 없으면 store에 저장
     useLayoutEffect(() => {
-        if (projectData.length == 0) {
+        if (clubData.length == 0) {
             // 빈 배열이면 배열 요청
             // To Do : 나중에 api로 값 가져오게 수정
             setList({list: projectJSONData});
@@ -91,10 +113,10 @@ function ItemList() {
         <>
         <CusGrid container maxWidth="lg" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
             {
-                projectData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
+                clubData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={data.no}  onClick={()=>{
-                            Router.push("/project/"+data.no);
+                            Router.push(props.from+"/"+data.no);
                             setDetail({detail: data});
                         }}>
                             <Item data={data}></Item> 
@@ -143,7 +165,12 @@ export function Item(props) {
                         {data.title}
                     </Typography>
                     
-                    <StackList stackData={data.stacks}></StackList>
+                    {/* 리스트에서 보이는 클럽 스택은 최대 3개까지 표시 */}
+                    <StackList stackData={data.stacks.length > 3? 
+                        data.stacks.slice(0,3)
+                        : 
+                        data.stacks
+                }></StackList>
                 </CardContent>
             </Card>
         </Container>
