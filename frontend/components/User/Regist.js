@@ -29,6 +29,7 @@ import {
   ListItemText,
   Dialog,
   Select,
+  Typography,
 } from "@mui/material";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PersonIcon from "@mui/icons-material/Person";
@@ -43,7 +44,6 @@ import MenuItem from "@mui/material/MenuItem";
 
 export default function Regist() {
   // id, password 유효성 검사 반환 결과 : idCheckRes, pwCheckRes
-  const [idCheckRes, setIdCheckRes] = useState(null);
   const [pwCheckRes, setPwCheckRes] = useState(null);
   const [pwSameRes, setPwSameRes] = useState(null);
 
@@ -411,7 +411,9 @@ export default function Regist() {
         {/* <form > */}
         {/* 이메일 */}
         <div>
-          <label>이메일</label>
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            이메일
+          </Typography>
           <br />
           <OutlinedInput
             type="email"
@@ -420,8 +422,7 @@ export default function Regist() {
             value={inputState.email}
             onChange={handleChange}
             disabled={authFin ? true : false}
-            sx={{ width: 240 }}
-            
+            sx={{ width: 370, fontSize: 14 }}
             endAdornment={
               <InputAdornment position="end">
                 <Button
@@ -435,12 +436,16 @@ export default function Regist() {
           />
           <>{showEmailCodeCheck ? <EmailCodeSource /> : null}</>
           {authFin ? (
-            <Button onClick={sendEmailCodeAgainClick}>이메일 변경 및 인증 다시 받기</Button>
+            <Button onClick={sendEmailCodeAgainClick}>
+              이메일 변경 및 인증 다시 받기
+            </Button>
           ) : null}
         </div>
         {/* 닉네임 */}
         <div className="mb-6">
-          <label className="">닉네임</label>
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            닉네임
+          </Typography>
           <br />
           <OutlinedInput
             type="text"
@@ -451,7 +456,7 @@ export default function Regist() {
               handleChange(e);
               nicknameHandleChange(e);
             }}
-            sx={{ width: 240 }}
+            sx={{ width: 370, fontSize: 14 }}
           />
           {/* 닉네임 유효성 결과 */}
           {/* 1. 사용 가능 */}
@@ -473,7 +478,9 @@ export default function Regist() {
         </div>
         {/* 비밀번호 */}
         <div className="mb-6">
-          <label className="">비밀번호</label>
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            비밀번호
+          </Typography>
           <br />
           <OutlinedInput
             type="password"
@@ -484,7 +491,7 @@ export default function Regist() {
               handleChange(e);
               pwHandleChange(e);
             }}
-            sx={{ width: 240 }}
+            sx={{ width: 370, fontSize: 14 }}
           />
           {/* 1. 비밀번호 사용 가능 */}
           {inputState.password != "" && pwCheckRes && pwCheckRes.code == 200 ? (
@@ -501,7 +508,9 @@ export default function Regist() {
         </div>
         {/* 비밀번호 확인 */}
         <div className="mb-6">
-          <label className="">비밀번호 확인</label>
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            비밀번호 확인
+          </Typography>
           <br />
           <OutlinedInput
             type="password"
@@ -511,7 +520,7 @@ export default function Regist() {
               handleChange(e);
               pwSameCheck(e);
             }}
-            sx={{ width: 240 }}
+            sx={{ width: 370, fontSize: 14 }}
           />
           {/* 비밀번호 동일 체크 */}
           {inputState.passwordConfirm == "" || pwSameRes ? null : (
@@ -522,99 +531,87 @@ export default function Regist() {
         </div>
         {/* 기수 */}
         <div className="mb-6">
-          <label>기수</label>
-          <x sx={{ m: 1, minWidth: 120 }}>
-            <Select
-              id="generation"
-              onChange={generationHandleChange}
-              defaultValue=""
-            >
-              {generationOptions.map((opt) => {
-                return (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </x>
-          {/* 반 */}
-          <label>반</label>
-          <x sx={{ m: 1, minWidth: 280 }}>
-            <Select id="userClass" onChange={classHandleChange} defaultValue="">
-              {classOptions.map((opt) => {
-                return (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </x>
-          {/* 학번 */}
-          <div className="mb-6">
-            <label>학번</label>
-            <br />
-            <OutlinedInput
-              type="text"
-              id="studentId"
-              value={inputState.studentId}
-              placeholder="싸피에서 제공받은 학번"
-              onChange={handleChange}
-              sx={{ width: 240 }}
-            />
+        <div sx={{ flexDirection: "row" }}>
+            <Typography display="inline" sx={{ fontSize: 14, mr: 20.5 }}>
+            기수
+            </Typography>
+            <Typography display="inline" sx={{ fontSize: 14 }}>
+            반
+            </Typography>
           </div>
+          <Select
+            id="generation"
+            onChange={generationHandleChange}
+            defaultValue=""
+            sx={{ width: 180, mr: 1.25,fontSize: 14 }}
+          >
+            {generationOptions.map((opt) => {
+              return (
+                <MenuItem
+                  key={opt.value}
+                  value={opt.value}
+                  sx={{ minWidth: 120, fontSize: 14 }}
+                >
+                  {opt.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+          {/* 반 */}
+          <Select
+            id="userClass"
+            onChange={classHandleChange}
+            defaultValue=""
+            sx={{ width: 180, fontSize: 14 }}
+          >
+            {classOptions.map((opt) => {
+              return (
+                <MenuItem
+                  key={opt.value}
+                  value={opt.value}
+                  sx={{ minWidth: 120, fontSize: 14 }}
+                >
+                  {opt.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
         </div>
-        {/* 이름 */}
-        <div className="mb-6">
-          <label className="">이름</label>
-          <br />
+        {/* 학번 */}
+        <div>
+          <div sx={{ flexDirection: "row" }}>
+            <Typography display="inline" sx={{ fontSize: 14, mr: 20.5 }}>
+              학번
+            </Typography>
+            <Typography display="inline" sx={{ fontSize: 14 }}>
+              이름
+            </Typography>
+          </div>
+          <OutlinedInput
+            type="number"
+            id="studentId"
+            value={inputState.studentId}
+            placeholder="싸피에서 받은 학번"
+            onChange={handleChange}
+            sx={{ width: 180, mr: 1.25, fontSize: 14 }}
+          />
+          {/* 이름 */}
           <OutlinedInput
             type="text"
             id="name"
             value={inputState.name}
+            placeholder="한글"
             onChange={(e) => {
               handleChange(e);
             }}
-            sx={{ width: 240 }}
+            sx={{ width: 180, fontSize: 14 }}
           />
-        </div>
-        {/* 분야 */}
-        <div className="mb-6">
-          <label>분야</label>
-          <x sx={{ m: 1, minWidth: 120 }}>
-            <Select
-              id="position"
-              onChange={positionHandleChange}
-              // key={inputState.position}
-              // defaultValue={inputState.position}
-              // value={inputState.position}
-              // onBlur={handleChange}
-              defaultValue=""
-            >
-              {positionOptions.map((u, i) => {
-                return (
-                  <MenuItem key={i} value={u.value}>
-                    {u.name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </x>
-        </div>
-        {/* 생년월일 */}
-        <div className="mb-6">
-          <label>생년월일</label>
-          <br />
-          <LocalizationProvider dateAdapter={DateAdapter}>
-            <DatePickerWrapper>
-              <DatePicker label="생년월일" value={inputState.birthday} />
-            </DatePickerWrapper>
-          </LocalizationProvider>
         </div>
         {/* 전화번호 */}
         <div className="mb-6">
-          <label className="">전화번호</label>
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            전화번호
+          </Typography>
           <br />
           <OutlinedInput
             type="number"
@@ -624,12 +621,51 @@ export default function Regist() {
             onChange={(e) => {
               handleChange(e);
             }}
-            sx={{ width: 240 }}
+            sx={{ width: 370, fontSize: 14 }}
           />
+        </div>
+        {/* 분야 */}
+        <div className="mb-6">
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            분야
+          </Typography>
+          <br />
+          <Select
+            id="position"
+            onChange={positionHandleChange}
+            defaultValue=""
+            sx={{ minWidth: 370, fontSize: 14 }}
+          >
+            {positionOptions.map((u, i) => {
+              return (
+                <MenuItem
+                  key={i}
+                  value={u.value}
+                  sx={{ minWidth: 120, fontSize: 14 }}
+                >
+                  {u.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </div>
+        {/* 생년월일 */}
+        <div className="mb-6">
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            생년월일
+          </Typography>
+          <br />
+          <LocalizationProvider dateAdapter={DateAdapter}>
+            <DatePickerWrapper>
+              <DatePicker label="생년월일" value={inputState.birthday} />
+            </DatePickerWrapper>
+          </LocalizationProvider>
         </div>
         {/* 링크 */}
         <div className="mb-6">
-          <label>링크</label>
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            링크
+          </Typography>
           <Button onClick={handleClickOpen}>추가</Button>
           <label></label>
           <Dialog open={open} onClose={handleClose}>
@@ -664,7 +700,10 @@ export default function Regist() {
         </div>
         {/* 자기소개 */}
         <div className="mb-6">
-          <label className="">자기소개</label>
+          <Typography display="inline" sx={{ fontSize: 14 }}>
+            자기소개
+          </Typography>
+          <br />
           <TextField
             id="description"
             placeholder="자기자신에 대해 소개해주세요"
@@ -673,6 +712,7 @@ export default function Regist() {
             multiline
             value={inputState.description}
             onChange={handleChange}
+            sx={{ width: 370, fontSize: 14 }}
           />
         </div>
         {/* 이미지 업로드 */}
@@ -689,7 +729,13 @@ export default function Regist() {
         </Box>
         <br />
         {/* 가입 버튼 */}
-        <button type="submit">가입하기</button>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ width: 370, mb: 2, mt: 1, py: 1.2, fontSize: 14 }}
+        >
+          회원가입하기
+        </Button>
 
         {/* </form> */}
       </Box>

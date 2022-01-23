@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { OutlinedInput, InputAdornment, Button } from "@mui/material";
+import {
+  OutlinedInput,
+  InputAdornment,
+  Button,
+  Typography,
+} from "@mui/material";
 import { checkEmailPWAPI } from "../../pages/api/user";
 
 export default function CheckEmailCode() {
@@ -29,7 +34,9 @@ export default function CheckEmailCode() {
 
   return (
     <div>
-      <label className="">인증번호 확인</label>
+      <Typography display="inline" sx={{ fontSize: 14 }}>
+        인증번호 확인
+      </Typography>
       <br />
       <OutlinedInput
         type="text"
@@ -37,7 +44,7 @@ export default function CheckEmailCode() {
         placeholder="이메일 인증번호"
         value={code}
         onChange={codeHandleChange}
-        sx={{ width: 240 }}
+        sx={{ width: 370 }}
         disabled={authFin ? true : false}
         endAdornment={
           <InputAdornment position="end">

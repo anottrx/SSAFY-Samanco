@@ -22,7 +22,6 @@ async function registAPI(inputState) {
   return await api
     // .post("/api/v1/users", {
     .post("/api/user", {
-      // id: inputState.id,
       email: inputState.email,
       name: inputState.name,
       password: inputState.password,
