@@ -187,6 +187,9 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     // file
     implementation("commons-io:commons-io:2.6")
+    // String -> JsonArray
+    implementation("com.googlecode.json-simple:json-simple:1.1.1")
+//    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.3")
 }
 
 test {

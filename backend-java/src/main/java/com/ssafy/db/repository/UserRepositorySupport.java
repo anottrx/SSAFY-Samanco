@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * 유저 모델 관련 디비 쿼리 생성을 위한 구현 정의.
@@ -61,7 +62,7 @@ public class UserRepositorySupport {
     }
 
     @Transactional
-    public void updateUser(UserUpdatePostReq userUpdateInfo) {
+    public int updateUser(UserUpdatePostReq userUpdateInfo) {
 //        User user=jpaQueryFactory.select(qUser).from(qUser)
 //                .where(qUser.id.eq(userUpdateInfo.getUserId())).fetchOne();
 
@@ -81,20 +82,43 @@ public class UserRepositorySupport {
                     .set(qUser.name, name).set(qUser.password, password).set(qUser.phone, phone).set(qUser.birthday, birthday)
                     .set(qUser.description, description).set(qUser.description, description).set(qUser.nickname, nickname)
                     .set(qUser.generation, generation).set(qUser.link, link).set(qUser.studentId, studentId).execute();
+
+            return 200;
         }
+        return 401;
     }
 
     @Transactional
-    public void updateUserProject(Long userId, Long projectId) {
+    public int updateUserProject(Long userId, Long projectId) {
         if (isProjectValid(userId)) {
             jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
                     .set(qUser.projectId, projectId).execute();
+            return 200;
         }
+
+        return 401;
     }
 
     @Transactional
     public void deleteUser(Long userId){
         jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
                 .set(qUser.isDeleted, true).execute();
+    }
+
+    public int updatePasswordUserProject(UserUpdatePostReq userUpdateInfo) {
+        Long userId=userUpdateInfo.getUserId();
+        if (isValid(userId)) {
+            String password = passwordEncoder.encode(userUpdateInfo.getPassword());
+
+            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                    .set(qUser.password, password).execute();
+
+            return 200;
+        }
+        return 401;
+    }
+
+    public List<User> selectUserAll() {
+        return jpaQueryFactory.selectFrom(qUser).where(qUser.isDeleted.eq(false)).fetch();
     }
 }

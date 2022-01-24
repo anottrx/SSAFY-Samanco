@@ -14,6 +14,7 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class Project extends BaseEntity{
 
     @Id
