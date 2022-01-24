@@ -66,10 +66,7 @@ export default function BoardList(props) {
                     <TableBody>
                     {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
                         <StyledTableRow key={article.boardId}>
-                        <StyledTableCell component="th" scope="row" onClick={()=>{Router.push({
-                                pathname: '/board/BoardDetail', query : {boardId : article.boardId}}
-                            )}}>{article.title}
-                        </StyledTableCell>
+                        <StyledTableCell component="th" scope="row" onClick={()=>{Router.push("/board/"+article.boardId);}}>{article.title}</StyledTableCell>
                         <StyledTableCell align="right">{article.userId}</StyledTableCell>
                         <StyledTableCell align="right">{article.startDate}</StyledTableCell>
                         <StyledTableCell align="right">{article.likes}</StyledTableCell>
