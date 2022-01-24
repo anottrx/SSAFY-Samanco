@@ -62,10 +62,9 @@ function ProjectRegist() {
         background-size: contain;
     `
 
-    // To Do : 나중에 hostId는 로그인 한 userId로 변경하기!
     const [inputValue, setInputValue] = useState({
         "collectStatus": "ING",
-        "hostId": 4,
+        "hostId": sessionStorage.getItem("userId"),
     });
 
     const [files, setFiles] = useState('');

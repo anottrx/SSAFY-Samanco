@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
 
-import { getProjectAllAPI } from "../../pages/api/project"
+import { getProjectAllAPI, getProjectById } from "../../pages/api/project"
 
 import StackList from "./StackList"
 import stackData from "../../data/StackData.json"
@@ -91,15 +91,12 @@ function ItemList(props) {
     // 화면에 요소를 그리기 전에 store에 저장된 아이템 리스트가 있는지 확인
     // 없으면 store에 저장
     useLayoutEffect(() => {
-        if (clubData.length == 0) {
-            // 빈 배열이면 배열 요청
-            // To Do : 나중에 api로 값 가져오게 수정
-            if (props.from === "project") {
-                getProjectAllAPI().then(res => setList({list: res.projects}));
-            } else {
-                setList({list: projectJSONData});
-            }
-
+        // 빈 배열이면 배열 요청
+        // To Do : 나중에 api로 값 가져오게 수정 - Project API 연동
+        if (props.from === "project") {
+            getProjectAllAPI().then(res => setList({list: res.projects}));
+        } else {
+            setList({list: projectJSONData});
         }
     }, [])
 
@@ -123,11 +120,17 @@ function ItemList(props) {
                 clubData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}  onClick={()=>{
-                            Router.push({
-                                pathname: `/${props.from}/[id]`,
-                                query: { id: data.id }
+                            getProjectById({id: data.id})
+                            .then(res => {
+                                setDetail({detail: res.project});
+                                
+                                // api 작성
+                                Router.push({
+                                    pathname: `/${props.from}/[id]`,
+                                    query: { id: data.id }
+                                })
                             })
-                            setDetail({detail: data});
+                            
                         }}>
                             <Item data={data}></Item> 
                         </Grid>

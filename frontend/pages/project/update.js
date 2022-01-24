@@ -64,6 +64,9 @@ function projectUpdate() {
     `
 
     const [inputValue, setInputValue] = useState({
+        // To Do: hostPosition 받아오면 그 때 수정~~
+        projectId: detail.id,
+        hostId: sessionStorage.getItem("userId"),
         schedule: detail.schedule,
         startDate: detail.startDate,
         endDate: detail.endDate,

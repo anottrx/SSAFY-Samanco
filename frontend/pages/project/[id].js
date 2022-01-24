@@ -14,7 +14,6 @@ import Router from "next/router";
 
 import { deleteAPI } from "../api/project";
 
-
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
 
@@ -61,7 +60,7 @@ const ProjectDetail = () => {
             <br></br>
             <DetailHeader>
                 <h2>{detail.title}</h2>
-                <DetailOperation></DetailOperation>
+                <DetailOperation detail={detail}></DetailOperation>
             </DetailHeader>
             <DetailWrapper maxWidth="sm">
                 <CusSkeleton variant="rectangular" animation={false} />
@@ -71,17 +70,18 @@ const ProjectDetail = () => {
         </CusContainer>
     </Layout>);
 
-    function DetailOperation() {
+    function DetailOperation({detail}) {
         const [open, setOpen] = useState(false);
 
         const deleteDialogOpen = () => { setOpen(true) }
         const deleteOperation = () => {
-            // To do: projectId, userId 수정해야함!
-            let data = {id: 1, userId: 1};
+            let data = {id: detail.id, hostId: parseInt(sessionStorage.getItem("userId"))};
             deleteAPI(data)
             .then(res => {
-                if (res.statusCode == 200)
-                    console.log("삭제")
+                if (res.statusCode == 200){
+                    console.log("삭제");
+                    Router.push("/project")
+                }
             })
             .catch(err => console.log(err))
             setOpen(false);
