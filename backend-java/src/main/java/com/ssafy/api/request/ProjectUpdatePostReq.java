@@ -4,12 +4,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
+@ToString
 @ApiModel("ProjectUpdatePostReq")
 public class ProjectUpdatePostReq {
 
@@ -18,6 +20,9 @@ public class ProjectUpdatePostReq {
 
     @ApiModelProperty(name="user id", example="1")
     private Long hostId;
+
+    @ApiModelProperty(name="host position", example="FRONTEND")
+    private String hostPosition;
 
     @ApiModelProperty(name="title", example="싸피사만코 같이 하실분 구함")
     private String title;

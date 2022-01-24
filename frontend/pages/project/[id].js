@@ -220,7 +220,10 @@ const ProjectDetail = () => {
                     </Button>
                 </ButtonGroup>
                 <>
+                <div>
+                    <Button variant="outlined" onClick={() => {Router.push("/project/applylist")}}>지원자 목록 조회</Button>
                     <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                </div>
                     <Dialog
                         open={open}
                         onClose={JoinDialogClose}

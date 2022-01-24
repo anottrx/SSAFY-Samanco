@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.model.StackGradeDto;
 import com.ssafy.db.entity.StackGrade;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.StackRepository;
@@ -23,6 +24,9 @@ public class StackServiceImpl implements StackService{
 
     @Override
     public void createStack(List<Map<String, Integer>> stacks, Long id, int flag) {
+        if (stacks==null){
+            return;
+        }
         for (Map<String, Integer> stack: stacks){
             for (Map.Entry<String, Integer>entry: stack.entrySet()){
                 String name= entry.getKey();
@@ -44,8 +48,17 @@ public class StackServiceImpl implements StackService{
 
     @Override
     public void updateStack(List<Map<String, Integer>> stacks, Long id, int flag) {
+        if (stacks==null){
+            return;
+        }
         stackRepositorySupport.deleteStack(id, flag);
         createStack(stacks, id, flag);
 
+
+    }
+
+    @Override
+    public List<StackGradeDto> selectStack(Long id, int flag) {
+        return stackRepositorySupport.selectStack(id, flag);
     }
 }

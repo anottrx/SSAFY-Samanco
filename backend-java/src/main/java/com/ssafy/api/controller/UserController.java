@@ -1,9 +1,12 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
+import com.ssafy.api.response.UserSelectAllPostRes;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
 import com.ssafy.db.entity.StackGrade;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,9 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+
+import static com.ssafy.common.util.JsonUtil.getListMapFromString;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -60,8 +66,20 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> register(
-			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo,
-			@RequestPart(required = false) MultipartFile[] files) throws IOException {
+			@RequestParam("email") String email,
+			@RequestParam("password") String password,
+			@RequestParam("name") String name,
+			@RequestParam("nickname") String nickname,
+			@RequestParam("studentId") String studentId,
+			@RequestParam(required = false, value="phone") String phone,
+			@RequestParam(required = false, value="stacks") String stacks,
+			@RequestParam(required = false, value="birthday") String birthday,
+			@RequestParam(required = false, value="generation") int generation,
+			@RequestParam(required = false, value="class") String userClass,
+			@RequestParam(required = false, value="position") String position,
+			@RequestParam(required = false, value="link") String link,
+			@RequestParam(required = false, value="description") String description,
+			@RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 
@@ -74,6 +92,20 @@ public class UserController {
          5. 이메일은 @ 필수적으로 포함
          6. 전화번호는 01012341234 형식
          */
+
+		UserRegisterPostReq registerInfo=new UserRegisterPostReq();
+		registerInfo.setBirthday(birthday);
+		registerInfo.setDescription(description);
+		registerInfo.setEmail(email);
+		registerInfo.setGeneration(generation);
+		registerInfo.setUserClass(userClass);
+		registerInfo.setLink(link);
+		registerInfo.setName(name);
+		registerInfo.setNickname(nickname);
+		registerInfo.setPassword(password);
+		registerInfo.setPhone(phone);
+		registerInfo.setStudentId(studentId);
+		registerInfo.setPosition(position);
 
 		//1. 이메일 오류
 		int emailCode=userService.emailCheck(registerInfo.getEmail());
@@ -108,20 +140,23 @@ public class UserController {
 
 		//6. 전화번호 오류
 		int phoneCode=userService.phoneCheck(registerInfo.getPhone());
-		if(phoneCode == 401)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"전화번호를 입력해주세요"));
-		else if(phoneCode == 402)
+//		if(phoneCode == 401)
+//			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"전화번호를 입력해주세요"));
+		if(phoneCode == 402)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 전화번호 형식으로 입력해주세요."));
 
 
 		// 회원 가입
 		User user = userService.createUser(registerInfo);
-		// 회원 스택 입력
-		stackService.createStack(registerInfo.getStacks(), user.getId(), 1);
 		// 회원 이미지 입력
-		fileService.saveFile(files, user.getId(), 1);
-
-
+		if (files!=null) {
+			fileService.saveFile(files, user.getId(), 1);
+		}
+		// user 스택 입력
+		if (stacks!=null) {
+			registerInfo.setStacks(getListMapFromString(stacks));
+			stackService.createStack(registerInfo.getStacks(), user.getId(), 1);
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
@@ -134,10 +169,39 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> update(
-			@RequestBody @ApiParam(value="회원 정보", required = true) UserUpdatePostReq updateInfo,
-			@RequestPart(required = false) MultipartFile[] files) throws IOException {
+			@RequestParam("userId") Long userId,
+			@RequestParam("email") String email,
+			@RequestParam("password") String password,
+			@RequestParam("name") String name,
+			@RequestParam("nickname") String nickname,
+			@RequestParam("studentId") String studentId,
+			@RequestParam(required = false, value="phone") String phone,
+			@RequestParam(required = false, value="stacks") String stacks,
+			@RequestParam(required = false, value="birthday") String birthday,
+			@RequestParam(required = false, value="generation") int generation,
+			@RequestParam(required = false, value="class") String userClass,
+			@RequestParam(required = false, value="position") String position,
+			@RequestParam(required = false, value="link") String link,
+			@RequestParam(required = false, value="description") String description,
+			@RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
+
+
+		UserUpdatePostReq updateInfo=new UserUpdatePostReq();
+		updateInfo.setUserId(userId);
+		updateInfo.setBirthday(birthday);
+		updateInfo.setDescription(description);
+		updateInfo.setEmail(email);
+		updateInfo.setGeneration(generation);
+		updateInfo.setUserClass(userClass);
+		updateInfo.setLink(link);
+		updateInfo.setName(name);
+		updateInfo.setNickname(nickname);
+		updateInfo.setPassword(password);
+		updateInfo.setPhone(phone);
+		updateInfo.setStudentId(studentId);
+		updateInfo.setPosition(position);
 
 		//1. 이메일 오류
 		int emailCode=userService.emailCheck(updateInfo.getEmail());
@@ -172,21 +236,54 @@ public class UserController {
 
 		//6. 전화번호 오류
 		int phoneCode=userService.phoneCheck(updateInfo.getPhone());
-		if(phoneCode == 401)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"전화번호를 입력해주세요"));
-		else if(phoneCode == 402)
+//		if(phoneCode == 401)
+//			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"전화번호를 입력해주세요"));
+		if(phoneCode == 402)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 전화번호 형식으로 입력해주세요."));
 
 
 		// 회원 수정
 		userService.updateUser(updateInfo);
-		Long userId= updateInfo.getUserId();
+//		Long userId= updateInfo.getUserId();
 		// 회원 스택 수정
-		stackService.updateStack(updateInfo.getStacks(), userId, 1);
+		if (stacks!=null) {
+			updateInfo.setStacks(getListMapFromString(stacks));
+			stackService.updateStack(updateInfo.getStacks(), userId, 1);
+		}
 		// 회원 이미지 입력
-		fileService.updateFile(files, userId, 1);
+		if (files!=null) {
+			fileService.updateFile(files, userId, 1);
+		}
 
 
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+	}
+
+	@PostMapping("/updatepass")
+	@ApiOperation(value = "비밀번호 수정")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> updatePassword(
+			@RequestBody @ApiParam(value="사용자 아이디랑 비밀번호만", required = true) UserUpdatePostReq updateInfo) throws IOException {
+
+		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
+
+		//3. 비밀번호 오류
+		int passCode=userService.pwdCheck(updateInfo.getPassword());
+		if(passCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"비밀번호를 입력해주세요"));
+		else if(passCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"비밀번호는 영문, 숫자, 특수문자 포함 8~16자로 입력해주세요."));
+
+		// 회원 수정
+		int updatePasswordCode=userService.updatePasswordUser(updateInfo);
+		if (updatePasswordCode==401){
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "사용자 아이디가 유효하지 않습니다."));
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
@@ -197,8 +294,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> delete(
-			@RequestBody @ApiParam(value="회원 아이디", required = true) UserIdPostReq userId,
-			@RequestPart(required = false) MultipartFile[] files) throws IOException {
+			@RequestBody @ApiParam(value="회원 아이디", required = true) UserIdPostReq userId) throws IOException {
 
 		// 회원 삭제 : isDeleted=true
 		userService.deleteUser(userId.getUserId());
@@ -222,6 +318,21 @@ public class UserController {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"닉네임이 중복됩니다. 다른 닉네임으로 가입해주세요."));
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "닉네임 사용 가능합니다."));
+	}
+
+	@GetMapping
+	@ApiOperation(value = "사용자 전체 조회")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> selectUser() {
+		//200 일때 사용 가능
+		List<UserDto> users=userService.selectUserAll();
+		if (users==null){
+			return ResponseEntity.status(200).body(UserSelectAllPostRes.of(200, "사용자가 없습니다.", null));
+		}
+		return ResponseEntity.status(200).body(UserSelectAllPostRes.of(200, "사용자 전체 목록", users));
 	}
 
 //	@PostMapping("passcheck")
@@ -288,4 +399,6 @@ public class UserController {
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
 		return ResponseEntity.status(200).body(UserLoginPostRes.of(401, "이메일 혹은 비밀번호가 일치하지 않습니다.", null));
 	}
+
+
 }
