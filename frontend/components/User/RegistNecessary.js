@@ -3,11 +3,7 @@ import Router from "next/router";
 import CheckEmailCode from "./CheckEmailCode";
 import { useCookies } from "react-cookie";
 
-import {
-  registAPI,
-  checkNicknameAPI,
-  checkMemberAPI,
-} from "../../pages/api/user";
+import { registAPI, loginAPI, checkNicknameAPI } from "../../pages/api/user";
 import {
   Paper,
   InputLabel,
@@ -208,6 +204,11 @@ export default function RegistNecessafy() {
     setPwSameRes(inputState.password == value ? true : false);
   };
 
+  const pwSameOtherCheck = (e) => {
+    const value = e.target.value;
+    setPwSameRes(inputState.passwordConfirm == value ? true : false);
+  };
+
   const idReg = /^[A-Za-z0-9_-]{4,8}$/;
   // 아이디 정규표현식 : 최소 4자, 최대 8자
 
@@ -280,7 +281,10 @@ export default function RegistNecessafy() {
           // 가입 성공 시
           // alert("가입이 되었습니다!");
 
-          setCookie("userToken", res.accessToken);
+          // 로그인
+          loginAPI(inputState).then((res) => {
+            setCookie("userToken", res.accessToken); // 쿠키 설정
+          });
           setCookie("userEmail", inputState.email);
           sessionStorage.setItem("userId", inputState.userId);
           sessionStorage.setItem("email", inputState.email);
@@ -292,10 +296,11 @@ export default function RegistNecessafy() {
             )
           ) {
           } else {
-            // 페이지 이동
-            window.history.forward();
-            Router.push("/login");
+            
           }
+          // 페이지 이동
+          window.history.forward();
+          window.location.replace("/");
         } else {
           alert(`${res.message}`);
           console.log("회원가입실패");
@@ -402,7 +407,7 @@ export default function RegistNecessafy() {
             onChange={(e) => {
               handleChange(e);
               pwHandleChange(e);
-              pwSameCheck(e);
+              pwSameOtherCheck(e);
             }}
             sx={{ width: 370, fontSize: 14 }}
           />
