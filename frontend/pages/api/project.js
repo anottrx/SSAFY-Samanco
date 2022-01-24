@@ -32,6 +32,13 @@ async function deleteAPI(data) {
     .catch((err) => err.response.data);
 }
 
+async function getProjectAllAPI() {
+    return await api
+    .get("/api/project")
+    .then((res) => res.data)
+    .catch((err) => console.log(err))
+}
+
 export {
-    registAPI, updateAPI, deleteAPI
+    registAPI, updateAPI, deleteAPI, getProjectAllAPI
 }

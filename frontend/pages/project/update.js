@@ -22,6 +22,7 @@ const position = [
 
 function projectUpdate() {
     const detail = useSelector(({ project }) => project.projectDetail);
+    console.log(detail)
 
     const CusPaper = styled(Paper)`
         width: 100%;
@@ -204,10 +205,10 @@ function projectUpdate() {
                             const formData = new FormData();
 
                             Object.keys(inputValue).map(key => {
-                                if (key!=="positions"){
-                                    let value = inputValue[key];
+                                if (key === 'stacks' || key == 'positions')
                                     formData.append(key, JSON.stringify(value));
-                                }
+                                else 
+                                    formData.append(key, value);
                             })
 
                             formData.append("file",files);

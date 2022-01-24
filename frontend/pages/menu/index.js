@@ -26,7 +26,7 @@ const menu = () => {
       <Link href="/board">
         <a className={styles.link}>게시판</a>
       </Link>
-      {userId === "admin" ? <Link href="/"><a className={styles.link}>회원관리</a></Link> :null}
+      {userId === "admin" ? <Link href="/admin"><a className={styles.link}>회원관리</a></Link> :null}
     </div>
   );
 };

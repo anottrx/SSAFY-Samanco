@@ -50,52 +50,30 @@ public class ProjectController {
     })
     public ResponseEntity<? extends BaseResponseBody> register(
             @RequestParam("hostId") Long hostId, @RequestParam("hostPosition") String hostPosition,
-<<<<<<< HEAD
-            @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
-            @RequestParam("description") String description, @RequestParam("collectStatus") String collectStatus,
-=======
             @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam(required = false, value="collectStatus", defaultValue="ING") String collectStatus,
->>>>>>> 76ccf4c255d329e5c08358d6ee5cdb3e18227859
             @RequestParam(required = false, value="stacks") String stacks,
             @RequestParam(required = false, value="totalFrontendSize", defaultValue = "0") int totalFrontendSize,
             @RequestParam(required = false, value="totalBackendSize", defaultValue = "0") int totalBackendSize,
             @RequestParam(required = false, value="totalMobileSize", defaultValue = "0") int totalMobileSize,
             @RequestParam(required = false, value="totalEmbeddedSize", defaultValue = "0") int totalEmbeddedSize,
-<<<<<<< HEAD
-            @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException {
-
-        ProjectRegisterPostReq registerInfo=new ProjectRegisterPostReq();
-        registerInfo.setCollectStatus(collectStatus);
-=======
             @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {
 
         ProjectRegisterPostReq registerInfo=new ProjectRegisterPostReq();
         registerInfo.setCollectStatus(collectStatus);
         registerInfo.setTitle(title);
->>>>>>> 76ccf4c255d329e5c08358d6ee5cdb3e18227859
         registerInfo.setHostId(hostId);
         registerInfo.setHostPosition(hostPosition);
         registerInfo.setStartDate(startDate);
         registerInfo.setEndDate(endDate);
-<<<<<<< HEAD
-        System.out.println(stacks);
-//        registerInfo.setStacks(stacks);
-=======
->>>>>>> 76ccf4c255d329e5c08358d6ee5cdb3e18227859
         registerInfo.setDescription(description);
         registerInfo.setTotalFrontendSize(totalFrontendSize);
         registerInfo.setTotalBackendSize(totalBackendSize);
         registerInfo.setTotalMobileSize(totalMobileSize);
         registerInfo.setTotalEmbeddedSize(totalEmbeddedSize);
-<<<<<<< HEAD
-
-        System.out.println(registerInfo);
-=======
 //        registerInfo.setStacks(getListMapFromString(stacks));
 
->>>>>>> 76ccf4c255d329e5c08358d6ee5cdb3e18227859
         if (files!=null) {
             System.out.println(files[0].getOriginalFilename());
         }
@@ -109,13 +87,6 @@ public class ProjectController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 중복하여 등록할 수 없습니다."));
         }
         // project 스택 입력
-<<<<<<< HEAD
-//        if (registerInfo.getStacks()!=null) {
-//            stackService.createStack(registerInfo.getStacks(), project.getId(), 2);
-//        }
-        // project 이미지 입력
-        fileService.saveFile(files, project.getId(), 2);
-=======
         if (stacks!=null) {
             registerInfo.setStacks(getListMapFromString(stacks));
             stackService.createStack(registerInfo.getStacks(), project.getId(), 2);
@@ -124,7 +95,6 @@ public class ProjectController {
         if (files!=null) {
             fileService.saveFile(files, project.getId(), 2);
         }
->>>>>>> 76ccf4c255d329e5c08358d6ee5cdb3e18227859
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -194,15 +164,9 @@ public class ProjectController {
         stackService.updateStack(updateInfo.getStacks(), updateInfo.getId(), 2);
         // project 이미지 update
         fileService.updateFile(files, updateInfo.getId(), 2);
-<<<<<<< HEAD
-//        if (projectCode==401){
-//            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트는 유효하지 않습니다."));
-//        }
-=======
         if (projectCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트는 유효하지 않습니다."));
         }
->>>>>>> 76ccf4c255d329e5c08358d6ee5cdb3e18227859
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -212,21 +176,6 @@ public class ProjectController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> delete(
-<<<<<<< HEAD
-            @RequestBody @ApiParam(value="project info", required = true) ProjectUpdatePostReq updateInfo,
-            @RequestPart(required = false) MultipartFile[] files) throws IOException {
-
-        // project update
-//        int projectCode = projectService.deleteProject(updateInfo);
-        // project 스택 입력
-        stackService.updateStack(updateInfo.getStacks(), updateInfo.getId(), 2);
-        // project 이미지 입력
-        fileService.updateFile(files, updateInfo.getId(), 2);
-
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-    }
-}
-=======
             @RequestBody @ApiParam(value="project id, host id", required = true) ProjectDeletePostReq deleteInfo) throws IOException {
 
         // project delete
@@ -318,4 +267,3 @@ public class ProjectController {
         return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
     }
 }
->>>>>>> 76ccf4c255d329e5c08358d6ee5cdb3e18227859

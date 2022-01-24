@@ -3,44 +3,39 @@ import api, { getAuth } from "./index";
 async function checkLoginTokenInfo(token) {
   // 로그인 토큰 조회
   return await getAuth(token)
-    .get("/api/user/auth")
+    .post("/api/user/auth")
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
 
 async function loginAPI(inputState) {
   return await api
-    .post("/api/v1/auth/login", {
-      id: inputState.id,
+    .post("/api/user/login", {
+      email: inputState.email,
       password: inputState.password,
     })
-    // .post("/api/user/login", {
-    // email: inputState.email,
-    // password: inputState.password
-    // })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
 
 async function registAPI(inputState) {
   return await api
-    .post("/api/v1/users", {
-      // .post("/api/user", {
-      id: inputState.id,
+    // .post("/api/v1/users", {
+    .post("/api/user", {
       email: inputState.email,
       name: inputState.name,
       password: inputState.password,
       phone: inputState.phone,
-      //   nickname: inputState.nickname,
-      //   birthday: inputState.birthday,
-      //   generation: inputState.generation,
-      //   userClass: inputState.userClass,
-      //   studentId: inputState.studentId,
-      //   stacks: inputState.stacks, // array
-      //   position: inputState.position,
-      //   link: inputState.link, // ,로 자르기
-      //   description: inputState.description,
-      //   image_id: inputState.image_id,
+      nickname: inputState.nickname,
+      birthday: inputState.birthday,
+      generation: inputState.generation,
+      userClass: inputState.userClass,
+      studentId: inputState.studentId,
+      stacks: inputState.stacks, // array
+      position: inputState.position,
+      link: inputState.link, // ,로 자르기
+      description: inputState.description,
+      image_id: inputState.image_id,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
@@ -49,7 +44,7 @@ async function registAPI(inputState) {
 async function sendEmailCodeAPI(email) {
   // 이메일로 인증번호 보내기
   return await api
-    .post("/api/user/email-send", {
+    .post("/api/user/emailsend", {
       email: email,
     })
     .then((res) => res.data)
@@ -59,7 +54,7 @@ async function sendEmailCodeAPI(email) {
 async function checkCodeAPI(code) {
   // 이메일로 받은 인증번호로 인증하기
   return await api
-    .post("/api/user/email_code", {
+    .post("/api/user/emailcode", {
       code: code,
     })
     .then((res) => res.data)
@@ -67,10 +62,10 @@ async function checkCodeAPI(code) {
 }
 
 async function getUserInfo(token) {
-  // 내 정보 조회
+  // 내 정보를 조회 -> 이중에서 email, nickname, userId 받음
+  // return await api
   return await getAuth(token)
-    .get("/api/user/me")
-    //   .get("/api/user/me")
+    .get("/api/user/auth")
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }

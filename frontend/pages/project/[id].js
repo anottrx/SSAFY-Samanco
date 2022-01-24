@@ -171,15 +171,6 @@ const ProjectDetail = () => {
                         {detail.startDate} ~  {detail.endDate}
                     </Typography>
                 </div>
-                <div>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
-                        예정 스케쥴
-                    </Typography>
-
-                    <Typography sx={{ mb: 1.5 }}>
-                        {detail.schedule} 
-                    </Typography>
-                </div>
             </FooterWrapper>
         )
     }
@@ -216,7 +207,7 @@ const ProjectDetail = () => {
                     </Button>
                     <Button>
                         <FavoriteIcon /> 
-                        <span>{detail.like}</span>
+                        <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
                 <>
