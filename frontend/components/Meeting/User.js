@@ -15,9 +15,10 @@ function User() {
         width: 100%;
         justify-content: center;
 
-        & .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-10.MuiGrid-grid-md-6.css-745qxe-MuiGrid-root{
+        & .MuiGrid-root{
             height: 250px;
             transform: translate(0px, -70px);
+            padding: 0px 5px;
         }
     `
 
