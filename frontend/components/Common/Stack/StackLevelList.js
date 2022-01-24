@@ -20,11 +20,11 @@ function StackLevelList({items}) {
     return (
         <StackWrapper>
         {
-            items.map(item => {
+            items.map((item, index) => {
                 return (
-                    <ItemWrapper>
+                    <ItemWrapper key={index}>
                         <StackItem title={item.name}></StackItem>
-                        <Rating className="star" value={item.grade} max={3} readOnly />
+                        <Rating className="star" value={item.grade} max={3} readOnly/>
                     </ItemWrapper>
                 )
             })

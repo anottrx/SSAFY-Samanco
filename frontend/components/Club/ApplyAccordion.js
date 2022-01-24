@@ -25,7 +25,7 @@ function ApplyAccordion(props) {
       justify-content: flex-start;
       align-items: flex-start;
 
-      & :first-child {
+      & :first-of-type {
         margin-right: 10px;
       }
     `
@@ -40,7 +40,7 @@ function ApplyAccordion(props) {
           {
             props.applyData.map(data => {
               return(
-                <Accordion>
+                <Accordion key={data.no}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
