@@ -116,7 +116,10 @@ function ItemList(props) {
                 clubData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={data.no}  onClick={()=>{
-                            Router.push(props.from+"/"+data.no);
+                            Router.push({
+                                pathname: `/${props.from}/[id]`,
+                                query: { id: data.no }
+                            })
                             setDetail({detail: data});
                         }}>
                             <Item data={data}></Item> 

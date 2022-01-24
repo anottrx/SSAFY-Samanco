@@ -94,7 +94,7 @@ function ItemList() {
                 meetingData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={data.no}  onClick={()=>{
-                            window.open("/meeting/"+data.no, "_blank", "toolbar=no, menubar=no, status=no, scrollbars=no,resizable=yes,top=10,left=10,width=1000,height=600");
+                            Router.push("/meeting/"+data.no);
                             setDetail({detail: data});
                         }}>
                             <Item data={data}></Item> 
