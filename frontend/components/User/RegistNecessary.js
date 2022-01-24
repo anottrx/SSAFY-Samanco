@@ -118,13 +118,6 @@ export default function RegistNecessafy() {
     background-size: contain;
   `;
 
-  const EmailCodeSource = (props) => {
-    return (
-      <CheckEmailCode />
-      // <Button onClick={compareEmailCodeClick}>확인</Button>
-    );
-  };
-
   const changeHandle = (value, name) => {
     inputState[name] = value;
     // 리렌더링 X
@@ -353,7 +346,7 @@ export default function RegistNecessafy() {
               </InputAdornment>
             }
           />
-          <>{showEmailCodeCheck ? <EmailCodeSource /> : null}</>
+          <>{showEmailCodeCheck ? <CheckEmailCode /> : <></>}</>
           {authFin ? (
             <Button onClick={sendEmailCodeAgainClick}>
               이메일 변경 및 인증 다시 받기
