@@ -91,16 +91,15 @@ function ItemList(props) {
     // 화면에 요소를 그리기 전에 store에 저장된 아이템 리스트가 있는지 확인
     // 없으면 store에 저장
     useLayoutEffect(() => {
-        if (clubData.length == 0) {
-            // 빈 배열이면 배열 요청
-            // To Do : 나중에 api로 값 가져오게 수정
-            if (props.from === "project") {
-                getProjectAllAPI().then(res => setList({list: res.projects}));
-            } else {
-                setList({list: projectJSONData});
-            }
-
+        // 빈 배열이면 배열 요청
+        // To Do : 나중에 api로 값 가져오게 수정 - Project API 연동
+        if (props.from === "project") {
+            getProjectAllAPI().then(res => setList({list: res.projects}));
+        } else {
+            setList({list: projectJSONData});
         }
+
+        
     }, [])
 
     const handleChange = (index,value) => {

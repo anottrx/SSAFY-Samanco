@@ -26,7 +26,7 @@ async function deleteAPI(data) {
     return await api
     .post("/api/project/delete", {
         "id": data.id,
-        "user_id": data.userId,
+        "hostId": data.hostId,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
