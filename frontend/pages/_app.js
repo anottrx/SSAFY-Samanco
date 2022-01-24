@@ -57,8 +57,26 @@ function MyApp({ Component, pageProps }) {
     setIsLogin(cookies.get("userToken" || ""));
     setUserId(sessionStorage.getItem("userId"));
   }, [isLogin, userId]);
-
+  
   return (
+    (pageProps && pageProps.pathname) === '/meeting/[id]'? (
+        <div>
+
+          <Head>    
+            <title>Static Website</title>
+            <meta name="viewport" content="viewport-fit=cover" />
+          </Head>
+          
+          <div style={styles.layout}>
+            
+            <main style={{backgroundColor: "gray"}}>
+              <Component {...pageProps} /> 
+            </main>
+            {/* pageProps.pathname === '/meeting/[id]' 일 때는 Layout 없이 렌더링 */}
+          </div>
+        </div>
+    ) : 
+
     <div>
       <Head>
         <title>Static Website</title>

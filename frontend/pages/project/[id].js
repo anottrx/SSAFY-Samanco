@@ -3,9 +3,7 @@ import { useSelector } from 'react-redux';
 
 import styled from "@emotion/styled";
 import StackList from "../../components/Club/StackList"
-import stackData from "../../data/StackData.json"
 import PositionList from "../../components/Club/PositionList"
-import positionData from "../../data/positionData.json"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -123,7 +121,6 @@ const ProjectDetail = () => {
                 <div>기술 스택</div>
                 <StackList stackData={detail.stacks}></StackList>
                 <br />
-                {/* To Do : BE 받는 데이터 변경되면 수정 */}
                 <div>모집 팀원</div>
                 <PositionList positionData={detail.positions}></PositionList>        
             </ContentWrapper>
@@ -174,15 +171,6 @@ const ProjectDetail = () => {
                         {detail.startDate} ~  {detail.endDate}
                     </Typography>
                 </div>
-                <div>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
-                        예정 스케쥴
-                    </Typography>
-
-                    <Typography sx={{ mb: 1.5 }}>
-                        {detail.schedule} 
-                    </Typography>
-                </div>
             </FooterWrapper>
         )
     }
@@ -219,11 +207,14 @@ const ProjectDetail = () => {
                     </Button>
                     <Button>
                         <FavoriteIcon /> 
-                        <span>{detail.like}</span>
+                        <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
                 <>
+                <div>
+                    <Button variant="outlined" onClick={() => {Router.push("/project/applylist")}}>지원자 목록 조회</Button>
                     <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                </div>
                     <Dialog
                         open={open}
                         onClose={JoinDialogClose}
