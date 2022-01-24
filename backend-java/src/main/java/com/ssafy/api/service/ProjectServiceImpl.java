@@ -51,6 +51,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTotalFrontendSize(projectRegisterPostReq.getTotalFrontendSize());
         project.setTotalMobileSize(projectRegisterPostReq.getTotalMobileSize());
         project.setTotalEmbeddedSize(projectRegisterPostReq.getTotalEmbeddedSize());
+
         String hostPosition= projectRegisterPostReq.getHostPosition();
         if ("frontend".equalsIgnoreCase(hostPosition)){
             project.setCurrentFrontendSize(1);

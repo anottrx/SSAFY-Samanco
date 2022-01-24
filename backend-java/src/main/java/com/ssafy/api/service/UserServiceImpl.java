@@ -108,8 +108,8 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public int addProject(Long userId, Long projectId) {
-		int updateUserProjectCode=userRepositorySupport.updateUserProject(userId, projectId);
+	public int addProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
+		int updateUserProjectCode=userRepositorySupport.updateUserProject(userId, projectId, projectPosition, projectJoinStatus);
 		if (updateUserProjectCode==401){
 			projectRepositorySupport.deleteProject(userId, projectId);
 		}

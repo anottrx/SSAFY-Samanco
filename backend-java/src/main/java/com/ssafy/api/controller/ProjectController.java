@@ -72,6 +72,8 @@ public class ProjectController {
         registerInfo.setTotalBackendSize(totalBackendSize);
         registerInfo.setTotalMobileSize(totalMobileSize);
         registerInfo.setTotalEmbeddedSize(totalEmbeddedSize);
+        registerInfo.setHostPosition(hostPosition);
+
 //        registerInfo.setStacks(getListMapFromString(stacks));
 
         if (files!=null) {
@@ -81,7 +83,7 @@ public class ProjectController {
         // project 가입
         Project project = projectService.createProject(registerInfo);
         // project host 추가
-        int addProjectCode=userService.addProject(project.getHostId(), project.getId());
+        int addProjectCode=userService.addProject(project.getHostId(), project.getId(), hostPosition, "OK");
 
         if (addProjectCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 중복하여 등록할 수 없습니다."));

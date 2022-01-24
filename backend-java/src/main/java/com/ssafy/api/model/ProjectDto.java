@@ -24,11 +24,12 @@ public class ProjectDto {
     private String endDate;
     private Long likes;
     private Long hostId;
+    private String hostPosition;
     private Long hit;
 
     public ProjectDto(Long id, String title, String collectStatus, int size, List<PositionDto> positions,
                       List<StackGradeDto> stacks, String description, String startDate, String endDate,
-                      Long likes, Long hostId, Long hit) {
+                      Long likes, Long hostId, String hostPosition, Long hit) {
         this.id = id;
         this.title = title;
         this.collectStatus = collectStatus;
@@ -40,6 +41,7 @@ public class ProjectDto {
         this.endDate = endDate;
         this.likes = likes;
         this.hostId = hostId;
+        this.hostPosition=hostPosition;
         this.hit = hit;
     }
 }

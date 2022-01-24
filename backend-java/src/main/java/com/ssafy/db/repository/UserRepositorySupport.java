@@ -2,6 +2,8 @@ package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.request.UserUpdatePostReq;
+import com.ssafy.db.entity.Project;
+import com.ssafy.db.entity.QProject;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 
@@ -22,6 +24,8 @@ public class UserRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
+    QProject qProject=QProject.project;
+
 
 
     @Autowired
@@ -44,9 +48,16 @@ public class UserRepositorySupport {
     }
 
     public boolean isProjectValid(Long userId){
+        // project 지워지면 등록 가능
         User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false), qUser.projectId.eq(0l)).fetchOne();
-        if (user==null){
+                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
+        if (user==null){    // 사용자가 탈퇴했거나 없으면
+            return false;
+        }
+        Project project = jpaQueryFactory.selectFrom(qProject)
+                .where(qProject.id.eq(user.getProjectId()), qProject.isDeleted.eq(false)).fetchOne();
+
+        if (project!=null){     // 진행중인 프로젝트가 있으면
             return false;
         }
         return true;
@@ -89,10 +100,12 @@ public class UserRepositorySupport {
     }
 
     @Transactional
-    public int updateUserProject(Long userId, Long projectId) {
+    public int updateUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
         if (isProjectValid(userId)) {
             jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
-                    .set(qUser.projectId, projectId).execute();
+                    .set(qUser.projectId, projectId)
+                    .set(qUser.projectPosition, projectPosition)
+                    .set(qUser.projectJoinStatus, projectJoinStatus).execute();
             return 200;
         }
 

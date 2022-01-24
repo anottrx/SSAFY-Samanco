@@ -1,0 +1,44 @@
+listening-port=3478                                                                                                     
+tls-listening-port=5349                                                                                                 
+listening-ip=i6a502.p.ssafy.io                                                                                          
+#external-ip=i6a502.p.ssafy.io/i6a502.p.ssafy.io                                                                        
+relay-ip=i6a502.p.ssafy.io                                                                                              
+fingerprint                                                                                                             
+lt-cred-mech                                                                                                            
+user=ssafy:ssafy                                                                                                        
+realm=I6A502T.pem                                                                                                       
+log-file=/var/log/trun.log                                                                                              
+simple-log   
+
+
+61.84.6.225
+
+172.25.32.1
+
+public :	54.180.156.63
+private : 	172.26.1.5
+
+
+
+i6a502.p.ssafy.io
+
+session ssh
+remote host : 받은 도메인
+private pem 누르고
+ubuntu
+sudo apt-get update
+sudo install mysql-server
+dpkg -l | grep mysql-server
+cd /etc/mysql/mysql.conf.d
+sudo vi mysqld.cnf
+bind-address: 0.0.0.0 으로 바꾸기
+
+sudo service mysql restart
+sudo mysql -u root -p
+CREATE USER samanco@'%' IDENTIFIED BY ssafy;
+GRANT ALL PRIVILEGES ON *.* TO 'samanco'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+exit;
+mysql -h 54.180.156.63 -P 3306 -u samanco -p
+
