@@ -1,10 +1,19 @@
-import * as style from "../../styles/chattingStyle"
+import styled from "@emotion/styled"
 
 function Chatting() {
+
+    const ChattingWrapper = styled.div`
+        font: 13px Helvetica, Arial;
+        background-color: gray;
+        min-width: 300px;
+        height: 100vh
+        overflow-y: scroll;
+`
+
     return (
-        <style.ChattingWrapper>
+        <ChattingWrapper>
             채팅~
-        </style.ChattingWrapper>
+        </ChattingWrapper>
     )
 }
 
