@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "react";
 
 import Layout from "../../components/layout"
 import DatePicker from "../../components/Common/DatePicker";
-import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
 import StackSelect from "../../components/Common/Stack/StackSelect";
 import Counter from "../../components/Common/PositionSelect";
 
@@ -69,7 +68,6 @@ function ProjectRegist() {
         "hostId": 1,
     });
 
-    // const formData = new FormData();
     const [files, setFiles] = useState('');
 
     const onImgChange = (event) => {

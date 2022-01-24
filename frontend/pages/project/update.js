@@ -71,9 +71,6 @@ function projectUpdate() {
         hostPosition: detail.hostPosition,
     });
 
-    console.log(detail)
-
-    const [formData, changeFormData] = useState(new FormData());
     const [files, setFiles] = useState('');
 
     const onImgChange = (event) => {
@@ -183,7 +180,6 @@ function projectUpdate() {
                     value={inputValue.description}
                 />
 
-                {/* <StackLevelSelect></StackLevelSelect> */}
                 <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="프로젝트 스택"></StackSelect>
                 
                 <DatePickerWrapper>

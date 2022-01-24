@@ -23,7 +23,7 @@ async function updateAPI(formData) {
 }
 
 async function deleteAPI(data) {
-    return await url
+    return await api
     .post("/api/project/delete", {
         "id": data.id,
         "user_id": data.userId,

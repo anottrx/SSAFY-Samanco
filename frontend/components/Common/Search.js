@@ -17,7 +17,8 @@ function SearchBar(props) {
 
 
     useEffect(() => {
-        console.log(keyword)
+        if (keyword !== "")
+            console.log(keyword)
         if (props.target === "project" && keyword) {
             // 프로젝트 페이지를 위한 검색창
             // dispatch(projectActions.setProjectFilteringKeyword({keyword}))
