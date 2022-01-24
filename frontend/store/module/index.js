@@ -3,6 +3,7 @@ import { HYDRATE } from "next-redux-wrapper";
 import project from './project';
 import study from "./study"; 
 import meeting from "./meeting";
+import board from "./board";
 
 const reducer = (state, action) => { 
     if (action.type === HYDRATE) { 

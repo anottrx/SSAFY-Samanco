@@ -272,7 +272,7 @@ export default function RegistNecessafy() {
     if (isNormal) {
       registAPI(inputState).then((res) => {
         console.log(res);
-        // if (res.statusCode == 200) {
+        if (res.statusCode == 200) {
           // 가입 성공 시
           // alert("가입이 되었습니다!");
 
@@ -293,9 +293,9 @@ export default function RegistNecessafy() {
             window.history.forward();
             Router.push("/login");
           }
-        // } else{ alert(`${res.message}`);
-        // console.log("회원가입실패")
-      // }
+        } else{ alert(`${res.message}`);
+        console.log("회원가입실패")
+      }
       });
     } else {
       alert(msg);
@@ -398,6 +398,7 @@ export default function RegistNecessafy() {
             onChange={(e) => {
               handleChange(e);
               pwHandleChange(e);
+              pwSameCheck(e);
             }}
             sx={{ width: 370, fontSize: 14 }}
           />
@@ -427,6 +428,7 @@ export default function RegistNecessafy() {
             onChange={(e) => {
               handleChange(e);
               pwSameCheck(e);
+              pwHandleChange(e);
             }}
             sx={{ width: 370, fontSize: 14 }}
           />

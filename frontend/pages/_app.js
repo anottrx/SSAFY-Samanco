@@ -114,7 +114,7 @@ function MyApp({ Component, pageProps }) {
                   sessionStorage.clear();
                   cookies.set("userToken", "");
                   // Router.push("/");
-                  document.location.href = "/";
+                  // document.location.href = "/";
                   setIsLogin(false);
                   setUserId(null);
                 }}
