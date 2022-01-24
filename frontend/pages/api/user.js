@@ -1,4 +1,4 @@
-import api, { getAuth } from "./index";
+import api, { getAuth, fileUrl } from "./index";
 
 async function checkLoginTokenInfo(token) {
   // 로그인 토큰 조회
@@ -18,25 +18,30 @@ async function loginAPI(inputState) {
     .catch((err) => err.response.data);
 }
 
-async function registAPI(inputState) {
-  return await api
-    // .post("/api/v1/users", {
-    .post("/api/user", {
-      email: inputState.email,
-      name: inputState.name,
-      password: inputState.password,
-      phone: inputState.phone,
-      nickname: inputState.nickname,
-      birthday: inputState.birthday,
-      generation: inputState.generation,
-      userClass: inputState.userClass,
-      studentId: inputState.studentId,
-      stacks: inputState.stacks, // array
-      position: inputState.position,
-      link: inputState.link, // ,로 자르기
-      description: inputState.description,
-      image_id: inputState.image_id,
+async function registAPI(formData) {
+  return await fileUrl
+    .post("/api/user", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
+    // return await api
+    // .post("/api/user", {
+    //   email: inputState.email,
+    //   name: inputState.name,
+    //   password: inputState.password,
+    //   phone: inputState.phone,
+    //   nickname: inputState.nickname,
+    //   birthday: inputState.birthday,
+    //   generation: inputState.generation,
+    //   userClass: inputState.userClass,
+    //   studentId: inputState.studentId,
+    //   stacks: inputState.stacks, // array
+    //   position: inputState.position,
+    //   link: inputState.link, // ,로 자르기
+    //   description: inputState.description,
+    //   image_id: inputState.image_id,
+    // })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
@@ -111,25 +116,13 @@ async function resetPWAPI(inputState) {
     .catch((err) => err.response.data);
 }
 
-async function updateUserAPI(inputState) {
+async function updateUserAPI(formData) {
   // 회원정보 변경
-  return await api
-    .post("/api/user/update", {
-      userId: inputState.userId, // 바꿀 수 없음
-      email: inputState.email,
-      name: inputState.name, // 바꿀 수 없음
-      password: inputState.password,
-      phone: inputState.phone,
-      nickname: inputState.nickname,
-      birthday: inputState.birthday,
-      generation: inputState.generation, // 바꿀 수 없음
-      userClass: inputState.userClass,
-      studentId: inputState.studentId, // 바꿀 수 없음
-      stacks: inputState.stacks,
-      position: inputState.position,
-      link: inputState.link,
-      description: inputState.description,
-      image_id: inputState.image_id,
+  return await fileUrl
+    .post("/api/user/update", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
@@ -172,28 +165,9 @@ async function checkMemberAPI(inputState) {
     .catch((err) => err.response.data);
 }
 
-async function idCheckAPI(id) {
-  // 아이디 중복체크 -> 이제는 필요 없음
-  return await api
-    .get("/api/v1/users/idcheck/" + id)
-    .then((res) => res.data)
-    .catch((err) => err.response.data);
-}
-
-// 비밀번호 유효성 테스트는 FE에서 처리!
-// async function pwCheckAPI(password) {
-//     return await api.post("/api/v1/users/passcheck/", {
-//         id: "",
-//         password: password
-//     })
-//     .then(res => res.data)
-//     .catch(err => err.response.data)
-// }
-
 export {
   loginAPI,
   registAPI,
-  idCheckAPI,
   getUserInfo,
   checkLoginTokenInfo,
   sendEmailCodeAPI,

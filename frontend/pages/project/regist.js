@@ -75,15 +75,12 @@ function ProjectRegist() {
     const onImgChange = (event) => {
         const file = event.target.files[0];
         setFiles(file)
-<<<<<<< HEAD
-=======
 
         const newData = new FormData();
         newData.append('file', file, file.name)
         console.log
         // newData.append("files", file);
         changeFormData(newData);
->>>>>>> 76ccf4c255d329e5c08358d6ee5cdb3e18227859
     }
     
     const uploadRef = useRef(null);
