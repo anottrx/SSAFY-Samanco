@@ -22,10 +22,16 @@ const getAuth = (token) => axios.create({
 const fileUrl = axios.create({
     baseURL: `http://localhost:8080`,
     headers: {
+<<<<<<< HEAD
         // "Content-Type": `application/json;charset=UTF-8`,
         "Content-Type": `multipart/form-data`,
         "Access-Control-Allow-Origin": "*",
         "Accept": "application/json",
+=======
+        "Content-Type": `multipart/form-data`,
+        // "Access-Control-Allow-Origin": "*",
+        // "Accept": "application/json",
+>>>>>>> 05448cc5cfe521c7784b37ab9550c1992558ea79
     }
 })
 

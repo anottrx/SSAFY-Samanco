@@ -42,6 +42,7 @@ export default function DatePicker(props){
              label={props.label}
              inputFormat="yyyy/MM/dd"
              value={props.value}
+             mask="____/__/__"
              onChange={(e) => props.handleDateChange(e, props.label)}
              renderInput={(params) => <TextField {...params} />}
              />

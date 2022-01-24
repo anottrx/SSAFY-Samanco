@@ -157,7 +157,7 @@ const StudyDetail = () => {
                         진행 기간
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} >
-                        {detail.start_date} ~  {detail.end_date}
+                        {detail.startDate} ~  {detail.endDate}
                     </Typography>
                 </div>
                 <div>

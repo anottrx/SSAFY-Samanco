@@ -60,8 +60,8 @@ function studyUpdate() {
         title: detail.title,
         description: detail.description,
         schedule: detail.schedule,
-        start_date: detail.start_date,
-        end_date: detail.end_date,
+        startDate: detail.startDate,
+        endDate: detail.endDate,
         stacks: detail.stacks,
         positions: detail.positions
     });

@@ -124,6 +124,7 @@ export function Item(props) {
 
     return (
         <Container>
+            {/* To Do: current 주어지면 변경하기 */}
             <CusBadge badgeContent={data.size+" / "+data.size} color="primary"></CusBadge>
             <Card>
                 <Skeleton variant="rectangular" height={150} animation={false} />

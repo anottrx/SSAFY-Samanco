@@ -1,24 +1,37 @@
 import api, { fileUrl } from "./index";
 
-async function registAPI(inputState, formData) {
-    // async function registAPI(inputState) {
-        return await fileUrl
-    .post("/api/project", {
-        collectStatus: inputState.collectStatus,
-        description: inputState.description,
-        endDate:inputState.endDate,
-        hostId: inputState.hostId,
-        hostPosition: inputState.hostPosition,
-        stacks: inputState.stacks,
-        startDate: inputState.startDate,
-        title: inputState.title,
-        totalEmbeddedSize: inputState.totalEmbeddedSize,
+async function registAPI(formData) {
+    return await fileUrl
+    .post("/api/project", 
         formData
+    , {headers: {
+        'Content-Type': 'multipart/form-data'
+      }})
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
+async function updateAPI(formData) {
+    return await fileUrl
+    .post("/api/project/update", 
+        formData
+    , {headers: {
+        'Content-Type': 'multipart/form-data'
+      }})
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
+async function deleteAPI(data) {
+    return await url
+    .post("/api/project/delete", {
+        "id": data.id,
+        "user_id": data.userId,
     })
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
 }
 
 export {
-    registAPI
+    registAPI, updateAPI, deleteAPI
 }

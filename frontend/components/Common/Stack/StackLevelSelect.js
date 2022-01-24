@@ -31,6 +31,7 @@ function StackLevelSelect(){
             ...stackName, 
             {name: name, level: 1}
         ]);
+        console.log(stackName);
     };
 
     return(
