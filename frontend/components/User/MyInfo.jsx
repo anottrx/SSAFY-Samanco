@@ -99,12 +99,6 @@ export default function MyInfo() {
     } else if (!inputState.name) {
       isNormal = false;
       msg = "이름을 입력해주세요.";
-    } else if (!inputState.email) {
-      isNormal = false;
-      msg = "이메일을 입력해주세요.";
-    } else if (!emailReg.test(inputState.email)) {
-      isNormal = false;
-      msg = "이메일 양식을 확인해주세요.";
     } else if (!phoneReg.test(inputState.phone)) {
       isNormal = false;
       msg = "전화번호 양식을 확인해주세요.";
@@ -179,8 +173,6 @@ export default function MyInfo() {
             id="email"
             type="email"
             value={inputState.email}
-            disabled={onlyView ? true : false}
-            onChange={handleChange}
           />
         </div>
         <div className="mb-6">
