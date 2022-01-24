@@ -78,7 +78,7 @@ export default function Login() {
       loginAPI(inputState).then((res) => {
         switch (res.statusCode) {
           case 200: // 로그인 성공
-            alert(`로그인 성공: ${res.accessToken}`);
+            // alert(`로그인 성공: ${res.accessToken}`);
             setCookie("userToken", res.accessToken); // 쿠키 설정
 
             if (rememberId) {
@@ -86,11 +86,13 @@ export default function Login() {
             } else {
               setCookie("userEmail", "");
             }
-            getUserInfo(res.accessToken).then((res) => {
-              alert(res);
-              sessionStorage.setItem("userId", res.userId);
+            const token = res.accessToken;
+            getUserInfo(token).then((res1) => {
+              console.log(res1)
+              alert()
+              sessionStorage.setItem("userId", res1.userId);
               sessionStorage.setItem("email", inputState.email);
-              sessionStorage.setItem("nickname", res.nickname);
+              sessionStorage.setItem("nickname", res1.nickname);
             });
             // Router.push("/");
             window.history.forward();
