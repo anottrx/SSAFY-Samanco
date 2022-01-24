@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class User extends BaseEntity{
 
     @Id
@@ -30,7 +32,6 @@ public class User extends BaseEntity{
 
     private String nickname;
 
-    private String name;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -40,6 +41,7 @@ public class User extends BaseEntity{
 
     private String phone;
 
+    private String name;
     private String userClass;   // JAVA, PYTHON, EMBEDDED, MOBILE
 
     private int generation;
