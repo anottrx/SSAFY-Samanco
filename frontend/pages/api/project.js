@@ -36,9 +36,18 @@ async function getProjectAllAPI() {
     return await api
     .get("/api/project")
     .then((res) => res.data)
-    .catch((err) => console.log(err))
+    .catch((err) => err.response.data)
+}
+
+async function getProjectById(data) {
+    return await api
+    .post("/api/project/view", {
+        id: data.id
+    })
+    .then(res => res.data)
+    .catch(err => err.response.data)
 }
 
 export {
-    registAPI, updateAPI, deleteAPI, getProjectAllAPI
+    registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById
 }

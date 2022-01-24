@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
 
-import { getProjectAllAPI } from "../../pages/api/project"
+import { getProjectAllAPI, getProjectById } from "../../pages/api/project"
 
 import StackList from "./StackList"
 import stackData from "../../data/StackData.json"
@@ -98,8 +98,6 @@ function ItemList(props) {
         } else {
             setList({list: projectJSONData});
         }
-
-        
     }, [])
 
     const handleChange = (index,value) => {
@@ -122,11 +120,17 @@ function ItemList(props) {
                 clubData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}  onClick={()=>{
-                            Router.push({
-                                pathname: `/${props.from}/[id]`,
-                                query: { id: data.id }
+                            getProjectById({id: data.id})
+                            .then(res => {
+                                setDetail({detail: res.project});
+                                
+                                // api 작성
+                                Router.push({
+                                    pathname: `/${props.from}/[id]`,
+                                    query: { id: data.id }
+                                })
                             })
-                            setDetail({detail: data});
+                            
                         }}>
                             <Item data={data}></Item> 
                         </Grid>
