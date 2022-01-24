@@ -68,7 +68,7 @@ export default function MyInfo() {
   const [cookie, setCookie] = useCookies(["userToken"]);
 
   useEffect(() => {
-
+    
     getUserInfo(cookie.userToken).then((res) => {
       console.log(res);
       if (res.statusCode == 200) {

@@ -25,23 +25,6 @@ async function registAPI(formData) {
         "Content-Type": "multipart/form-data",
       },
     })
-    // return await api
-    // .post("/api/user", {
-    //   email: inputState.email,
-    //   name: inputState.name,
-    //   password: inputState.password,
-    //   phone: inputState.phone,
-    //   nickname: inputState.nickname,
-    //   birthday: inputState.birthday,
-    //   generation: inputState.generation,
-    //   userClass: inputState.userClass,
-    //   studentId: inputState.studentId,
-    //   stacks: inputState.stacks, // array
-    //   position: inputState.position,
-    //   link: inputState.link, // ,로 자르기
-    //   description: inputState.description,
-    //   image_id: inputState.image_id,
-    // })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }

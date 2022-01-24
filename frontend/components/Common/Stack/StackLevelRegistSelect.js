@@ -73,7 +73,6 @@ function StackLevelSelect() {
       value = value[0] + " " + levelNames[curNth];
       event.target.innerText = value;
       
-      stacks.names.indexOf(value[0]).level = curNth;
       console.log(stacks.indexOf(value[0]).level)
       
       label = value;

@@ -268,15 +268,26 @@ export default function RegistNecessafy() {
       msg = "이름을 입력해주세요.";
     }
 
-    console.log(inputState);
+    // console.log(inputState);
     if (isNormal) {
-      registAPI(inputState).then((res) => {
+      const formData = new FormData();
+
+      Object.keys(inputState).map((key) => {
+        let value = inputState[key];
+        formData.append(key, value);
+      });
+
+      for (var key of formData.entries()) {
+        console.log(`${key}`);
+      }
+
+      registAPI(formData).then((res) => {
         console.log(res);
         if (res.statusCode == 200) {
           // 가입 성공 시
           // alert("가입이 되었습니다!");
 
-          setCookie("userToken", res.accessToken)
+          setCookie("userToken", res.accessToken);
           setCookie("userEmail", inputState.email);
           sessionStorage.setItem("userId", inputState.userId);
           sessionStorage.setItem("email", inputState.email);
@@ -285,17 +296,17 @@ export default function RegistNecessafy() {
           if (
             window.confirm(
               "가입이 완료되었습니다! 추가 정보를 입력하실 건가요?"
-              )
+            )
           ) {
-            
           } else {
             // 페이지 이동
             window.history.forward();
             Router.push("/login");
           }
-        } else{ alert(`${res.message}`);
-        console.log("회원가입실패")
-      }
+        } else {
+          alert(`${res.message}`);
+          console.log("회원가입실패");
+        }
       });
     } else {
       alert(msg);
