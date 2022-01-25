@@ -7,7 +7,7 @@ import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead
 import Router from "next/router";
 import * as boardActions from '../../store/module/board';
 
-import Datas from "./data.js";
+import Datas from "./boardData.json";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 [`&.${tableCellClasses.head}`]: {
