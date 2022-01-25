@@ -10,7 +10,7 @@ function MoreInfo(data) {
 export default function Regist() {
   const [register, setRegister] = useState(true);
 
-  return <><RegistNecessary /></>;
+  return <><RegistAdd /></>;
 
   // return <>{register ? <RegistNecessary /> : <RegistAdd />}</>;
 }

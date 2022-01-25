@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
-import PositionList from "../Club/PositionList";
+import StackLevelList from "../../components/Common/Stack/StackLevelList";
 import StackLevelRegistSelect from "../../components/Common/Stack/StackLevelRegistSelect";
+import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSelectRegister";
 
 import { registAPI, checkMemberAPI } from "../../pages/api/user";
 import {
@@ -86,6 +87,32 @@ export default function RegistAdd() {
     background-size: contain;
   `;
 
+  const [files, setFiles] = useState("");
+
+  const onImgChange = (event) => {
+    const file = event.target.files[0];
+    setFiles(file);
+  };
+
+  const uploadRef = useRef(null);
+
+  useEffect(() => {
+    preview();
+  });
+
+  const preview = () => {
+    if (!files) return false;
+
+    const imgEl = document.querySelector("#img_box");
+    const reader = new FileReader();
+
+    reader.onload = () =>
+      (imgEl.style.backgroundImage = `url(${reader.result})`);
+
+    imgEl.innerText = "";
+    reader.readAsDataURL(files);
+  };
+
   // const changeHandle = (value, name) => {
   //   inputState[name] = value;
   //   // 리렌더링 X
@@ -105,11 +132,29 @@ export default function RegistAdd() {
     }));
   };
 
-  const positionHandleChange = (e) => {
-    inputState.position = e.target.value;
+  const [inputStacks, setInputStacks] = useState([]);
+  const handleStackChange = (e) => {
+    console.log("Dddddddddddddd")
+    setInputState({
+      stacks: inputStacks,
+    });
+    console.log("inputStacks" + inputStacks)
+    console.log("ㅇㅇ" + inputState.stacks)
   };
 
-  const links = []
+  const positionHandleChange = (e) => {
+    setInputState({
+      position: e.target.value,
+    });
+  };
+
+  const [links, setLinks] = useState([]);
+  const handleLinksChange = (e) => {
+    let linkStr = "";
+    setInputState({
+      link: e.target.value,
+    });
+  };
 
   const phoneReg = /^[0-9]{8,13}$/;
   // 전화번호 정규표현식
@@ -122,7 +167,7 @@ export default function RegistAdd() {
     let isNormal = true;
     let msg = "";
 
-    console.log(links)
+    console.log(links);
     inputState.link = links;
 
     console.log(inputState);
@@ -136,6 +181,29 @@ export default function RegistAdd() {
       //     window.history.forward();
       //     Router.push("/login");
       //   } else alert(`${res.message}`);
+      // });
+      const formData = new FormData();
+
+      Object.keys(inputState).map((key) => {
+        let value = inputState[key];
+        if (key === "stacks") formData.append(key, JSON.stringify(value));
+        else formData.append(key, value);
+      });
+
+      formData.append("file", files);
+
+      for (var key of formData.entries()) {
+        console.log(`${key}`);
+      }
+
+      // registAPI(formData).then((res) => {
+      //     console.log(res);
+      //     if (res.statusCode == 200) {
+      //         alert("프로젝트가 등록되었습니다.")
+      //         Router.push("/project");
+      //     } else if (res.statusCode == 401) {
+      //         alert("프로젝트를 중복하여 등록할 수 없습니다.");
+      //     }
       // });
     } else {
       alert(msg);
@@ -167,6 +235,17 @@ export default function RegistAdd() {
           >
             Image Upload
           </ImgUploadBtn>
+
+          <input
+            ref={uploadRef}
+            type="file"
+            className="imgInput"
+            id="projectImg"
+            accept="image/*"
+            name="file"
+            encType="multipart/form-data"
+            onChange={onImgChange}
+          ></input>
         </div>
         <div>
           {/* 전화번호 */}
@@ -195,7 +274,7 @@ export default function RegistAdd() {
             <LocalizationProvider dateAdapter={DateAdapter}>
               <DatePickerWrapper>
                 <DatePicker
-                  label="생년월일"
+                  label=""
                   value={inputState.birthday}
                   onChange={handleChange}
                 ></DatePicker>
@@ -210,8 +289,10 @@ export default function RegistAdd() {
             <br />
             <Select
               id="position"
+              name="position"
               onChange={positionHandleChange}
-              defaultValue=""
+              // defaultValue=""
+              value={inputState.position || ""}
               sx={{ minWidth: 370, fontSize: 14 }}
             >
               {positionOptions.map((u, i) => {
@@ -232,10 +313,11 @@ export default function RegistAdd() {
             <Typography display="inline" sx={{ fontSize: 14 }}>
               기술 스택
             </Typography>
-            <StackLevelRegistSelect
-              changeHandle={changeHandle}
+            <StackLevelSelectRegister
+              value={inputStacks}
+              changeHandle={handleStackChange}
               // label="프로젝트 스택"
-            ></StackLevelRegistSelect>
+            ></StackLevelSelectRegister>
           </div>
           {/* 링크 */}
           <div className="mb-6">
@@ -246,28 +328,12 @@ export default function RegistAdd() {
             <Autocomplete
               multiple
               id="tags-filled"
-              // options={top100Films.map((option) => option.title)}
-              // defaultValue={[top100Films[13].title]}
               freeSolo
-              // renderTags={(value, getTagProps) =>
-              //   value.map((option, index) => (
-              //     <Chip
-              //       variant="outlined"
-              //       label={option}
-              //       {...getTagProps({ index })}
-              //     />
-              //   ))
-              // }
-              
-              options={links.map((l) => (l.value))}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  // variant="filled"
-                  // label="freeSolo"
-                  // placeholder="Favorites"
-                />
-              )}
+              onChange={handleLinksChange}
+              options={links}
+              getOptionLabel={(option) => option}
+              // options={links.map((l) => (l.value))}
+              renderInput={(params) => <TextField {...params} />}
             />
           </div>
           {/* 자기소개 */}
@@ -282,7 +348,7 @@ export default function RegistAdd() {
               fullWidth
               rows={4}
               multiline
-              value={inputState.description}
+              value={inputState.description || ""}
               onChange={handleChange}
               sx={{ width: 370, fontSize: 14 }}
             />
