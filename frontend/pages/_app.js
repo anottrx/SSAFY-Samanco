@@ -44,6 +44,11 @@ const styles = {
   footer: {
     color: "white",
     backgroundColor: "#A2C2DC",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    marginTop: "10px",
+    padding: "10px",
   },
 };
 
@@ -63,7 +68,7 @@ function MyApp({ Component, pageProps }) {
         <div>
 
           <Head>    
-            <title>Static Website</title>
+            <title>싸피사만코</title>
             <meta name="viewport" content="viewport-fit=cover" />
           </Head>
           
@@ -79,7 +84,7 @@ function MyApp({ Component, pageProps }) {
 
     <div>
       <Head>
-        <title>Static Website</title>
+        <title>싸피사만코</title>
         <meta name="viewport" content="viewport-fit=cover" />
       </Head>
       <div style={styles.layout}>
@@ -89,7 +94,9 @@ function MyApp({ Component, pageProps }) {
         <main style={styles.main}>
           <Component {...pageProps} />
         </main>
-        <footer style={styles.footer}>Footer</footer>
+        <footer style={styles.footer}>
+          footer
+        </footer>
       </div>
     </div>
   );
