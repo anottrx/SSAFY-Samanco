@@ -4,7 +4,6 @@ import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
 
 import Router from "next/router";
 import Layout from "../../components/layout";
-import SearchBar from "../../components/Common/Search";
 
 import BoardList from "./BoardList";
 
