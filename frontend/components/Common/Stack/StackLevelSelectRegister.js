@@ -253,7 +253,6 @@ function CusPaper(props) {
       newStack = props.stacks.filter((stack) => stack.name !== name);
     }
     props.setStacks(newStack);
-    // console.log("스택 메소드 안에서 " + stack);
   }
 
   return (

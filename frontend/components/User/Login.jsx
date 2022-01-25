@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { getUserInfo, loginAPI } from "../../pages/api/user";
 import Link from "next/link";
 import { useCookies } from "react-cookie";
-
-// import styles from "../../styles/Login.module.css";
-
 import FormControl, { useFormControl } from "@mui/material/FormControl";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
@@ -88,8 +85,8 @@ export default function Login() {
             }
             const token = res.accessToken;
             getUserInfo(token).then((res1) => {
-              console.log(res1)
-              alert()
+              console.log(res1);
+              alert();
               sessionStorage.setItem("userId", res1.userId);
               sessionStorage.setItem("email", inputState.email);
               sessionStorage.setItem("nickname", res1.nickname);
@@ -134,9 +131,8 @@ export default function Login() {
         <FormControl sx={{ width: 300 }}>
           <OutlinedInput
             id="email"
-            // id="margin-none"
             placeholder="이메일"
-            value={inputState.email || ''}
+            value={inputState.email || ""}
             onChange={handleChange}
             sx={{ fontSize: 14 }}
           />
@@ -146,7 +142,7 @@ export default function Login() {
             id="password"
             placeholder="비밀번호"
             type={inputState.showPassword ? "text" : "password"}
-            value={inputState.password || ''}
+            value={inputState.password || ""}
             onChange={handleChange}
             sx={{ fontSize: 14 }}
             endAdornment={

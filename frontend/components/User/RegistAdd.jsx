@@ -2,50 +2,45 @@ import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
 import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSelectRegister";
 
-import { registAPI, checkMemberAPI } from "../../pages/api/user";
 import {
-  Paper,
-  InputLabel,
+  checkLoginTokenInfo,
+  registAPI,
+  getUserInfo,
+  updateUserAPI,
+} from "../../pages/api/user";
+import {
   TextField,
   Box,
-  Avatar,
   OutlinedInput,
-  ListItem,
-  DialogContentText,
-  DialogContent,
-  List,
-  DialogActions,
   Button,
-  DialogTitle,
   Autocomplete,
-  ListItemAvatar,
-  ListItemText,
-  Dialog,
   Select,
   Typography,
 } from "@mui/material";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import PersonIcon from "@mui/icons-material/Person";
-import AddIcon from "@mui/icons-material/Add";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
 import DatePicker from "../../components/Common/DatePicker";
 import styled from "@emotion/styled";
 import { LocalizationProvider } from "@mui/lab";
 import DateAdapter from "@mui/lab/AdapterDateFns";
 import MenuItem from "@mui/material/MenuItem";
 
-export default function RegistAdd() {
+export default function RegistInfo() {
   const [inputState, setInputState] = useState({
-    email: "",
+    userId: sessionStorage.getItem("userId"),
+    email: sessionStorage.getItem("email"),
     phone: "",
-    nickname: "",
+    nickname: sessionStorage.getItem("nickname"),
     birthday: "",
     stacks: [],
     position: "",
     link: "",
     description: "",
     image_id: "",
+    // 이미 입력된 값들
+    name: sessionStorage.getItem("name"),
+    password: sessionStorage.getItem("password"),
+    userClass: sessionStorage.getItem("userClass"),
+    generation: sessionStorage.getItem("generation"),
+    studentId: sessionStorage.getItem("studentId"),
   });
 
   const positionOptions = [
@@ -138,7 +133,6 @@ export default function RegistAdd() {
   };
 
   const [links, setLinks] = useState([]);
-  const [linkList, setLinkList] = useState([]);
   function handleLinksChange(linkArr) {
     let linkList = "";
     const size = linkArr.length;
@@ -162,8 +156,6 @@ export default function RegistAdd() {
     let isNormal = true;
     let msg = "";
 
-    console.log(inputState.link);
-
     inputState.stacks = {
       HTML: inputState.HTML,
       CSS: inputState.CSS,
@@ -184,20 +176,8 @@ export default function RegistAdd() {
       Redis: inputState.Redis,
     };
 
-    console.log("스택이라 제일 중요" + inputState.stacks);
-
     console.log(inputState);
     if (isNormal) {
-      // registAPI(inputState).then((res) => {
-      //   console.log(res);
-      //   if (res.statusCode == 200) {
-      //     // 가입 성공 시
-      //     alert("가입이 되었습니다!");
-      //     // 페이지 이동
-      //     window.history.forward();
-      //     Router.push("/login");
-      //   } else alert(`${res.message}`);
-      // });
       const formData = new FormData();
 
       Object.keys(inputState).map((key) => {
@@ -214,12 +194,19 @@ export default function RegistAdd() {
         console.log("key", `${key}`);
       }
 
-      // registAPI(formData).then((res) => {
-      //     console.log(res);
-      //     if (res.statusCode == 200) {
-      //     } else if (res.statusCode == 401) {
-      //     }
-      // });
+      updateUserAPI(formData).then((res) => {
+        if (res.statusCode == 200) {
+          window.history.forward();
+          window.location.replace("/");
+        } else {
+          alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
+        }
+        console.log(res);
+        sessionStorage.clear();
+        sessionStorage.setItem("userId", inputState.userId);
+        sessionStorage.setItem("email", inputState.email);
+        sessionStorage.setItem("nickname", inputState.nickname);
+      });
     } else {
       alert(msg);
     }
@@ -330,9 +317,7 @@ export default function RegistAdd() {
               기술 스택
             </Typography>
             <StackLevelSelectRegister
-              // value={inputState.stacks}
               changeHandle={changeHandle}
-              // label="프로젝트 스택"
             ></StackLevelSelectRegister>
           </div>
           {/* 링크 */}
