@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
-import StackLevelList from "../../components/Common/Stack/StackLevelList";
-import StackLevelRegistSelect from "../../components/Common/Stack/StackLevelRegistSelect";
 import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSelectRegister";
 
 import { registAPI, checkMemberAPI } from "../../pages/api/user";
@@ -113,14 +111,19 @@ export default function RegistAdd() {
     reader.readAsDataURL(files);
   };
 
-  // const changeHandle = (value, name) => {
-  //   inputState[name] = value;
+  // const changeHandle = (e) => {
+  //   const { id, value } = e.target;
+  //   inputState[id] = value;
   //   // 리렌더링 X
   // };
 
-  const changeHandle = (e) => {
-    const { id, value } = e.target;
-    inputState[id] = value;
+  const changeHandle = (value, name) => {
+    console.log(name);
+    const n = name;
+    // inputState[name] = value;
+    inputState.stacks = { HTML: value };
+    // console.log("여기"+ name)
+    // console.log("저기"+value)
     // 리렌더링 X
   };
 
@@ -132,16 +135,6 @@ export default function RegistAdd() {
     }));
   };
 
-  const [inputStacks, setInputStacks] = useState([]);
-  const handleStackChange = (e) => {
-    console.log("Dddddddddddddd")
-    setInputState({
-      stacks: inputStacks,
-    });
-    console.log("inputStacks" + inputStacks)
-    console.log("ㅇㅇ" + inputState.stacks)
-  };
-
   const positionHandleChange = (e) => {
     setInputState({
       position: e.target.value,
@@ -150,9 +143,9 @@ export default function RegistAdd() {
 
   const [links, setLinks] = useState([]);
   const handleLinksChange = (e) => {
-    let linkStr = "";
+    let linkStr = e.target.value;
     setInputState({
-      link: e.target.value,
+      link: inputState.link + " " + linkStr,
     });
   };
 
@@ -167,8 +160,10 @@ export default function RegistAdd() {
     let isNormal = true;
     let msg = "";
 
-    console.log(links);
-    inputState.link = links;
+    // console.log(links);
+    // inputState.link = links;
+
+    console.log("스택이라 제일 중요" + inputState.stacks);
 
     console.log(inputState);
     if (isNormal) {
@@ -186,23 +181,22 @@ export default function RegistAdd() {
 
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
-        if (key === "stacks") formData.append(key, JSON.stringify(value));
-        else formData.append(key, value);
+        if (key === "stacks") {
+          formData.append(key, JSON.stringify(value));
+          console.log(value);
+        } else formData.append(key, value);
       });
 
       formData.append("file", files);
 
       for (var key of formData.entries()) {
-        console.log(`${key}`);
+        console.log("key", `${key}`);
       }
 
       // registAPI(formData).then((res) => {
       //     console.log(res);
       //     if (res.statusCode == 200) {
-      //         alert("프로젝트가 등록되었습니다.")
-      //         Router.push("/project");
       //     } else if (res.statusCode == 401) {
-      //         alert("프로젝트를 중복하여 등록할 수 없습니다.");
       //     }
       // });
     } else {
@@ -314,8 +308,8 @@ export default function RegistAdd() {
               기술 스택
             </Typography>
             <StackLevelSelectRegister
-              value={inputStacks}
-              changeHandle={handleStackChange}
+              // value={inputState.stacks}
+              changeHandle={changeHandle}
               // label="프로젝트 스택"
             ></StackLevelSelectRegister>
           </div>
@@ -327,12 +321,12 @@ export default function RegistAdd() {
             <br />
             <Autocomplete
               multiple
-              id="tags-filled"
+              // id="tags-filled"
               freeSolo
               onChange={handleLinksChange}
-              options={links}
-              getOptionLabel={(option) => option}
-              // options={links.map((l) => (l.value))}
+              // options={links}
+              // getOptionLabel={(option) => option}
+              options={links.map((l) => l.value)}
               renderInput={(params) => <TextField {...params} />}
             />
           </div>

@@ -66,6 +66,65 @@ function StackLevelSelectRegister(props) {
     }
   };
 
+  const [stackStack, setStackStack] = useState([]);
+  useEffect(() => {
+    // 상위 컴포넌트에게 바뀐 포지션 전달
+    let [
+      HTML,
+      CSS,
+      JavaScript,
+      VueJS,
+      React,
+      Angular,
+      Python,
+      Java,
+      C,
+      SpringBoot,
+      MySQL,
+      Git,
+      AWS,
+      Docker,
+      Linux,
+      Jira,
+      Django,
+      Redis,
+    ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    // [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    stacks.map((stack) => {
+      switch (stack.name) {
+        case "HTML":
+          props.changeHandle(stack.level, "HTML");
+          //   setStackStack([...stackStack, { HTML:  }]);
+          HTML = stack.level;
+          break;
+        case "CSS":
+          props.changeHandle(stack.level, "CSS");
+          //   setStackStack([...stackStack, { CSS: stack.level }]);
+          CSS = stack.level;
+          break;
+        case "JavaScript":
+          props.changeHandle(stack.level, "JavaScript");
+          //   setStackStack([...stackStack, { JavaScript: stack.level }]);
+          JavaScript = stack.level;
+          break;
+        case "VueJS":
+          props.changeHandle(stack.level, "VueJS");
+          //   setStackStack([...stackStack, { VueJS: stack.level }]);
+          VueJS = stack.level;
+          break;
+        default:
+          break;
+      }
+    });
+
+    console.log();
+    // if (!HTML) props.changeHandle(0, "HTMLLevel");
+    // if (!CSS) props.changeHandle(0, "CSSLevel");
+    // if (!JavaScript) props.changeHandle(0, "JavaScriptLevel");
+    // if (!VueJS) props.changeHandle(0, "VueJSLevel");
+    // props.changeHandle(stackStack, stackStack);
+  }, [stacks]);
+
   return (
     <>
       <Box>
@@ -127,7 +186,7 @@ function CusPaper(props) {
       newStack = props.stacks.filter((stack) => stack.name !== name);
     }
     props.setStacks(newStack);
-    console.log(stack);
+    // console.log("스택 메소드 안에서 " + stack);
   }
 
   return (
