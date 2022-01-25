@@ -19,6 +19,7 @@ const menu = () => {
     {path:"/board", label:"게시판"}
   ]
 
+
   return (
     <div className={styles.menus}>
       {
@@ -26,7 +27,7 @@ const menu = () => {
           return(
             <Link href={link.path} key={index}>
               {
-                asPath === link.path?
+                asPath.split("/")[1] === link.path.split("/")[1]?
                 <a className={styles.link} style={{
                   fontWeight: "bolder"
                 }}>{link.label}</a>
