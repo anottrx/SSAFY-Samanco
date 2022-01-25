@@ -2,13 +2,20 @@ import { Skeleton, Grid, Card, Fab, Box } from "@mui/material"
 import styled from "@emotion/styled";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MicIcon from '@mui/icons-material/Mic';
+import IosShareIcon from '@mui/icons-material/IosShare';
 
 function User() {
 
     const VideoWrapper = styled(Skeleton)`
-        min-height: 300px;
-        max-width: 380px;
-        min-width: 300px;
+        min-width: 200px;
+    `
+
+    const GridWrapper = styled(Grid)`
+        flex: 1;
+        justify-content: space-between;
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
     `
 
     const CusGrid = styled(Grid)`
@@ -22,24 +29,35 @@ function User() {
         }
     `
 
+    // 미팅룸 최대 인원은 6명으로? -> 얘기해보기
     let userList = [0, 0, 0]
 
     return (
-        <Grid>
+        <GridWrapper>
             <CusGrid container>
                 {
-                    userList.map((user, index) => {
-                        return (
-                            <Grid item xs={12} sm={10} md={6} key={index}>
-                                <VideoWrapper height={350}></VideoWrapper>
-                                <UserName></UserName>
-                            </Grid>
-                        )
-                    })
+                    userList.length > 4?
+                        userList.map((user, index) => {
+                            return (
+                                <Grid item xs={12} sm={4} md={4} key={index}>
+                                    <VideoWrapper height={350}></VideoWrapper>
+                                    <UserName></UserName>
+                                </Grid>
+                            )
+                        })
+                    : 
+                        userList.map((user, index) => {
+                            return (
+                                <Grid item xs={12} sm={10} md={6} key={index}>
+                                    <VideoWrapper height={350}></VideoWrapper>
+                                    <UserName></UserName>
+                                </Grid>
+                            )
+                        })
                 }
             </CusGrid>
             <Operation></Operation>
-        </Grid>
+        </GridWrapper>
     )
 }
 
@@ -61,12 +79,15 @@ function Operation(){
     return(
         <OperWrapper>
             <Box sx={{ '& > :not(style)': { m: 1 } }}>
-            <Fab variant="extended" aria-label="add">
-                <CameraAltIcon fontSize="large" />
-            </Fab>
-            <Fab variant="extended" aria-label="edit">
-                <MicIcon fontSize="large" />
-            </Fab>
+                <Fab variant="extended" aria-label="add">
+                    <CameraAltIcon fontSize="large" />
+                </Fab>
+                <Fab variant="extended" aria-label="edit">
+                    <MicIcon fontSize="large" />
+                </Fab>
+                <Fab variant="extended" aria-label="edit">
+                    <IosShareIcon fontSize="large" />
+                </Fab>
             </Box>
         </OperWrapper>
     )
