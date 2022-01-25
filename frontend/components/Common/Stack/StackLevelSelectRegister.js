@@ -89,40 +89,107 @@ function StackLevelSelectRegister(props) {
       Django,
       Redis,
     ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    // [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
     stacks.map((stack) => {
       switch (stack.name) {
         case "HTML":
           props.changeHandle(stack.level, "HTML");
-          //   setStackStack([...stackStack, { HTML:  }]);
+          // setStackStack([...stackStack, { HTML:stack.level  }]);
           HTML = stack.level;
           break;
         case "CSS":
           props.changeHandle(stack.level, "CSS");
-          //   setStackStack([...stackStack, { CSS: stack.level }]);
           CSS = stack.level;
           break;
         case "JavaScript":
           props.changeHandle(stack.level, "JavaScript");
-          //   setStackStack([...stackStack, { JavaScript: stack.level }]);
           JavaScript = stack.level;
           break;
         case "VueJS":
           props.changeHandle(stack.level, "VueJS");
-          //   setStackStack([...stackStack, { VueJS: stack.level }]);
           VueJS = stack.level;
+          break;
+        case "React":
+          props.changeHandle(stack.level, "React");
+          React = stack.level;
+          break;
+        case "Angular":
+          props.changeHandle(stack.level, "Angular");
+          Angular = stack.level;
+          break;
+        case "Python":
+          props.changeHandle(stack.level, "Python");
+          Python = stack.level;
+          break;
+        case "Java":
+          props.changeHandle(stack.level, "Java");
+          Java = stack.level;
+          break;
+        case "C":
+          props.changeHandle(stack.level, "C");
+          C = stack.level;
+          break;
+        case "SpringBoot":
+          props.changeHandle(stack.level, "SpringBoot");
+          SpringBoot = stack.level;
+          break;
+        case "MySQL":
+          props.changeHandle(stack.level, "MySQL");
+          MySQL = stack.level;
+          break;
+        case "Git":
+          props.changeHandle(stack.level, "Git");
+          Git = stack.level;
+          break;
+        case "AWS":
+          props.changeHandle(stack.level, "AWS");
+          AWS = stack.level;
+          break;
+        case "Docker":
+          props.changeHandle(stack.level, "Docker");
+          Docker = stack.level;
+          break;
+        case "Linux":
+          props.changeHandle(stack.level, "Linux");
+          Linux = stack.level;
+          break;
+        case "Jira":
+          props.changeHandle(stack.level, "Jira");
+          Jira = stack.level;
+          break;
+        case "Django":
+          props.changeHandle(stack.level, "Django");
+          Django = stack.level;
+          break;
+        case "Redis":
+          props.changeHandle(stack.level, "Redis");
+          Redis = stack.level;
           break;
         default:
           break;
       }
     });
 
-    console.log();
-    // if (!HTML) props.changeHandle(0, "HTMLLevel");
+    if (HTML == 0) props.changeHandle(0, "HTML");
+    if (CSS == 0) props.changeHandle(0, "CSS");
+    if (JavaScript == 0) props.changeHandle(0, "JavaScript");
+    if (VueJS == 0) props.changeHandle(0, "VueJS");
+    if (React == 0) props.changeHandle(0, "React");
+    if (Python == 0) props.changeHandle(0, "Python");
+    if (C == 0) props.changeHandle(0, "C");
+    if (SpringBoot == 0) props.changeHandle(0, "SpringBoot");
+    if (MySQL == 0) props.changeHandle(0, "MySQL");
+    if (Git == 0) props.changeHandle(0, "Git");
+    if (AWS == 0) props.changeHandle(0, "AWS");
+    if (Docker == 0) props.changeHandle(0, "Docker");
+    if (Linux == 0) props.changeHandle(0, "Linux");
+    if (Jira == 0) props.changeHandle(0, "Jira");
+    if (Django == 0) props.changeHandle(0, "Django");
+    if (Redis == 0) props.changeHandle(0, "Redis");
+
     // if (!CSS) props.changeHandle(0, "CSSLevel");
     // if (!JavaScript) props.changeHandle(0, "JavaScriptLevel");
     // if (!VueJS) props.changeHandle(0, "VueJSLevel");
-    // props.changeHandle(stackStack, stackStack);
+    // props.changeHandle(stackStack, "stacks");
   }, [stacks]);
 
   return (

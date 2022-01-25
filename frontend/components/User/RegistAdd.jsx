@@ -118,12 +118,8 @@ export default function RegistAdd() {
   // };
 
   const changeHandle = (value, name) => {
-    console.log(name);
-    const n = name;
-    // inputState[name] = value;
-    inputState.stacks = { HTML: value };
-    // console.log("여기"+ name)
-    // console.log("저기"+value)
+    inputState[name] = value;
+    // inputState.stacks = { HTML: value };
     // 리렌더링 X
   };
 
@@ -162,6 +158,30 @@ export default function RegistAdd() {
 
     // console.log(links);
     // inputState.link = links;
+
+    // inputState.link.replace('undefined', ' ');
+    // inputState.link.replace(' ', ',');
+    console.log(inputState.link);
+
+    inputState.stacks = {
+      HTML: inputState.HTML,
+      CSS: inputState.CSS,
+      JavaScript: inputState.JavaScript,
+      VueJS: inputState.VueJS,
+      React: inputState.React,
+      Python: inputState.Python,
+      Java: inputState.Java,
+      C: inputState.C,
+      SpringBoot: inputState.SpringBoot,
+      MySQL: inputState.MySQL,
+      Git: inputState.Git,
+      AWS: inputState.AWS,
+      Docker: inputState.Docker,
+      Linux: inputState.Linux,
+      Jira: inputState.Jira,
+      Django: inputState.Django,
+      Redis: inputState.Redis,
+    };
 
     console.log("스택이라 제일 중요" + inputState.stacks);
 
@@ -270,7 +290,8 @@ export default function RegistAdd() {
                 <DatePicker
                   label=""
                   value={inputState.birthday}
-                  onChange={handleChange}
+                  // onChange={handleChange}
+                  changeHandle={changeHandle}
                 ></DatePicker>
               </DatePickerWrapper>
             </LocalizationProvider>
@@ -285,7 +306,7 @@ export default function RegistAdd() {
               id="position"
               name="position"
               onChange={positionHandleChange}
-              // defaultValue=""
+              defaultValue=""
               value={inputState.position || ""}
               sx={{ minWidth: 370, fontSize: 14 }}
             >
@@ -324,6 +345,7 @@ export default function RegistAdd() {
               // id="tags-filled"
               freeSolo
               onChange={handleLinksChange}
+              // value={links}
               // options={links}
               // getOptionLabel={(option) => option}
               options={links.map((l) => l.value)}
