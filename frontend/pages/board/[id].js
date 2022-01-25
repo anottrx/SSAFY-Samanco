@@ -6,13 +6,16 @@ import styled from "@emotion/styled";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup } from "@mui/material";
-import { useState } from "react";
+import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup,TableContainer, Table, StyledTableRow, StyledTableCell, TableHead, TableRow, TableBody, Paper } from "@mui/material";
+import { useState, useEffect } from "react";
 import Router from "next/router";
+
+import CommentList from "./CommentList"
 
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ board }) => board.boardDetail);
+
 
     const DetailWrapper = styled.div`
         display: flex;
@@ -58,7 +61,6 @@ const ProjectDetail = () => {
             <DetailHeader>
                 <DetailOperation></DetailOperation>
             </DetailHeader>
-            
             <ProjectDetail></ProjectDetail>
         </CusContainer>
     </Layout>);
@@ -111,6 +113,7 @@ const ProjectDetail = () => {
                     <br />
                     <DetailAction detail={detail}></DetailAction>
                     <Divider light />
+                    <CommentList detail={detail}></CommentList>
                     <br />
                 </CardContent>
                 
