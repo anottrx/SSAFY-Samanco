@@ -138,12 +138,18 @@ export default function RegistAdd() {
   };
 
   const [links, setLinks] = useState([]);
-  const handleLinksChange = (e) => {
-    let linkStr = e.target.value;
+  const [linkList, setLinkList] = useState([]);
+  function handleLinksChange(linkArr) {
+    let linkList = "";
+    const size = linkArr.length;
+    for (let i = 0; i < size; i++) {
+      linkList = linkList + " " + linkArr[i];
+    }
+    linkList = linkList.trim();
     setInputState({
-      link: inputState.link + " " + linkStr,
+      link: linkList,
     });
-  };
+  }
 
   const phoneReg = /^[0-9]{8,13}$/;
   // 전화번호 정규표현식
@@ -156,11 +162,6 @@ export default function RegistAdd() {
     let isNormal = true;
     let msg = "";
 
-    // console.log(links);
-    // inputState.link = links;
-
-    // inputState.link.replace('undefined', ' ');
-    // inputState.link.replace(' ', ',');
     console.log(inputState.link);
 
     inputState.stacks = {
@@ -342,14 +343,14 @@ export default function RegistAdd() {
             <br />
             <Autocomplete
               multiple
-              // id="tags-filled"
               freeSolo
-              onChange={handleLinksChange}
-              // value={links}
               // options={links}
               // getOptionLabel={(option) => option}
               options={links.map((l) => l.value)}
               renderInput={(params) => <TextField {...params} />}
+              onChange={(e, option, reason) => {
+                handleLinksChange(option);
+              }}
             />
           </div>
           {/* 자기소개 */}
