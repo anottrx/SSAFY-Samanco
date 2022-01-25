@@ -25,10 +25,10 @@ import MenuItem from "@mui/material/MenuItem";
 
 export default function RegistInfo() {
   const [inputState, setInputState] = useState({
-    userId: sessionStorage.getItem("userId"),
-    email: sessionStorage.getItem("email"),
+    userId: "",
+    email: "",
     phone: "",
-    nickname: sessionStorage.getItem("nickname"),
+    nickname: "",
     birthday: "",
     stacks: [],
     position: "",
@@ -36,11 +36,11 @@ export default function RegistInfo() {
     description: "",
     image_id: "",
     // 이미 입력된 값들
-    name: sessionStorage.getItem("name"),
-    password: sessionStorage.getItem("password"),
-    userClass: sessionStorage.getItem("userClass"),
-    generation: sessionStorage.getItem("generation"),
-    studentId: sessionStorage.getItem("studentId"),
+    name: "",
+    password: "",
+    userClass: "",
+    generation: "",
+    studentId: "",
   });
 
   const positionOptions = [
@@ -176,6 +176,17 @@ export default function RegistInfo() {
       Redis: inputState.Redis,
     };
 
+    setInputState({
+      userId: sessionStorage.getItem("userId"),
+      email: sessionStorage.getItem("email"),
+      nickname: sessionStorage.getItem("nickname"),
+      link: "",
+      name: sessionStorage.getItem("name"),
+      password: sessionStorage.getItem("password"),
+      userClass: sessionStorage.getItem("userClass"),
+      generation: sessionStorage.getItem("generation"),
+      studentId: sessionStorage.getItem("studentId"),
+    });
     console.log(inputState);
     if (isNormal) {
       const formData = new FormData();
@@ -196,11 +207,13 @@ export default function RegistInfo() {
 
       updateUserAPI(formData).then((res) => {
         if (res.statusCode == 200) {
+          alert("회원정보 추가 성공");
           window.history.forward();
           window.location.replace("/");
         } else {
           alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
         }
+
         console.log(res);
         sessionStorage.clear();
         sessionStorage.setItem("userId", inputState.userId);
