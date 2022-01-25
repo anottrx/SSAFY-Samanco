@@ -3,52 +3,20 @@ import userData from "../../data/userData.json";
 import Router from "next/router";
 import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
-import { getUserInfo, updateUserAPI, deleteUserAPI } from "../../pages/api/user";
+import {
+  getUserInfo,
+  updateUserAPI,
+  deleteUserAPI,
+} from "../../pages/api/user";
 import { TextField } from "@mui/icons-material";
 
 export default function MyInfo() {
-  const userNumber = 1;
-
-  const {
-    userId,
-    name,
-    email,
-    phone,
-    nickname,
-    userClass,
-    birthday,
-    generation,
-    studentId,
-    stacks,
-    position,
-    link,
-    description,
-    image_id,
-  } = userData[userNumber];
-
   const [authChange, setAuthChange] = useState(false);
   const [onlyView, setOnlyView] = useState(true);
   const [finishUpdate, setFinishUpdate] = useState(false);
 
   const [inputState, setInputState] = useState({
-    id: userId,
-    name: name,
-    email: email,
-    phone: phone,
-    nickname: nickname,
-    userClass: userClass,
-    birthday: birthday,
-    generation: generation,
-    studentId: studentId,
-    stacks: stacks,
-    position: position,
-    link: link,
-    description: description,
-    image_id: image_id,
-  });
-
-  const [inputState2, setInputState2] = useState({
-    id: "",
+    userId: "",
     name: "",
     email: "",
     phone: "",
@@ -68,21 +36,29 @@ export default function MyInfo() {
   const [cookie, setCookie] = useCookies(["userToken"]);
 
   useEffect(() => {
+    const token = cookie.userToken;
 
-    getUserInfo(cookie.userToken).then((res) => {
-      console.log(res);
-      if (res.statusCode == 200) {
-        
-      } else alert(`${res.message}`);
+    getUserInfo(token).then((res) => {
+      // console.log("token: " + token);
+      // console.log("res: " + res);
+
+      // if (res.statusCode == 200) {
+      // } else {
+      //   alert(`${res.message}`);
+      // }
+
+      setInputState({
+        userId: res.userId,
+        email: res.email,
+        nickname: res.nickname,
+      });
     });
-
-    
   }, []);
-
-
 
   const handleUpdateClick = (e) => {
     e.preventDefault();
+    setOnlyView(false);
+    setFinishUpdate(true);
 
     let isNormal = true;
     let msg = "";
@@ -96,20 +72,14 @@ export default function MyInfo() {
     } else if (inputState.password != inputState.passwordConfirm) {
       isNormal = false;
       msg = "비밀번호가 동일하지 않습니다.";
-    } else if (!inputState.name) {
-      isNormal = false;
-      msg = "이름을 입력해주세요.";
     } else if (!phoneReg.test(inputState.phone)) {
       isNormal = false;
       msg = "전화번호 양식을 확인해주세요.";
-    } else if (!inputState.name) {
-      isNormal = false;
-      msg = "이름을 입력해주세요.";
     } else if (!inputState.nickname) {
       isNormal = false;
       msg = "닉네임을 입력해주세요.";
     }
-    
+
     if (isNormal) {
       // updateUserAPI(inputState).then((res) => {
       if (res.statusCode == 200) {
@@ -172,52 +142,54 @@ export default function MyInfo() {
           <input
             id="email"
             type="email"
-            value={inputState.email}
+            disabled
+            value={inputState.email || ""}
           />
         </div>
         <div className="mb-6">
           <label>닉네임</label>
           <input
             id="nickname"
-            value={inputState.nickname}
-            disabled={onlyView ? true : false}
-            onChange={handleChange}
+            value={inputState.nickname || ""}
+            disabled
+            // disabled={onlyView ? true : false}
+            // onChange={handleChange}
           />
         </div>
         <div className="mb-6">
           <label>기수</label>
-          <input value={inputState.generation} disabled />
+          <input value={inputState.generation || ""} disabled />
         </div>
         <div className="mb-6">
           <label>반</label>
-          <input value={inputState.userClass} disabled />
+          <input value={inputState.userClass || ""} disabled />
         </div>
         <div className="mb-6">
           <label>학번</label>
-          <input value={inputState.studentId} disabled />
+          <input value={inputState.studentId || ""} disabled />
         </div>
         <div className="mb-6">
           <label>이름</label>
-          <input value={inputState.name} disabled />
+          <input value={inputState.name || ""} disabled />
         </div>
         <div className="mb-6">
           <label>분야</label>
           <input
             id="position"
-            value={inputState.position}
+            defaultValue={inputState.position || ""}
             disabled={onlyView ? true : false}
             onChange={handleChange}
           />
         </div>
         <div className="mb-6">
           <label>생년월일</label>
-          <input value={inputState.birthday} disabled />
+          <input value={inputState.birthday || ""} disabled />
         </div>
         <div className="mb-6">
           <label>전화번호</label>
           <input
             id="phone"
-            value={inputState.phone}
+            defaultValue={inputState.phone || ""}
             disabled={onlyView ? true : false}
             onChange={handleChange}
           />
@@ -226,7 +198,7 @@ export default function MyInfo() {
           <label>링크</label>
           <input
             id="link"
-            value={inputState.link}
+            defaultValue={inputState.link || ""}
             disabled={onlyView ? true : false}
             onChange={handleChange}
           />
@@ -252,7 +224,7 @@ export default function MyInfo() {
         </div>
         <div className="mb-6">
           <label>이미지</label>
-          <text>{image_id}</text>
+          {/* <text>{image_id}</text> */}
         </div>
       </div>
       <button onClick={handleQuitClick}>탈퇴하기</button>

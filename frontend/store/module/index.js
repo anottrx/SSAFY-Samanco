@@ -12,8 +12,9 @@ const reducer = (state, action) => {
     
     return combineReducers({ 
         project, 
-        study,
-        meeting
+        meeting,
+        board,
+        study
         // 여기에 추가 
     })(state, action); 
 } 

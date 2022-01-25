@@ -25,23 +25,6 @@ async function registAPI(formData) {
         "Content-Type": "multipart/form-data",
       },
     })
-    // return await api
-    // .post("/api/user", {
-    //   email: inputState.email,
-    //   name: inputState.name,
-    //   password: inputState.password,
-    //   phone: inputState.phone,
-    //   nickname: inputState.nickname,
-    //   birthday: inputState.birthday,
-    //   generation: inputState.generation,
-    //   userClass: inputState.userClass,
-    //   studentId: inputState.studentId,
-    //   stacks: inputState.stacks, // array
-    //   position: inputState.position,
-    //   link: inputState.link, // ,로 자르기
-    //   description: inputState.description,
-    //   image_id: inputState.image_id,
-    // })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
@@ -75,11 +58,11 @@ async function getUserInfo(token) {
     .catch((err) => err.response.data);
 }
 
-async function getOtherInfoAPI(nickname) {
-  // 다른 사람 정보 조회
+async function getOtherInfoAPI(userId) {
+  // 나 또는 다른 사람이 내 정보 조회
   return await api
     .post("/api/user/view", {
-      nickname: nickname,
+      userId: userId,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
@@ -154,16 +137,16 @@ async function checkNicknameAPI(nickname) {
     .catch((err) => err.response.data);
 }
 
-async function checkMemberAPI(inputState) {
-  // 싸피생 확인 -> 안 함! 회원가입 때 할 것
-  return await api
-    .post("/api/user/check", {
-      studentId: inputState.studentId,
-      name: inputState.name,
-    })
-    .then((res) => res.data)
-    .catch((err) => err.response.data);
-}
+// async function checkMemberAPI(inputState) {
+//   // 싸피생 확인 -> 안 함! 회원가입 때 할 것
+//   return await api
+//     .post("/api/user/check", {
+//       studentId: inputState.studentId,
+//       name: inputState.name,
+//     })
+//     .then((res) => res.data)
+//     .catch((err) => err.response.data);
+// }
 
 export {
   loginAPI,

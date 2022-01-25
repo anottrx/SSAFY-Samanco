@@ -1,43 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
-import PositionList from "../Club/PositionList";
-import StackLevelRegistSelect from "../../components/Common/Stack/StackLevelRegistSelect";
+import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSelectRegister";
 
-import { registAPI, checkMemberAPI } from "../../pages/api/user";
 import {
-  Paper,
-  InputLabel,
+  checkLoginTokenInfo,
+  registAPI,
+  getUserInfo,
+  updateUserAPI,
+} from "../../pages/api/user";
+import {
   TextField,
   Box,
-  Avatar,
   OutlinedInput,
-  ListItem,
-  DialogContentText,
-  DialogContent,
-  List,
-  DialogActions,
   Button,
-  DialogTitle,
   Autocomplete,
-  ListItemAvatar,
-  ListItemText,
-  Dialog,
   Select,
   Typography,
 } from "@mui/material";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import PersonIcon from "@mui/icons-material/Person";
-import AddIcon from "@mui/icons-material/Add";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
 import DatePicker from "../../components/Common/DatePicker";
 import styled from "@emotion/styled";
 import { LocalizationProvider } from "@mui/lab";
 import DateAdapter from "@mui/lab/AdapterDateFns";
 import MenuItem from "@mui/material/MenuItem";
 
-export default function RegistAdd() {
+export default function RegistInfo() {
   const [inputState, setInputState] = useState({
+    userId: "",
     email: "",
     phone: "",
     nickname: "",
@@ -47,6 +35,12 @@ export default function RegistAdd() {
     link: "",
     description: "",
     image_id: "",
+    // 이미 입력된 값들
+    name: "",
+    password: "",
+    userClass: "",
+    generation: "",
+    studentId: "",
   });
 
   const positionOptions = [
@@ -86,14 +80,41 @@ export default function RegistAdd() {
     background-size: contain;
   `;
 
-  // const changeHandle = (value, name) => {
-  //   inputState[name] = value;
+  const [files, setFiles] = useState("");
+
+  const onImgChange = (event) => {
+    const file = event.target.files[0];
+    setFiles(file);
+  };
+
+  const uploadRef = useRef(null);
+
+  useEffect(() => {
+    preview();
+  });
+
+  const preview = () => {
+    if (!files) return false;
+
+    const imgEl = document.querySelector("#img_box");
+    const reader = new FileReader();
+
+    reader.onload = () =>
+      (imgEl.style.backgroundImage = `url(${reader.result})`);
+
+    imgEl.innerText = "";
+    reader.readAsDataURL(files);
+  };
+
+  // const changeHandle = (e) => {
+  //   const { id, value } = e.target;
+  //   inputState[id] = value;
   //   // 리렌더링 X
   // };
 
-  const changeHandle = (e) => {
-    const { id, value } = e.target;
-    inputState[id] = value;
+  const changeHandle = (value, name) => {
+    inputState[name] = value;
+    // inputState.stacks = { HTML: value };
     // 리렌더링 X
   };
 
@@ -106,10 +127,23 @@ export default function RegistAdd() {
   };
 
   const positionHandleChange = (e) => {
-    inputState.position = e.target.value;
+    setInputState({
+      position: e.target.value,
+    });
   };
 
-  const links = []
+  const [links, setLinks] = useState([]);
+  function handleLinksChange(linkArr) {
+    let linkList = "";
+    const size = linkArr.length;
+    for (let i = 0; i < size; i++) {
+      linkList = linkList + " " + linkArr[i];
+    }
+    linkList = linkList.trim();
+    setInputState({
+      link: linkList,
+    });
+  }
 
   const phoneReg = /^[0-9]{8,13}$/;
   // 전화번호 정규표현식
@@ -122,21 +156,70 @@ export default function RegistAdd() {
     let isNormal = true;
     let msg = "";
 
-    console.log(links)
-    inputState.link = links;
+    inputState.stacks = {
+      HTML: inputState.HTML,
+      CSS: inputState.CSS,
+      JavaScript: inputState.JavaScript,
+      VueJS: inputState.VueJS,
+      React: inputState.React,
+      Python: inputState.Python,
+      Java: inputState.Java,
+      C: inputState.C,
+      SpringBoot: inputState.SpringBoot,
+      MySQL: inputState.MySQL,
+      Git: inputState.Git,
+      AWS: inputState.AWS,
+      Docker: inputState.Docker,
+      Linux: inputState.Linux,
+      Jira: inputState.Jira,
+      Django: inputState.Django,
+      Redis: inputState.Redis,
+    };
 
+    setInputState({
+      userId: sessionStorage.getItem("userId"),
+      email: sessionStorage.getItem("email"),
+      nickname: sessionStorage.getItem("nickname"),
+      link: "",
+      name: sessionStorage.getItem("name"),
+      password: sessionStorage.getItem("password"),
+      userClass: sessionStorage.getItem("userClass"),
+      generation: sessionStorage.getItem("generation"),
+      studentId: sessionStorage.getItem("studentId"),
+    });
     console.log(inputState);
     if (isNormal) {
-      // registAPI(inputState).then((res) => {
-      //   console.log(res);
-      //   if (res.statusCode == 200) {
-      //     // 가입 성공 시
-      //     alert("가입이 되었습니다!");
-      //     // 페이지 이동
-      //     window.history.forward();
-      //     Router.push("/login");
-      //   } else alert(`${res.message}`);
-      // });
+      const formData = new FormData();
+
+      Object.keys(inputState).map((key) => {
+        let value = inputState[key];
+        if (key === "stacks") {
+          formData.append(key, JSON.stringify(value));
+          console.log(value);
+        } else formData.append(key, value);
+      });
+
+      formData.append("file", files);
+
+      for (var key of formData.entries()) {
+        console.log("key", `${key}`);
+      }
+
+      updateUserAPI(formData).then((res) => {
+        if (res.statusCode == 200) {
+          alert("회원정보 추가 성공");
+          window.history.forward();
+          window.location.replace("/");
+        } else {
+          alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
+        }
+
+        console.log(res);
+        sessionStorage.clear();
+        sessionStorage.setItem("userId", inputState.userId);
+        sessionStorage.setItem("email", inputState.email);
+        sessionStorage.setItem("nickname", inputState.nickname);
+      });
     } else {
       alert(msg);
     }
@@ -167,6 +250,17 @@ export default function RegistAdd() {
           >
             Image Upload
           </ImgUploadBtn>
+
+          <input
+            ref={uploadRef}
+            type="file"
+            className="imgInput"
+            id="projectImg"
+            accept="image/*"
+            name="file"
+            encType="multipart/form-data"
+            onChange={onImgChange}
+          ></input>
         </div>
         <div>
           {/* 전화번호 */}
@@ -195,9 +289,10 @@ export default function RegistAdd() {
             <LocalizationProvider dateAdapter={DateAdapter}>
               <DatePickerWrapper>
                 <DatePicker
-                  label="생년월일"
+                  label=""
                   value={inputState.birthday}
-                  onChange={handleChange}
+                  // onChange={handleChange}
+                  changeHandle={changeHandle}
                 ></DatePicker>
               </DatePickerWrapper>
             </LocalizationProvider>
@@ -210,8 +305,10 @@ export default function RegistAdd() {
             <br />
             <Select
               id="position"
+              name="position"
               onChange={positionHandleChange}
               defaultValue=""
+              value={inputState.position || ""}
               sx={{ minWidth: 370, fontSize: 14 }}
             >
               {positionOptions.map((u, i) => {
@@ -232,10 +329,9 @@ export default function RegistAdd() {
             <Typography display="inline" sx={{ fontSize: 14 }}>
               기술 스택
             </Typography>
-            <StackLevelRegistSelect
+            <StackLevelSelectRegister
               changeHandle={changeHandle}
-              // label="프로젝트 스택"
-            ></StackLevelRegistSelect>
+            ></StackLevelSelectRegister>
           </div>
           {/* 링크 */}
           <div className="mb-6">
@@ -245,29 +341,14 @@ export default function RegistAdd() {
             <br />
             <Autocomplete
               multiple
-              id="tags-filled"
-              // options={top100Films.map((option) => option.title)}
-              // defaultValue={[top100Films[13].title]}
               freeSolo
-              // renderTags={(value, getTagProps) =>
-              //   value.map((option, index) => (
-              //     <Chip
-              //       variant="outlined"
-              //       label={option}
-              //       {...getTagProps({ index })}
-              //     />
-              //   ))
-              // }
-              
-              options={links.map((l) => (l.value))}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  // variant="filled"
-                  // label="freeSolo"
-                  // placeholder="Favorites"
-                />
-              )}
+              // options={links}
+              // getOptionLabel={(option) => option}
+              options={links.map((l) => l.value)}
+              renderInput={(params) => <TextField {...params} />}
+              onChange={(e, option, reason) => {
+                handleLinksChange(option);
+              }}
             />
           </div>
           {/* 자기소개 */}
@@ -282,7 +363,7 @@ export default function RegistAdd() {
               fullWidth
               rows={4}
               multiline
-              value={inputState.description}
+              value={inputState.description || ""}
               onChange={handleChange}
               sx={{ width: 370, fontSize: 14 }}
             />

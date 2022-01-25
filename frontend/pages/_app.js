@@ -110,7 +110,7 @@ function MyApp({ Component, pageProps }) {
         <div>
           {props.isLogin ? (
             <>
-              <span className="mr-5">{props.userId}님, 안녕하세요</span>
+              <span className="mr-5">{sessionStorage.nickname}님, 안녕하세요</span>
               <Link href="/myinfo" className="site-nav-item" style={styles.link}>
                 마이페이지
               </Link>
@@ -120,10 +120,9 @@ function MyApp({ Component, pageProps }) {
                   alert("로그아웃 되었습니다.");
                   sessionStorage.clear();
                   cookies.set("userToken", "");
-                  // Router.push("/");
-                  // document.location.href = "/";
                   setIsLogin(false);
                   setUserId(null);
+                  // window.location.replace("/")
                 }}
                 className="site-nav-item"
               >
