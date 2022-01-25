@@ -14,8 +14,8 @@ import lombok.ToString;
 @ToString
 @ApiModel("UserLoginPostRequest")
 public class UserLoginPostReq {
-	@ApiModelProperty(name="유저 Email", example="sanmanco@ssafy.com")
+	@ApiModelProperty(name="email", example="sanmanco@ssafy.com")
 	String email;
-	@ApiModelProperty(name="유저 Password", example="your_password")
+	@ApiModelProperty(name="password", example="your_password")
 	String password;
 }

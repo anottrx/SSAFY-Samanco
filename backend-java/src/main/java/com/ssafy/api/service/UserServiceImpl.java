@@ -153,6 +153,33 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public UserDto selectUser(Long userId) {
+		UserDto user=userRepositorySupport.selectUser(userId);
+		System.out.println(user);
+		if (user==null){
+			return null;
+		}
+		user.setFile(fileRepositorySupport.selectFile(userId, 1));
+		user.setStacks(stackRepositorySupport.selectStack(userId, 1));
+
+		return user;
+	}
+
+	@Override
+	public int updateNickCheck(Long id, String nickname) {
+		//아이디 길이가 안맞으면 401에러 리턴
+		if(nickname.length()<2||nickname.length()>16){
+			return 401;
+		}
+		//디비에서 userId로 찾아봤는데 null이 아니면 (값이 있으면) 중복되므로 402에러 리턴
+		else if(userRepositorySupport.findUserByNickname(id, nickname)!=null){
+			return 402;
+		}
+		//아이디가 길이도 맞고 중복되지도 않다면 성공 200
+		return 200;
+	}
+
+	@Override
 	public int pwdCheck(String userPwd) {
 		if(userPwd == null)
 			return 401;

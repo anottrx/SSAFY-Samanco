@@ -28,4 +28,7 @@ public interface UserService {
     int updatePasswordUser(UserUpdatePostReq updateInfo);
 
 	List<UserDto> selectUserAll();
+    UserDto selectUser(Long userId);
+
+    int updateNickCheck(Long id, String nickname);
 }

@@ -1,6 +1,7 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.entity.QProject;
@@ -72,6 +73,11 @@ public class UserRepositorySupport {
                 .where(qUser.nickname.eq(nickname), qUser.isDeleted.eq(false)).fetchOne();
     }
 
+    public User findUserByNickname(Long id, String nickname) {
+        return jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.nickname.eq(nickname), qUser.isDeleted.eq(false), qUser.id.ne(id)).fetchOne();
+    }
+
     @Transactional
     public int updateUser(UserUpdatePostReq userUpdateInfo) {
 //        User user=jpaQueryFactory.select(qUser).from(qUser)
@@ -133,5 +139,28 @@ public class UserRepositorySupport {
 
     public List<User> selectUserAll() {
         return jpaQueryFactory.selectFrom(qUser).where(qUser.isDeleted.eq(false)).fetch();
+    }
+
+    public UserDto selectUser(Long userId) {
+        User result = jpaQueryFactory.selectFrom(qUser).where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
+        if (result==null){
+            return null;
+        }
+        UserDto user=new UserDto();
+        user.setStudentId(result.getStudentId());
+        user.setPosition(result.getPosition());
+        user.setPhone(result.getPhone());
+//        user.setPassword(result.getPassword());
+        user.setName(result.getName());
+        user.setProjectJoinStatus(result.getProjectJoinStatus());
+        user.setDescription(result.getDescription());
+        user.setNickname(result.getNickname());
+        user.setLink(result.getLink());
+        user.setGeneration(result.getGeneration());
+        user.setEmail(result.getEmail());
+        user.setBirthday(result.getBirthday());
+        user.setProjectPosition(result.getProjectPosition());
+        user.setProjectId(result.getProjectId());
+        return user;
     }
 }

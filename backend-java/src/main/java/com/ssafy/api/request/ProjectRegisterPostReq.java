@@ -15,43 +15,43 @@ import java.util.Map;
 @ApiModel("ProjectRegisterPstReq")
 public class ProjectRegisterPostReq {
 
-    @ApiModelProperty(name="host id", example="1")
+    @ApiModelProperty(name="hostId", example="1")
     private Long hostId;
 
-    @ApiModelProperty(name="host position", example="FRONTEND")
+    @ApiModelProperty(name="hostPosition", example="FRONTEND")
     private String hostPosition;
 
     @ApiModelProperty(name="title", example="싸피사만코 같이 하실분 구함")
     private String title;
 
-    @ApiModelProperty(name="collect status", example="ING")
+    @ApiModelProperty(name="collectStatus", example="ING")
     private String collectStatus;
 
     @ApiModelProperty(name="description", example="싸피사만코는 설명설명..")
     private String description;
 
-    @ApiModelProperty(name="start date", example="2022-01-19")
+    @ApiModelProperty(name="startDate", example="2022-01-19")
     private String startDate;
 
-    @ApiModelProperty(name="end date", example="2022-02-19")
+    @ApiModelProperty(name="endDate", example="2022-02-19")
     private String endDate;
 
     @ApiModelProperty(name="size", example="5")
     private int size;
 
-    @ApiModelProperty(name="stack", example="[{java: 1}, {HTML: 1}]")
+    @ApiModelProperty(name="stacks", example="[{java: 1}, {HTML: 1}]")
     private List<Map<String, Integer>> stacks;
 
-    @ApiModelProperty(name="total frontend size", example="3")
+    @ApiModelProperty(name="totalFrontendSize", example="3")
     private int totalFrontendSize=0;
 
-    @ApiModelProperty(name="total backend size", example="2")
+    @ApiModelProperty(name="totalBackendSize", example="2")
     private int totalBackendSize=0;
 
-    @ApiModelProperty(name="total mobile size", example="0")
+    @ApiModelProperty(name="totalMobileSize", example="0")
     private int totalMobileSize=0;
 
-    @ApiModelProperty(name="total embedded size", example="1")
+    @ApiModelProperty(name="totalEmbeddedSize", example="1")
     private int totalEmbeddedSize=0;
 
 //    @ApiModelProperty(name="current frontend size", example="3")
