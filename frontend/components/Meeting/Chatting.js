@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
-import {TextField} from "@mui/material"
+import { TextField } from "@mui/material"
+import { useRef, useEffect } from "react"
 
 function Chatting() {
 
@@ -39,23 +40,46 @@ function Chatting() {
             text-align: right;
             margin-bottom: 15px;
         }
-
     `
+
+    let index = [0, 0, 0, 0, 0, 0]
+    const scrollEl = useRef(null);
+
+    const scrollToBottom = () => {
+        scrollEl.current?.scrollIntoView({
+            // behavior: 'smooth',
+            block: 'end',
+            inline: 'nearest'
+          })
+      }
+
+    useEffect(() => {
+        scrollToBottom()
+      }, []);
+
 
     return (
         <ChattingWrapper>
-            <div className="messages">
-                <div className="otherMessageWrapper">
-                    <span className="nickName">닉네임</span>
-                    <span className="otherMessage">안녕하세요</span>
-                </div>
-                <div className="otherMessageWrapper">
-                    <span className="nickName">닉네임</span>
-                    <span className="otherMessage">안녕하세요</span>
-                </div>
-                <div className="myMessageWrapper">
-                    <span className="myMessage">안녕하세요</span>
-                </div>
+            <div className="messages" ref={scrollEl}>
+                {
+                    index.map(idx => {
+                        return (
+                            <>
+                            <div className="otherMessageWrapper">
+                                <span className="nickName">닉네임</span>
+                                <span className="otherMessage">안녕하세요</span>
+                            </div>
+                            <div className="otherMessageWrapper">
+                                <span className="nickName">닉네임</span>
+                                <span className="otherMessage">안녕하세요</span>
+                            </div>
+                            <div className="myMessageWrapper">
+                                <span className="myMessage">안녕하세요</span>
+                            </div>
+                        </>
+                        )
+                    })
+                }
             </div>
             <TextField size="small"></TextField>
         </ChattingWrapper>
