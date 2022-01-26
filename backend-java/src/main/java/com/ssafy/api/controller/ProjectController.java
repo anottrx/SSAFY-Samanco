@@ -172,6 +172,8 @@ public class ProjectController {
         fileService.updateFile(files, updateInfo.getId(), 2);
         if (projectCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트는 유효하지 않습니다."));
+        } else if (projectCode==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "사용자가 유효하지 않습니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }

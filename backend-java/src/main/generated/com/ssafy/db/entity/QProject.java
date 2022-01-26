@@ -29,14 +29,6 @@ public class QProject extends EntityPathBase<Project> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
-    public final NumberPath<Integer> currentBackendSize = createNumber("currentBackendSize", Integer.class);
-
-    public final NumberPath<Integer> currentEmbeddedSize = createNumber("currentEmbeddedSize", Integer.class);
-
-    public final NumberPath<Integer> currentFrontendSize = createNumber("currentFrontendSize", Integer.class);
-
-    public final NumberPath<Integer> currentMobileSize = createNumber("currentMobileSize", Integer.class);
-
     public final StringPath description = createString("description");
 
     public final StringPath endDate = createString("endDate");
