@@ -1,6 +1,9 @@
 import "../styles/app.css";
 import "../styles/globals.css";
-import { wrapper } from "../store";
+import { wrapper, persistedReducer } from "../store";
+import { createStore } from 'redux';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 
 // import { Container } from "next/app";
 import Head from "next/head";
@@ -53,6 +56,9 @@ const styles = {
 };
 
 function MyApp({ Component, pageProps }) {
+  const store = createStore(persistedReducer);
+  const persistor = persistStore(store);
+
   let [isLogin, setIsLogin] = useState(false);
   let [userId, setUserId] = useState(null);
 
@@ -64,41 +70,45 @@ function MyApp({ Component, pageProps }) {
   }, [isLogin, userId]);
   
   return (
-    (pageProps && pageProps.pathname) === '/meeting/[id]'? (
-        <div>
+    <PersistGate persistor={persistor} loading={<div>loading...</div>}>
+      {
+        (pageProps && pageProps.pathname) === '/meeting/[id]'? (
+            <React.Fragment>
 
-          <Head>    
-            <title>싸피사만코</title>
-            <meta name="viewport" content="viewport-fit=cover" />
-          </Head>
-          
-          <div style={styles.layout}>
-            
-            <main style={{backgroundColor: "gray"}}>
-              <Component {...pageProps} /> 
-            </main>
-            {/* pageProps.pathname === '/meeting/[id]' 일 때는 Layout 없이 렌더링 */}
-          </div>
-        </div>
-    ) : 
-
-    <div>
-      <Head>
-        <title>싸피사만코</title>
-        <meta name="viewport" content="viewport-fit=cover" />
-      </Head>
-      <div style={styles.layout}>
-        <header style={styles.header}>
-          <HeaderLink isLogin={isLogin} userId={userId}></HeaderLink>
-        </header>
-        <main style={styles.main}>
-          <Component {...pageProps} />
-        </main>
-        <footer style={styles.footer}>
-          footer
-        </footer>
-      </div>
-    </div>
+              <Head>    
+                <title>싸피사만코</title>
+                <meta name="viewport" content="viewport-fit=cover" />
+              </Head>
+              
+              <div style={styles.layout}>
+                
+                <main style={{backgroundColor: "gray"}}>
+                  <Component {...pageProps} /> 
+                </main>
+                {/* pageProps.pathname === '/meeting/[id]' 일 때는 Layout 없이 렌더링 */}
+              </div>
+            </React.Fragment>
+        ) 
+        : 
+          <React.Fragment>
+            <Head>
+              <title>싸피사만코</title>
+              <meta name="viewport" content="viewport-fit=cover" />
+            </Head>
+            <div style={styles.layout}>
+              <header style={styles.header}>
+                <HeaderLink isLogin={isLogin} userId={userId}></HeaderLink>
+              </header>
+              <main style={styles.main}>
+                <Component {...pageProps} />
+              </main>
+              <footer style={styles.footer}>
+                footer
+              </footer>
+            </div>
+          </React.Fragment>
+    }
+    </PersistGate>
   );
 
   function HeaderLink(props) {
