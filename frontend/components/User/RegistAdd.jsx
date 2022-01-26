@@ -6,6 +6,7 @@ import {
   checkLoginTokenInfo,
   registAPI,
   getUserTokenAPI,
+  getUserInfoAPI,
   updateUserAPI,
 } from "../../pages/api/user";
 import {
@@ -34,20 +35,21 @@ export default function RegistInfo() {
     description: "",
     image_id: "",
     // 이미 입력된 값들
-    userId: "",
-    email: "",
-    nickname: "",
-    name: "",
-    userClass: "",
-    generation: "",
-    studentId: "",
-    // userId: sessionStorage.getItem("userId"),
-    // email: sessionStorage.getItem("email"),
-    // nickname: sessionStorage.getItem("nickname"),
-    // name: sessionStorage.getItem("name"),
-    // userClass: sessionStorage.getItem("userClass"),
-    // generation: sessionStorage.getItem("generation"),
-    // studentId: sessionStorage.getItem("studentId"),
+    // userId: "",
+    // email: "",
+    // nickname: "",
+    // name: "",
+    // userClass: "",
+    // generation: "",
+    // studentId: "",
+    password: sessionStorage.getItem("password"),
+    userId: sessionStorage.getItem("userId"),
+    email: sessionStorage.getItem("email"),
+    nickname: sessionStorage.getItem("nickname"),
+    name: sessionStorage.getItem("name"),
+    userClass: sessionStorage.getItem("userClass"),
+    generation: sessionStorage.getItem("generation"),
+    studentId: sessionStorage.getItem("studentId"),
   });
 
   const positionOptions = [
@@ -159,7 +161,7 @@ export default function RegistInfo() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("왜"+inputState);
+    console.log("이전" + inputState);
 
     let isNormal = true;
     let msg = "";
@@ -186,24 +188,35 @@ export default function RegistInfo() {
 
     if (isNormal) {
       const formData = new FormData();
-      
-      setInputState({
-        userId: sessionStorage.getItem("userId"),
-        email: sessionStorage.getItem("email"),
-        nickname: sessionStorage.getItem("nickname"),
-        name: sessionStorage.getItem("name"),
-        userClass: sessionStorage.getItem("userClass"),
-        generation: sessionStorage.getItem("generation"),
-        studentId: sessionStorage.getItem("studentId"),
-      });
-      console.log("왜뢔뢔"+inputState.userId +" "+ inputState.email+ " "+inputState.studentId);
-      
+
+      // setInputState({
+        // userId: sessionStorage.getItem("userId"),
+        // email: sessionStorage.getItem("email"),
+        // nickname: sessionStorage.getItem("nickname"),
+        // name: sessionStorage.getItem("name"),
+        // userClass: sessionStorage.getItem("userClass"),
+        // generation: sessionStorage.getItem("generation"),
+        // studentId: sessionStorage.getItem("studentId"),
+        // password: sessionStorage.getItem("password"),
+      // });
+      console.log(
+        "이후" +
+          inputState.userId +
+          " " +
+          inputState.email +
+          " " +
+          inputState.studentId
+      );
+
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
         if (key === "stacks") {
           formData.append(key, JSON.stringify(value));
           console.log(value);
-        } else formData.append(key, value);
+        } else {
+          formData.append(key, value);
+          console.log(key + " " + value);
+        }
       });
 
       formData.append("file", files);
@@ -225,7 +238,6 @@ export default function RegistInfo() {
         } else {
           alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
         }
-
       });
     } else {
       alert(msg);
