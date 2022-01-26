@@ -80,16 +80,19 @@ function BoardRegist() {
     });
 
     const preview = () => {
+        let fileName;
         if (!files) return false;
 
         const fileEl = document.querySelector("#file_box");
         const reader = new FileReader();
 
-        reader.onload = () => (
-            imgEl.style.backgroundImage = `url(${reader.result})`
-        )
+        reader.onload=()=>{
+            fileName = files.name;
+            console.log(fileName);
+            fileEl.innerText  = fileName;
+        }
 
-        imgEl.innerText  = "";
+        
         reader.readAsDataURL(files)
     }
 
