@@ -86,7 +86,7 @@ export default function Login() {
             const token = res.accessToken;
             getUserTokenAPI(token).then((res1) => {
               console.log(res1);
-              alert();
+              // alert();
               sessionStorage.setItem("userId", res1.userId);
               sessionStorage.setItem("email", inputState.email);
               sessionStorage.setItem("nickname", res1.nickname);

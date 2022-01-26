@@ -9,6 +9,7 @@ import {
   updateUserAPI,
   updateNicknameAPI,
   deleteUserAPI,
+  checkLoginTokenInfo,
 } from "../../pages/api/user";
 import { TextField } from "@mui/icons-material";
 
@@ -34,6 +35,7 @@ export default function MyInfo() {
     description: "",
     image_id: "",
   });
+
   const [nicknameInfo, setNicknameInfo] = useState({
     newNickname: "",
     curUserId: "",
@@ -42,70 +44,72 @@ export default function MyInfo() {
   const cookies = new Cookies();
   const [cookie, setCookie] = useCookies(["userToken"]);
 
-  const token = cookie.userToken;
-  const [uesrIdNum, setUserIdNum] = useState("");
-  async function getUserToken() {
-    getUserTokenAPI(token).then((res) => {
-      // console.log("token: " + token);
+  useEffect(() => {
+    const token = cookie.userToken;
+    const curUserId = sessionStorage.getItem("userId");
+
+    checkLoginTokenInfo(token).then((res) => {
+      console.log(res);
       // console.log("res: " + res);
 
       if (res.statusCode == 200) {
       } else {
-        alert(`${res.email}`);
+        alert(`${res.message}`);
+        console.log(res.userId);
+
+        setInputState({
+          userId: res.userId,
+          email: res.email,
+          nickname: res.nickname,
+        });
+        console.log(inputState);
+
+        getUserInfoAPI(res.userId).then((res1) => {
+          console.log(res.userId);
+        });
       }
-      console.log("getUserToken" + res);
-
-      setInputState({
-        userId: res.userId,
-        email: res.email,
-        nickname: res.nickname,
-      });
-      setUserIdNum({
-        userIdNum: res.userId,
-      });
-      setNicknameInfo({
-        curUserId: res.userId,
-      });
     });
-  }
-
-  async function getUserInfo() {
-    setUserIdNum({
-      userIdNum: sessionStorage.getItem("userId"),
-    });
-    console.log("UserID는 " + sessionStorage.getItem("userId"));
-    getUserInfoAPI("45").then((res) => {
-      if (res.statusCode == 200) {
-      } else {
-        alert(`${res.email}`);
-      }
-      console.log("getUserInfoAPI" + res.user);
-
-      setInputState({
-        phone: res.phone,
-        class: res.class,
-        birthday: res.birthday,
-        generation: res.generation,
-        studentId: res.studentId,
-        stacks: res.stacks,
-        position: res.position,
-        link: res.link,
-        description: res.description,
-        image_id: res.image_id,
-      });
-      setNicknameInfo({
-        curUserId: res.userId,
-      });
-    });
-  }
-
-  useEffect(() => {
-    // getUserToken();
-    getUserInfo();
-    console.log(
-      inputState.userId + " " + inputState.email + " " + inputState.nickname
-    );
   }, []);
+
+  const handleNicknameChange = (e) => {
+    setNicknameInfo({
+      newNickname: e.target.value,
+    });
+  };
+
+  const handleNicknameClick = (e) => {
+    e.preventDefault();
+    // 닉네임 바꾸기
+    if (nicknameChange) {
+      // setNicknameChange(false);
+      setNicknameInfo({
+        curUserId: inputState.userId,
+      });
+
+      let isNormal = true;
+      if (nicknameInfo.newNickname == "") {
+        isNormal = false;
+      }
+      if (isNormal) {
+        updateNicknameAPI(nicknameInfo).then((res) => {
+          console.log(
+            "닉네임 업데이트할 때 입력값" +
+              nicknameInfo.newNickname +
+              " " +
+              nicknameInfo.curUserId
+          );
+          if (res.statusCode == 200) {
+            setNicknameChange(false);
+          } else {
+            alert(`${res.message}`);
+          }
+          console.log("닉네임 업데이트결과" + res);
+        });
+      }
+    } else {
+      setNicknameChange(true);
+    }
+  };
 
   const handleUpdateClick = (e) => {
     e.preventDefault();
@@ -143,45 +147,6 @@ export default function MyInfo() {
       } else {
         alert(msg);
       }
-    }
-  };
-
-  const handleNicknameChange = (e) => {
-    setNicknameInfo({
-      newNickname: e.target.value,
-    });
-  };
-  const handleNicknameClick = (e) => {
-    e.preventDefault();
-    // 닉네임 바꾸기
-    if (nicknameChange) {
-      // setNicknameChange(false);
-      setNicknameInfo({
-        curUserId: inputState.userId,
-      });
-
-      let isNormal = true;
-      if (nicknameInfo.newNickname == "") {
-        isNormal = false;
-      }
-      if (isNormal) {
-        updateNicknameAPI(nicknameInfo).then((res) => {
-          console.log(
-            "닉네임 업데이트할 때 입력값" +
-              nicknameInfo.newNickname +
-              " " +
-              nicknameInfo.curUserId
-          );
-          if (res.statusCode == 200) {
-            setNicknameChange(false);
-          } else {
-            alert(`${res.message}`);
-          }
-          console.log("닉네임 업데이트결과" + res);
-        });
-      }
-    } else {
-      setNicknameChange(true);
     }
   };
 
@@ -261,7 +226,11 @@ export default function MyInfo() {
         </div>
         <div className="mb-6">
           <label>반</label>
-          <input value={inputState.class || ""} disabled />
+          <input
+            value={inputState.class || ""}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
         </div>
         <div className="mb-6">
           <label>학번</label>

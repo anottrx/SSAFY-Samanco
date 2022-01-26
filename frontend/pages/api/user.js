@@ -3,7 +3,7 @@ import api, { getAuth, fileUrl } from "./index";
 async function checkLoginTokenInfo(token) {
   // 로그인 토큰 조회
   return await getAuth(token)
-    .post("/api/user/auth")
+    .get("/api/user/auth")
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
