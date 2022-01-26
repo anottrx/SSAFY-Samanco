@@ -1,13 +1,12 @@
 import React, {useState, useRef, useEffect,useCallback, useLayoutEffect} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 
-import Link from "next/link";
 import { styled } from '@mui/material/styles';
 import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, ButtonGroup, Button} from '@mui/material';
-import Router from "next/router";
-import * as boardActions from '../../store/module/board';
 
-import commentDatas from "./commentData.json";
+
+import commentDatas from "./data/commentData.json";
+
+//댓글 목록 페이지
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 [`&.${tableCellClasses.head}`]: {
