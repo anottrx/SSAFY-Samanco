@@ -24,7 +24,7 @@ export default function MyInfo() {
     email: "",
     phone: "",
     nickname: "",
-    userClass: "",
+    class: "",
     birthday: "",
     generation: "",
     studentId: "",
@@ -70,8 +70,11 @@ export default function MyInfo() {
   }
 
   async function getUserInfo() {
-    console.log("UserID는 " + uesrIdNum);
-    getUserInfoAPI(uesrIdNum).then((res) => {
+    setUserIdNum({
+      userIdNum: sessionStorage.getItem("userId"),
+    });
+    console.log("UserID는 " + sessionStorage.getItem("userId"));
+    getUserInfoAPI("45").then((res) => {
       if (res.statusCode == 200) {
       } else {
         alert(`${res.email}`);
@@ -80,7 +83,7 @@ export default function MyInfo() {
 
       setInputState({
         phone: res.phone,
-        userClass: res.userClass,
+        class: res.class,
         birthday: res.birthday,
         generation: res.generation,
         studentId: res.studentId,
@@ -97,7 +100,7 @@ export default function MyInfo() {
   }
 
   useEffect(() => {
-    getUserToken();
+    // getUserToken();
     getUserInfo();
     console.log(
       inputState.userId + " " + inputState.email + " " + inputState.nickname
@@ -258,7 +261,7 @@ export default function MyInfo() {
         </div>
         <div className="mb-6">
           <label>반</label>
-          <input value={inputState.userClass || ""} disabled />
+          <input value={inputState.class || ""} disabled />
         </div>
         <div className="mb-6">
           <label>학번</label>
