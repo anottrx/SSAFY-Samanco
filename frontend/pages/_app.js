@@ -13,6 +13,8 @@ import Router from "next/router";
 import Button from '@mui/material/Button';
 import Cookies from "universal-cookie";
 
+import styled from "@emotion/styled";
+
 const styles = {
   layout: {
     display: "flex",
@@ -114,15 +116,23 @@ function MyApp({ Component, pageProps }) {
   );
 
   function HeaderLink(props) {
+    
+  const UserSpan = styled.span`
+    color: black;
+    margin-right: 5px;
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+  `
     return (
       <div style={styles.headerLink}>
         <Link href="/">
-          <img src="/images/main-logo.png" height="30px"></img>
+          <img src="/images/main-logo-black.png" height="30px"></img>
         </Link>
         <div>
           {props.isLogin ? (
             <>
-              <span className="mr-5">{sessionStorage.nickname}님, 안녕하세요</span>
+              <UserSpan>{sessionStorage.nickname}님, 안녕하세요</UserSpan>
               <Link href="/myinfo" className="site-nav-item" style={styles.link}>
                 마이페이지
               </Link>
