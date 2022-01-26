@@ -3,6 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback } from "react";
 import {useDispatch } from 'react-redux';
 
+//게시글 검색바
 
 function BoardSearch(props) {
     const [keyword, setKeyword] = useState("");

@@ -4,8 +4,9 @@ import styled from "@emotion/styled";
 import { useState, useRef, useEffect } from "react";
 import React from "react";
 import styles from "../../styles/Board.module.css"
+var FormData = require('form-data');
 
-
+//게시글 등록 페이지
 function BoardRegist() {
     const CusPaper = styled(Paper)`
         width: 100%;
@@ -48,11 +49,52 @@ function BoardRegist() {
         },
     ];
 
+    //파일 업로드 부분
+    const FileUploadBtn = styled(Button)`
+        padding: 10px;
+        border: 1px dashed grey;
+        width : 100%;
+    `
+
     const [inputValue, setInputValue] = useState({});
+
+    const [formData, changeFormData] = useState(new FormData());
+    const [files, setFiles] = useState('');
 
 
     const changeHandle = (value, name) => {
         inputValue[name] = value;
+    }
+    const onImgChange = (event) => {
+        const file = event.target.files[0];
+        setFiles(file)
+
+        const newData = new FormData();
+        newData.append("file", file);
+        changeFormData(newData);
+    }
+
+    const uploadRef = useRef(null);
+
+    useEffect(() => {
+        preview();
+    });
+
+    const preview = () => {
+        let fileName;
+        if (!files) return false;
+
+        const fileEl = document.querySelector("#file_box");
+        const reader = new FileReader();
+
+        reader.onload=()=>{
+            fileName = files.name;
+            //console.log(fileName);
+            fileEl.innerText  = fileName;
+        }
+
+        
+        reader.readAsDataURL(files)
     }
 
     return (
@@ -85,11 +127,22 @@ function BoardRegist() {
                     label="게시글 내용"
                     placeholder="게시글 내용"
                     fullWidth
-                    rows={30}
+                    rows={20}
                     multiline
                     onChange={(e) => changeHandle(e.target.value, "content")}
                     value={inputValue.description}
                 />
+
+                {/*파일 업로드 부분*/}
+                <FileUploadBtn id="file_box" onClick={(event) => {
+                    event.preventDefault();
+                    uploadRef.current.click();
+                }}>파일 업로드</FileUploadBtn>
+                
+                <input ref={uploadRef} type="file"
+                    className="imgInput" id="projectImg"
+                    accept="*" name="file"
+                    onChange={onImgChange}></input>
 
 
                 <div className="registBtn">
