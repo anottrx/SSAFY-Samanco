@@ -119,11 +119,10 @@ const StudyDetail = () => {
         
         return (
             <ContentWrapper>
-                <div>기술 스택</div>
+                <div>스터디 주제</div>
                 <StackList stackData={detail.stacks}></StackList>
                 <br />
-                <div>모집 팀원</div>
-                <PositionList positionData={detail.positions}></PositionList>        
+        
             </ContentWrapper>
         )
     }
@@ -137,7 +136,11 @@ const StudyDetail = () => {
             <CusCard sx={{ minWidth: 275 }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 16 }}  variant="body1">
-                        {detail.description}
+                    {
+                        detail.description.split('\n').map((line, index) => {
+                            return (<span key={index}>{line}<br/></span>)
+                        })
+                    }
                     </Typography>
                     <br />
                     <Divider light />
@@ -164,14 +167,6 @@ const StudyDetail = () => {
 
         return (
             <FooterWrapper>
-                <div>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
-                        진행 기간
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} >
-                        {detail.startDate} ~  {detail.endDate}
-                    </Typography>
-                </div>
                 <div>
                     <Typography sx={{ fontSize: 14 }} gutterBottom>
                         예정 스케쥴
@@ -217,11 +212,14 @@ const StudyDetail = () => {
                     </Button>
                     <Button>
                         <FavoriteIcon /> 
-                        <span>{detail.like}</span>
+                        <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
                 <>
+                <div>
+                    <Button variant="outlined" onClick={() => {Router.push("/study/applylist")}}>지원자 목록 조회</Button>
                     <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                </div>
                     <Dialog
                         open={open}
                         onClose={JoinDialogClose}

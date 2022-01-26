@@ -9,6 +9,8 @@ function meetingDetail() {
     const RoomWrapper = styled(Card)`
         padding: 20px;
         margin: 10px;
+        height: calc(100vh - 20px);
+        overflow-y: scroll;
     `
 
     const RoomContent = styled.div`
@@ -16,6 +18,7 @@ function meetingDetail() {
         flex-direction: row;
         justify-content: space-between;
         margin-top: 20px;
+        height: calc(100% - 100px);
     `
 
     return (

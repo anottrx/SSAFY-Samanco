@@ -1331,7 +1331,7 @@ function augmentErrorWithPlugin(plugin, err) {
 
 function apiRunner(api, args, defaultReturn, argTransform) {
   if (!apis[api]) {
-    console.log(`This API doesn't exist`, api);
+    // console.log(`This API doesn't exist`, api);
   }
 
   const results = [];
@@ -1365,7 +1365,7 @@ function apiRunner(api, args, defaultReturn, argTransform) {
 }
 async function apiRunnerAsync(api, args, defaultReturn, argTransform) {
   if (!apis[api]) {
-    console.log(`This API doesn't exist`, api);
+    // console.log(`This API doesn't exist`, api);
   }
 
   const results = [];
@@ -10312,7 +10312,7 @@ try {
   if (testRequireError(`../src/html`, err)) {
     Html = __webpack_require__(/*! ./default-html */ "./.cache/default-html.js");
   } else {
-    console.log(`There was an error requiring "src/html.js"\n\n`, err, `\n\n`);
+    // console.log(`There was an error requiring "src/html.js"\n\n`, err, `\n\n`);
     process.exit();
   }
 }

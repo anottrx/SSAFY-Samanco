@@ -92,8 +92,10 @@ function ItemList(props) {
     // 없으면 store에 저장
     useLayoutEffect(() => {
         // 빈 배열이면 배열 요청
-        // To Do : 나중에 api로 값 가져오게 수정 - Project API 연동
+        // To Do : 나중에 api로 값 가져오게 수정 - Study API 연동 필요
         if (props.from === "project") {
+            getProjectAllAPI().then(res => setList({list: res.projects}));
+        } else if (props.from === "study") {
             getProjectAllAPI().then(res => setList({list: res.projects}));
         } else {
             setList({list: projectJSONData});
