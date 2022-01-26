@@ -49,7 +49,7 @@ async function checkCodeAPI(code) {
     .catch((err) => err.response.data);
 }
 
-async function getUserInfo(token) {
+async function getUserTokenAPI(token) {
   // 내 정보를 조회 -> 이중에서 email, nickname, userId 받음
   // return await api
   return await getAuth(token)
@@ -58,7 +58,7 @@ async function getUserInfo(token) {
     .catch((err) => err.response.data);
 }
 
-async function getOtherInfoAPI(userId) {
+async function getUserInfoAPI(userId) {
   // 나 또는 다른 사람이 내 정보 조회
   return await api
     .post("/api/user/view", {
@@ -91,7 +91,7 @@ async function checkEmailPWAPI(code) {
 async function resetPWAPI(inputState) {
   // 비밀번호 재설정
   return await api
-    .post("/api/user//api/user/updatepass", {
+    .post("/api/user/api/user/updatepass", {
       userId: inputState.userId,
       password: inputState.password,
     })
@@ -137,25 +137,25 @@ async function checkNicknameAPI(nickname) {
     .catch((err) => err.response.data);
 }
 
-// async function checkMemberAPI(inputState) {
-//   // 싸피생 확인 -> 안 함! 회원가입 때 할 것
-//   return await api
-//     .post("/api/user/check", {
-//       studentId: inputState.studentId,
-//       name: inputState.name,
-//     })
-//     .then((res) => res.data)
-//     .catch((err) => err.response.data);
-// }
+async function updateNicknameAPI(inputData) {
+  // 회원가입한 후 사용자가 닉네임 수정할 때 닉네임 중복 체크
+  return await api
+  .post("/api/user/nickcheck", {
+    userId: inputData.userId,
+    nickname: inputData.nickname,
+  })
+  .then((res) => res.data)
+  .catch((err) => err.response.data);
+}
 
 export {
   loginAPI,
   registAPI,
-  getUserInfo,
+  getUserTokenAPI,
+  getUserInfoAPI,
   checkLoginTokenInfo,
   sendEmailCodeAPI,
   checkCodeAPI,
-  getOtherInfoAPI,
   sendEmailPWCodeAPI,
   checkEmailPWAPI,
   resetPWAPI,
@@ -163,5 +163,5 @@ export {
   deleteUserAPI,
   getAllUserInfoAPI,
   checkNicknameAPI,
-  checkMemberAPI,
+  updateNicknameAPI,
 };
