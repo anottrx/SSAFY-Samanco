@@ -39,6 +39,7 @@ const styles = {
   },
   link: {
     marginRight: "10px",
+    color: "black",
   },
   main: {
     flex: 1,
