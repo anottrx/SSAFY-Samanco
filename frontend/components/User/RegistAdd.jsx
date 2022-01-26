@@ -3,9 +3,8 @@ import Router from "next/router";
 import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSelectRegister";
 
 import {
-  checkLoginTokenInfo,
+  getUserLoginTokenAPI,
   registAPI,
-  getUserTokenAPI,
   getUserInfoAPI,
   updateUserAPI,
 } from "../../pages/api/user";

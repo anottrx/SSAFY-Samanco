@@ -4,12 +4,11 @@ import Router from "next/router";
 import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
 import {
-  getUserTokenAPI,
+  getUserLoginTokenAPI,
   getUserInfoAPI,
   updateUserAPI,
   updateNicknameAPI,
   deleteUserAPI,
-  checkLoginTokenInfo,
 } from "../../pages/api/user";
 import { TextField } from "@mui/icons-material";
 
@@ -51,26 +50,29 @@ export default function MyInfo() {
     //   curUserId: sessionStorage.getItem("userId"),
     // });
 
-    checkLoginTokenInfo(token).then((res) => {
-      console.log(res);
-      // console.log("res: " + res);
-
+    getUserLoginTokenAPI(token).then((res) => {
       if (res.statusCode == 200) {
       } else {
-        alert(`${res.message}`);
-        console.log(res.userId);
-
-        setInputState({
-          userId: res.userId,
-          email: res.email,
-          nickname: res.nickname,
-        });
-        console.log(inputState);
-
-        getUserInfoAPI(res.userId).then((res1) => {
-          console.log(res1);
-        });
+        // alert(`${res.message}`);
       }
+      // console.log("getUserLoginTokenAPI 관련 결과"+res.status);
+      console.log("getUserLoginTokenAPI 관련 결과" + JSON.stringify(res));
+      // setInputState({
+      //   userId: res.userId,
+      //   email: res.email,
+      //   nickname: res.nickname,
+      // });
+      inputState.userId = res.userId;
+      inputState.email = res.email;
+      inputState.nickname = res.nickname;
+
+      console.log(inputState.userId);
+
+      const userId = res.userId;
+      console.log("userId: " + userId);
+      getUserInfoAPI(userId).then((res) => {
+        console.log("내 정보 보기 결과: " + JSON.stringify(res));
+      });
     });
   }, []);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getUserTokenAPI, loginAPI } from "../../pages/api/user";
+import { getUserLoginTokenAPI, loginAPI } from "../../pages/api/user";
 import Link from "next/link";
 import { useCookies } from "react-cookie";
 import FormControl, { useFormControl } from "@mui/material/FormControl";
@@ -84,7 +84,7 @@ export default function Login() {
               setCookie("userEmail", "");
             }
             const token = res.accessToken;
-            getUserTokenAPI(token).then((res1) => {
+            getUserLoginTokenAPI(token).then((res1) => {
               console.log(res1);
               // alert();
               sessionStorage.setItem("userId", res1.userId);

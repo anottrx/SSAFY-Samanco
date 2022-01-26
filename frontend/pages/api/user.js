@@ -1,6 +1,7 @@
 import api, { getAuth, fileUrl } from "./index";
 
-async function checkLoginTokenInfo(token) {
+async function getUserLoginTokenAPI(token) {
+  // 내 정보를 조회 -> 이중에서 email, nickname, userId 받음
   // 로그인 토큰 조회
   return await getAuth(token)
     .get("/api/user/auth")
@@ -49,16 +50,10 @@ async function checkCodeAPI(code) {
     .catch((err) => err.response.data);
 }
 
-async function getUserTokenAPI(token) {
-  // 내 정보를 조회 -> 이중에서 email, nickname, userId 받음
-  // return await api
-  return await getAuth(token)
-    .get("/api/user/auth")
-    .then((res) => res.data)
-    .catch((err) => err.response.data);
-}
+
 
 async function getUserInfoAPI(userId) {
+  console.log(userId)
   // 나 또는 다른 사람이 내 정보 조회
   return await api
     .post("/api/user/view", {
@@ -151,9 +146,8 @@ async function updateNicknameAPI(inputData) {
 export {
   loginAPI,
   registAPI,
-  getUserTokenAPI,
   getUserInfoAPI,
-  checkLoginTokenInfo,
+  getUserLoginTokenAPI,
   sendEmailCodeAPI,
   checkCodeAPI,
   sendEmailPWCodeAPI,
