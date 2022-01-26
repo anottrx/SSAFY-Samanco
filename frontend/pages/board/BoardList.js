@@ -6,10 +6,10 @@ import { styled } from '@mui/material/styles';
 import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination, Button} from '@mui/material';
 import Router from "next/router";
 import * as boardActions from '../../store/module/board';
-import SearchBar from "../../components/Common/Search";
+import BoardSearch from "./BoardSearch";
 import style from "@emotion/styled";
 
-import Datas from "./boardData.json";
+import Datas from "./data/boardData.json";
 
 const ItemWrapper = style.div`
     display: flex;
@@ -80,6 +80,9 @@ function BoardList(props) {
     };
 
     const CusPagination = styled(Pagination)`
+        display : flex;
+        justify-content: center;
+        align-items: center;
         margin-top: 20px;
     `;
 
@@ -87,7 +90,7 @@ function BoardList(props) {
         <div>
             <ItemWrapper>
                 <ProjectActions>
-                    <SearchBar></SearchBar>
+                    <BoardSearch></BoardSearch>
                     <CusButton variant="outlined" size="medium"
                         onClick={() => {
                         Router.push("/board/BoardRegist");

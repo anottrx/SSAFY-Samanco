@@ -6,7 +6,7 @@ import styled from "@emotion/styled";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup,TableContainer, Table, StyledTableRow, StyledTableCell, TableHead, TableRow, TableBody, Paper } from "@mui/material";
+import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import Router from "next/router";
 
@@ -76,7 +76,7 @@ const ProjectDetail = () => {
             <>
             <ButtonGroup variant="outlined">
                 <Button onClick={() => {
-                    Router.push("/project/update");
+                    Router.push("/board/BoardRegist");
                 }}>수정</Button>
                 <Button onClick={JoinDialogOpen}>삭제</Button>
             </ButtonGroup>
@@ -102,12 +102,32 @@ const ProjectDetail = () => {
         const CusCard = styled(Card)`
             margin-top: 10px;
         `
+        const DetailWrapper = styled.div`
+            display: flex;
+            flex-direction: row;
+            padding: 10px;
+            & > div {
+                display: flex;
+                margin-left: auto;
+                float: right;
+            }
+
+            & div > p {
+                margin-left: 10px;
+            }
+        `
 
         return (
             <CusCard sx={{ minWidth: 275 }}>
                 <CardContent>
-                    <h1>{detail.title}</h1>
-                    <Typography sx={{ fontSize: 16 }}  variant="body1">
+                    <DetailWrapper>
+                        <h1>{detail.title}</h1>
+                        <div>
+                            <p>{detail.userId}</p>
+                            <p>{detail.startDate}</p>
+                        </div>
+                    </DetailWrapper>
+                    <Typography sx={{ fontSize: 18 }}>
                         {detail.content}
                     </Typography>
                     <br />
@@ -116,7 +136,6 @@ const ProjectDetail = () => {
                     <CommentList detail={detail}></CommentList>
                     <br />
                 </CardContent>
-                
             </CusCard>
         )
     }
@@ -126,6 +145,7 @@ const ProjectDetail = () => {
         let detail = props.detail;
         const ActionWrapper = styled.div`
             display: flex;
+            float: right;
             flex-direction: row;
             justify-content: space-between;
             padding: 20px;
@@ -157,28 +177,6 @@ const ProjectDetail = () => {
                         <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
-                <>
-                    <Button variant="outlined">댓글달기</Button>
-                    <Dialog
-                        open={open}
-                        onClose={JoinDialogClose}
-                        >
-                        <DialogTitle>
-                            {"지원 하시겠습니까?"}
-                        </DialogTitle>
-                        <DialogContent>
-                        <DialogContentText>
-                            마이페이지에 기입된 정보가 전달됩니다. 
-                        </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                        <Button onClick={JoinDialogClose}>취소</Button>
-                        <Button onClick={JoinDialogClose} autoFocus>
-                            확인
-                        </Button>
-                        </DialogActions>
-                    </Dialog>
-                </>
             </ActionWrapper>
         )
     }
