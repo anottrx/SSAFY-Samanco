@@ -119,11 +119,10 @@ const StudyDetail = () => {
         
         return (
             <ContentWrapper>
-                <div>기술 스택</div>
+                <div>스터디 주제</div>
                 <StackList stackData={detail.stacks}></StackList>
                 <br />
-                <div>모집 팀원</div>
-                <PositionList positionData={detail.positions}></PositionList>        
+        
             </ContentWrapper>
         )
     }
@@ -164,14 +163,6 @@ const StudyDetail = () => {
 
         return (
             <FooterWrapper>
-                <div>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
-                        진행 기간
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} >
-                        {detail.startDate} ~  {detail.endDate}
-                    </Typography>
-                </div>
                 <div>
                     <Typography sx={{ fontSize: 14 }} gutterBottom>
                         예정 스케쥴
@@ -217,7 +208,7 @@ const StudyDetail = () => {
                     </Button>
                     <Button>
                         <FavoriteIcon /> 
-                        <span>{detail.like}</span>
+                        <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
                 <>
