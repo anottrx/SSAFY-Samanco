@@ -136,7 +136,11 @@ const ProjectDetail = () => {
             <CusCard sx={{ minWidth: 275 }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 16 }}  variant="body1">
-                        {detail.description}
+                    {
+                        detail.description.split('\n').map((line, index) => {
+                            return (<span key={index}>{line}<br/></span>)
+                        })
+                    }
                     </Typography>
                     <br />
                     <Divider light />

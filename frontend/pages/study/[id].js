@@ -136,7 +136,11 @@ const StudyDetail = () => {
             <CusCard sx={{ minWidth: 275 }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 16 }}  variant="body1">
-                        {detail.description}
+                    {
+                        detail.description.split('\n').map((line, index) => {
+                            return (<span key={index}>{line}<br/></span>)
+                        })
+                    }
                     </Typography>
                     <br />
                     <Divider light />
@@ -212,7 +216,10 @@ const StudyDetail = () => {
                     </Button>
                 </ButtonGroup>
                 <>
+                <div>
+                    <Button variant="outlined" onClick={() => {Router.push("/study/applylist")}}>지원자 목록 조회</Button>
                     <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                </div>
                     <Dialog
                         open={open}
                         onClose={JoinDialogClose}
