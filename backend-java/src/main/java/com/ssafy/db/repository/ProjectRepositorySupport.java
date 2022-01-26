@@ -55,7 +55,7 @@ public class ProjectRepositorySupport {
         if (isValid(hostId)&&isValid(projectId)) {
             String collectStatus=(projectUpdateInfo.getCollectStatus());
             String description=(projectUpdateInfo.getDescription());
-            int size=(projectUpdateInfo.getSize());
+            int size=(projectUpdateInfo.getTotalSize());
             String title=(projectUpdateInfo.getTitle());
             String startDate=(projectUpdateInfo.getStartDate());
             String endDate=(projectUpdateInfo.getEndDate());
@@ -64,67 +64,41 @@ public class ProjectRepositorySupport {
             int totalBackendSize=projectUpdateInfo.getTotalBackendSize();
             int totalMobileSize=projectUpdateInfo.getTotalMobileSize();
             int totalEmbeddedSize=projectUpdateInfo.getTotalEmbeddedSize();
+            int totalSize=projectUpdateInfo.getTotalSize();
             jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-                    .set(qProject.collectStatus, collectStatus).set(qProject.size, size)
-                    .set(qProject.description, description).set(qProject.title, title)
-                    .set(qProject.startDate, startDate).set(qProject.endDate, endDate)
+                    .set(qProject.collectStatus, collectStatus)
+                    .set(qProject.description, description)
+                    .set(qProject.title, title)
+                    .set(qProject.startDate, startDate)
+                    .set(qProject.endDate, endDate)
                     .set(qProject.hostPosition, hostPosition)
                     .set(qProject.totalBackendSize, totalBackendSize)
                     .set(qProject.totalFrontendSize, totalFrontendSize)
                     .set(qProject.totalMobileSize, totalMobileSize)
-                    .set(qProject.totalEmbeddedSize, totalEmbeddedSize).execute();
+                    .set(qProject.totalEmbeddedSize, totalEmbeddedSize)
+                    .set(qProject.size, totalSize)
+                    .execute();
 
             return 200;
         }
         return 401;
     }
 
-    public Long selectByHost(Long userId) {
-        if (isValid(userId)){
-            return jpaQueryFactory.select(qUser.projectId).from(qUser).where(qUser.id.eq(userId)).fetchOne();
-        }
-        return null;
+    public Project selectByHost(Long userId) {
+       return jpaQueryFactory.selectFrom(qProject)
+               .where(qProject.isDeleted.eq(false), qProject.hostId.eq(userId)).fetchOne();
     }
 
-    public ProjectDto selectProject(Long projectId) {
-        Project result = jpaQueryFactory.selectFrom(qProject)
+    public User selectByUser(Long userId) {
+        return jpaQueryFactory.selectFrom(qUser)
+                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false), qUser.projectJoinStatus.eq("OK")).fetchOne();
+    }
+
+    public Project selectProject(Long projectId) {
+        return jpaQueryFactory.selectFrom(qProject)
                 .where(qProject.id.eq(projectId), qProject.isDeleted.eq(false)).fetchOne();
-        if (result==null){
-            return null;
-        }
-        List<PositionDto> positions=new ArrayList<>();
-        positions.add(new PositionDto("totalFrontend", result.getTotalFrontendSize()));
-        positions.add(new PositionDto("totalBackend", result.getTotalBackendSize()));
-        positions.add(new PositionDto("totalMobile", result.getTotalMobileSize()));
-        positions.add(new PositionDto("totalEmbedded", result.getTotalEmbeddedSize()));
-        positions.add(new PositionDto("currentFrontend", result.getCurrentFrontendSize()));
-        positions.add(new PositionDto("currentBackend", result.getCurrentBackendSize()));
-        positions.add(new PositionDto("currentMobile", result.getCurrentMobileSize()));
-        positions.add(new PositionDto("currentEmbedded", result.getCurrentEmbeddedSize()));
-        positions.add(new PositionDto("totalSize", result.getSize()));
-        ProjectDto projectDto=new ProjectDto();
-        projectDto.setDescription(result.getDescription());
-        projectDto.setEndDate(result.getEndDate());
-        projectDto.setHostId(result.getHostId());
-        projectDto.setHit(result.getHit());
-        projectDto.setStartDate(result.getStartDate());
-        projectDto.setTitle(result.getTitle());
-        projectDto.setCollectStatus(result.getCollectStatus());
-        projectDto.setId(result.getId());
-        projectDto.setHostPosition(result.getHostPosition());
-        projectDto.setLikes(result.getLikes());
-        projectDto.setPositions(positions);
-
-        return projectDto;
     }
 
-    public Long selectByUser(Long userId) {
-//        if (isValid(userId)){
-            return jpaQueryFactory.select(qUser.projectId).from(qUser)
-                    .where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
-//        }
-//        return null;
-    }
 
     public List<Project> selectProjectAll() {
         return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false)).fetch();
