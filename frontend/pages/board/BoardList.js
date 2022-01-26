@@ -1,7 +1,6 @@
 import React, {useState, useRef, useEffect,useCallback, useLayoutEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Link from "next/link";
 import { styled } from '@mui/material/styles';
 import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination, Button} from '@mui/material';
 import Router from "next/router";
@@ -9,7 +8,9 @@ import * as boardActions from '../../store/module/board';
 import BoardSearch from "./BoardSearch";
 import style from "@emotion/styled";
 
-import Datas from "./data/boardData.json";
+import Datas from "./data/boardData.json"; //임의 데이터
+
+//게시글 목록 페이지
 
 const ItemWrapper = style.div`
     display: flex;

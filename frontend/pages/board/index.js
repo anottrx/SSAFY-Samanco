@@ -2,10 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
 
-import Router from "next/router";
 import Layout from "../../components/layout";
 
 import BoardList from "./BoardList";
+
+//게시판 탭(공지사항, 자유게시판, 질문게시판, 정보공유, 사람구해요)
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

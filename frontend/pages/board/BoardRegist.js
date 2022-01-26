@@ -6,7 +6,7 @@ import React from "react";
 import styles from "../../styles/Board.module.css"
 var FormData = require('form-data');
 
-
+//게시글 등록 페이지
 function BoardRegist() {
     const CusPaper = styled(Paper)`
         width: 100%;
@@ -49,6 +49,7 @@ function BoardRegist() {
         },
     ];
 
+    //파일 업로드 부분
     const FileUploadBtn = styled(Button)`
         padding: 10px;
         border: 1px dashed grey;
@@ -132,6 +133,7 @@ function BoardRegist() {
                     value={inputValue.description}
                 />
 
+                {/*파일 업로드 부분*/}
                 <FileUploadBtn id="file_box" onClick={(event) => {
                     event.preventDefault();
                     uploadRef.current.click();

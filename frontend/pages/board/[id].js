@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import Router from "next/router";
 import CommentList from "./CommentList"
 
+//게시글 상세보기 페이지
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ board }) => board.boardDetail);
@@ -95,7 +96,7 @@ const ProjectDetail = () => {
                 margin-left: 10px;
             }
         `
-
+        //게시글 제목(title),작성자 아이디(userId),작성날짜(startDate),내용(content)
         return (
             <CusCard sx={{ minWidth: 275 }}>
                 <CardContent>
@@ -140,7 +141,7 @@ const ProjectDetail = () => {
                 margin : 0px 5px;
             }
         `
-
+        //조회수,좋아요 
         return (
             <ActionWrapper>
                 <ButtonGroup variant="outlined" aria-label="text button group">
