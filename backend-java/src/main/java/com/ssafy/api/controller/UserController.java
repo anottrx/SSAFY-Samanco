@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
 import com.ssafy.api.response.UserSelectAllPostRes;
+import com.ssafy.api.response.UserSelectPostRes;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
 import com.ssafy.db.entity.StackGrade;
@@ -302,16 +303,37 @@ public class UserController {
 	}
 
 	@GetMapping("/nickcheck/{nickname}")
-	@ApiOperation(value = "닉네임 유효성 검사", notes = "<strong>회원 가입 시 닉네임</strong>의 유효성을 검사한다.")
+	@ApiOperation(value = "등록 시 닉네임 유효성 검사", notes = "<strong>회원 가입 시 닉네임</strong>의 유효성을 검사한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
 			@ApiResponse(code = 401, message = "글자 길이 제한"),
-			@ApiResponse(code = 402, message = "중복 아이디"),
+			@ApiResponse(code = 402, message = "중복 닉네임"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> idCheck(@PathVariable("nickname") @ApiParam(value="닉네임", required = true) String nickname) {
+	public ResponseEntity<? extends BaseResponseBody> registerNicknameCheck(@PathVariable("nickname") @ApiParam(value="닉네임", required = true) String nickname) {
 		//200 일때 사용 가능
 		int nickCode=userService.nickCheck(nickname);
+		if(nickCode == 401)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"닉네임 길이는 2자 이상 16자이하로 해주세요."));
+		else if(nickCode == 402)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"닉네임이 중복됩니다. 다른 닉네임으로 가입해주세요."));
+
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "닉네임 사용 가능합니다."));
+	}
+
+	@PostMapping("/nickcheck")
+	@ApiOperation(value = "수정 시 닉네임 유효성 검사")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "글자 길이 제한"),
+			@ApiResponse(code = 402, message = "중복 닉네임"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> updateNicknameCheck(@RequestBody UserUpdateNicknamePostReq userUpdateNicknamePostReq) {
+		//200 일때 사용 가능
+		Long id=userUpdateNicknamePostReq.getId();
+		String nickname= userUpdateNicknamePostReq.getNickname();
+		int nickCode=userService.updateNickCheck(id, nickname);
 		if(nickCode == 401)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"닉네임 길이는 2자 이상 16자이하로 해주세요."));
 		else if(nickCode == 402)
@@ -326,13 +348,30 @@ public class UserController {
 			@ApiResponse(code = 200, message = "성공"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> selectUser() {
+	public ResponseEntity<? extends BaseResponseBody> selectUserAll() {
 		//200 일때 사용 가능
 		List<UserDto> users=userService.selectUserAll();
 		if (users==null){
 			return ResponseEntity.status(200).body(UserSelectAllPostRes.of(200, "사용자가 없습니다.", null));
 		}
 		return ResponseEntity.status(200).body(UserSelectAllPostRes.of(200, "사용자 전체 목록", users));
+	}
+
+	@PostMapping("/view")
+	@ApiOperation(value = "사용자 상세보기")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> selectUserMe(UserIdPostReq userIdPostReq) {
+		//200 일때 사용 가능
+		System.out.println(userIdPostReq);
+		System.out.println(userIdPostReq.getUserId());
+		UserDto user=userService.selectUser(userIdPostReq.getUserId());
+		if (user==null){
+			return ResponseEntity.status(200).body(UserSelectPostRes.of(401, "사용자 정보가 없습니다.", null));
+		}
+		return ResponseEntity.status(200).body(UserSelectPostRes.of(200, "사용자 정보", user));
 	}
 
 //	@PostMapping("passcheck")

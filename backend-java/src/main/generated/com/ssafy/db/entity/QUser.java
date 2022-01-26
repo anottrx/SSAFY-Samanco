@@ -62,6 +62,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath projectJoinStatus = createString("projectJoinStatus");
 
+    public final StringPath projectPosition = createString("projectPosition");
+
     public final StringPath studentId = createString("studentId");
 
     public final StringPath userClass = createString("userClass");

@@ -59,6 +59,7 @@ public class ProjectRepositorySupport {
             String title=(projectUpdateInfo.getTitle());
             String startDate=(projectUpdateInfo.getStartDate());
             String endDate=(projectUpdateInfo.getEndDate());
+            String hostPosition= projectUpdateInfo.getHostPosition();
             int totalFrontendSize=projectUpdateInfo.getTotalFrontendSize();
             int totalBackendSize=projectUpdateInfo.getTotalBackendSize();
             int totalMobileSize=projectUpdateInfo.getTotalMobileSize();
@@ -67,6 +68,7 @@ public class ProjectRepositorySupport {
                     .set(qProject.collectStatus, collectStatus).set(qProject.size, size)
                     .set(qProject.description, description).set(qProject.title, title)
                     .set(qProject.startDate, startDate).set(qProject.endDate, endDate)
+                    .set(qProject.hostPosition, hostPosition)
                     .set(qProject.totalBackendSize, totalBackendSize)
                     .set(qProject.totalFrontendSize, totalFrontendSize)
                     .set(qProject.totalMobileSize, totalMobileSize)
@@ -109,6 +111,7 @@ public class ProjectRepositorySupport {
         projectDto.setTitle(result.getTitle());
         projectDto.setCollectStatus(result.getCollectStatus());
         projectDto.setId(result.getId());
+        projectDto.setHostPosition(result.getHostPosition());
         projectDto.setLikes(result.getLikes());
         projectDto.setPositions(positions);
 

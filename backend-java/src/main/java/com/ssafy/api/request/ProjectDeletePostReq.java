@@ -11,9 +11,9 @@ import lombok.ToString;
 @ToString
 @ApiModel("ProjectDeletePostReq")
 public class ProjectDeletePostReq {
-    @ApiModelProperty(name="project id", example="10")
+    @ApiModelProperty(name="id", example="10")
     private Long id;
 
-    @ApiModelProperty(name="user id", example="1")
+    @ApiModelProperty(name="hostId", example="1")
     private Long hostId;
 }

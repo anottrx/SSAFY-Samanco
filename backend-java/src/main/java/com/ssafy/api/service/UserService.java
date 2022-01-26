@@ -23,9 +23,12 @@ public interface UserService {
 
     int updateUser(UserUpdatePostReq registerInfo);
 	void deleteUser(Long userId);
-    int addProject(Long userId, Long projectId);
+    int addProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus);
 
     int updatePasswordUser(UserUpdatePostReq updateInfo);
 
 	List<UserDto> selectUserAll();
+    UserDto selectUser(Long userId);
+
+    int updateNickCheck(Long id, String nickname);
 }

@@ -54,5 +54,6 @@ public class User extends BaseEntity{
     private String description;
     private Long projectId=0l;
     private String projectJoinStatus;
+    private String projectPosition;
 
 }

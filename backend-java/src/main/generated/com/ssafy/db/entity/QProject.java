@@ -45,6 +45,8 @@ public class QProject extends EntityPathBase<Project> {
 
     public final NumberPath<Long> hostId = createNumber("hostId", Long.class);
 
+    public final StringPath hostPosition = createString("hostPosition");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited

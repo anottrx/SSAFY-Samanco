@@ -32,11 +32,14 @@ public class UserDto {
     private String description;
     private Long projectId;
     private String projectJoinStatus;
+    private String projectPosition;
     private List<StackGradeDto> stacks;
+    private FileDto file;
 
     public UserDto(Long id, String email, String nickname, String name, String password, String birthday,
                    String phone, String userClass, int generation, String studentId, String position, String link,
-                   String description, Long projectId, String projectJoinStatus, List<StackGradeDto> stacks) {
+                   String description, Long projectId, String projectJoinStatus, FileDto file,
+                   String projectPosition, List<StackGradeDto> stacks) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;
@@ -52,6 +55,8 @@ public class UserDto {
         this.description = description;
         this.projectId = projectId;
         this.projectJoinStatus = projectJoinStatus;
+        this.projectPosition=projectPosition;
         this.stacks = stacks;
+        this.file=file;
     }
 }
