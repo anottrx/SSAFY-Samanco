@@ -62,7 +62,22 @@ export default function MyInfo() {
 
       const userId = res.userId;
       getUserInfoAPI(userId).then((res) => {
+        if (res.statusCode == 200) {
+        } else {
+        }
         console.log("내 정보 보기 결과: " + JSON.stringify(res));
+        inputState.name = res.user.name;
+        inputState.birthday = res.user.birthday;
+        inputState.phone = res.user.phone;
+        inputState.class = res.user.userClass;
+        inputState.generation = res.user.generation;
+        inputState.studentId = res.user.studentId;
+        inputState.position = res.user.projectPosition;
+        inputState.password = res.user.password;
+        // inputState.link = res.user.user.link;
+        inputState.description = res.description;
+        // inputState.stacks = res.user.stacks;
+        // inputState.file = res.user.file;
       });
     });
   }, []);
