@@ -45,17 +45,11 @@ export default function MyInfo() {
 
   useEffect(() => {
     const token = cookie.userToken;
-    // const curUserId = sessionStorage.getItem("userId");
-    // setNicknameInfo({
-    //   curUserId: sessionStorage.getItem("userId"),
-    // });
 
     getUserLoginTokenAPI(token).then((res) => {
       if (res.statusCode == 200) {
       } else {
-        // alert(`${res.message}`);
       }
-      // console.log("getUserLoginTokenAPI 관련 결과"+res.status);
       console.log("getUserLoginTokenAPI 관련 결과" + JSON.stringify(res));
       // setInputState({
       //   userId: res.userId,
@@ -66,10 +60,7 @@ export default function MyInfo() {
       inputState.email = res.email;
       inputState.nickname = res.nickname;
 
-      console.log(inputState.userId);
-
       const userId = res.userId;
-      console.log("userId: " + userId);
       getUserInfoAPI(userId).then((res) => {
         console.log("내 정보 보기 결과: " + JSON.stringify(res));
       });

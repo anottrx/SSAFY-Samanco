@@ -50,10 +50,7 @@ async function checkCodeAPI(code) {
     .catch((err) => err.response.data);
 }
 
-
-
 async function getUserInfoAPI(userId) {
-  console.log(userId)
   // 나 또는 다른 사람이 내 정보 조회
   return await api
     .post("/api/user/view", {
@@ -135,12 +132,12 @@ async function checkNicknameAPI(nickname) {
 async function updateNicknameAPI(inputData) {
   // 회원가입한 후 사용자가 닉네임 수정할 때 닉네임 중복 체크
   return await api
-  .post("/api/user/nickcheck", {
-    id: inputData.id,
-    nickname: inputData.nickname,
-  })
-  .then((res) => res.data)
-  .catch((err) => err.response.data);
+    .post("/api/user/nickcheck", {
+      id: inputData.id,
+      nickname: inputData.nickname,
+    })
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
 }
 
 export {
