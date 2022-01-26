@@ -40,7 +40,7 @@ public class ProjectUpdatePostReq {
     private String endDate;
 
     @ApiModelProperty(name="size", example="5")
-    private int size;
+    private int totalSize;
 
     @ApiModelProperty(name="stacks", example="[{java: 3}, {HTML: 2}]")
     private List<Map<String, Integer>> stacks;

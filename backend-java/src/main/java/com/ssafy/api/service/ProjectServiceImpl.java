@@ -7,6 +7,7 @@ import com.ssafy.api.request.ProjectJoinPostReq;
 import com.ssafy.api.request.ProjectRegisterPostReq;
 import com.ssafy.api.request.ProjectUpdatePostReq;
 import com.ssafy.db.entity.Project;
+import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,9 +41,10 @@ public class ProjectServiceImpl implements ProjectService {
     public Project createProject(ProjectRegisterPostReq projectRegisterPostReq) {
         Project project = new Project();
         project.setHostId(projectRegisterPostReq.getHostId());
+        project.setHostPosition(projectRegisterPostReq.getHostPosition());
         project.setCollectStatus(projectRegisterPostReq.getCollectStatus());
         project.setDescription(projectRegisterPostReq.getDescription());
-        project.setSize(projectRegisterPostReq.getSize());
+        project.setSize(projectRegisterPostReq.getTotalSize());
         project.setCollectStatus(projectRegisterPostReq.getCollectStatus());
         project.setTitle(projectRegisterPostReq.getTitle());
         project.setStartDate(projectRegisterPostReq.getStartDate());
@@ -62,6 +64,7 @@ public class ProjectServiceImpl implements ProjectService {
         } else if ("embedded".equalsIgnoreCase(hostPosition)){
             project.setCurrentEmbeddedSize(1);
         }
+
         return projectRepository.save(project);
     }
 
@@ -79,30 +82,42 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto selectByHost(Long userId) {
-        Long projectId = projectRepositorySupport.selectByHost(userId);
-        if (projectId==null){
+        Project result = projectRepositorySupport.selectByHost(userId);
+        if (result==null){
             return null;
         }
-        return projectRepositorySupport.selectProject(projectId);
+        ProjectDto project=projectEntityToDto(result);
+        Long projectId=project.getId();
+
+        project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
+        project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+
+        return project;
     }
 
     @Override
     public ProjectDto selectProject(Long projectId) {
-        ProjectDto project=projectRepositorySupport.selectProject(projectId);
-        if (project!=null){
-            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
-            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
-            return project;
+        Project result=projectRepositorySupport.selectProject(projectId);
+        if (result==null){
+            return null;
         }
-        return null;
+        ProjectDto project=projectEntityToDto(result);
+        project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
+        project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+
+        return project;
     }
 
     @Override
     public ProjectDto selectByUser(Long userId) {
-        Long projectId = projectRepositorySupport.selectByUser(userId);
+        User result = projectRepositorySupport.selectByUser(userId);
+        Long projectId = result.getProjectId();
         if (projectId==null){
             return null;
         }
+
+//        String projectJoinStatus = result.getProjectJoinStatus();
+//        if ("OK".equals(projectJoinStatus))
         return selectProject(projectId);
     }
 
@@ -114,31 +129,11 @@ public class ProjectServiceImpl implements ProjectService {
         }
         List<ProjectDto> projects=new ArrayList<>();
         for (Project result: results) {
-            List<PositionDto> positions = new ArrayList<>();
-            positions.add(new PositionDto("totalFrontend", result.getTotalFrontendSize()));
-            positions.add(new PositionDto("totalBackend", result.getTotalBackendSize()));
-            positions.add(new PositionDto("totalMobile", result.getTotalMobileSize()));
-            positions.add(new PositionDto("totalEmbedded", result.getTotalEmbeddedSize()));
-            positions.add(new PositionDto("currentFrontend", result.getCurrentFrontendSize()));
-            positions.add(new PositionDto("currentBackend", result.getCurrentBackendSize()));
-            positions.add(new PositionDto("currentMobile", result.getCurrentMobileSize()));
-            positions.add(new PositionDto("currentEmbedded", result.getCurrentEmbeddedSize()));
-            positions.add(new PositionDto("totalSize", result.getSize()));
-            ProjectDto projectDto = new ProjectDto();
-            projectDto.setId(result.getId());
-            projectDto.setDescription(result.getDescription());
-            projectDto.setEndDate(result.getEndDate());
-            projectDto.setHostId(result.getHostId());
-            projectDto.setHit(result.getHit());
-            projectDto.setStartDate(result.getStartDate());
-            projectDto.setTitle(result.getTitle());
-            projectDto.setCollectStatus(result.getCollectStatus());
-            projectDto.setId(result.getId());
-            projectDto.setLikes(result.getLikes());
-            projectDto.setPositions(positions);
-            projectDto.setStacks(stackRepositorySupport.selectStack(result.getId(), 2));
-            projectDto.setFile(fileRepositorySupport.selectFile(result.getId(), 2));
-            projects.add(projectDto);
+            ProjectDto project=projectEntityToDto(result);
+            Long projectId=project.getId();
+            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
+            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+            projects.add(project);
         }
 
         return projects;
@@ -148,5 +143,36 @@ public class ProjectServiceImpl implements ProjectService {
     public int joinProject(Long projectId, Long userId, String position) {
 //        int joinProjectCode=projectRepositorySupport.joinProject(projectId, position);
         return projectRepositorySupport.joinProject(projectId, userId, position);
+    }
+
+    @Override
+    public ProjectDto projectEntityToDto(Project result) {
+        List<PositionDto> positions=new ArrayList<>();
+        positions.add(new PositionDto("totalFrontend", result.getTotalFrontendSize()));
+        positions.add(new PositionDto("totalBackend", result.getTotalBackendSize()));
+        positions.add(new PositionDto("totalMobile", result.getTotalMobileSize()));
+        positions.add(new PositionDto("totalEmbedded", result.getTotalEmbeddedSize()));
+        positions.add(new PositionDto("currentFrontend", result.getCurrentFrontendSize()));
+        positions.add(new PositionDto("currentBackend", result.getCurrentBackendSize()));
+        positions.add(new PositionDto("currentMobile", result.getCurrentMobileSize()));
+        positions.add(new PositionDto("currentEmbedded", result.getCurrentEmbeddedSize()));
+        positions.add(new PositionDto("totalSize", result.getSize()));
+        int currentSize=result.getCurrentFrontendSize() + result.getCurrentBackendSize() + result.getCurrentEmbeddedSize() + result.getCurrentMobileSize();
+        positions.add(new PositionDto("currentSize", currentSize));
+        ProjectDto projectDto=new ProjectDto();
+        projectDto.setId(result.getId());
+        projectDto.setDescription(result.getDescription());
+        projectDto.setEndDate(result.getEndDate());
+        projectDto.setHostId(result.getHostId());
+        projectDto.setHit(result.getHit());
+        projectDto.setStartDate(result.getStartDate());
+        projectDto.setTitle(result.getTitle());
+        projectDto.setCollectStatus(result.getCollectStatus());
+        projectDto.setHostPosition(result.getHostPosition());
+        projectDto.setLikes(result.getLikes());
+        projectDto.setPositions(positions);
+
+        return  projectDto;
+
     }
 }

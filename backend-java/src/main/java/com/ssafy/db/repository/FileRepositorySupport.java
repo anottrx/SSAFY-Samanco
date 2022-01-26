@@ -48,13 +48,14 @@ public class FileRepositorySupport {
         } else if (flag==4){
 //            result = jpaQueryFactory.selectFrom(qFiles).where(qFiles.boardId.eq(id)).fetchOne();
         }
+
         if (result==null){
             return null;
         }
         FileDto file=new FileDto();
-        file.setSaveFile(file.getSaveFile());
-        file.setOriginFile(file.getOriginFile());
-        file.setSaveFolder(file.getSaveFolder());
+        file.setSaveFile(result.getSaveFile());
+        file.setOriginFile(result.getOriginFile());
+        file.setSaveFolder(result.getSaveFolder());
         return file;
     }
 }

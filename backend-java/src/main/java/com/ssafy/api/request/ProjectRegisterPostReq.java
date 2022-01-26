@@ -36,8 +36,8 @@ public class ProjectRegisterPostReq {
     @ApiModelProperty(name="endDate", example="2022-02-19")
     private String endDate;
 
-    @ApiModelProperty(name="size", example="5")
-    private int size;
+    @ApiModelProperty(name="totalSize", example="5")
+    private int totalSize;
 
     @ApiModelProperty(name="stacks", example="[{java: 1}, {HTML: 1}]")
     private List<Map<String, Integer>> stacks;
@@ -53,6 +53,7 @@ public class ProjectRegisterPostReq {
 
     @ApiModelProperty(name="totalEmbeddedSize", example="1")
     private int totalEmbeddedSize=0;
+
 
 //    @ApiModelProperty(name="current frontend size", example="3")
 //    private int currentFrontendSize=0;

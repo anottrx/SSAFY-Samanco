@@ -23,4 +23,5 @@ public interface ProjectService {
     List<ProjectDto> selectProjectAll();
 
     int joinProject(Long projectId, Long userId, String position);
+    ProjectDto projectEntityToDto(Project entity);
 }

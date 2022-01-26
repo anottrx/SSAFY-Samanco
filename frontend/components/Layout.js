@@ -1,4 +1,4 @@
-import Menu from "../pages/menu";
+import Menu from "../pages/menu/index";
 
 const layoutStyle = {
   margin: 20,
@@ -7,7 +7,7 @@ const layoutStyle = {
 
 const Layout = (props) => (
   <div style={layoutStyle}>
-    <Menu />
+    <Menu></Menu>
     {props.children}
   </div>
 );
