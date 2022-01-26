@@ -53,6 +53,8 @@ public class UserServiceImpl implements UserService {
 		user.setGeneration(userRegisterInfo.getGeneration());
 		user.setLink(userRegisterInfo.getLink());
 		user.setStudentId(userRegisterInfo.getStudentId());
+		user.setUserClass(userRegisterInfo.getUserClass());
+		user.setPosition(userRegisterInfo.getPosition());
 
 		return userRepository.save(user);
 	}
@@ -154,11 +156,25 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto selectUser(Long userId) {
-		UserDto user=userRepositorySupport.selectUser(userId);
-		System.out.println(user);
-		if (user==null){
+		User result=userRepositorySupport.selectUser(userId);
+		if (result==null){
 			return null;
 		}
+		UserDto user=new UserDto();
+		user.setStudentId(result.getStudentId());
+		user.setPosition(result.getPosition());
+		user.setPhone(result.getPhone());
+//        user.setPassword(result.getPassword());
+		user.setName(result.getName());
+		user.setProjectJoinStatus(result.getProjectJoinStatus());
+		user.setDescription(result.getDescription());
+		user.setNickname(result.getNickname());
+		user.setLink(result.getLink());
+		user.setGeneration(result.getGeneration());
+		user.setEmail(result.getEmail());
+		user.setBirthday(result.getBirthday());
+		user.setProjectPosition(result.getProjectPosition());
+		user.setProjectId(result.getProjectId());
 		user.setFile(fileRepositorySupport.selectFile(userId, 1));
 		user.setStacks(stackRepositorySupport.selectStack(userId, 1));
 

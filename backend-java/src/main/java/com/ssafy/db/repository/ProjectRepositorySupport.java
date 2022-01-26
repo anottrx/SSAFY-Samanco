@@ -119,10 +119,11 @@ public class ProjectRepositorySupport {
     }
 
     public Long selectByUser(Long userId) {
-        if (isValid(userId)){
-            return jpaQueryFactory.select(qUser.projectId).from(qUser).where(qUser.id.eq(userId)).fetchOne();
-        }
-        return null;
+//        if (isValid(userId)){
+            return jpaQueryFactory.select(qUser.projectId).from(qUser)
+                    .where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
+//        }
+//        return null;
     }
 
     public List<Project> selectProjectAll() {
@@ -130,20 +131,28 @@ public class ProjectRepositorySupport {
     }
 
     @Transactional
-    public int joinProject(Long projectId, String position) {
-        if ("frontend".equalsIgnoreCase(position)){
-            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-                .set(qProject.currentFrontendSize, qProject.currentFrontendSize.add(1)).execute();
-        } else if ("backend".equalsIgnoreCase(position)){
-            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-                    .set(qProject.currentBackendSize, qProject.currentBackendSize.add(1)).execute();
-        } else if ("mobile".equalsIgnoreCase(position)){
-            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-                    .set(qProject.currentMobileSize, qProject.currentMobileSize.add(1)).execute();
-        } else if ("embedded".equalsIgnoreCase(position)){
-            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-                    .set(qProject.currentEmbeddedSize, qProject.currentEmbeddedSize.add(1)).execute();
+    public int joinProject(Long projectId, Long userId, String position) {
+        if (!isValid(projectId)){
+            return 401;
         }
+        jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                .set(qUser.projectId, projectId)
+                .set(qUser.projectPosition, position)
+                .set(qUser.projectJoinStatus, "BEFORE")
+                .execute();
+//        if ("frontend".equalsIgnoreCase(position)){
+//            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+//                .set(qProject.currentFrontendSize, qProject.currentFrontendSize.add(1)).execute();
+//        } else if ("backend".equalsIgnoreCase(position)){
+//            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+//                    .set(qProject.currentBackendSize, qProject.currentBackendSize.add(1)).execute();
+//        } else if ("mobile".equalsIgnoreCase(position)){
+//            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+//                    .set(qProject.currentMobileSize, qProject.currentMobileSize.add(1)).execute();
+//        } else if ("embedded".equalsIgnoreCase(position)){
+//            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+//                    .set(qProject.currentEmbeddedSize, qProject.currentEmbeddedSize.add(1)).execute();
+//        }
         return 200;
     }
 }

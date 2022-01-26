@@ -91,14 +91,17 @@ public class UserRepositorySupport {
             String birthday = (userUpdateInfo.getBirthday());
             String description = (userUpdateInfo.getDescription());
             String nickname = (userUpdateInfo.getNickname());
-            int generation = (userUpdateInfo.getGeneration());
+//            int generation = (userUpdateInfo.getGeneration());
             String link = (userUpdateInfo.getLink());
-            String studentId = (userUpdateInfo.getStudentId());
+//            String studentId = (userUpdateInfo.getStudentId());
 
             jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
                     .set(qUser.name, name).set(qUser.password, password).set(qUser.phone, phone).set(qUser.birthday, birthday)
                     .set(qUser.description, description).set(qUser.description, description).set(qUser.nickname, nickname)
-                    .set(qUser.generation, generation).set(qUser.link, link).set(qUser.studentId, studentId).execute();
+//                    .set(qUser.generation, generation)
+                    .set(qUser.link, link)
+//                    .set(qUser.studentId, studentId)
+                    .execute();
 
             return 200;
         }
@@ -141,26 +144,14 @@ public class UserRepositorySupport {
         return jpaQueryFactory.selectFrom(qUser).where(qUser.isDeleted.eq(false)).fetch();
     }
 
-    public UserDto selectUser(Long userId) {
-        User result = jpaQueryFactory.selectFrom(qUser).where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
-        if (result==null){
-            return null;
-        }
-        UserDto user=new UserDto();
-        user.setStudentId(result.getStudentId());
-        user.setPosition(result.getPosition());
-        user.setPhone(result.getPhone());
-//        user.setPassword(result.getPassword());
-        user.setName(result.getName());
-        user.setProjectJoinStatus(result.getProjectJoinStatus());
-        user.setDescription(result.getDescription());
-        user.setNickname(result.getNickname());
-        user.setLink(result.getLink());
-        user.setGeneration(result.getGeneration());
-        user.setEmail(result.getEmail());
-        user.setBirthday(result.getBirthday());
-        user.setProjectPosition(result.getProjectPosition());
-        user.setProjectId(result.getProjectId());
-        return user;
+    public User selectUser(Long userId) {
+        return jpaQueryFactory.selectFrom(qUser).where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
     }
+
+//    public Long selectByUser(Long userId) {
+//        if (isValid(userId)){
+//            return jpaQueryFactory.select(qUser.projectId).from(qUser).where(qUser.id.eq(userId)).fetchOne();
+//        }
+//        return null;
+//    }
 }

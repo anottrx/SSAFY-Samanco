@@ -146,11 +146,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public int joinProject(Long projectId, Long userId, String position) {
-//        int userUpdateJoinStatus=userR
-//        int userUpdateProjectCode=userRepositorySupport.updateUserProject(userId, projectId);
-//        if (userUpdateProjectCode==401){
-//            return 401;
-//        }
-        return projectRepositorySupport.joinProject(projectId, position);
+//        int joinProjectCode=projectRepositorySupport.joinProject(projectId, position);
+        return projectRepositorySupport.joinProject(projectId, userId, position);
     }
 }

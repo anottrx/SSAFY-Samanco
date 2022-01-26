@@ -171,15 +171,15 @@ public class UserController {
 	})
 	public ResponseEntity<? extends BaseResponseBody> update(
 			@RequestParam("userId") Long userId,
-			@RequestParam("email") String email,
+//			@RequestParam("email") String email,
 			@RequestParam("password") String password,
 			@RequestParam("name") String name,
 			@RequestParam("nickname") String nickname,
-			@RequestParam("studentId") String studentId,
+//			@RequestParam("studentId") String studentId,
 			@RequestParam(required = false, value="phone") String phone,
 			@RequestParam(required = false, value="stacks") String stacks,
 			@RequestParam(required = false, value="birthday") String birthday,
-			@RequestParam(required = false, value="generation") int generation,
+//			@RequestParam(required = false, value="generation") int generation,
 			@RequestParam(required = false, value="class") String userClass,
 			@RequestParam(required = false, value="position") String position,
 			@RequestParam(required = false, value="link") String link,
@@ -193,28 +193,19 @@ public class UserController {
 		updateInfo.setUserId(userId);
 		updateInfo.setBirthday(birthday);
 		updateInfo.setDescription(description);
-		updateInfo.setEmail(email);
-		updateInfo.setGeneration(generation);
+//		updateInfo.setEmail(email);
+//		updateInfo.setGeneration(generation);
 		updateInfo.setUserClass(userClass);
 		updateInfo.setLink(link);
 		updateInfo.setName(name);
 		updateInfo.setNickname(nickname);
 		updateInfo.setPassword(password);
 		updateInfo.setPhone(phone);
-		updateInfo.setStudentId(studentId);
+//		updateInfo.setStudentId(studentId);
 		updateInfo.setPosition(position);
 
-		//1. 이메일 오류
-		int emailCode=userService.emailCheck(updateInfo.getEmail());
-		if(emailCode == 401)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"이메일을 입력해주세요"));
-		else if(emailCode == 402)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 이메일 형식으로 입력해주세요."));
-		else if(emailCode == 403)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(403,"이메일이 중복됩니다. 다른 이메일로 가입해주세요."));
-
 //		//2. 닉네임 오류
-		int nickCode=userService.nickCheck(updateInfo.getNickname());
+		int nickCode=userService.updateNickCheck(updateInfo.getUserId(), updateInfo.getNickname());
 		if(nickCode == 401)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"닉네임 길이는 2자이상 16자이하로 해주세요."));
 		else if(nickCode == 402)

@@ -21,8 +21,8 @@ public class UserUpdatePostReq {
 	@ApiModelProperty(name="userId", example="1")
 	Long userId;
 
-	@ApiModelProperty(name="email", example="email@email.com")
-	String email;
+//	@ApiModelProperty(name="email", example="email@email.com")
+//	String email;
 
 	@ApiModelProperty(name="password", example="your_password")
 	String password;
@@ -42,11 +42,11 @@ public class UserUpdatePostReq {
 	@ApiModelProperty(name="birthday", example="000410")
 	String birthday;
 
-	@ApiModelProperty(name="generation", example="6")
-	int generation;
+//	@ApiModelProperty(name="generation", example="6")
+//	int generation;
 
-	@ApiModelProperty(name="studentId", example="0643163")
-	String studentId;
+//	@ApiModelProperty(name="studentId", example="0643163")
+//	String studentId;
 
 	@ApiModelProperty(name="position", example="FRONTEND")
 	String position;
