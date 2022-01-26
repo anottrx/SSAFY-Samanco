@@ -14,14 +14,15 @@ import styled from "@emotion/styled";
 import { updateAPI } from "../api/project"
 
 const position = [
-    {name:"Front-end", count: 0},
-    {name:"Back-end", count: 0},
+    {name:"Frontend", count: 0},
+    {name:"Backend", count: 0},
     {name:"Embedded", count: 0},
     {name:"Mobile", count: 0}
 ]
 
 function projectUpdate() {
     const detail = useSelector(({ project }) => project.projectDetail);
+    console.log(detail)
 
     const CusPaper = styled(Paper)`
         width: 100%;
@@ -63,6 +64,9 @@ function projectUpdate() {
     `
 
     const [inputValue, setInputValue] = useState({
+        // To Do: hostPosition 받아오면 그 때 수정~~
+        projectId: detail.id,
+        hostId: sessionStorage.getItem("userId"),
         schedule: detail.schedule,
         startDate: detail.startDate,
         endDate: detail.endDate,
@@ -71,9 +75,6 @@ function projectUpdate() {
         hostPosition: detail.hostPosition,
     });
 
-    console.log(detail)
-
-    const [formData, changeFormData] = useState(new FormData());
     const [files, setFiles] = useState('');
 
     const onImgChange = (event) => {
@@ -123,8 +124,8 @@ function projectUpdate() {
             [check, msg] = [false, "프로젝트 스택을 한가지 이상 선택해주세요."]
         else if (typeof(inputValue.hostPosition)=='undefined')   
             [check, msg] = [false, "본인의 포지션을 선택해주세요."]
-        else if (inputValue.totalFrontendSize + inputValue.totalBackendSize + 
-            inputValue.totalEmbeddedSize + inputValue.totalMobileSize <= 1)   
+        else if (inputValue.positions.totalFrontendSize + inputValue.positions.totalBackendSize + 
+            inputValue.totalEmbeddedSize + inputValue.positions.totalMobileSize <= 1)   
             [check, msg] = [false, "팀원은 한 명이상 존재해야 합니다."]
         
         if (!check)
@@ -183,7 +184,6 @@ function projectUpdate() {
                     value={inputValue.description}
                 />
 
-                {/* <StackLevelSelect></StackLevelSelect> */}
                 <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="프로젝트 스택"></StackSelect>
                 
                 <DatePickerWrapper>
@@ -208,8 +208,10 @@ function projectUpdate() {
                             const formData = new FormData();
 
                             Object.keys(inputValue).map(key => {
-                                let value = inputValue[key];
-                                formData.append(key, JSON.stringify(value));
+                                if (key === 'stacks' || key == 'positions')
+                                    formData.append(key, JSON.stringify(value));
+                                else 
+                                    formData.append(key, value);
                             })
 
                             formData.append("file",files);

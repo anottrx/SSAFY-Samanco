@@ -1,0 +1,44 @@
+[
+    {
+        "no": 1,
+        "nickname": "김싸피",
+        "position": "Frontend",
+        "image": [],
+        "description": "안녕하세요. 준비된 인재 김싸피입니다.",
+        "stacks": [
+            {"name": "Vue", "grade": 3},
+            {"name": "MySQL", "grade": 2},
+            {"name": "React", "grade": 1}
+        ],
+        "link": "http://github.com/ssafy"
+    }, 
+    {
+        "no": 2,
+        "nickname": "김사비",
+        "position": "Backend",
+        "image": [],
+        "description": "안녕하세요. 그냥 지원해봤어요",
+        "stacks": [
+            {"name": "Spring boot", "grade": 3},
+            {"name": "Git", "grade": 3},
+            {"name": "Jira", "grade": 2},
+            {"name": "Vue", "grade": 3},
+            {"name": "MySQL", "grade": 2},
+            {"name": "React", "grade": 1}
+        ],
+        "link": "http://github.com/sabi"
+    }, 
+    {
+        "no": 3,
+        "nickname": "김싸만코",
+        "position": "Mobile",
+        "image": [],
+        "description": "안녕하세요. 달콤달콤",
+        "stacks": [
+            {"name": "Flutter", "grade": 2},
+            {"name": "kotlin", "grade": 2},
+            {"name": "java", "grade": 1}
+        ],
+        "link": "http://github.com/ssamanco"
+    }
+]

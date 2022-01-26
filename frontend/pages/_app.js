@@ -1,6 +1,9 @@
 import "../styles/app.css";
 import "../styles/globals.css";
-import { wrapper } from "../store";
+import { wrapper, persistedReducer } from "../store";
+import { createStore } from 'redux';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 
 // import { Container } from "next/app";
 import Head from "next/head";
@@ -36,6 +39,7 @@ const styles = {
   },
   link: {
     marginRight: "10px",
+    color: "black",
   },
   main: {
     flex: 1,
@@ -44,10 +48,18 @@ const styles = {
   footer: {
     color: "white",
     backgroundColor: "#A2C2DC",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    marginTop: "10px",
+    padding: "10px",
   },
 };
 
 function MyApp({ Component, pageProps }) {
+  const store = createStore(persistedReducer);
+  const persistor = persistStore(store);
+
   let [isLogin, setIsLogin] = useState(false);
   let [userId, setUserId] = useState(null);
 
@@ -57,23 +69,48 @@ function MyApp({ Component, pageProps }) {
     setIsLogin(cookies.get("userToken" || ""));
     setUserId(sessionStorage.getItem("userId"));
   }, [isLogin, userId]);
-
+  
   return (
-    <div>
-      <Head>
-        <title>Static Website</title>
-        <meta name="viewport" content="viewport-fit=cover" />
-      </Head>
-      <div style={styles.layout}>
-        <header style={styles.header}>
-          <HeaderLink isLogin={isLogin} userId={userId}></HeaderLink>
-        </header>
-        <main style={styles.main}>
-          <Component {...pageProps} />
-        </main>
-        <footer style={styles.footer}>Footer</footer>
-      </div>
-    </div>
+    // PersistGate : state를 조회한 후 리덕스에 저장할 때까지 웹 어플리케이션의 UI가 렌더링되는 것을 지연시킴
+    <PersistGate persistor={persistor} loading={<div>loading...</div>}>
+      {
+        (pageProps && pageProps.pathname) === '/meeting/[id]'? (
+            <React.Fragment>
+
+              <Head>    
+                <title>싸피사만코</title>
+                <meta name="viewport" content="viewport-fit=cover" />
+              </Head>
+              
+              <div style={styles.layout}>
+                
+                <main style={{backgroundColor: "gray"}}>
+                  <Component {...pageProps} /> 
+                </main>
+                {/* pageProps.pathname === '/meeting/[id]' 일 때는 Layout 없이 렌더링 */}
+              </div>
+            </React.Fragment>
+        ) 
+        : 
+          <React.Fragment>
+            <Head>
+              <title>싸피사만코</title>
+              <meta name="viewport" content="viewport-fit=cover" />
+            </Head>
+            <div style={styles.layout}>
+              <header style={styles.header}>
+                <HeaderLink isLogin={isLogin} userId={userId}></HeaderLink>
+              </header>
+              <main style={styles.main}>
+                <Component {...pageProps} />
+              </main>
+              <footer style={styles.footer}>
+                footer
+              </footer>
+            </div>
+          </React.Fragment>
+    }
+    </PersistGate>
   );
 
   function HeaderLink(props) {
@@ -85,7 +122,7 @@ function MyApp({ Component, pageProps }) {
         <div>
           {props.isLogin ? (
             <>
-              <span className="mr-5">{props.userId}님, 안녕하세요</span>
+              <span className="mr-5">{sessionStorage.nickname}님, 안녕하세요</span>
               <Link href="/myinfo" className="site-nav-item" style={styles.link}>
                 마이페이지
               </Link>
@@ -95,10 +132,9 @@ function MyApp({ Component, pageProps }) {
                   alert("로그아웃 되었습니다.");
                   sessionStorage.clear();
                   cookies.set("userToken", "");
-                  // Router.push("/");
-                  document.location.href = "/";
                   setIsLogin(false);
                   setUserId(null);
+                  // window.location.replace("/")
                 }}
                 className="site-nav-item"
               >

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getUserInfo, loginAPI } from "../../pages/api/user";
+import { getUserTokenAPI, loginAPI } from "../../pages/api/user";
 import Link from "next/link";
 import { useCookies } from "react-cookie";
-
-// import styles from "../../styles/Login.module.css";
-
 import FormControl, { useFormControl } from "@mui/material/FormControl";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
@@ -78,7 +75,7 @@ export default function Login() {
       loginAPI(inputState).then((res) => {
         switch (res.statusCode) {
           case 200: // 로그인 성공
-            alert(`로그인 성공: ${res.accessToken}`);
+            // alert(`로그인 성공: ${res.accessToken}`);
             setCookie("userToken", res.accessToken); // 쿠키 설정
 
             if (rememberId) {
@@ -86,11 +83,13 @@ export default function Login() {
             } else {
               setCookie("userEmail", "");
             }
-            getUserInfo(res.accessToken).then((res) => {
-              alert(res);
-              sessionStorage.setItem("userId", res.userId);
+            const token = res.accessToken;
+            getUserTokenAPI(token).then((res1) => {
+              console.log(res1);
+              alert();
+              sessionStorage.setItem("userId", res1.userId);
               sessionStorage.setItem("email", inputState.email);
-              sessionStorage.setItem("nickname", res.nickname);
+              sessionStorage.setItem("nickname", res1.nickname);
             });
             // Router.push("/");
             window.history.forward();
@@ -132,9 +131,8 @@ export default function Login() {
         <FormControl sx={{ width: 300 }}>
           <OutlinedInput
             id="email"
-            // id="margin-none"
             placeholder="이메일"
-            value={inputState.email || ''}
+            value={inputState.email || ""}
             onChange={handleChange}
             sx={{ fontSize: 14 }}
           />
@@ -144,7 +142,7 @@ export default function Login() {
             id="password"
             placeholder="비밀번호"
             type={inputState.showPassword ? "text" : "password"}
-            value={inputState.password || ''}
+            value={inputState.password || ""}
             onChange={handleChange}
             sx={{ fontSize: 14 }}
             endAdornment={

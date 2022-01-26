@@ -49,7 +49,7 @@ function StackSelect(props){
     let initArray = [];
     if (props.initData){
         props.initData.map(data=>{
-            initArray.push(Object.keys(data)[0])
+            initArray.push(data.name)
         })
     }
 

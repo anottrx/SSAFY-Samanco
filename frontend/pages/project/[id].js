@@ -3,9 +3,7 @@ import { useSelector } from 'react-redux';
 
 import styled from "@emotion/styled";
 import StackList from "../../components/Club/StackList"
-import stackData from "../../data/StackData.json"
 import PositionList from "../../components/Club/PositionList"
-import positionData from "../../data/positionData.json"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -15,7 +13,6 @@ import { useState } from "react";
 import Router from "next/router";
 
 import { deleteAPI } from "../api/project";
-
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -63,7 +60,7 @@ const ProjectDetail = () => {
             <br></br>
             <DetailHeader>
                 <h2>{detail.title}</h2>
-                <DetailOperation></DetailOperation>
+                <DetailOperation detail={detail}></DetailOperation>
             </DetailHeader>
             <DetailWrapper maxWidth="sm">
                 <CusSkeleton variant="rectangular" animation={false} />
@@ -73,17 +70,18 @@ const ProjectDetail = () => {
         </CusContainer>
     </Layout>);
 
-    function DetailOperation() {
+    function DetailOperation({detail}) {
         const [open, setOpen] = useState(false);
 
         const deleteDialogOpen = () => { setOpen(true) }
         const deleteOperation = () => {
-            // To do: projectId, userId 수정해야함!
-            let data = {id: 1, userId: 1};
+            let data = {id: detail.id, hostId: parseInt(sessionStorage.getItem("userId"))};
             deleteAPI(data)
             .then(res => {
-                if (res.statusCode == 200)
-                    console.log("삭제")
+                if (res.statusCode == 200){
+                    console.log("삭제");
+                    Router.push("/project")
+                }
             })
             .catch(err => console.log(err))
             setOpen(false);
@@ -123,7 +121,6 @@ const ProjectDetail = () => {
                 <div>기술 스택</div>
                 <StackList stackData={detail.stacks}></StackList>
                 <br />
-                {/* To Do : BE 받는 데이터 변경되면 수정 */}
                 <div>모집 팀원</div>
                 <PositionList positionData={detail.positions}></PositionList>        
             </ContentWrapper>
@@ -139,7 +136,11 @@ const ProjectDetail = () => {
             <CusCard sx={{ minWidth: 275 }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 16 }}  variant="body1">
-                        {detail.description}
+                    {
+                        detail.description.split('\n').map((line, index) => {
+                            return (<span key={index}>{line}<br/></span>)
+                        })
+                    }
                     </Typography>
                     <br />
                     <Divider light />
@@ -172,15 +173,6 @@ const ProjectDetail = () => {
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} >
                         {detail.startDate} ~  {detail.endDate}
-                    </Typography>
-                </div>
-                <div>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
-                        예정 스케쥴
-                    </Typography>
-
-                    <Typography sx={{ mb: 1.5 }}>
-                        {detail.schedule} 
                     </Typography>
                 </div>
             </FooterWrapper>
@@ -219,11 +211,14 @@ const ProjectDetail = () => {
                     </Button>
                     <Button>
                         <FavoriteIcon /> 
-                        <span>{detail.like}</span>
+                        <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
                 <>
+                <div>
+                    <Button variant="outlined" onClick={() => {Router.push("/project/applylist")}}>지원자 목록 조회</Button>
                     <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                </div>
                     <Dialog
                         open={open}
                         onClose={JoinDialogClose}

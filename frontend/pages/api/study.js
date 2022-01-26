@@ -2,7 +2,7 @@ import api, { fileUrl } from "./index";
 
 async function registAPI(formData) {
     return await fileUrl
-    .post("/api/project", 
+    .post("/api/study", 
         formData
     , {headers: {
         'Content-Type': 'multipart/form-data'
@@ -13,7 +13,7 @@ async function registAPI(formData) {
 
 async function updateAPI(formData) {
     return await fileUrl
-    .post("/api/project/update", 
+    .post("/api/study/update", 
         formData
     , {headers: {
         'Content-Type': 'multipart/form-data'
@@ -24,30 +24,14 @@ async function updateAPI(formData) {
 
 async function deleteAPI(data) {
     return await api
-    .post("/api/project/delete", {
+    .post("/api/study/delete", {
         "id": data.id,
-        "hostId": data.hostId,
+        "user_id": data.userId,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
 
-async function getProjectAllAPI() {
-    return await api
-    .get("/api/project")
-    .then((res) => res.data)
-    .catch((err) => err.response.data)
-}
-
-async function getProjectById(data) {
-    return await api
-    .post("/api/project/view", {
-        id: data.id
-    })
-    .then(res => res.data)
-    .catch(err => err.response.data)
-}
-
 export {
-    registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById
+    registAPI, updateAPI, deleteAPI
 }

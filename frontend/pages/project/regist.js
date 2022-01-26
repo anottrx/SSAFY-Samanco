@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "react";
 
 import Layout from "../../components/layout"
 import DatePicker from "../../components/Common/DatePicker";
-import StackLevelSelect from "../../components/Common/Stack/StackLevelSelect";
 import StackSelect from "../../components/Common/Stack/StackSelect";
 import Counter from "../../components/Common/PositionSelect";
 
@@ -17,8 +16,8 @@ import { registAPI } from "../api/project"
 import Router from "next/router";
 
 const position = [
-    {name:"Front-end", count: 0},
-    {name:"Back-end", count: 0},
+    {name:"Frontend", count: 0},
+    {name:"Backend", count: 0},
     {name:"Embedded", count: 0},
     {name:"Mobile", count: 0}
 ]
@@ -63,13 +62,11 @@ function ProjectRegist() {
         background-size: contain;
     `
 
-    // To Do : 나중에 hostId는 로그인 한 userId로 변경하기!
     const [inputValue, setInputValue] = useState({
         "collectStatus": "ING",
-        "hostId": 1,
+        "hostId": sessionStorage.getItem("userId"),
     });
 
-    // const formData = new FormData();
     const [files, setFiles] = useState('');
 
     const onImgChange = (event) => {
@@ -178,7 +175,10 @@ function ProjectRegist() {
 
                             Object.keys(inputValue).map(key => {
                                 let value = inputValue[key];
-                                formData.append(key, JSON.stringify(value));
+                                if (key === 'stacks' || key == 'positions')
+                                    formData.append(key, JSON.stringify(value));
+                                else 
+                                    formData.append(key, value);
                             })
 
                             formData.append("file",files);
@@ -189,9 +189,12 @@ function ProjectRegist() {
                             } 
 
                             registAPI(formData).then((res) => {
+                                console.log(res);
                                 if (res.statusCode == 200) {
                                     alert("프로젝트가 등록되었습니다.")
                                     Router.push("/project");
+                                } else if (res.statusCode == 401) {
+                                    alert("프로젝트를 중복하여 등록할 수 없습니다.");
                                 }
                             });
                         }

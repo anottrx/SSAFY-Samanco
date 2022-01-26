@@ -6,13 +6,10 @@ export default function PositionList(props) {
     const StackChip = styled(Chip)`
         margin-left: 10px;
     `
-
-    // let positionNames = ["Frontend", "Backend", "Embedded", "Mobile"];
     let Item = {}
 
     props.positionData.map(data => {
         // data.position: 포지션 이름 / data.size: 포지션 인원수
-
 
         if (data.position.includes("total")) {
             let name = data.position.split("total")[1]

@@ -36,7 +36,7 @@ export default function Meeting() {
           <SearchBar></SearchBar>
           <CusButton variant="outlined" size="medium"
             onClick={() => {
-              Router.push("/meeting/regist");
+              Router.replace("/meeting/regist");
             }}>
             등록
           </CusButton>

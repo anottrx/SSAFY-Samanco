@@ -48,7 +48,7 @@ export default function Study() {
         </StudyActions>
 
         <StackTagList></StackTagList>
-        <ItemList></ItemList>
+        <ItemList from="study"></ItemList>
       </ItemWrapper>
 
       <CusDivider variant="middle" />

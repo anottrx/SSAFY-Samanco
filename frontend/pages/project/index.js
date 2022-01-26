@@ -48,7 +48,7 @@ export default function Project() {
           </CusButton>
         </ProjectActions>
         <StackTagList></StackTagList>
-        <ItemList></ItemList>
+        <ItemList from="project"></ItemList>
       </ItemWrapper>
     
       <CusDivider variant="middle" />

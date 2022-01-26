@@ -2,21 +2,20 @@ import Layout from "../../components/layout";
 import { useSelector } from 'react-redux';
 
 import styled from "@emotion/styled";
-import StackList from "../../components/Club/StackList"
-import PositionList from "../../components/Club/PositionList"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup } from "@mui/material";
-import { useState } from "react";
+import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup,TableContainer, Table, StyledTableRow, StyledTableCell, TableHead, TableRow, TableBody, Paper } from "@mui/material";
+import { useState, useEffect } from "react";
 import Router from "next/router";
 
-import { deleteAPI } from "../api/study";
+import CommentList from "./CommentList"
 
 
-const StudyDetail = () => { 
-    const detail = useSelector(({ study }) => study.studyDetail);
+const ProjectDetail = () => { 
+    const detail = useSelector(({ board }) => board.boardDetail);
+
 
     const DetailWrapper = styled.div`
         display: flex;
@@ -60,53 +59,37 @@ const StudyDetail = () => {
         <CusContainer maxWidth="md">
             <br></br>
             <DetailHeader>
-                <h2>{detail.title}</h2>
                 <DetailOperation></DetailOperation>
             </DetailHeader>
-            <DetailWrapper maxWidth="sm">
-                <CusSkeleton variant="rectangular" animation={false} />
-                <StudyInfo detail={detail}></StudyInfo>
-            </DetailWrapper>    
-            <StudyDetail></StudyDetail>
+            <ProjectDetail></ProjectDetail>
         </CusContainer>
     </Layout>);
 
     function DetailOperation() {
         const [open, setOpen] = useState(false);
 
-        const deleteDialogOpen = () => { setOpen(true) }
-        const deleteOperation = () => {
-            // To do: projectId, userId 수정해야함!
-            let data = {id: 1, userId: 1};
-            deleteAPI(data)
-            .then(res => {
-                if (res.statusCode == 200)
-                    console.log("삭제")
-            })
-            .catch(err => console.log(err))
-            setOpen(false);
-        }
-        const deleteDialogClose = () => { setOpen(false) }
+        const JoinDialogOpen = () => { setOpen(true) }
+        const JoinDialogClose = () => { setOpen(false) }
 
 
         return (
             <>
             <ButtonGroup variant="outlined">
                 <Button onClick={() => {
-                    Router.push("/study/update");
+                    Router.push("/project/update");
                 }}>수정</Button>
-                <Button onClick={deleteDialogOpen}>삭제</Button>
+                <Button onClick={JoinDialogOpen}>삭제</Button>
             </ButtonGroup>
             <Dialog
                 open={open}
-                onClose={deleteDialogClose}
+                onClose={JoinDialogClose}
                 >
                 <DialogTitle>
                     {"삭제 하시겠습니까?"}
                 </DialogTitle>
                 <DialogActions>
-                <Button onClick={deleteDialogClose}>취소</Button>
-                <Button onClick={deleteOperation} autoFocus>
+                <Button onClick={JoinDialogClose}>취소</Button>
+                <Button onClick={JoinDialogClose} autoFocus>
                     확인
                 </Button>
                 </DialogActions>
@@ -115,19 +98,7 @@ const StudyDetail = () => {
         )
     }
 
-    function StudyInfo(){
-        
-        return (
-            <ContentWrapper>
-                <div>스터디 주제</div>
-                <StackList stackData={detail.stacks}></StackList>
-                <br />
-        
-            </ContentWrapper>
-        )
-    }
-
-    function StudyDetail() {
+    function ProjectDetail() {
         const CusCard = styled(Card)`
             margin-top: 10px;
         `
@@ -135,50 +106,21 @@ const StudyDetail = () => {
         return (
             <CusCard sx={{ minWidth: 275 }}>
                 <CardContent>
+                    <h1>{detail.title}</h1>
                     <Typography sx={{ fontSize: 16 }}  variant="body1">
-                    {
-                        detail.description.split('\n').map((line, index) => {
-                            return (<span key={index}>{line}<br/></span>)
-                        })
-                    }
+                        {detail.content}
                     </Typography>
                     <br />
+                    <DetailAction detail={detail}></DetailAction>
                     <Divider light />
+                    <CommentList detail={detail}></CommentList>
                     <br />
-                    <DetailFooter detail={detail}></DetailFooter>
                 </CardContent>
-                <DetailAction detail={detail}></DetailAction>
+                
             </CusCard>
         )
     }
 
-    function DetailFooter(props) {
-        const FooterWrapper = styled.div`
-        display: flex;
-        flex-direction: row;
-        & > div {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            margin: 10px;
-        }
-    `
-        let detail = props.detail;
-
-        return (
-            <FooterWrapper>
-                <div>
-                    <Typography sx={{ fontSize: 14 }} gutterBottom>
-                        예정 스케쥴
-                    </Typography>
-
-                    <Typography sx={{ mb: 1.5 }}>
-                        {detail.schedule} 
-                    </Typography>
-                </div>
-            </FooterWrapper>
-        )
-    }
 
     function DetailAction(props) {
         let detail = props.detail;
@@ -216,10 +158,7 @@ const StudyDetail = () => {
                     </Button>
                 </ButtonGroup>
                 <>
-                <div>
-                    <Button variant="outlined" onClick={() => {Router.push("/study/applylist")}}>지원자 목록 조회</Button>
-                    <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
-                </div>
+                    <Button variant="outlined">댓글달기</Button>
                     <Dialog
                         open={open}
                         onClose={JoinDialogClose}
@@ -246,4 +185,4 @@ const StudyDetail = () => {
 } 
 
 
-export default StudyDetail;
+export default ProjectDetail;
