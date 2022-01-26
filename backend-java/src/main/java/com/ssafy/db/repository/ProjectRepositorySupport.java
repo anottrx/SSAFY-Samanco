@@ -52,36 +52,44 @@ public class ProjectRepositorySupport {
 
         Long projectId=projectUpdateInfo.getId();
         Long hostId=projectUpdateInfo.getHostId();
-        if (isValid(hostId)&&isValid(projectId)) {
-            String collectStatus=(projectUpdateInfo.getCollectStatus());
-            String description=(projectUpdateInfo.getDescription());
-            int size=(projectUpdateInfo.getTotalSize());
-            String title=(projectUpdateInfo.getTitle());
-            String startDate=(projectUpdateInfo.getStartDate());
-            String endDate=(projectUpdateInfo.getEndDate());
-            String hostPosition= projectUpdateInfo.getHostPosition();
-            int totalFrontendSize=projectUpdateInfo.getTotalFrontendSize();
-            int totalBackendSize=projectUpdateInfo.getTotalBackendSize();
-            int totalMobileSize=projectUpdateInfo.getTotalMobileSize();
-            int totalEmbeddedSize=projectUpdateInfo.getTotalEmbeddedSize();
-            int totalSize=projectUpdateInfo.getTotalSize();
-            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-                    .set(qProject.collectStatus, collectStatus)
-                    .set(qProject.description, description)
-                    .set(qProject.title, title)
-                    .set(qProject.startDate, startDate)
-                    .set(qProject.endDate, endDate)
-                    .set(qProject.hostPosition, hostPosition)
-                    .set(qProject.totalBackendSize, totalBackendSize)
-                    .set(qProject.totalFrontendSize, totalFrontendSize)
-                    .set(qProject.totalMobileSize, totalMobileSize)
-                    .set(qProject.totalEmbeddedSize, totalEmbeddedSize)
-                    .set(qProject.size, totalSize)
-                    .execute();
-
-            return 200;
+        User host = jpaQueryFactory.selectFrom(qUser).where(qUser.id.eq(hostId), qUser.isDeleted.eq(false)).fetchOne();
+        if (host==null){
+            return 402;
         }
-        return 401;
+        jpaQueryFactory.update(qUser).where(qUser.id.eq(hostId))
+                .set(qUser.projectPosition, projectUpdateInfo.getHostPosition())
+                .execute();
+
+        if (!isValid(projectId)) {
+            return 401;
+        }
+        String collectStatus=(projectUpdateInfo.getCollectStatus());
+        String description=(projectUpdateInfo.getDescription());
+//        int size=(projectUpdateInfo.getTotalSize());
+        String title=(projectUpdateInfo.getTitle());
+        String startDate=(projectUpdateInfo.getStartDate());
+        String endDate=(projectUpdateInfo.getEndDate());
+        String hostPosition= projectUpdateInfo.getHostPosition();
+        int totalFrontendSize=projectUpdateInfo.getTotalFrontendSize();
+        int totalBackendSize=projectUpdateInfo.getTotalBackendSize();
+        int totalMobileSize=projectUpdateInfo.getTotalMobileSize();
+        int totalEmbeddedSize=projectUpdateInfo.getTotalEmbeddedSize();
+        int totalSize=projectUpdateInfo.getTotalSize();
+        jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+                .set(qProject.collectStatus, collectStatus)
+                .set(qProject.description, description)
+                .set(qProject.title, title)
+                .set(qProject.startDate, startDate)
+                .set(qProject.endDate, endDate)
+                .set(qProject.hostPosition, hostPosition)
+                .set(qProject.totalBackendSize, totalBackendSize)
+                .set(qProject.totalFrontendSize, totalFrontendSize)
+                .set(qProject.totalMobileSize, totalMobileSize)
+                .set(qProject.totalEmbeddedSize, totalEmbeddedSize)
+                .set(qProject.size, totalSize)
+                .execute();
+
+        return 200;
     }
 
     public Project selectByHost(Long userId) {
@@ -128,5 +136,11 @@ public class ProjectRepositorySupport {
 //                    .set(qProject.currentEmbeddedSize, qProject.currentEmbeddedSize.add(1)).execute();
 //        }
         return 200;
+    }
+
+    public List<User> selectUsers(Long projectId) {
+        return jpaQueryFactory.selectFrom(qUser)
+                .where(qUser.projectId.eq(projectId), qUser.isDeleted.eq(false), qUser.projectJoinStatus.eq("OK"))
+                .fetch();
     }
 }

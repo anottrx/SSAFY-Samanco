@@ -28,7 +28,6 @@ public class UserRepositorySupport {
     QProject qProject=QProject.project;
 
 
-
     @Autowired
     PasswordEncoder passwordEncoder;
 

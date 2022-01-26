@@ -54,16 +54,16 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTotalMobileSize(projectRegisterPostReq.getTotalMobileSize());
         project.setTotalEmbeddedSize(projectRegisterPostReq.getTotalEmbeddedSize());
 
-        String hostPosition= projectRegisterPostReq.getHostPosition();
-        if ("frontend".equalsIgnoreCase(hostPosition)){
-            project.setCurrentFrontendSize(1);
-        } else if ("backend".equalsIgnoreCase(hostPosition)){
-            project.setCurrentBackendSize(1);
-        } else if ("mobile".equalsIgnoreCase(hostPosition)){
-            project.setCurrentMobileSize(1);
-        } else if ("embedded".equalsIgnoreCase(hostPosition)){
-            project.setCurrentEmbeddedSize(1);
-        }
+//        String hostPosition= projectRegisterPostReq.getHostPosition();
+//        if ("frontend".equalsIgnoreCase(hostPosition)){
+//            project.setCurrentFrontendSize(1);
+//        } else if ("backend".equalsIgnoreCase(hostPosition)){
+//            project.setCurrentBackendSize(1);
+//        } else if ("mobile".equalsIgnoreCase(hostPosition)){
+//            project.setCurrentMobileSize(1);
+//        } else if ("embedded".equalsIgnoreCase(hostPosition)){
+//            project.setCurrentEmbeddedSize(1);
+//        }
 
         return projectRepository.save(project);
     }
@@ -88,7 +88,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         ProjectDto project=projectEntityToDto(result);
         Long projectId=project.getId();
-
+//        projectRepositorySupport.setCurrentSize(project);
         project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
         project.setFile(fileRepositorySupport.selectFile(projectId, 2));
 
@@ -147,18 +147,31 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto projectEntityToDto(Project result) {
+        List<User> results=projectRepositorySupport.selectUsers(result.getId());
+        int[] currentPositionSize=new int[4];
+        for (User user: results){
+            String position= user.getProjectPosition();
+            if ("frontend".equalsIgnoreCase(position)){
+                currentPositionSize[0]++;
+            } else if ("backend".equalsIgnoreCase(position)){
+                currentPositionSize[1]++;
+            } else if ("mobile".equalsIgnoreCase(position)){
+                currentPositionSize[2]++;
+            } else if ("embedded".equalsIgnoreCase(position)){
+                currentPositionSize[3]++;
+            }
+        }
         List<PositionDto> positions=new ArrayList<>();
         positions.add(new PositionDto("totalFrontend", result.getTotalFrontendSize()));
         positions.add(new PositionDto("totalBackend", result.getTotalBackendSize()));
         positions.add(new PositionDto("totalMobile", result.getTotalMobileSize()));
         positions.add(new PositionDto("totalEmbedded", result.getTotalEmbeddedSize()));
-        positions.add(new PositionDto("currentFrontend", result.getCurrentFrontendSize()));
-        positions.add(new PositionDto("currentBackend", result.getCurrentBackendSize()));
-        positions.add(new PositionDto("currentMobile", result.getCurrentMobileSize()));
-        positions.add(new PositionDto("currentEmbedded", result.getCurrentEmbeddedSize()));
+        positions.add(new PositionDto("currentFrontend", currentPositionSize[0]));
+        positions.add(new PositionDto("currentBackend", currentPositionSize[1]));
+        positions.add(new PositionDto("currentMobile", currentPositionSize[2]));
+        positions.add(new PositionDto("currentEmbedded", currentPositionSize[3]));
         positions.add(new PositionDto("totalSize", result.getSize()));
-        int currentSize=result.getCurrentFrontendSize() + result.getCurrentBackendSize() + result.getCurrentEmbeddedSize() + result.getCurrentMobileSize();
-        positions.add(new PositionDto("currentSize", currentSize));
+        positions.add(new PositionDto("currentSize", results.size()));
         ProjectDto projectDto=new ProjectDto();
         projectDto.setId(result.getId());
         projectDto.setDescription(result.getDescription());

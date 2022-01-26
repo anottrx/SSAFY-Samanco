@@ -27,10 +27,10 @@ public class Project extends BaseEntity{
     private int totalBackendSize=0;
     private int totalMobileSize=0;
     private int totalEmbeddedSize=0;
-    private int currentFrontendSize=0;
-    private int currentBackendSize=0;
-    private int currentMobileSize=0;
-    private int currentEmbeddedSize=0;
+//    private int currentFrontendSize=0;
+//    private int currentBackendSize=0;
+//    private int currentMobileSize=0;
+//    private int currentEmbeddedSize=0;
     private String description;
     private String startDate;
     private String endDate;

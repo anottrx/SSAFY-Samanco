@@ -354,10 +354,8 @@ public class UserController {
 			@ApiResponse(code = 200, message = "성공"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> selectUserMe(@RequestBody UserIdPostReq userIdPostReq) {
+	public ResponseEntity<? extends BaseResponseBody> selectUser(@RequestBody UserIdPostReq userIdPostReq) {
 		//200 일때 사용 가능
-		System.out.println(userIdPostReq);
-		System.out.println(userIdPostReq.getUserId());
 		UserDto user=userService.selectUser(userIdPostReq.getUserId());
 		if (user==null){
 			return ResponseEntity.status(200).body(UserSelectPostRes.of(401, "사용자 정보가 없습니다.", null));
