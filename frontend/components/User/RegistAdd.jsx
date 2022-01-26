@@ -5,7 +5,7 @@ import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSe
 import {
   checkLoginTokenInfo,
   registAPI,
-  getUserInfo,
+  getUserTokenAPI,
   updateUserAPI,
 } from "../../pages/api/user";
 import {
@@ -25,10 +25,8 @@ import MenuItem from "@mui/material/MenuItem";
 
 export default function RegistInfo() {
   const [inputState, setInputState] = useState({
-    userId: "",
     email: "",
     phone: "",
-    nickname: "",
     birthday: "",
     stacks: [],
     position: "",
@@ -36,11 +34,20 @@ export default function RegistInfo() {
     description: "",
     image_id: "",
     // 이미 입력된 값들
+    userId: "",
+    email: "",
+    nickname: "",
     name: "",
-    password: "",
     userClass: "",
     generation: "",
     studentId: "",
+    // userId: sessionStorage.getItem("userId"),
+    // email: sessionStorage.getItem("email"),
+    // nickname: sessionStorage.getItem("nickname"),
+    // name: sessionStorage.getItem("name"),
+    // userClass: sessionStorage.getItem("userClass"),
+    // generation: sessionStorage.getItem("generation"),
+    // studentId: sessionStorage.getItem("studentId"),
   });
 
   const positionOptions = [
@@ -152,6 +159,7 @@ export default function RegistInfo() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log("왜"+inputState);
 
     let isNormal = true;
     let msg = "";
@@ -176,21 +184,20 @@ export default function RegistInfo() {
       Redis: inputState.Redis,
     };
 
-    setInputState({
-      userId: sessionStorage.getItem("userId"),
-      email: sessionStorage.getItem("email"),
-      nickname: sessionStorage.getItem("nickname"),
-      link: "",
-      name: sessionStorage.getItem("name"),
-      password: sessionStorage.getItem("password"),
-      userClass: sessionStorage.getItem("userClass"),
-      generation: sessionStorage.getItem("generation"),
-      studentId: sessionStorage.getItem("studentId"),
-    });
-    console.log(inputState);
     if (isNormal) {
       const formData = new FormData();
-
+      
+      setInputState({
+        userId: sessionStorage.getItem("userId"),
+        email: sessionStorage.getItem("email"),
+        nickname: sessionStorage.getItem("nickname"),
+        name: sessionStorage.getItem("name"),
+        userClass: sessionStorage.getItem("userClass"),
+        generation: sessionStorage.getItem("generation"),
+        studentId: sessionStorage.getItem("studentId"),
+      });
+      console.log("왜뢔뢔"+inputState);
+      
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
         if (key === "stacks") {
@@ -206,6 +213,11 @@ export default function RegistInfo() {
       }
 
       updateUserAPI(formData).then((res) => {
+        console.log(res);
+        sessionStorage.clear();
+        sessionStorage.setItem("userId", inputState.userId);
+        sessionStorage.setItem("email", inputState.email);
+        sessionStorage.setItem("nickname", inputState.nickname);
         if (res.statusCode == 200) {
           alert("회원정보 추가 성공");
           window.history.forward();
@@ -214,11 +226,6 @@ export default function RegistInfo() {
           alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
         }
 
-        console.log(res);
-        sessionStorage.clear();
-        sessionStorage.setItem("userId", inputState.userId);
-        sessionStorage.setItem("email", inputState.email);
-        sessionStorage.setItem("nickname", inputState.nickname);
       });
     } else {
       alert(msg);

@@ -4,7 +4,7 @@ import Router from "next/router";
 import CheckEmailCode from "./CheckEmailCode";
 import { useCookies } from "react-cookie";
 
-import { registAPI, loginAPI, checkNicknameAPI } from "../../pages/api/user";
+import { registAPI, loginAPI, checkNicknameAPI,getUserInfo } from "../../pages/api/user";
 import {
   Box,
   OutlinedInput,
@@ -33,7 +33,8 @@ export default function Regist() {
     passwordConfirm: "",
     email: "",
     nickname: "",
-    userClass: "JAVA",
+    // userClass: "JAVA",
+    class: "JAVA",
     generation: "6",
     studentId: "",
     phone: 11111111111,
@@ -111,12 +112,14 @@ export default function Regist() {
   };
 
   const classHandleChange = (e) => {
-    inputState.userClass = e.target.value;
+    // inputState.userClass = e.target.value;
+    inputState.class = e.target.value;
   };
 
   const nicknameHandleChange = (e) => {
     const value = e.target.value;
     checkNicknameAPI(value).then((res) => {
+      console.log("닉네임이 " +value+"인 사람의 닉네임API 체크 결과" + res)
       setNicknameCheckRes({ code: res.statusCode, msg: res.message });
     });
   };
@@ -209,7 +212,8 @@ export default function Regist() {
     } else if (!inputState.generation) {
       isNormal = false;
       msg = "기수를 입력해주세요.";
-    } else if (!inputState.userClass) {
+    // } else if (!inputState.userClass) {
+    } else if (!inputState.class) {
       isNormal = false;
       msg = "반을 입력해주세요.";
     } else if (!inputState.studentId) {
@@ -241,29 +245,33 @@ export default function Regist() {
           // 로그인
           loginAPI(inputState).then((res) => {
             setCookie("userToken", res.accessToken); // 쿠키 설정
+            setCookie("userEmail", inputState.email);
+            const token = res.accessToken;
+            getUserInfo(token).then((res1) => {
+              console.log(res1);
+              sessionStorage.setItem("userId", res1.userId);
+              sessionStorage.setItem("email", inputState.email);
+              sessionStorage.setItem("nickname", res1.nickname);
+            });
+            if (
+              window.confirm(
+                "가입이 완료되었습니다! 추가 정보를 입력하실 건가요?"
+              )
+            ) {
+              sessionStorage.setItem("password", inputState.password);
+              // sessionStorage.setItem("userClass", inputState.userClass);
+              sessionStorage.setItem("class", inputState.class);
+              sessionStorage.setItem("studentId", inputState.studentId);
+              sessionStorage.setItem("generation", inputState.generation);
+              sessionStorage.setItem("name", inputState.name);
+              window.history.forward();
+              Router.push("/regist/info");
+            } else {
+              // 페이지 이동
+              window.history.forward();
+              window.location.replace("/");
+            }
           });
-          setCookie("userEmail", inputState.email);
-          sessionStorage.setItem("userId", inputState.userId);
-          sessionStorage.setItem("email", inputState.email);
-          sessionStorage.setItem("nickname", inputState.nickname);
-
-          if (
-            window.confirm(
-              "가입이 완료되었습니다! 추가 정보를 입력하실 건가요?"
-            )
-          ) {
-            sessionStorage.setItem("password", inputState.password);
-            sessionStorage.setItem("userClass", inputState.userClass);
-            sessionStorage.setItem("studentId", inputState.studentId);
-            sessionStorage.setItem("generation", inputState.generation);
-            sessionStorage.setItem("name", inputState.name);
-            window.history.forward();
-            Router.push("/regist/info");
-          } else {
-            // 페이지 이동
-            window.history.forward();
-            window.location.replace("/");
-          }
         } else {
           alert(`${res.message}`);
           console.log("회원가입실패");
@@ -441,7 +449,8 @@ export default function Regist() {
           </Select>
           {/* 반 */}
           <Select
-            id="userClass"
+            // id="userClass"
+            id="class"
             onChange={classHandleChange}
             defaultValue={classOptions[0].value}
             value={classOptions.value}

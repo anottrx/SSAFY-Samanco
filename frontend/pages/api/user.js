@@ -49,7 +49,7 @@ async function checkCodeAPI(code) {
     .catch((err) => err.response.data);
 }
 
-async function getUserInfo(token) {
+async function getUserTokenAPI(token) {
   // 내 정보를 조회 -> 이중에서 email, nickname, userId 받음
   // return await api
   return await getAuth(token)
@@ -58,7 +58,7 @@ async function getUserInfo(token) {
     .catch((err) => err.response.data);
 }
 
-async function getOtherInfoAPI(userId) {
+async function getUserInfoAPI(userId) {
   // 나 또는 다른 사람이 내 정보 조회
   return await api
     .post("/api/user/view", {
@@ -151,11 +151,11 @@ async function updateNicknameAPI(inputData) {
 export {
   loginAPI,
   registAPI,
-  getUserInfo,
+  getUserTokenAPI,
+  getUserInfoAPI,
   checkLoginTokenInfo,
   sendEmailCodeAPI,
   checkCodeAPI,
-  getOtherInfoAPI,
   sendEmailPWCodeAPI,
   checkEmailPWAPI,
   resetPWAPI,

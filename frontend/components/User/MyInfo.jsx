@@ -4,7 +4,8 @@ import Router from "next/router";
 import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
 import {
-  getUserInfo,
+  getUserTokenAPI,
+  getUserInfoAPI,
   updateUserAPI,
   deleteUserAPI,
 } from "../../pages/api/user";
@@ -14,6 +15,7 @@ export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
   const [onlyView, setOnlyView] = useState(true);
   const [finishUpdate, setFinishUpdate] = useState(false);
+  const [nicknameChange,setNicknameChange] =useState(false)
 
   const [inputState, setInputState] = useState({
     userId: "",
@@ -38,7 +40,7 @@ export default function MyInfo() {
   useEffect(() => {
     const token = cookie.userToken;
 
-    getUserInfo(token).then((res) => {
+    getUserTokenAPI(token).then((res) => {
       // console.log("token: " + token);
       // console.log("res: " + res);
 
@@ -151,9 +153,9 @@ export default function MyInfo() {
           <input
             id="nickname"
             value={inputState.nickname || ""}
-            disabled
+            disabled = {nicknameChange?true:false}
             // disabled={onlyView ? true : false}
-            // onChange={handleChange}
+            onChange={handleNicknameChange}
           />
         </div>
         <div className="mb-6">
