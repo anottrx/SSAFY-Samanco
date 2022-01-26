@@ -70,6 +70,7 @@ function MyApp({ Component, pageProps }) {
   }, [isLogin, userId]);
   
   return (
+    // PersistGate : state를 조회한 후 리덕스에 저장할 때까지 웹 어플리케이션의 UI가 렌더링되는 것을 지연시킴
     <PersistGate persistor={persistor} loading={<div>loading...</div>}>
       {
         (pageProps && pageProps.pathname) === '/meeting/[id]'? (
