@@ -3,11 +3,32 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Link from "next/link";
 import { styled } from '@mui/material/styles';
-import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination} from '@mui/material';
+import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination, Button} from '@mui/material';
 import Router from "next/router";
 import * as boardActions from '../../store/module/board';
+import SearchBar from "../../components/Common/Search";
+import style from "@emotion/styled";
 
-import Datas from "./data.js";
+import Datas from "./boardData.json";
+
+const ItemWrapper = style.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+`
+const ProjectActions = style.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`
+
+const CusButton = style(Button)`
+    height: fit-content;
+`
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 [`&.${tableCellClasses.head}`]: {
@@ -27,7 +48,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function BoardList(props) {
-
     const dispatch = useDispatch();
 
     const setDetail = useCallback(
@@ -65,6 +85,17 @@ function BoardList(props) {
 
     return (
         <div>
+            <ItemWrapper>
+                <ProjectActions>
+                    <SearchBar></SearchBar>
+                    <CusButton variant="outlined" size="medium"
+                        onClick={() => {
+                        Router.push("/board/BoardRegist");
+                        }}>
+                        등록하기
+                    </CusButton>
+                </ProjectActions>
+            </ItemWrapper>
             <TableContainer>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
