@@ -4,7 +4,7 @@ import Router from "next/router";
 import CheckEmailCode from "./CheckEmailCode";
 import { useCookies } from "react-cookie";
 
-import { registAPI, loginAPI, checkNicknameAPI,getUserInfo } from "../../pages/api/user";
+import { registAPI, loginAPI, checkNicknameAPI,getUserTokenAPI } from "../../pages/api/user";
 import {
   Box,
   OutlinedInput,
@@ -247,7 +247,7 @@ export default function Regist() {
             setCookie("userToken", res.accessToken); // 쿠키 설정
             setCookie("userEmail", inputState.email);
             const token = res.accessToken;
-            getUserInfo(token).then((res1) => {
+            getUserTokenAPI(token).then((res1) => {
               console.log(res1);
               sessionStorage.setItem("userId", res1.userId);
               sessionStorage.setItem("email", inputState.email);
