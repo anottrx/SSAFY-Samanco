@@ -37,8 +37,8 @@ export default function MyInfo() {
   });
 
   const [nicknameInfo, setNicknameInfo] = useState({
-    newNickname: "",
-    curUserId: "",
+    nickname: "",
+    id: sessionStorage.getItem("userId"),
   });
 
   const cookies = new Cookies();
@@ -46,7 +46,10 @@ export default function MyInfo() {
 
   useEffect(() => {
     const token = cookie.userToken;
-    const curUserId = sessionStorage.getItem("userId");
+    // const curUserId = sessionStorage.getItem("userId");
+    // setNicknameInfo({
+    //   curUserId: sessionStorage.getItem("userId"),
+    // });
 
     checkLoginTokenInfo(token).then((res) => {
       console.log(res);
@@ -65,7 +68,7 @@ export default function MyInfo() {
         console.log(inputState);
 
         getUserInfoAPI(res.userId).then((res1) => {
-          console.log(res.userId);
+          console.log(res1);
         });
       }
     });
@@ -73,37 +76,34 @@ export default function MyInfo() {
 
   const handleNicknameChange = (e) => {
     setNicknameInfo({
-      newNickname: e.target.value,
+      nickname: e.target.value,
+      id: sessionStorage.getItem("userId"),
     });
   };
 
   const handleNicknameClick = (e) => {
     e.preventDefault();
-    // 닉네임 바꾸기
+    // 닉네임 바꿀 수 있는지 확인
     if (nicknameChange) {
-      // setNicknameChange(false);
-      setNicknameInfo({
-        curUserId: inputState.userId,
-      });
-
       let isNormal = true;
-      if (nicknameInfo.newNickname == "") {
+      if (
+        nicknameInfo.nickname == "" ||
+        nicknameInfo.nickname == "admin" ||
+        nicknameInfo.nickname == "관리자"
+      ) {
         isNormal = false;
       }
+
       if (isNormal) {
+        // console.log(nicknameInfo);
         updateNicknameAPI(nicknameInfo).then((res) => {
-          console.log(
-            "닉네임 업데이트할 때 입력값" +
-              nicknameInfo.newNickname +
-              " " +
-              nicknameInfo.curUserId
-          );
           if (res.statusCode == 200) {
             setNicknameChange(false);
+            // sessionStorage.setItem("nickname", nicknameInfo.nickname);
           } else {
             alert(`${res.message}`);
           }
-          console.log("닉네임 업데이트결과" + res);
+          console.log("닉네임 수정 가능한지 확인한 결과" + JSON.stringify(res));
         });
       }
     } else {
