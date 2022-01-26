@@ -31,7 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
     FileRepositorySupport fileRepositorySupport;
 
 //    @Autowired
-//    UserRepositorySupport userRepositorySupport;
+//    UserRepositorySupport userRepositorySupport;  // 사용 못함
 
 //    @Autowired
 //    PasswordEncoder passwordEncoder;
@@ -51,6 +51,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTotalFrontendSize(projectRegisterPostReq.getTotalFrontendSize());
         project.setTotalMobileSize(projectRegisterPostReq.getTotalMobileSize());
         project.setTotalEmbeddedSize(projectRegisterPostReq.getTotalEmbeddedSize());
+
         String hostPosition= projectRegisterPostReq.getHostPosition();
         if ("frontend".equalsIgnoreCase(hostPosition)){
             project.setCurrentFrontendSize(1);
@@ -90,6 +91,7 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectDto project=projectRepositorySupport.selectProject(projectId);
         if (project!=null){
             project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
+            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
             return project;
         }
         return null;
@@ -101,7 +103,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (projectId==null){
             return null;
         }
-        return projectRepositorySupport.selectProject(projectId);
+        return selectProject(projectId);
     }
 
     @Override
@@ -135,6 +137,7 @@ public class ProjectServiceImpl implements ProjectService {
             projectDto.setLikes(result.getLikes());
             projectDto.setPositions(positions);
             projectDto.setStacks(stackRepositorySupport.selectStack(result.getId(), 2));
+            projectDto.setFile(fileRepositorySupport.selectFile(result.getId(), 2));
             projects.add(projectDto);
         }
 
@@ -143,6 +146,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public int joinProject(Long projectId, Long userId, String position) {
+//        int userUpdateJoinStatus=userR
 //        int userUpdateProjectCode=userRepositorySupport.updateUserProject(userId, projectId);
 //        if (userUpdateProjectCode==401){
 //            return 401;
