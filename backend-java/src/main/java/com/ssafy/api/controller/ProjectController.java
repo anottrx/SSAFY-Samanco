@@ -49,8 +49,11 @@ public class ProjectController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> register(
-            @RequestParam("hostId") Long hostId, @RequestParam("hostPosition") String hostPosition,
-            @RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate, @RequestParam("title") String title,
+            @RequestParam("hostId") Long hostId,
+            @RequestParam("hostPosition") String hostPosition,
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate,
+            @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam(required = false, value="collectStatus", defaultValue="ING") String collectStatus,
             @RequestParam(required = false, value="stacks") String stacks,
@@ -72,7 +75,7 @@ public class ProjectController {
         registerInfo.setTotalBackendSize(totalBackendSize);
         registerInfo.setTotalMobileSize(totalMobileSize);
         registerInfo.setTotalEmbeddedSize(totalEmbeddedSize);
-        registerInfo.setHostPosition(hostPosition);
+        registerInfo.setTotalSize(totalBackendSize+totalEmbeddedSize+totalFrontendSize+totalMobileSize);
 
 //        registerInfo.setStacks(getListMapFromString(stacks));
 
@@ -157,6 +160,7 @@ public class ProjectController {
         updateInfo.setTotalBackendSize(totalBackendSize);
         updateInfo.setTotalMobileSize(totalMobileSize);
         updateInfo.setTotalEmbeddedSize(totalEmbeddedSize);
+        updateInfo.setTotalSize(totalBackendSize+totalEmbeddedSize+totalFrontendSize+totalMobileSize);
         if (stacks!=null) {
             updateInfo.setStacks(getListMapFromString(stacks));
         }
@@ -190,7 +194,7 @@ public class ProjectController {
     @PostMapping("/host")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 401, message = "가입한 프로젝트 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectProjectByHost(
@@ -198,7 +202,7 @@ public class ProjectController {
 
         ProjectDto project=projectService.selectByHost(userInfo.getUserId());
         if (project==null){
-            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "유효하지 않은 프로젝트입니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "가입한 프로젝트가 없습니다.", null));
         }
         return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
     }
@@ -206,7 +210,7 @@ public class ProjectController {
     @PostMapping("/user")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 401, message = "가입한 프로젝트 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectProjectByUser(
@@ -214,7 +218,7 @@ public class ProjectController {
 
         ProjectDto project=projectService.selectByUser(userInfo.getUserId());
         if (project==null){
-            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "유효하지 않은 프로젝트입니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "가입한 프로젝트가 없습니다.", null));
         }
         return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
     }

@@ -16,7 +16,7 @@ public class ProjectDto {
     private Long id;
     private String title;
     private String collectStatus;     // ING, END
-    private int size;
+//    private int size;
     private List<PositionDto> positions;
     private List<StackGradeDto> stacks;
     private String description;
@@ -28,13 +28,13 @@ public class ProjectDto {
     private Long hit;
     private FileDto file;
 
-    public ProjectDto(Long id, String title, String collectStatus, int size, List<PositionDto> positions,
+    public ProjectDto(Long id, String title, String collectStatus, List<PositionDto> positions,
                       List<StackGradeDto> stacks, String description, String startDate, String endDate, Long likes,
                       Long hostId, String hostPosition, Long hit, FileDto file) {
         this.id = id;
         this.title = title;
         this.collectStatus = collectStatus;
-        this.size = size;
+//        this.size = size;
         this.positions = positions;
         this.stacks = stacks;
         this.description = description;
