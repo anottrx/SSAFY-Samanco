@@ -10,8 +10,6 @@ function BoardSearch(props) {
         setKeyword(e.target.value);
     }
 
-    const dispatch = useDispatch();
-
 
     useEffect(() => {
         console.log(keyword)
@@ -26,7 +24,6 @@ function BoardSearch(props) {
             <InputBase
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="검색어를 입력해주세요."
-                inputProps={{ 'aria-label': 'search google maps' }}
                 onChange={handleChange}/>
             <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
                 <SearchIcon />
