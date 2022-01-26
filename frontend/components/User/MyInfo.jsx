@@ -42,32 +42,67 @@ export default function MyInfo() {
   const cookies = new Cookies();
   const [cookie, setCookie] = useCookies(["userToken"]);
 
-  useEffect(() => {
-    const token = cookie.userToken;
-    async function getUserToken() {
-      getUserTokenAPI(token).then((res) => {
-        // console.log("token: " + token);
-        // console.log("res: " + res);
-  
-        if (res.statusCode == 200) {
-        } else {
-          alert(`${res.email}`);
-        }
-  
-        setInputState({
-          userId: res.userId,
-          email: res.email,
-          nickname: res.nickname,
-        });
-        setNicknameInfo({
-          curUserId: res.userId,
-        })
+  const token = cookie.userToken;
+  const [uesrIdNum, setUserIdNum] = useState("");
+  async function getUserToken() {
+    getUserTokenAPI(token).then((res) => {
+      // console.log("token: " + token);
+      // console.log("res: " + res);
+
+      if (res.statusCode == 200) {
+      } else {
+        alert(`${res.email}`);
+      }
+      console.log("getUserToken" + res);
+
+      setInputState({
+        userId: res.userId,
+        email: res.email,
+        nickname: res.nickname,
       });
-    }
-    
+      setUserIdNum({
+        userIdNum: res.userId,
+      });
+      setNicknameInfo({
+        curUserId: res.userId,
+      });
+    });
+  }
+
+  async function getUserInfo() {
+    console.log("UserID는 " + uesrIdNum);
+    getUserInfoAPI(uesrIdNum).then((res) => {
+      if (res.statusCode == 200) {
+      } else {
+        alert(`${res.email}`);
+      }
+      console.log("getUserInfoAPI" + res.user);
+
+      setInputState({
+        phone: res.phone,
+        userClass: res.userClass,
+        birthday: res.birthday,
+        generation: res.generation,
+        studentId: res.studentId,
+        stacks: res.stacks,
+        position: res.position,
+        link: res.link,
+        description: res.description,
+        image_id: res.image_id,
+      });
+      setNicknameInfo({
+        curUserId: res.userId,
+      });
+    });
+  }
+
+  useEffect(() => {
     getUserToken();
-    console.log(inputState.userId + " "+inputState.email+" "+inputState.nickname)
-  },[]);
+    getUserInfo();
+    console.log(
+      inputState.userId + " " + inputState.email + " " + inputState.nickname
+    );
+  }, []);
 
   const handleUpdateClick = (e) => {
     e.preventDefault();
@@ -108,7 +143,6 @@ export default function MyInfo() {
     }
   };
 
-  
   const handleNicknameChange = (e) => {
     setNicknameInfo({
       newNickname: e.target.value,
