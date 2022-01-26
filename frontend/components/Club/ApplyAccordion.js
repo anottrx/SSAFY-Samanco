@@ -28,6 +28,15 @@ function ApplyAccordion(props) {
       & :first-of-type {
         margin-right: 10px;
       }
+
+      & .linkWrapper a, .linkWrapper a:visited{
+        font-size: 12px;
+        color: #1976d2;
+      }
+
+      & .linkWrapper a:hover{
+        color: #0342A2;
+      }
     `
 
     const ButtonWrapper = styled(ButtonGroup)`
@@ -57,9 +66,19 @@ function ApplyAccordion(props) {
                       <Skeleton variant="circular" width={100} height={100} />
                       <Stack>
                         <Typography>{data.description}</Typography>
-                        <Link underline="none" href={data.link} target="_blank">
-                          <LinkIcon />{data.link}</Link>
+                        {
+                          data.links.map(link => {
+                            return (
+                              <div className="linkWrapper">
+                                <Link underline="none" href={link.url} target="_blank">
+                                <LinkIcon />{link.url}</Link>
+                              </div>
+                            )
+                          })
+                        }
                       </Stack>
+                      
+
                     </ProfileWrapper>
                     <StackLevelList items={data.stacks}></StackLevelList>
 

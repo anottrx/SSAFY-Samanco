@@ -10,7 +10,10 @@
             {"name": "MySQL", "grade": 2},
             {"name": "React", "grade": 1}
         ],
-        "link": "http://github.com/ssafy"
+        "links": [
+            {"url":"http://github.com/ssafy"},
+            {"url":"http://velog.io/@ssafy"}
+        ]
     }, 
     {
         "no": 2,
@@ -26,7 +29,10 @@
             {"name": "MySQL", "grade": 2},
             {"name": "React", "grade": 1}
         ],
-        "link": "http://github.com/sabi"
+        "links": [
+            {"url":"http://github.com/sabi"},
+            {"url":"http://velog.io/@sabi"}
+        ]
     }, 
     {
         "no": 3,
@@ -39,6 +45,8 @@
             {"name": "kotlin", "grade": 2},
             {"name": "java", "grade": 1}
         ],
-        "link": "http://github.com/ssamanco"
+        "links": [
+            {"url":"http://github.com/ssamanco"}
+        ]
     }
 ]
