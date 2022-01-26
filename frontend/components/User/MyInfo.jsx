@@ -7,6 +7,7 @@ import {
   getUserTokenAPI,
   getUserInfoAPI,
   updateUserAPI,
+  updateNicknameAPI,
   deleteUserAPI,
 } from "../../pages/api/user";
 import { TextField } from "@mui/icons-material";
@@ -15,7 +16,7 @@ export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
   const [onlyView, setOnlyView] = useState(true);
   const [finishUpdate, setFinishUpdate] = useState(false);
-  const [nicknameChange,setNicknameChange] =useState(false)
+  const [nicknameChange, setNicknameChange] = useState(false);
 
   const [inputState, setInputState] = useState({
     userId: "",
@@ -33,29 +34,40 @@ export default function MyInfo() {
     description: "",
     image_id: "",
   });
+  const [nicknameInfo, setNicknameInfo] = useState({
+    newNickname: "",
+    curUserId: "",
+  });
 
   const cookies = new Cookies();
   const [cookie, setCookie] = useCookies(["userToken"]);
 
   useEffect(() => {
     const token = cookie.userToken;
-
-    getUserTokenAPI(token).then((res) => {
-      // console.log("token: " + token);
-      // console.log("res: " + res);
-
-      // if (res.statusCode == 200) {
-      // } else {
-      //   alert(`${res.message}`);
-      // }
-
-      setInputState({
-        userId: res.userId,
-        email: res.email,
-        nickname: res.nickname,
+    async function getUserToken() {
+      getUserTokenAPI(token).then((res) => {
+        // console.log("token: " + token);
+        // console.log("res: " + res);
+  
+        if (res.statusCode == 200) {
+        } else {
+          alert(`${res.email}`);
+        }
+  
+        setInputState({
+          userId: res.userId,
+          email: res.email,
+          nickname: res.nickname,
+        });
+        setNicknameInfo({
+          curUserId: res.userId,
+        })
       });
-    });
-  }, []);
+    }
+    
+    getUserToken();
+    console.log(inputState.userId + " "+inputState.email+" "+inputState.nickname)
+  },[]);
 
   const handleUpdateClick = (e) => {
     e.preventDefault();
@@ -93,6 +105,46 @@ export default function MyInfo() {
       } else {
         alert(msg);
       }
+    }
+  };
+
+  
+  const handleNicknameChange = (e) => {
+    setNicknameInfo({
+      newNickname: e.target.value,
+    });
+  };
+  const handleNicknameClick = (e) => {
+    e.preventDefault();
+    // 닉네임 바꾸기
+    if (nicknameChange) {
+      // setNicknameChange(false);
+      setNicknameInfo({
+        curUserId: inputState.userId,
+      });
+
+      let isNormal = true;
+      if (nicknameInfo.newNickname == "") {
+        isNormal = false;
+      }
+      if (isNormal) {
+        updateNicknameAPI(nicknameInfo).then((res) => {
+          console.log(
+            "닉네임 업데이트할 때 입력값" +
+              nicknameInfo.newNickname +
+              " " +
+              nicknameInfo.curUserId
+          );
+          if (res.statusCode == 200) {
+            setNicknameChange(false);
+          } else {
+            alert(`${res.message}`);
+          }
+          console.log("닉네임 업데이트결과" + res);
+        });
+      }
+    } else {
+      setNicknameChange(true);
     }
   };
 
@@ -153,10 +205,18 @@ export default function MyInfo() {
           <input
             id="nickname"
             value={inputState.nickname || ""}
-            disabled = {nicknameChange?true:false}
+            disabled={nicknameChange ? false : true}
             // disabled={onlyView ? true : false}
-            onChange={handleNicknameChange}
+            onChange={(e) => {
+              handleNicknameChange(e);
+              handleChange(e);
+            }}
           />
+          {nicknameChange ? (
+            <button onClick={handleNicknameClick}>수정완료</button>
+          ) : (
+            <button onClick={handleNicknameClick}>수정하기</button>
+          )}
         </div>
         <div className="mb-6">
           <label>기수</label>

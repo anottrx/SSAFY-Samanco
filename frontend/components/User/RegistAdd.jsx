@@ -196,7 +196,7 @@ export default function RegistInfo() {
         generation: sessionStorage.getItem("generation"),
         studentId: sessionStorage.getItem("studentId"),
       });
-      console.log("왜뢔뢔"+inputState);
+      console.log("왜뢔뢔"+inputState.userId +" "+ inputState.email+ " "+inputState.studentId);
       
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
