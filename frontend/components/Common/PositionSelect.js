@@ -17,8 +17,8 @@ function PositionSelect(props) {
 
     if (props.initData) {
         props.initData.map(data=>{
-            if (data.position.includes("current") && data.size > 0) {
-                let name = data.position.split("current")[1];
+            if (data.position.includes("total") && data.size > 0 && data.position !== "totalSize") {
+                let name = data.position.split("total")[1];
                 initArray.push({name: name, count: data.size})
             }
         })

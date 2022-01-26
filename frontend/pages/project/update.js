@@ -13,6 +13,8 @@ import Counter from "../../components/Common/PositionSelect";
 import styled from "@emotion/styled";
 import { updateAPI } from "../api/project"
 
+import Router from "next/router";
+
 const position = [
     {name:"Frontend", count: 0},
     {name:"Backend", count: 0},
@@ -22,6 +24,7 @@ const position = [
 
 function projectUpdate() {
     const detail = useSelector(({ project }) => project.projectDetail);
+    const url = "../../../backend-java";
     console.log(detail)
 
     const CusPaper = styled(Paper)`
@@ -67,12 +70,11 @@ function projectUpdate() {
         // To Do: hostPosition 받아오면 그 때 수정~~
         projectId: detail.id,
         hostId: sessionStorage.getItem("userId"),
-        schedule: detail.schedule,
         startDate: detail.startDate,
         endDate: detail.endDate,
         stacks: detail.stacks,
         positions: detail.positions,
-        hostPosition: detail.hostPosition,
+        hostPosition: detail.hostPosition
     });
 
     const [files, setFiles] = useState('');
@@ -93,8 +95,17 @@ function projectUpdate() {
 
         const imgEl = document.querySelector("#img_box");
         const reader = new FileReader();
+        let saveFile, saveFolder
 
+        if (detail.file) {
+            saveFile = detail.file.saveFile;
+            saveFolder = detail.file.saveFolder;
+        }
         reader.onload = () => (
+        
+            detail.file? 
+            imgEl.style.backgroundImage = `url(${url}/${saveFolder}/${saveFile})`
+            :
             imgEl.style.backgroundImage = `url(${reader.result})`
         )
 
@@ -114,16 +125,22 @@ function projectUpdate() {
 
     async function validateCheck() {
         let [check, msg] = [true, ""]
+        console.log("inputValue",inputValue)
+        
         if (typeof(inputValue.title)=='undefined')
             inputValue["title"] = detail.title;
         else if (inputValue.title=="")
-            [check, msg] = [false, "프로젝트 이름을 입력해주세요."]
-        else if (typeof(inputValue.description)=='undefined')
+                [check, msg] = [false, "프로젝트 이름을 입력해주세요."]
+        if (typeof(inputValue.collectStatus)=='undefined')
+            inputValue["collectStatus"] = detail.collectStatus;
+        if (typeof(inputValue.description)=='undefined')
             inputValue["description"] = detail.description;
-        else if (typeof(inputValue.stacks)=='undefined' || inputValue.stacks.length == 0)   
-            [check, msg] = [false, "프로젝트 스택을 한가지 이상 선택해주세요."]
-        else if (typeof(inputValue.hostPosition)=='undefined')   
+        if (typeof(inputValue.hostPosition)=='undefined')   
             [check, msg] = [false, "본인의 포지션을 선택해주세요."]
+        if (typeof(inputValue.stacks)=='undefined')   
+            inputValue["stacks"] = detail.stacks;
+        else if (inputValue.stacks.length == 0)   
+            [check, msg] = [false, "프로젝트 스택을 한가지 이상 선택해주세요."]
         else if (inputValue.positions.totalFrontendSize + inputValue.positions.totalBackendSize + 
             inputValue.totalEmbeddedSize + inputValue.positions.totalMobileSize <= 1)   
             [check, msg] = [false, "팀원은 한 명이상 존재해야 합니다."]
@@ -184,7 +201,7 @@ function projectUpdate() {
                     value={inputValue.description}
                 />
 
-                <StackSelect changeHandle={changeHandle} initData={inputValue.stacks} label="프로젝트 스택"></StackSelect>
+                <StackSelect changeHandle={changeHandle} initData={detail.stacks} label="프로젝트 스택"></StackSelect>
                 
                 <DatePickerWrapper>
                     <DatePicker initDate={inputValue.startDate} changeHandle={changeHandle} label="시작 날짜"/>
@@ -208,24 +225,28 @@ function projectUpdate() {
                             const formData = new FormData();
 
                             Object.keys(inputValue).map(key => {
+                                let value = inputValue[key];
                                 if (key === 'stacks' || key == 'positions')
                                     formData.append(key, JSON.stringify(value));
                                 else 
                                     formData.append(key, value);
                             })
 
-                            formData.append("file",files);
-
                             for(var key of formData.entries())
                             {
                                 console.log(`${key}`);
                             } 
+                            formData.append("file",files);
+
 
                             updateAPI(formData).then((res) => {
+                                console.log(res)
                                 if (res.statusCode == 200) {
                                     alert("프로젝트가 수정되었습니다.")
                                     // To do: 해당 페이지로 이동
                                     Router.push("/project");
+                                } else {
+                                    alert(`${res.message}`)
                                 }
                             });
                         }
