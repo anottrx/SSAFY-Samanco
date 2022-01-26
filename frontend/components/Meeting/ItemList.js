@@ -192,7 +192,10 @@ function JoinDialog(props){
                 () => {joinDialogClose(); pwDialogOpen();}
                  : 
                 () => {
-                    Router.push("/meeting/"+room.no);
+                    // Router.push("/meeting/"+room.no);
+                    joinDialogClose(); 
+                    window.open("/meeting/"+room.no, "_blank", 
+                    "toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800");
                 }
 
             } autoFocus>
@@ -227,7 +230,10 @@ function PwDialog(props){
                 // To Do : 나중에 방 비밀번호로 변경
                 pw === "1234"? 
                 () => {
-                    Router.push("/meeting/"+room.no);
+                    // Router.push("/meeting/"+room.no);
+                    pwDialogClose(); 
+                    window.open("/meeting/"+room.no, "_blank", 
+                    "toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800");
                 } : 
                 () => {alert("비밀번호를 확인해주세요.")}
 

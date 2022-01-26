@@ -63,7 +63,8 @@ function ExitDialog(props){
             <DialogActions>
             <Button onClick={exitDialogClose}>취소</Button>
             <Button onClick={() => {
-                    Router.push("/meeting")
+                    // Router.push("/meeting")
+                    window.close();
                 }} autoFocus>
                 확인
             </Button>
