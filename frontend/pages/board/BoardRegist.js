@@ -88,7 +88,7 @@ function BoardRegist() {
 
         reader.onload=()=>{
             fileName = files.name;
-            console.log(fileName);
+            //console.log(fileName);
             fileEl.innerText  = fileName;
         }
 

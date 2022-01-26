@@ -71,6 +71,12 @@ export default function Board() {
           <TabPanel value={value} index={2}>
             <BoardList tag="qna"/>
           </TabPanel>
+          <TabPanel value={value} index={3}>
+            <BoardList tag="exam"/>
+          </TabPanel>
+          <TabPanel value={value} index={4}>
+            <BoardList tag="job"/>
+          </TabPanel>
       </Box>
     </Layout>
   );

@@ -5,9 +5,9 @@ import styled from "@emotion/styled";
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import SearchIcon from '@mui/icons-material/Search';
 
-import { Card, Container, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogTitle, ButtonGroup, Paper, InputBase, IconButton } from "@mui/material";
+import { Card, Container, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogTitle, ButtonGroup, TextField } from "@mui/material";
+import SendIcon from '@mui/icons-material/Send';
 import { useState, useEffect } from "react";
 import Router from "next/router";
 import CommentList from "./CommentList"
@@ -158,28 +158,31 @@ const ProjectDetail = () => {
     }
 
     function CommentRegist(){
+        const [inputComment, setInputComment] = useState({});
 
-        const [comment, setComment] = useState("");
-        const handleChange = (e) => {
-            setComment(e.target.value);
+        const changeHandle = (value, name) => {
+            inputComment[name] = value;
         }
 
-        useEffect(() => {
-            console.log(comment)
-        }, [comment])
+        const CommentWrapper = styled.div`
+            display: flex;
+            border : 1px dashed gray;
+            margin: 10px 10px 10px 10px;
+        `
 
         return(
-            <div>
-                <Paper
-                    component="form"
-                    sx={{ p: '10px 10px', display: 'inline-block', alignItems: 'center', alignSelf: "flex-start", width:"100%", maxWidth: 400, justifyContent: "space-between", margin: "10px 10px 10px 42%" }}>
-                    <InputBase
-                        sx={{ ml: 1, flex: 1 }}
-                        placeholder="댓글을 입력하세요."
-                        onChange={handleChange}/>
-                </Paper>
-                <Button variant="outlined" sx={{ p: '10px 10px'}}>댓글달기</Button>
-            </div>
+            <CommentWrapper>
+                <TextField 
+                    id="outlined-basic"
+                    placeholder="댓글을 입력하세요" 
+                    variant="outlined" 
+                    onChange={(e) => changeHandle(e.target.value, "content")}
+                    sx={{ width: "900px"}}/>
+                <Button
+                    sx={{ p: '10px 10px'}}
+                    onClick={() => {console.log(inputComment);}}
+                ><SendIcon sx={{ fontSize: 25 }}/></Button>
+            </CommentWrapper>
         )
     }
 } 
