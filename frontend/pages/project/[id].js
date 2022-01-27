@@ -8,11 +8,14 @@ import PositionList from "../../components/Club/PositionList"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup } from "@mui/material";
+import { Card, Container, Skeleton, CardContent, Typography, 
+    Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, 
+    DialogTitle, ButtonGroup, FormControl, FormLabel, RadioGroup,
+    Radio, FormControlLabel } from "@mui/material";
 import { useState } from "react";
 import Router from "next/router";
 
-import { deleteAPI, updateProjectLike } from "../api/project";
+import { deleteAPI, updateProjectLike, joinProjectAPI } from "../api/project";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -211,6 +214,8 @@ const ProjectDetail = () => {
             }
         }
         const JoinDialogClose = () => { setOpen(false) }
+        
+        const [selectPosition, setSelectPosition] = useState("");
 
         return (
             <ActionWrapper>
@@ -256,12 +261,50 @@ const ProjectDetail = () => {
                         </DialogTitle>
                         <DialogContent>
                         <DialogContentText>
-                            마이페이지에 기입된 정보가 전달됩니다. 
+                        원하는 포지션을 선택해주세요.<br></br>
+                            <FormControl> 
+                                <RadioGroup
+                                    aria-labelledby="demo-controlled-radio-buttons-group"
+                                    name="controlled-radio-buttons-group"
+                                    value={selectPosition}
+                                    onChange={(e) => {setSelectPosition(e.target.value)}}
+                                >
+                                    {
+                                        detail.positions.map((data, index) => {
+                                            
+                                            return (
+                                                data.position.includes("total") && data.size > 0 && data.position!=="totalSize"?
+                                                <FormControlLabel 
+                                                    key={index} value={data.position.split("total")[1]} 
+                                                    control={<Radio />} label={data.position.split("total")[1]} />
+                                                :
+                                                null
+                                            )
+                                        })
+                                    }
+                                </RadioGroup>
+                            </FormControl>
+
                         </DialogContentText>
                         </DialogContent>
                         <DialogActions>
                         <Button onClick={JoinDialogClose}>취소</Button>
-                        <Button onClick={JoinDialogClose} autoFocus>
+                        <Button onClick={() => {
+                            JoinDialogClose();
+                            joinProjectAPI({
+                                position: selectPosition,
+                                projectId: detail.id,
+                                userId: sessionStorage.getItem("userId")
+                            })
+                            .then(res => {
+                                if (res.statusCode === 200) {
+                                    alert("프로젝트 지원 신청이 되었습니다.")
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            })
+                            .catch(err => console.log(err));
+                        }} autoFocus>
                             확인
                         </Button>
                         </DialogActions>
