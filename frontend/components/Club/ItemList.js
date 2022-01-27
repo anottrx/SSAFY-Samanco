@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useLayoutEffect, useEffect } from "react
 
 import styled from "@emotion/styled"
 import { Grid, Skeleton, Card, CardContent, Typography, Pagination, Badge } from '@mui/material';
+import { BadgeUnstyled } from '@mui/base';
 
 import projectJSONData from "../../data/projectData.json"
 import Router from "next/router";
@@ -17,7 +18,6 @@ import stackData from "../../data/StackData.json"
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-
 
 
 function ItemList(props) {
@@ -131,43 +131,20 @@ function ItemList(props) {
             :
             <CusGrid container maxWidth="lg" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
             {
+                // 검색된 데이터가 있을 때
                 filterData!=null?
                 filterData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}  onClick={()=>{
-                            getProjectById({id: data.id})
-                            .then(res => {
-                                setDetail({detail: res.project});
-                                
-                                // api 작성
-                                Router.push({
-                                    pathname: `/${props.from}/[id]`,
-                                    query: { id: data.id }
-                                })
-                            })
-                            
-                        }}>
-                            <Item data={data}></Item> 
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}>
+                            <Item data={data} setDetail={setDetail} from={props.from}></Item> 
                         </Grid>
                     )
                 })
                 :
                 clubData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}  onClick={()=>{
-                            getProjectById({id: data.id})
-                            .then(res => {
-                                setDetail({detail: res.project});
-                                
-                                // api 작성
-                                Router.push({
-                                    pathname: `/${props.from}/[id]`,
-                                    query: { id: data.id }
-                                })
-                            })
-                            
-                        }}>
-                            <Item data={data}></Item> 
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}>
+                            <Item data={data} setDetail={setDetail} from={props.from}></Item> 
                         </Grid>
                     )
                 })
@@ -181,7 +158,7 @@ function ItemList(props) {
 }
 
 export function Item(props) {
-    let data = props.data;
+    let {data, setDetail, from} = props;
 
     const Container = styled.div`
         display: flex;
@@ -194,9 +171,47 @@ export function Item(props) {
         right: 30px;
     ` 
 
-    const CusDeadlineBadge = styled(Badge)`
-        top: 125px;
-        right: 70px;
+    const CusDeadlineBadge = styled(BadgeUnstyled)`
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        list-style: none;
+        font-feature-settings: 'tnum';
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+            'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+            'Segoe UI Symbol';
+        position: relative;
+        display: inline-block;
+        line-height: 1;
+
+        & .MuiBadge-badge {
+            z-index: auto;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            color: #fff;
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 20px;
+            white-space: nowrap;
+            text-align: center;
+            background: #837e7e;
+            border-radius: 10px;
+            box-shadow: 0 0 0 1px #fff;
+        }
+
+        & .MuiBadge-anchorOriginTopRight {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(-15px, 115px);
+            transform-origin: 100% 0;
+        }
+        // top: 125px;
+        // right: 40px;
     ` 
 
     let totalSize = 0, currSize = 0;
@@ -206,14 +221,23 @@ export function Item(props) {
     })
 
     return (
-        <Container>
+        <Container onClick={()=>{
+            getProjectById({id: data.id})
+            .then(res => {
+                setDetail({detail: res.project});
+                
+                // api 작성
+                Router.push({
+                    pathname: `/${from}/[id]`,
+                    query: { id: data.id }
+                })
+            })
+            
+        }}>
             <CusCountBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusCountBadge>
-            {
-                data.deadline?
-                <CusDeadlineBadge badgeContent={"마감까지 "+ data.deadline+"일 남았어요!"} color="warning"></CusDeadlineBadge>
-                :
-                null
-            }
+            <CusDeadlineBadge badgeContent={"D-"+ (data.deadline!=0? data.deadline: "DAY" ) + " | ♥ "+data.likes}></CusDeadlineBadge>
+            {/* <CusLikeBadge badgeContent={"좋아요 "+data.likes)}></CusLikeBadge> */}
+
             <Card>
                 {
                     // data.file?

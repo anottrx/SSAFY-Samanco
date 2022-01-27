@@ -39,6 +39,13 @@ async function getProjectAllAPI() {
     .catch((err) => err.response.data)
 }
 
+async function updateProjectLike(id) {
+    return await api
+    .post("/api/project/like", {id: id})
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
 async function getProjectById(data) {
     return await api
     .post("/api/project/view", {
@@ -62,7 +69,14 @@ async function getProjectByDeadLine() {
     .catch(err => err.response.data)
 }
 
+async function getProjectByLike() {
+    return await api
+    .get("/api/project/like")
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
 export {
     registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
-    getProjectBytitle, getProjectByDeadLine
+    getProjectBytitle, getProjectByDeadLine, updateProjectLike, getProjectByLike
 }

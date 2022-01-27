@@ -6,10 +6,12 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 import { Item } from "./ItemList";
-// import projectData from "../../data/projectData.json"
 
-import { useState, useEffect } from "react";
-import {getProjectByDeadLine} from "../../pages/api/project"
+import { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getProjectByDeadLine, getProjectByLike } from "../../pages/api/project"
+import * as projectActions from '../../store/module/project';
+import { Router } from "next/router";
 
 const CarouselWrapper = styled.div`
     text-align: center;
@@ -17,6 +19,10 @@ const CarouselWrapper = styled.div`
 
     & .slick-slide{
         padding: 10px;
+    }
+
+    & .slick-prev:before, .slick-next:before {
+        color: #837e7e;
     }
 `
 
@@ -36,39 +42,76 @@ export default function Carousel(props) {
     });
 
     if (lgMatches) {
-        settings.slidesToShow = 4;
-        settings.slidesToScroll = 4;
+        if (projectData.length >= 4) {
+            settings.slidesToShow = 4;
+            settings.slidesToScroll = 4;
+        } else {
+            settings.slidesToShow = projectData.length;
+            settings.slidesToScroll = projectData.length;
+        }
     }
     else if (mdMatches) {
-        settings.slidesToShow = 3;
-        settings.slidesToScroll = 3;
+        if (projectData.length >= 3) {
+            settings.slidesToShow = 3;
+            settings.slidesToScroll = 3;
+        } else {
+            settings.slidesToShow = projectData.length;
+            settings.slidesToScroll = projectData.length;
+        }
     } 
     else if (smMatches) {
-        settings.slidesToShow = 2;
-        settings.slidesToScroll = 2;
+        if (projectData.length >= 2) {
+            settings.slidesToShow = 2;
+            settings.slidesToScroll = 2;
+        } else {
+            settings.slidesToShow = projectData.length;
+            settings.slidesToScroll = projectData.length;
+        }
     } 
     else if (xsMaches) {
         settings.slidesToShow = 1;
         settings.slidesToScroll = 1;
     }
 
+    const dispatch = useDispatch();
+    
+    let setDetail;
+    
+    if (props.target === "project") {
+        setDetail = useCallback(
+            ({detail}) => {
+                dispatch(projectActions.setProjectDetail({detail}))
+            },
+            [dispatch],
+        )
+    
+    } else if (props.target === "study") {
+        setDetail = useCallback(
+            ({detail}) => {
+                dispatch(studyActions.setStudyDetail({detail}))
+            },
+            [dispatch],
+        )
+    }
+
     useEffect(() => {
       if (props.target === "project") {
         if (props.subject === "deadline") {
             getProjectByDeadLine().then(res => setProjectData(res.projects))
+        } else {
+            getProjectByLike().then(res => setProjectData(res.projects))
         }
       }
     }, []);
-    
 
     return (
     <CarouselWrapper>
         <h2>{props.label}</h2>
         <Slider {...settings}>
         {
-            projectData.slice(0, 6).map((data, index) => {
+            projectData.map((data, index) => {
                 return (
-                    <Item key={index} data={data}></Item> 
+                    <Item key={index} data={data} setDetail={setDetail} from={props.target}></Item> 
                 )
             })
         }

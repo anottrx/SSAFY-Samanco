@@ -12,7 +12,7 @@ import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Di
 import { useState } from "react";
 import Router from "next/router";
 
-import { deleteAPI } from "../api/project";
+import { deleteAPI, updateProjectLike } from "../api/project";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -220,12 +220,14 @@ const ProjectDetail = () => {
                         <span>{detail.hit}</span>
                     </Button>
                     <Button onClick={() => {
-                        sessionStorage.getItem("userId")?
-                        // To do: 좋아요 api 호출
-                        console.log("좋아요")
-                        : 
-                        alert("로그인이 필요한 작업입니다.");
-                        Router.push("/login")
+                        if (sessionStorage.getItem("userId")) {
+                            // To do: 좋아요 api 호출
+                            console.log("좋아요");
+                            updateProjectLike(detail.id).then(res => console.log(res))
+                        } else {
+                            alert("로그인이 필요한 작업입니다.");
+                            Router.push("/login")
+                        }
                     }}>
                         <FavoriteIcon /> 
                         <span>{detail.likes}</span>
