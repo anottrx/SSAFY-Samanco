@@ -92,8 +92,6 @@ async function resetPWAPI(inputState) {
 }
 
 async function updateUserAPI(formData) {
-  console.log(formData)
-  console.log(JSON.stringify(formData))
   // 회원정보 변경
   return await fileUrl
     .post("/api/user/update", formData, {

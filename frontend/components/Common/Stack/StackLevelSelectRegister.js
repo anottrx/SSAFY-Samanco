@@ -36,12 +36,12 @@ const stack = [
 
 function StackLevelSelectRegister(props) {
   let initArray = [];
-    if (props.initData){
-        props.initData.map(data=>{
-            // initArray.push(data.name)
-            initArray.push({ name: name, level: data.size });
-        })
-    }
+  if (props.initData) {
+    props.initData.map((data) => {
+      // initArray.push(data.name)
+      initArray.push({ name: name, level: data.size });
+    });
+  }
 
   // if (props.initData) {
   //   props.initData.map((data) => {
@@ -98,77 +98,77 @@ function StackLevelSelectRegister(props) {
     stacks.map((stack) => {
       switch (stack.name) {
         case "HTML":
-          props.changeHandle(stack.level, "HTML");
-          // setStackStack([...stackStack, { HTML:stack.level  }]);
           HTML = stack.level;
+          props.changeHandle(parseInt(HTML), "HTML");
+          // setStackStack([...stackStack, { HTML:stack.level  }]);
           break;
         case "CSS":
-          props.changeHandle(stack.level, "CSS");
           CSS = stack.level;
+          props.changeHandle(parseInt(CSS), "CSS");
           break;
         case "JavaScript":
-          props.changeHandle(stack.level, "JavaScript");
           JavaScript = stack.level;
+          props.changeHandle(parseInt(JavaScript), "JavaScript");
           break;
         case "VueJS":
-          props.changeHandle(stack.level, "VueJS");
           VueJS = stack.level;
+          props.changeHandle(parseInt(VueJS), "VueJS");
           break;
         case "React":
-          props.changeHandle(stack.level, "React");
           React = stack.level;
+          props.changeHandle(parseInt(React), "React");
           break;
         case "Angular":
-          props.changeHandle(stack.level, "Angular");
           Angular = stack.level;
+          props.changeHandle(parseInt(Angular), "Angular");
           break;
         case "Python":
-          props.changeHandle(stack.level, "Python");
           Python = stack.level;
+          props.changeHandle(parseInt(Python), "Python");
           break;
         case "Java":
-          props.changeHandle(stack.level, "Java");
           Java = stack.level;
+          props.changeHandle(parseInt(Java), "Java");
           break;
         case "C":
-          props.changeHandle(stack.level, "C");
           C = stack.level;
+          props.changeHandle(parseInt(C), "C");
           break;
         case "SpringBoot":
-          props.changeHandle(stack.level, "SpringBoot");
           SpringBoot = stack.level;
+          props.changeHandle(parseInt(SpringBoot), "SpringBoot");
           break;
         case "MySQL":
-          props.changeHandle(stack.level, "MySQL");
           MySQL = stack.level;
+          props.changeHandle(parseInt(MySQL), "MySQL");
           break;
         case "Git":
-          props.changeHandle(stack.level, "Git");
           Git = stack.level;
+          props.changeHandle(parseInt(Git), "Git");
           break;
         case "AWS":
-          props.changeHandle(stack.level, "AWS");
           AWS = stack.level;
+          props.changeHandle(parseInt(AWS), "AWS");
           break;
         case "Docker":
-          props.changeHandle(stack.level, "Docker");
           Docker = stack.level;
+          props.changeHandle(parseInt(Docker), "Docker");
           break;
         case "Linux":
-          props.changeHandle(stack.level, "Linux");
           Linux = stack.level;
+          props.changeHandle(parseInt(Linux), "Linux");
           break;
         case "Jira":
-          props.changeHandle(stack.level, "Jira");
           Jira = stack.level;
+          props.changeHandle(parseInt(Jira), "Jira");
           break;
         case "Django":
-          props.changeHandle(stack.level, "Django");
           Django = stack.level;
+          props.changeHandle(parseInt(Django), "Django");
           break;
         case "Redis":
-          props.changeHandle(stack.level, "Redis");
           Redis = stack.level;
+          props.changeHandle(parseInt(Redis), "Redis");
           break;
         default:
           break;

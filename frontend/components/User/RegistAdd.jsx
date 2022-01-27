@@ -40,14 +40,6 @@ export default function RegistInfo() {
     class: "",
     generation: "",
     studentId: "",
-    // password: sessionStorage.getItem("password"),
-    // userId: sessionStorage.getItem("userId"),
-    // email: sessionStorage.getItem("email"),
-    // nickname: sessionStorage.getItem("nickname"),
-    // name: sessionStorage.getItem("name"),
-    // class: sessionStorage.getItem("userClass"),
-    // generation: sessionStorage.getItem("generation"),
-    // studentId: sessionStorage.getItem("studentId"),
   });
 
   const positionOptions = [
@@ -97,6 +89,14 @@ export default function RegistInfo() {
   const uploadRef = useRef(null);
 
   useEffect(() => {
+    inputState.userId = sessionStorage.getItem("userId");
+    inputState.nickname = sessionStorage.getItem("nickname");
+    inputState.name = sessionStorage.getItem("name");
+    inputState.class = sessionStorage.getItem("userClass");
+    inputState.generation = sessionStorage.getItem("generation");
+    inputState.studentId = sessionStorage.getItem("studentId");
+    inputState.password = sessionStorage.getItem("password");
+
     preview();
   });
 
@@ -134,9 +134,7 @@ export default function RegistInfo() {
   };
 
   const positionHandleChange = (e) => {
-    setInputState({
-      position: e.target.value,
-    });
+    inputState.position = e.target.value;
   };
 
   const [links, setLinks] = useState([]);
@@ -147,14 +145,13 @@ export default function RegistInfo() {
       linkList = linkList + " " + linkArr[i];
     }
     linkList = linkList.trim();
-    setInputState({
-      link: linkList,
-    });
+    inputState.link = linkList;
+    // setInputState({
+    //   link: linkList,
+    // });
   }
 
-  const phoneReg = /^[0-9]{8,13}$/;
-  // 전화번호 정규표현식
-
+  const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
   const koreanReg = /[ㄱ-ㅎㅏ-ㅣ가-힇ㆍ ᆢ]/g;
 
   const handleSubmit = (event) => {
@@ -183,26 +180,23 @@ export default function RegistInfo() {
       Django: inputState.Django,
       Redis: inputState.Redis,
     };
+    Object.keys(inputState.stacks).forEach(function (key) {
+      if (inputState.stacks[key] === 0) {
+        delete inputState.stacks[key];
+      }
+    });
 
     if (isNormal) {
       const formData = new FormData();
 
-      inputState.userId = sessionStorage.getItem("userId");
-      inputState.nickname = sessionStorage.getItem("nickname");
-      inputState.name = sessionStorage.getItem("name");
-      inputState.class = sessionStorage.getItem("userClass");
-      inputState.generation = sessionStorage.getItem("generation");
-      inputState.studentId = sessionStorage.getItem("studentId");
-      inputState.password = sessionStorage.getItem("password");
-      
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
         if (key === "stacks") {
-          formData.append(key, JSON.stringify(value));
-          console.log(value);
+          formData.append(key, "[" + JSON.stringify(value) + "]");
+          // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
         } else {
           formData.append(key, value);
-          console.log(key + " " + value);
+          // console.log(key + " " + value);
         }
       });
 
@@ -213,15 +207,14 @@ export default function RegistInfo() {
       }
 
       updateUserAPI(formData).then((res) => {
-        console.log(res);
-        sessionStorage.clear();
-        sessionStorage.setItem("userId", inputState.userId);
-        sessionStorage.setItem("email", inputState.email);
-        sessionStorage.setItem("nickname", inputState.nickname);
         if (res.statusCode == 200) {
-          alert("회원정보 추가 성공");
-          window.history.forward();
-          window.location.replace("/");
+          sessionStorage.clear();
+          sessionStorage.setItem("userId", inputState.userId);
+          sessionStorage.setItem("email", inputState.email);
+          sessionStorage.setItem("nickname", inputState.nickname);
+          // alert("회원정보 추가 성공");
+          // window.history.forward();
+          // window.location.replace("/");
         } else {
           alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
         }
