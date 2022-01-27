@@ -57,8 +57,8 @@ export default function Project() {
     
       <CusDivider variant="middle" />
 
-      <Carousel label="인기 많은 프로젝트"></Carousel>
-      <Carousel label="곧 마감 되는 프로젝트"></Carousel>
+      <Carousel label="곧 마감 되는 프로젝트" target="project" subject="deadline"></Carousel>
+      <Carousel label="인기 많은 프로젝트" target="project" subject="likes"></Carousel>
     </Layout>
   );
 }

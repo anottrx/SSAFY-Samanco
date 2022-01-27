@@ -6,9 +6,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 import { Item } from "./ItemList";
-import projectData from "../../data/projectData.json"
+// import projectData from "../../data/projectData.json"
 
 import { useState, useEffect } from "react";
+import {getProjectByDeadLine} from "../../pages/api/project"
 
 const CarouselWrapper = styled.div`
     text-align: center;
@@ -20,6 +21,7 @@ const CarouselWrapper = styled.div`
 `
 
 export default function Carousel(props) {
+    let [projectData, setProjectData] = useState([]);
     const theme = useTheme();
     
     const xsMaches = useMediaQuery(theme.breakpoints.up('xs'));
@@ -49,6 +51,15 @@ export default function Carousel(props) {
         settings.slidesToShow = 1;
         settings.slidesToScroll = 1;
     }
+
+    useEffect(() => {
+      if (props.target === "project") {
+        if (props.subject === "deadline") {
+            getProjectByDeadLine().then(res => setProjectData(res.projects))
+        }
+      }
+    }, []);
+    
 
     return (
     <CarouselWrapper>

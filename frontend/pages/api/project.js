@@ -55,7 +55,14 @@ async function getProjectBytitle(title) {
     .catch(err => err.response.data)
 }
 
+async function getProjectByDeadLine() {
+    return await api
+    .get("/api/project/deadline")
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
 export {
     registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
-    getProjectBytitle
+    getProjectBytitle, getProjectByDeadLine
 }
