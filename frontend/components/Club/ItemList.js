@@ -19,9 +19,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
 
+
 function ItemList(props) {
     //-------------- redux dispatch로 값 저장, selector로 불러오기
-    
     
     const dispatch = useDispatch();
     
@@ -115,9 +115,20 @@ function ItemList(props) {
         min-height: 530px;
     `
 
+    const CusCard = styled(Card)`
+        width: 100%;
+        padding: 10px;
+    `
+
     return (
         <>
-        <CusGrid container maxWidth="lg" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
+        {
+            clubData.length==0?
+            <CusGrid>
+                <CusCard>등록된 데이터가 없습니다.</CusCard>
+            </CusGrid>
+            :
+            <CusGrid container maxWidth="lg" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
             {
                 clubData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
@@ -140,6 +151,8 @@ function ItemList(props) {
                 })
             }
         </CusGrid>
+        }
+        
         <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />
         </>
     )
@@ -159,20 +172,25 @@ export function Item(props) {
         right: 30px;
     ` 
 
-    let totalSize = 0;
-    let currSize = data.positions.reduce((acc, curr) => {
-        if (curr.position.includes("current")) {
-            acc += curr.size;
-        }
+    let totalSize = 0, currSize = 0;
+    data.positions.map((curr) => {
         if (curr.position === "totalSize") totalSize = curr.size;
-        return acc;
-    }, 0)
+        if (curr.position === "currentSize") currSize = curr.size;
+    })
 
     return (
         <Container>
             <CusBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusBadge>
             <Card>
-                <Skeleton variant="rectangular" height={150} animation={false} />
+                {
+                    // data.file?
+                    // <div style={{
+                    //     height: "150px",
+                    //     backgroundImage: `url("../../../backend-java/${data.file.saveFolder}/${data.file.saveFile}")`
+                    // }}></div>
+                    // :
+                    <Skeleton variant="rectangular" height={150} animation={false} />
+                }
                 
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">

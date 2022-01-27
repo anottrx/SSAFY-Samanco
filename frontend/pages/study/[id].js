@@ -61,7 +61,10 @@ const StudyDetail = () => {
             <br></br>
             <DetailHeader>
                 <h2>{detail.title}</h2>
-                <DetailOperation></DetailOperation>
+                {
+                    sessionStorage.getItem("userId") == detail.hostId?
+                    <DetailOperation></DetailOperation> : null
+                }
             </DetailHeader>
             <DetailWrapper maxWidth="sm">
                 <CusSkeleton variant="rectangular" animation={false} />
@@ -210,15 +213,30 @@ const StudyDetail = () => {
                         <VisibilityIcon /> 
                         <span>{detail.hit}</span>
                     </Button>
-                    <Button>
+                    <Button onClick={() => {
+                        sessionStorage.getItem("userId")?
+                        // To do: 좋아요 api 호출
+                        console.log("좋아요")
+                        : 
+                        alert("로그인이 필요한 작업입니다.");
+                        Router.push("/login")
+                    }}>
                         <FavoriteIcon /> 
                         <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
                 <>
                 <div>
-                    <Button variant="outlined" onClick={() => {Router.push("/study/applylist")}}>지원자 목록 조회</Button>
-                    <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                    {
+                        // 글 작성한 사람 === 현재 로그인 한 사람 => 지원자 목록
+                        sessionStorage.getItem("userId") == detail.hostId?
+                        <Button variant="outlined" onClick={() => {Router.push("/study/applylist")}}>
+                            지원자 목록 조회
+                        </Button>
+                        : 
+                        // 글 작성한 사람 !=== 현재 로그인 한 사람 => 지원하기 버튼
+                        <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                    } 
                 </div>
                     <Dialog
                         open={open}

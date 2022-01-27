@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/router'
 
 const menu = () => {
-  const { asPath } = useRouter(); // asPath: 현재 path 
+  const { pathname } = useRouter(); // pathname: 현재 path 
   let [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const menu = () => {
           return(
             <Link href={link.path} key={index}>
               {
-                asPath.split("/")[1] === link.path.split("/")[1]?
+                pathname.split("/")[1] === link.path.split("/")[1]?
                 <a className={styles.link} style={{
                   fontWeight: "bolder"
                 }}>{link.label}</a>
