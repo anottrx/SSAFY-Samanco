@@ -36,15 +36,21 @@ const stack = [
 
 function StackLevelSelectRegister(props) {
   let initArray = [];
+    if (props.initData){
+        props.initData.map(data=>{
+            // initArray.push(data.name)
+            initArray.push({ name: name, level: data.size });
+        })
+    }
 
-  if (props.initData) {
-    props.initData.map((data) => {
-      if (data.stack.includes("current") && data.size > 0) {
-        let name = data.stack.split("current")[1];
-        initArray.push({ name: name, level: data.size });
-      }
-    });
-  }
+  // if (props.initData) {
+  //   props.initData.map((data) => {
+  //     if (data.stack.includes("current") && data.size > 0) {
+  //       let name = data.stack.split("current")[1];
+  //       initArray.push({ name: name, level: data.size });
+  //     }
+  //   });
+  // }
 
   const [stacks, setStacks] = useState(props.initData ? initArray : []);
 

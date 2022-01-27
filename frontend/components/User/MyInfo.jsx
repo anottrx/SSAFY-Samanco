@@ -74,7 +74,7 @@ export default function MyInfo() {
         inputState.studentId = res.user.studentId;
         inputState.position = res.user.projectPosition;
         inputState.password = res.user.password;
-        // inputState.link = res.user.user.link;
+        inputState.link = res.user.link;
         inputState.description = res.description;
         // inputState.stacks = res.user.stacks;
         // inputState.file = res.user.file;
@@ -235,6 +235,7 @@ export default function MyInfo() {
         <div className="mb-6">
           <label>반</label>
           <input
+          id="class"
             value={inputState.class || ""}
             disabled={onlyView ? true : false}
             onChange={handleChange}

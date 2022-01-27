@@ -4,7 +4,6 @@ import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSe
 
 import {
   getUserLoginTokenAPI,
-  registAPI,
   getUserInfoAPI,
   updateUserAPI,
 } from "../../pages/api/user";
@@ -34,21 +33,21 @@ export default function RegistInfo() {
     description: "",
     image_id: "",
     // 이미 입력된 값들
-    // userId: "",
-    // email: "",
-    // nickname: "",
-    // name: "",
-    // userClass: "",
-    // generation: "",
-    // studentId: "",
-    password: sessionStorage.getItem("password"),
-    userId: sessionStorage.getItem("userId"),
-    email: sessionStorage.getItem("email"),
-    nickname: sessionStorage.getItem("nickname"),
-    name: sessionStorage.getItem("name"),
-    userClass: sessionStorage.getItem("userClass"),
-    generation: sessionStorage.getItem("generation"),
-    studentId: sessionStorage.getItem("studentId"),
+    userId: "",
+    email: "",
+    nickname: "",
+    name: "",
+    class: "",
+    generation: "",
+    studentId: "",
+    // password: sessionStorage.getItem("password"),
+    // userId: sessionStorage.getItem("userId"),
+    // email: sessionStorage.getItem("email"),
+    // nickname: sessionStorage.getItem("nickname"),
+    // name: sessionStorage.getItem("name"),
+    // class: sessionStorage.getItem("userClass"),
+    // generation: sessionStorage.getItem("generation"),
+    // studentId: sessionStorage.getItem("studentId"),
   });
 
   const positionOptions = [
@@ -188,25 +187,14 @@ export default function RegistInfo() {
     if (isNormal) {
       const formData = new FormData();
 
-      // setInputState({
-        // userId: sessionStorage.getItem("userId"),
-        // email: sessionStorage.getItem("email"),
-        // nickname: sessionStorage.getItem("nickname"),
-        // name: sessionStorage.getItem("name"),
-        // userClass: sessionStorage.getItem("userClass"),
-        // generation: sessionStorage.getItem("generation"),
-        // studentId: sessionStorage.getItem("studentId"),
-        // password: sessionStorage.getItem("password"),
-      // });
-      console.log(
-        "이후" +
-          inputState.userId +
-          " " +
-          inputState.email +
-          " " +
-          inputState.studentId
-      );
-
+      inputState.userId = sessionStorage.getItem("userId");
+      inputState.nickname = sessionStorage.getItem("nickname");
+      inputState.name = sessionStorage.getItem("name");
+      inputState.class = sessionStorage.getItem("userClass");
+      inputState.generation = sessionStorage.getItem("generation");
+      inputState.studentId = sessionStorage.getItem("studentId");
+      inputState.password = sessionStorage.getItem("password");
+      
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
         if (key === "stacks") {
