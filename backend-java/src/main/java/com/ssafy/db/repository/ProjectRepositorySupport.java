@@ -1,20 +1,15 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.api.model.PositionDto;
-import com.ssafy.api.model.ProjectDto;
-import com.ssafy.api.request.ProjectDeletePostReq;
-import com.ssafy.api.request.ProjectUpdatePostReq;
+import com.ssafy.api.request.ProjectUpdateReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.entity.QProject;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -51,9 +46,9 @@ public class ProjectRepositorySupport {
     }
 
     @Transactional
-    public int updateProject(ProjectUpdatePostReq projectUpdateInfo){
+    public int updateProject(ProjectUpdateReq projectUpdateInfo){
 
-        Long projectId=projectUpdateInfo.getId();
+        Long projectId=projectUpdateInfo.getProjectId();
         Long hostId=projectUpdateInfo.getHostId();
         User host = jpaQueryFactory.selectFrom(qUser).where(qUser.id.eq(hostId), qUser.isDeleted.eq(false)).fetchOne();
         if (host==null){
@@ -105,40 +100,23 @@ public class ProjectRepositorySupport {
                 .where(qUser.id.eq(userId), qUser.isDeleted.eq(false), qUser.projectJoinStatus.eq("OK")).fetchOne();
     }
 
+    @Transactional
     public Project selectProject(Long projectId) {
-        return jpaQueryFactory.selectFrom(qProject)
+        Project result = jpaQueryFactory.selectFrom(qProject)
                 .where(qProject.id.eq(projectId), qProject.isDeleted.eq(false)).fetchOne();
+        if (result==null){
+            return null;
+        }
+        // 조회수 증가
+        jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+                .set(qProject.hit, qProject.hit.add(1))
+                .execute();
+        return result;
     }
 
 
     public List<Project> selectProjectAll() {
-        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false)).fetch();
-    }
-
-    @Transactional
-    public int joinProject(Long projectId, Long userId, String position) {
-        if (!isValid(projectId)){
-            return 401;
-        }
-        jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
-                .set(qUser.projectId, projectId)
-                .set(qUser.projectPosition, position)
-                .set(qUser.projectJoinStatus, "BEFORE")
-                .execute();
-//        if ("frontend".equalsIgnoreCase(position)){
-//            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-//                .set(qProject.currentFrontendSize, qProject.currentFrontendSize.add(1)).execute();
-//        } else if ("backend".equalsIgnoreCase(position)){
-//            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-//                    .set(qProject.currentBackendSize, qProject.currentBackendSize.add(1)).execute();
-//        } else if ("mobile".equalsIgnoreCase(position)){
-//            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-//                    .set(qProject.currentMobileSize, qProject.currentMobileSize.add(1)).execute();
-//        } else if ("embedded".equalsIgnoreCase(position)){
-//            jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-//                    .set(qProject.currentEmbeddedSize, qProject.currentEmbeddedSize.add(1)).execute();
-//        }
-        return 200;
+        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false)).orderBy(qProject.id.desc()).fetch();
     }
 
     public List<User> selectUsers(Long projectId) {

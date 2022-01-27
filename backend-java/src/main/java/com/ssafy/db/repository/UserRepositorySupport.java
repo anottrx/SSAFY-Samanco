@@ -1,11 +1,8 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.api.model.UserDto;
-import com.ssafy.api.request.UserLoginPostReq;
-import com.ssafy.api.request.UserUpdatePostReq;
-import com.ssafy.db.entity.Project;
-import com.ssafy.db.entity.QProject;
+import com.ssafy.api.request.UserLoginReq;
+import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 
@@ -13,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -51,7 +47,7 @@ public class UserRepositorySupport {
     }
 
     @Transactional
-    public int updateUser(UserUpdatePostReq userUpdateInfo) {
+    public int updateUser(UserUpdateReq userUpdateInfo) {
         Long userId=userUpdateInfo.getUserId();
         if (valid.isUserValid(userId)) {
             jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
@@ -90,7 +86,7 @@ public class UserRepositorySupport {
     }
 
     @Transactional
-    public int updateUserPassword(UserLoginPostReq userUpdateInfo) {
+    public int updateUserPassword(UserLoginReq userUpdateInfo) {
         String email=userUpdateInfo.getEmail();
         if (valid.isUserValid(email)) {
             String password = passwordEncoder.encode(userUpdateInfo.getPassword());

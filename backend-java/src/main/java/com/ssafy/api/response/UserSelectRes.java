@@ -6,20 +6,18 @@ import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @ApiModel("UserSelectAllPostRes")
-public class UserSelectAllPostRes extends BaseResponseBody {
+public class UserSelectRes extends BaseResponseBody {
 
-    private List<UserDto> users;
+    private UserDto user;
 
-    public static UserSelectAllPostRes of(Integer statusCode, String message, List<UserDto> users) {
-        UserSelectAllPostRes res = new UserSelectAllPostRes();
+    public static UserSelectRes of(Integer statusCode, String message, UserDto user) {
+        UserSelectRes res = new UserSelectRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
-        res.setUsers(users);
+        res.setUser(user);
 
         return res;
     }

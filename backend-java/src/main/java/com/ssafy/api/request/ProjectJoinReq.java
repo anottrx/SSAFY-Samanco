@@ -10,13 +10,10 @@ import lombok.ToString;
 @Setter
 @ToString
 @ApiModel("ProjectJoinPostReq")
-public class ProjectJoinPostReq {
-    @ApiModelProperty(name="id", example="10")
-    private Long id;
-
-    @ApiModelProperty(name="userId", example="1")
+public class ProjectJoinReq {
+    private Long projectId;
     private Long userId;
 
-    @ApiModelProperty(name="position", example="frontend")
+    @ApiModelProperty(example="FRONTEND")
     private String position;
 }

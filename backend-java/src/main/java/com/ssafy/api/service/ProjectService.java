@@ -1,18 +1,17 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.model.ProjectDto;
-import com.ssafy.api.request.ProjectRegisterPostReq;
-import com.ssafy.api.request.ProjectUpdatePostReq;
+import com.ssafy.api.request.ProjectRegisterReq;
+import com.ssafy.api.request.ProjectUpdateReq;
 import com.ssafy.db.entity.Project;
 
-import java.text.ParseException;
 import java.util.List;
 
 public interface ProjectService {
 
-    Project createProject(ProjectRegisterPostReq projectRegisterPostReq);
+    Project createProject(ProjectRegisterReq projectRegisterReq);
 
-    int updateProject(ProjectUpdatePostReq updateInfo);
+    int updateProject(ProjectUpdateReq updateInfo);
 
     void deleteProject(Long userId, Long projectId);
 
@@ -20,10 +19,7 @@ public interface ProjectService {
     ProjectDto selectProject(Long projectId);
 
     ProjectDto selectByUser(Long userId);
-
     List<ProjectDto> selectProjectAll();
-
-    int joinProject(Long projectId, Long userId, String position);
     ProjectDto projectEntityToDto(Project entity);
 
     List<ProjectDto> selectProjectByTitle(String title);

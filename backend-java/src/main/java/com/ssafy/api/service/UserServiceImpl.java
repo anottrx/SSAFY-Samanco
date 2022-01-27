@@ -1,15 +1,16 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.model.ProjectDto;
 import com.ssafy.api.model.UserDto;
-import com.ssafy.api.request.UserLoginPostReq;
-import com.ssafy.api.request.UserUpdatePostReq;
+import com.ssafy.api.request.UserLoginReq;
+import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.api.request.UserRegisterPostReq;
+import com.ssafy.api.request.UserRegisterReq;
 import com.ssafy.db.entity.User;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
 	PasswordEncoder passwordEncoder;
 
 	@Override
-	public User createUser(UserRegisterPostReq userRegisterInfo) {
+	public User createUser(UserRegisterReq userRegisterInfo) {
 		User user = new User();
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int updateUser(UserUpdatePostReq userUpdateInfo) {
+	public int updateUser(UserUpdateReq userUpdateInfo) {
 		return userRepositorySupport.updateUser(userUpdateInfo);
 	}
 
@@ -105,7 +106,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int updateUserPassword(UserLoginPostReq updateInfo) {
+	public int updateUserPassword(UserLoginReq updateInfo) {
 		return userRepositorySupport.updateUserPassword(updateInfo);
 	}
 
@@ -167,6 +168,25 @@ public class UserServiceImpl implements UserService {
 		user.setStacks(stackRepositorySupport.selectStack(userId, 1));
 
 		return user;
+	}
+
+	@Override
+	public List<UserDto> selectProjectUsers(Long userId, Long projectId) {
+		User userResult = userRepositorySupport.selectUser(userId);
+		if (userResult==null || userResult.getProjectId()!=projectId){
+			return null;
+		}
+		List<User> results = projectRepositorySupport.selectUsers(projectId);
+		if (results==null){
+			return null;
+		}
+		List<UserDto> users=new ArrayList<>();
+		for (User result: results){
+			users.add(userEntityToDto(result));
+		}
+
+		return users;
+
 	}
 
 	@Override
