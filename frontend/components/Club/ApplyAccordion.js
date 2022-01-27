@@ -7,8 +7,14 @@ import LinkIcon from '@mui/icons-material/Link';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from '@emotion/styled';
+import { getUserByjoin } from "../../pages/api/project"
+import { useDispatch } from 'react-redux';
+
+
 
 function ApplyAccordion(props) {
+    const dispatch = useDispatch();
+    
     const SummaryWrapper = styled.div`
       display: flex;
       flex-direction: row;
@@ -43,13 +49,13 @@ function ApplyAccordion(props) {
       display: flex;
       justify-content: flex-end;
     `
-
     return (
         <div>
           {
+            props.applyData?
             props.applyData.map(data => {
               return(
-                <Accordion key={data.no}>
+                <Accordion key={data.id}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
@@ -57,7 +63,7 @@ function ApplyAccordion(props) {
                   >
                     <SummaryWrapper>
                       <Typography>{data.nickname}</Typography>
-                      <StackItem title={data.position}></StackItem>
+                      <StackItem title={data.projectPosition}></StackItem>
                     </SummaryWrapper>
                   </AccordionSummary>
 
@@ -66,7 +72,7 @@ function ApplyAccordion(props) {
                       <Skeleton variant="circular" width={100} height={100} />
                       <Stack>
                         <Typography>{data.description}</Typography>
-                        {
+                        {/* {
                           data.links.map(link => {
                             return (
                               <div className="linkWrapper">
@@ -75,7 +81,11 @@ function ApplyAccordion(props) {
                               </div>
                             )
                           })
-                        }
+                        } */}
+                        <div className="linkWrapper">
+                          <Link underline="none" href={data.link} target="_blank">
+                          <LinkIcon />{data.link}</Link>
+                        </div>
                       </Stack>
                       
 
@@ -83,14 +93,56 @@ function ApplyAccordion(props) {
                     <StackLevelList items={data.stacks}></StackLevelList>
 
                     <ButtonWrapper className="btnGroup" variant="outlined" aria-label="outlined button group">
-                      <Button><CheckIcon/></Button>
-                      <Button><CloseIcon/></Button>
+                      <Button onClick={() => {
+                        // 가입 승인
+                        props.approveAPI({
+                          projectId: props.clubId, 
+                          userId: data.id,
+                          joinTag: "OK"
+                        }).then(res => {
+                          if (res.statusCode == 200) {
+                            alert("해당 유저의 가입을 승인하였습니다.")
+                            getUserByjoin({ // 재조회
+                              projectId: props.clubId,
+                              userId: sessionStorage.getItem("userId")
+                              })
+                              .then(res => { 
+                                  dispatch(applyActions.setApplyList({list: res.users}))
+                              })
+                              .catch(err => console.log(err))
+                          } else {
+                            alert(`${res.message}`)
+                          }
+                        })
+                      }}><CheckIcon/></Button>
+                      <Button  onClick={() => {
+                        // 가입 거절
+                        props.approveAPI({
+                          projectId: props.clubId, 
+                          userId: data.id,
+                          joinTag: "NO"
+                        }).then(res => {
+                          if (res.statusCode == 200) {
+                            alert("해당 유저의 가입을 거절하였습니다.")
+                            getUserByjoin({ // 재조회
+                              projectId: props.clubId,
+                              userId: sessionStorage.getItem("userId")
+                              })
+                              .then(res => { 
+                                  dispatch(applyActions.setApplyList({list: res.users}))
+                              })
+                              .catch(err => console.log(err))
+                          } else {
+                            alert(`${res.message}`)
+                          }
+                        })
+                      }}><CloseIcon/></Button>
                     </ButtonWrapper>
 
                   </AccordionDetails>
                 </Accordion>
               )
-            })
+            }) : <div>아직 지원한 지원자가 없습니다 ㅜ.ㅜ</div>
           }
     </div>
     )
