@@ -1,5 +1,13 @@
 import {Card, CardContent, Button} from "@mui/material";
 import styled from "@emotion/styled";
+import * as projectActions from '../../store/module/project';
+import { useSelector, useDispatch } from 'react-redux';
+import {getProjectByUserId} from "../../pages/api/project"
+import { useEffect, useCallback } from "react";
+
+import StackList from "../Club/StackList"
+import Router from "next/router";
+
 
 function MyClub(props){
     const MyClubWrapper = styled.div`
@@ -26,24 +34,49 @@ function MyClub(props){
         & .title {
             font-size: 18px;
         }
+
+        & .date {
+            font-size: 10px;
+            color: #1976D6;
+        }
     `
 
     const CusCard = styled(Card)`
         max-width: 430px;
     `
-    
+
+    const dispatch = useDispatch();
+    let clubData;
+    if (props.from === "project") {
+        clubData = useSelector(({ project }) => project.myProject);
+    }
+
+    useEffect(() => {
+        getProjectByUserId(sessionStorage.getItem("userId"))
+        .then(res => dispatch(projectActions.setMyProject({project: res.project})));
+    }, [])
+
     return (
+        typeof(clubData) === "undefined"?
+        null : 
         <MyClubWrapper>
             <h2>{props.label}</h2>
             <CusCard>
                 <CusCardContent>
                     <div className="img-wrapper"></div>
                     <ProjectInfo>
-                        <div className="title">프로젝트명</div>
-                        <div>기한 ~ 기한</div>
+                        <div className="title">{clubData.title}</div>
+                        <div className="date">{clubData.startDate} ~ {clubData.endDate}</div>
                         
-                        <div>스택들</div>
-                        <Button variant="outlined">상세 보기 </Button>
+                        {/* 리스트에서 보이는 클럽 스택은 최대 3개까지 표시 */}
+                        <StackList stackData={clubData.stacks.length > 3? 
+                            clubData.stacks.slice(0,3)
+                            : 
+                            clubData.stacks
+                        }></StackList>
+                        <Button variant="outlined" onClick={() => {
+                            Router.push("/project/info")
+                        }}>상세 보기 </Button>
                     </ProjectInfo>
                     
                 </CusCardContent>
