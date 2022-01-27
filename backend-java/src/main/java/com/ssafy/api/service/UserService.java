@@ -1,6 +1,5 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.model.ProjectDto;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.UserLoginReq;
 import com.ssafy.api.request.UserRegisterReq;
@@ -23,13 +22,17 @@ public interface UserService {
     int nickCheck(String nickname);
     int updateUser(UserUpdateReq registerInfo);
 	void deleteUser(Long userId);
-	int updateUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus);
-    int updateUserPassword(UserLoginReq updateInfo);
+	int joinUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus);
+
+	int approveUserProject(Long hostId, Long userId, Long projectId, String projectJoinStatus);
+
+	int updateUserPassword(UserLoginReq updateInfo);
 	List<UserDto> selectUserAll();
     UserDto selectUser(Long userId);
     int updateNickCheck(Long id, String nickname);
 	UserDto userEntityToDto(User user);
     List<UserDto> selectProjectUsers(Long userId, Long projectId);
-
     List<UserDto> selectJoinUsers(Long userId, Long projectId);
+	int quitProject(Long userId, Long projectId);
+	int joinCancelProject(Long userId, Long projectId);
 }

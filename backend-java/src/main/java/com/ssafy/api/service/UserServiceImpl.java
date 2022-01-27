@@ -1,6 +1,5 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.model.ProjectDto;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.UserLoginReq;
 import com.ssafy.api.request.UserUpdateReq;
@@ -101,8 +100,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int updateUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
-		return userRepositorySupport.updateUserProject(userId, projectId, projectPosition, projectJoinStatus);
+	public int joinUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
+		return userRepositorySupport.joinUserProject(userId, projectId, projectPosition, projectJoinStatus);
+	}
+
+	@Override
+	public int approveUserProject(Long hostId, Long userId, Long projectId, String projectJoinStatus) {
+		Project project=projectRepositorySupport.selectByHost(hostId);
+		System.out.println(project);
+		if (project==null || project.getId()!=projectId){
+			return 402;	// host 틀림
+		}
+		User user=userRepositorySupport.selectUser(userId);
+		if (user==null || user.getProjectId()!=projectId || !"BEFORE".equalsIgnoreCase(user.getProjectJoinStatus())){
+			return 401;
+		}
+		return userRepositorySupport.approveUserProject(userId, projectJoinStatus);
 	}
 
 	@Override
@@ -202,6 +215,25 @@ public class UserServiceImpl implements UserService {
 			users.add(userEntityToDto(result));
 		}
 		return users;
+	}
+
+	@Override
+	public int quitProject(Long userId, Long projectId) {
+		User user=userRepositorySupport.selectUser(userId);
+		if (user.getProjectId()==projectId && "OK".equalsIgnoreCase(user.getProjectJoinStatus())){
+			return userRepositorySupport.resetUserProject(userId);
+		}
+		return 402;
+	}
+
+	@Override
+	public int joinCancelProject(Long userId, Long projectId) {
+		User user=userRepositorySupport.selectUser(userId);
+		if (user.getProjectId()==projectId && "BEFORE".equalsIgnoreCase(user.getProjectJoinStatus())){
+			return userRepositorySupport.resetUserProject(userId);
+		}
+		return 402;
+
 	}
 
 	@Override
