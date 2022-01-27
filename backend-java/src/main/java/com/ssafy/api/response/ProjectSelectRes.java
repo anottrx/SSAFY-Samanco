@@ -2,19 +2,14 @@ package com.ssafy.api.response;
 
 import com.ssafy.api.model.ProjectDto;
 import com.ssafy.common.model.response.BaseResponseBody;
-import com.ssafy.db.entity.Project;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
 @ApiModel("ProjectSelectPostRes")
-public class ProjectSelectPostRes extends BaseResponseBody {
+public class ProjectSelectRes extends BaseResponseBody {
 
     private ProjectDto project;
 //    Long hostId;
@@ -28,8 +23,8 @@ public class ProjectSelectPostRes extends BaseResponseBody {
 //    List<Map<String, Integer>> stacks;
 //    List<Map<String, Integer>> position;
 
-    public static ProjectSelectPostRes of(Integer statusCode, String message, ProjectDto project) {
-        ProjectSelectPostRes res = new ProjectSelectPostRes();
+    public static ProjectSelectRes of(Integer statusCode, String message, ProjectDto project) {
+        ProjectSelectRes res = new ProjectSelectRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
         res.setProject(project);

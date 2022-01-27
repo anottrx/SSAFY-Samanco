@@ -13,27 +13,16 @@ import java.util.Map;
 @Setter
 @ToString
 @ApiModel("ProjectRegisterPstReq")
-public class StudyRegisterPostReq {
+public class StudyRegisterReq {
 
-    @ApiModelProperty(name="hostId", example="1")
     private Long hostId;
-
-    @ApiModelProperty(name="title", example="싸피사만코 같이 하실분 구함")
     private String title;
-
-    @ApiModelProperty(name="collectStatus", example="ING")
+    @ApiModelProperty(example="ING")
     private String collectStatus;
-
-    @ApiModelProperty(name="schedule", example="평일 9시~6시")
     private String schedule;
-
-    @ApiModelProperty(name="description", example="싸피사만코는 설명설명..")
     private String description;
-
-    @ApiModelProperty(name="size", example="5")
     private int size;
-
-    @ApiModelProperty(name="stacks", example="[{java: 3}, {HTML: 2}]")
+    @ApiModelProperty(example="[{java: 3}, {HTML: 2}]")
     private List<Map<String, Integer>> stacks;
 
 }

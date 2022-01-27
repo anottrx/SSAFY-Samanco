@@ -11,15 +11,15 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("UserSelectAllPostRes")
-public class UserSelectPostRes extends BaseResponseBody {
+public class UserSelectAllRes extends BaseResponseBody {
 
-    private UserDto user;
+    private List<UserDto> users;
 
-    public static UserSelectPostRes of(Integer statusCode, String message, UserDto user) {
-        UserSelectPostRes res = new UserSelectPostRes();
+    public static UserSelectAllRes of(Integer statusCode, String message, List<UserDto> users) {
+        UserSelectAllRes res = new UserSelectAllRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
-        res.setUser(user);
+        res.setUsers(users);
 
         return res;
     }

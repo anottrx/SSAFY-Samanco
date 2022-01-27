@@ -2,20 +2,18 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
-import com.ssafy.api.response.UserSelectAllPostRes;
-import com.ssafy.api.response.UserSelectPostRes;
+import com.ssafy.api.response.UserLoginRes;
+import com.ssafy.api.response.UserSelectAllRes;
+import com.ssafy.api.response.UserSelectRes;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
-import com.ssafy.db.entity.StackGrade;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
@@ -32,8 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static com.ssafy.common.util.JsonUtil.getListMapFromString;
@@ -94,7 +90,7 @@ public class UserController {
          6. 전화번호는 01012341234 형식
          */
 
-		UserRegisterPostReq registerInfo=new UserRegisterPostReq();
+		UserRegisterReq registerInfo=new UserRegisterReq();
 		registerInfo.setBirthday(birthday);
 		registerInfo.setDescription(description);
 		registerInfo.setEmail(email);
@@ -186,7 +182,7 @@ public class UserController {
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 
 
-		UserUpdatePostReq updateInfo=new UserUpdatePostReq();
+		UserUpdateReq updateInfo=new UserUpdateReq();
 		updateInfo.setUserId(userId);
 		updateInfo.setBirthday(birthday);
 		updateInfo.setDescription(description);
@@ -254,7 +250,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> updatePassword(
-			@RequestBody @ApiParam(value="사용자 이메일이랑 비밀번호만", required = true) UserLoginPostReq updateInfo) throws IOException {
+			@RequestBody @ApiParam(value="사용자 이메일이랑 비밀번호만", required = true) UserLoginReq updateInfo) throws IOException {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 
@@ -280,7 +276,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> delete(
-			@RequestBody @ApiParam(value="회원 아이디", required = true) UserIdPostReq userId) throws IOException {
+			@RequestBody @ApiParam(value="회원 아이디", required = true) UserIdReq userId) throws IOException {
 
 		// 회원 삭제 : isDeleted=true
 		userService.deleteUser(userId.getUserId());
@@ -314,10 +310,10 @@ public class UserController {
 			@ApiResponse(code = 402, message = "중복 닉네임"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> updateNicknameCheck(@RequestBody UserUpdateNicknamePostReq userUpdateNicknamePostReq) {
+	public ResponseEntity<? extends BaseResponseBody> updateNicknameCheck(@RequestBody UserUpdateNicknameReq userUpdateNicknameReq) {
 		//200 일때 사용 가능
-		Long id=userUpdateNicknamePostReq.getId();
-		String nickname= userUpdateNicknamePostReq.getNickname();
+		Long id= userUpdateNicknameReq.getUserId();
+		String nickname= userUpdateNicknameReq.getNickname();
 		int nickCode=userService.updateNickCheck(id, nickname);
 		if(nickCode == 401)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"닉네임 길이는 2자 이상 16자이하로 해주세요."));
@@ -337,9 +333,9 @@ public class UserController {
 		//200 일때 사용 가능
 		List<UserDto> users=userService.selectUserAll();
 		if (users==null){
-			return ResponseEntity.status(200).body(UserSelectAllPostRes.of(200, "사용자가 없습니다.", null));
+			return ResponseEntity.status(200).body(UserSelectAllRes.of(200, "사용자가 없습니다.", null));
 		}
-		return ResponseEntity.status(200).body(UserSelectAllPostRes.of(200, "사용자 전체 목록", users));
+		return ResponseEntity.status(200).body(UserSelectAllRes.of(200, "사용자 전체 목록", users));
 	}
 
 	@PostMapping("/view")
@@ -348,13 +344,13 @@ public class UserController {
 			@ApiResponse(code = 200, message = "성공"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> selectUser(@RequestBody UserIdPostReq userIdPostReq) {
+	public ResponseEntity<? extends BaseResponseBody> selectUser(@RequestBody UserIdReq userIdReq) {
 		//200 일때 사용 가능
-		UserDto user=userService.selectUser(userIdPostReq.getUserId());
+		UserDto user=userService.selectUser(userIdReq.getUserId());
 		if (user==null){
-			return ResponseEntity.status(200).body(UserSelectPostRes.of(401, "사용자 정보가 없습니다.", null));
+			return ResponseEntity.status(200).body(UserSelectRes.of(401, "사용자 정보가 없습니다.", null));
 		}
-		return ResponseEntity.status(200).body(UserSelectPostRes.of(200, "사용자 정보", user));
+		return ResponseEntity.status(200).body(UserSelectRes.of(200, "사용자 정보", user));
 	}
 
 //	@PostMapping("passcheck")
@@ -404,7 +400,7 @@ public class UserController {
 			@ApiResponse(code = 404, message = "사용자 없음"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<UserLoginPostRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
+	public ResponseEntity<UserLoginRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginReq loginInfo) {
 		String email= loginInfo.getEmail();
 		String password = loginInfo.getPassword();
 
@@ -412,14 +408,14 @@ public class UserController {
 		// 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
 
 		if (user==null){
-			return ResponseEntity.status(200).body(UserLoginPostRes.of(404, "존재하는 이메일이 없습니다.", null));
+			return ResponseEntity.status(200).body(UserLoginRes.of(404, "존재하는 이메일이 없습니다.", null));
 		}
 		if(passwordEncoder.matches(password, user.getPassword())) {
 			// 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-			return ResponseEntity.ok(UserLoginPostRes.of(200, "로그인 성공", JwtTokenUtil.getToken(email)));
+			return ResponseEntity.ok(UserLoginRes.of(200, "로그인 성공", JwtTokenUtil.getToken(email)));
 		}
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-		return ResponseEntity.status(200).body(UserLoginPostRes.of(401, "이메일 혹은 비밀번호가 일치하지 않습니다.", null));
+		return ResponseEntity.status(200).body(UserLoginRes.of(401, "이메일 혹은 비밀번호가 일치하지 않습니다.", null));
 	}
 
 
