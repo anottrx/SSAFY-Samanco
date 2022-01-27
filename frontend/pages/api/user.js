@@ -83,8 +83,8 @@ async function checkEmailPWAPI(code) {
 async function resetPWAPI(inputState) {
   // 비밀번호 재설정
   return await api
-    .post("/api/user/api/user/updatepass", {
-      userId: inputState.userId,
+    .post("/api/user/updatepass", {
+      email: inputState.email,
       password: inputState.password,
     })
     .then((res) => res.data)
