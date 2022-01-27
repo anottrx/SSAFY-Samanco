@@ -33,7 +33,7 @@ export default function Regist() {
     passwordConfirm: "",
     email: "",
     nickname: "",
-    userClass: "JAVA",
+    class: "JAVA",
     generation: "6",
     studentId: "",
   });
@@ -111,7 +111,7 @@ export default function Regist() {
 
   const classHandleChange = (e) => {
     // inputState.userClass = e.target.value;
-    inputState.userClass = e.target.value;
+    inputState.class = e.target.value;
   };
 
   const nicknameHandleChange = (e) => {
@@ -208,7 +208,7 @@ export default function Regist() {
     } else if (!inputState.generation) {
       isNormal = false;
       msg = "기수를 입력해주세요.";
-    } else if (!inputState.userClass) {
+    } else if (!inputState.class) {
       isNormal = false;
       msg = "반을 입력해주세요.";
     } else if (!inputState.studentId) {
@@ -254,7 +254,7 @@ export default function Regist() {
               )
             ) {
               sessionStorage.setItem("password", inputState.password);
-             sessionStorage.setItem("userClass", inputState.userClass);
+             sessionStorage.setItem("userClass", inputState.class);
               sessionStorage.setItem("studentId", inputState.studentId);
               sessionStorage.setItem("generation", inputState.generation);
               sessionStorage.setItem("name", inputState.name);
@@ -443,7 +443,7 @@ export default function Regist() {
           </Select>
           {/* 반 */}
           <Select
-            id="userClass"
+            id="class"
             onChange={classHandleChange}
             defaultValue={classOptions[0].value}
             value={classOptions.value}

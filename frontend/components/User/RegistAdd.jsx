@@ -24,7 +24,6 @@ import MenuItem from "@mui/material/MenuItem";
 
 export default function RegistInfo() {
   const [inputState, setInputState] = useState({
-    email: "",
     phone: "",
     birthday: "",
     stacks: [],
@@ -33,11 +32,12 @@ export default function RegistInfo() {
     description: "",
     image_id: "",
     // 이미 입력된 값들
+    email: "",
     userId: "",
     email: "",
     nickname: "",
     name: "",
-    userClass: "",
+    class: "",
     generation: "",
     studentId: "",
   });
@@ -92,7 +92,7 @@ export default function RegistInfo() {
     inputState.userId = sessionStorage.getItem("userId");
     inputState.nickname = sessionStorage.getItem("nickname");
     inputState.name = sessionStorage.getItem("name");
-    inputState.userClass = sessionStorage.getItem("userClass");
+    inputState.class = sessionStorage.getItem("userClass");
     inputState.generation = sessionStorage.getItem("generation");
     inputState.studentId = sessionStorage.getItem("studentId");
     inputState.password = sessionStorage.getItem("password");
@@ -134,6 +134,8 @@ export default function RegistInfo() {
   const positionHandleChange = (e) => {
     console.log(e.target.value);
     inputState.position = e.target.value;
+    console.log("inputState" + JSON.stringify(inputState));
+    console.log(inputState);
   };
 
   const [links, setLinks] = useState([]);
@@ -188,6 +190,7 @@ export default function RegistInfo() {
     if (isNormal) {
       const formData = new FormData();
       console.log("inputState" + JSON.stringify(inputState));
+      console.log(inputState);
 
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
@@ -207,6 +210,8 @@ export default function RegistInfo() {
       }
 
       updateUserAPI(formData).then((res) => {
+        console.log(res)
+        console.log(JSON.stringify(res))
         if (res.statusCode == 200) {
           sessionStorage.clear();
           sessionStorage.setItem("userId", inputState.userId);
