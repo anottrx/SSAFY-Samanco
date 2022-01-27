@@ -23,6 +23,9 @@ public class ProjectRepositorySupport {
     @Autowired
     JPAQueryFactory jpaQueryFactory;
 
+    @Autowired
+    ValidRepository valid;
+
     QProject qProject=QProject.project;
 
     QUser qUser=QUser.user;
@@ -154,12 +157,17 @@ public class ProjectRepositorySupport {
                 .orderBy(qProject.likes.desc()).fetch();
     }
 
-//    public List<Project> selectProjectDeadlineOrder() {
-//        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false))
-//                .orderBy(qProject.likes.desc()).fetch();
-//    }
-
+    @Transactional
     public int updateProjectLike(Long projectId) {
-        return 0;
+        if (!isValid(projectId)){
+            return 401;
+        }
+
+        jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+                .set(qProject.likes, qProject.likes.add(1))
+                .execute();
+
+        return 200;
     }
+
 }

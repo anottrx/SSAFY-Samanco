@@ -83,13 +83,13 @@ public class ProjectController{
             System.out.println(files[0].getOriginalFilename());
         }
 
-        // project 가입
+        // project create
         Project project = projectService.createProject(registerInfo);
-        // project host 추가
-        int addProjectCode=userService.addProject(project.getHostId(), project.getId(), hostPosition, "OK");
+        // user's projectId, joinStatus position update
+        int addProjectCode=userService.updateUserProject(project.getHostId(), project.getId(), hostPosition, "OK");
 
         if (addProjectCode==401){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 중복하여 등록할 수 없습니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 등록할 수 없습니다."));
         }
         // project 스택 입력
         if (stacks!=null) {

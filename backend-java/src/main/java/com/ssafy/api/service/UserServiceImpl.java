@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.model.UserDto;
+import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.repository.*;
@@ -59,16 +60,6 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
-//	@Override
-//	public User getUserByUserId(String userId) {
-//		// 디비에 유저 정보 조회 (userId 를 통한 조회).
-//		if (!userRepositorySupport.findUserByUserId(userId).isPresent()){
-//			return null;
-//		}
-//		User user = userRepositorySupport.findUserByUserId(userId).get();
-//		return user;
-//	}
-
 	@Override
 	public User getUserByEmail(String email) {
 		return userRepositorySupport.findUserByEmail(email);
@@ -108,19 +99,14 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-
 	@Override
-	public int addProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
-		int updateUserProjectCode=userRepositorySupport.updateUserProject(userId, projectId, projectPosition, projectJoinStatus);
-		if (updateUserProjectCode==401){
-			projectRepositorySupport.deleteProject(userId, projectId);
-		}
-		return updateUserProjectCode;
+	public int updateUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
+		return userRepositorySupport.updateUserProject(userId, projectId, projectPosition, projectJoinStatus);
 	}
 
 	@Override
-	public int updatePasswordUser(UserUpdatePostReq updateInfo) {
-		return userRepositorySupport.updatePasswordUserProject(updateInfo);
+	public int updateUserPassword(UserLoginPostReq updateInfo) {
+		return userRepositorySupport.updateUserPassword(updateInfo);
 	}
 
 	@Override
@@ -130,25 +116,8 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 		List<UserDto> users=new ArrayList<>();
-		for (User user: results){
-			UserDto userDto=new UserDto();
-			userDto.setId(user.getId());
-			userDto.setPassword(user.getPassword());
-			userDto.setDescription(user.getDescription());
-			userDto.setUserClass(user.getUserClass());
-			userDto.setBirthday(user.getBirthday());
-			userDto.setEmail(user.getEmail());
-			userDto.setGeneration(user.getGeneration());
-			userDto.setLink(user.getLink());
-			userDto.setNickname(user.getNickname());
-			userDto.setName(user.getName());
-			userDto.setPhone(user.getPhone());
-			userDto.setPosition(user.getPosition());
-			userDto.setProjectJoinStatus(user.getProjectJoinStatus());
-			userDto.setStudentId(user.getStudentId());
-			userDto.setProjectId(user.getProjectId());
-			userDto.setStacks(stackRepositorySupport.selectStack(user.getId(), 1));
-			users.add(userDto);
+		for (User result: results){
+			users.add(userEntityToDto(result));
 		}
 
 		return users;
@@ -160,39 +129,44 @@ public class UserServiceImpl implements UserService {
 		if (result==null){
 			return null;
 		}
+		return userEntityToDto(result);
+	}
+
+	@Override
+	public int updateNickCheck(Long id, String nickname) {
+		if(nickname.length()<2||nickname.length()>16){
+			return 401;
+		}
+		else if(userRepositorySupport.findUserByNickname(id, nickname)!=null){	// 닉네임 중복
+			return 402;
+		}
+		return 200;
+	}
+
+	@Override
+	public UserDto userEntityToDto(User result) {
 		UserDto user=new UserDto();
+		Long userId= result.getId();
+		user.setId(userId);
 		user.setStudentId(result.getStudentId());
 		user.setPosition(result.getPosition());
 		user.setPhone(result.getPhone());
 //        user.setPassword(result.getPassword());
 		user.setName(result.getName());
-		user.setProjectJoinStatus(result.getProjectJoinStatus());
 		user.setDescription(result.getDescription());
 		user.setNickname(result.getNickname());
 		user.setLink(result.getLink());
 		user.setGeneration(result.getGeneration());
 		user.setEmail(result.getEmail());
 		user.setBirthday(result.getBirthday());
+		user.setUserClass(result.getUserClass());
 		user.setProjectPosition(result.getProjectPosition());
 		user.setProjectId(result.getProjectId());
+		user.setProjectJoinStatus(result.getProjectJoinStatus());
 		user.setFile(fileRepositorySupport.selectFile(userId, 1));
 		user.setStacks(stackRepositorySupport.selectStack(userId, 1));
 
 		return user;
-	}
-
-	@Override
-	public int updateNickCheck(Long id, String nickname) {
-		//아이디 길이가 안맞으면 401에러 리턴
-		if(nickname.length()<2||nickname.length()>16){
-			return 401;
-		}
-		//디비에서 userId로 찾아봤는데 null이 아니면 (값이 있으면) 중복되므로 402에러 리턴
-		else if(userRepositorySupport.findUserByNickname(id, nickname)!=null){
-			return 402;
-		}
-		//아이디가 길이도 맞고 중복되지도 않다면 성공 200
-		return 200;
 	}
 
 	@Override

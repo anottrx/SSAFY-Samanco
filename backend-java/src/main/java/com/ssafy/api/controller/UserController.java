@@ -141,7 +141,7 @@ public class UserController {
 
 		//6. 전화번호 오류
 		int phoneCode=userService.phoneCheck(registerInfo.getPhone());
-//		if(phoneCode == 401)
+//		if(phoneCode == 401)	// 널 가능
 //			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"전화번호를 입력해주세요"));
 		if(phoneCode == 402)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 전화번호 형식으로 입력해주세요."));
@@ -171,15 +171,12 @@ public class UserController {
 	})
 	public ResponseEntity<? extends BaseResponseBody> update(
 			@RequestParam("userId") Long userId,
-//			@RequestParam("email") String email,
 			@RequestParam("password") String password,
 			@RequestParam("name") String name,
 			@RequestParam("nickname") String nickname,
-//			@RequestParam("studentId") String studentId,
 			@RequestParam(required = false, value="phone") String phone,
 			@RequestParam(required = false, value="stacks") String stacks,
 			@RequestParam(required = false, value="birthday") String birthday,
-//			@RequestParam(required = false, value="generation") int generation,
 			@RequestParam(required = false, value="class") String userClass,
 			@RequestParam(required = false, value="position") String position,
 			@RequestParam(required = false, value="link") String link,
@@ -193,15 +190,12 @@ public class UserController {
 		updateInfo.setUserId(userId);
 		updateInfo.setBirthday(birthday);
 		updateInfo.setDescription(description);
-//		updateInfo.setEmail(email);
-//		updateInfo.setGeneration(generation);
 		updateInfo.setUserClass(userClass);
 		updateInfo.setLink(link);
 		updateInfo.setName(name);
 		updateInfo.setNickname(nickname);
 		updateInfo.setPassword(password);
 		updateInfo.setPhone(phone);
-//		updateInfo.setStudentId(studentId);
 		updateInfo.setPosition(position);
 
 //		//2. 닉네임 오류
@@ -228,7 +222,7 @@ public class UserController {
 
 		//6. 전화번호 오류
 		int phoneCode=userService.phoneCheck(updateInfo.getPhone());
-//		if(phoneCode == 401)
+//		if(phoneCode == 401)	// 널 가능
 //			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"전화번호를 입력해주세요"));
 		if(phoneCode == 402)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"올바른 전화번호 형식으로 입력해주세요."));
@@ -260,7 +254,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> updatePassword(
-			@RequestBody @ApiParam(value="사용자 아이디랑 비밀번호만", required = true) UserUpdatePostReq updateInfo) throws IOException {
+			@RequestBody @ApiParam(value="사용자 이메일이랑 비밀번호만", required = true) UserLoginPostReq updateInfo) throws IOException {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 
@@ -272,7 +266,7 @@ public class UserController {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(402,"비밀번호는 영문, 숫자, 특수문자 포함 8~16자로 입력해주세요."));
 
 		// 회원 수정
-		int updatePasswordCode=userService.updatePasswordUser(updateInfo);
+		int updatePasswordCode=userService.updateUserPassword(updateInfo);
 		if (updatePasswordCode==401){
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "사용자 아이디가 유효하지 않습니다."));
 		}
