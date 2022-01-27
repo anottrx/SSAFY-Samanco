@@ -1,6 +1,7 @@
 import {DesktopDatePicker, } from '@mui/lab';
 import { useState, useEffect } from "react";
 import { TextField } from '@mui/material';
+import dateFormat, { masks } from "dateformat";
 
 export let getDateValue;
 
@@ -25,6 +26,9 @@ export default function DatePicker(props){
             props.changeHandle(dateValue,"startDate")
         } else if (props.label.includes("종료")) {
             props.changeHandle(dateValue,"endDate")
+        } else if(props.label.length == 0) {
+            const birthday = dateFormat(dateValue, "yymmdd")
+            props.changeHandle(birthday, "birthday")
         }
     }, [dateValue])
 

@@ -118,11 +118,9 @@ export default function RegistInfo() {
   //   inputState[id] = value;
   //   // 리렌더링 X
   // };
-
   const changeHandle = (value, name) => {
     inputState[name] = value;
-    // inputState.stacks = { HTML: value };
-    // 리렌더링 X
+    // console.log(name + " " + value)
   };
 
   const handleChange = (e) => {
@@ -185,7 +183,7 @@ export default function RegistInfo() {
         delete inputState.stacks[key];
       }
     });
-
+    
     if (isNormal) {
       const formData = new FormData();
 
@@ -289,8 +287,7 @@ export default function RegistInfo() {
               <DatePickerWrapper>
                 <DatePicker
                   label=""
-                  value={inputState.birthday}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                   changeHandle={changeHandle}
                 ></DatePicker>
               </DatePickerWrapper>

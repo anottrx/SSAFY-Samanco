@@ -43,7 +43,7 @@ export default function MyInfo() {
   const cookies = new Cookies();
   const [cookie, setCookie] = useCookies(["userToken"]);
 
-  function getUserInfo() {
+  function getUserInfo() { // 사용자 정보 가져오는 함수
     const token = cookie.userToken;
 
     getUserLoginTokenAPI(token).then((res) => {
@@ -76,7 +76,7 @@ export default function MyInfo() {
         inputState.password = res.user.password;
         inputState.link = res.user.link;
         inputState.description = res.user.description;
-        // inputState.stacks = res.user.stacks;
+        inputState.stacks = res.user.stacks;
         // inputState.file = res.user.file;
       });
     });
