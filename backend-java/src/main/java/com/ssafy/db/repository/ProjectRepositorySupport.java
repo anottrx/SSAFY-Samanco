@@ -143,4 +143,23 @@ public class ProjectRepositorySupport {
                 .where(qUser.projectId.eq(projectId), qUser.isDeleted.eq(false), qUser.projectJoinStatus.eq("OK"))
                 .fetch();
     }
+
+    public List<Project> selectByTitle(String title) {
+        return jpaQueryFactory.selectFrom(qProject)
+                .where(qProject.isDeleted.eq(false), qProject.title.contains(title)).fetch();
+    }
+
+    public List<Project> selectProjectLikeOrder() {
+        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false))
+                .orderBy(qProject.likes.desc()).fetch();
+    }
+
+//    public List<Project> selectProjectDeadlineOrder() {
+//        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false))
+//                .orderBy(qProject.likes.desc()).fetch();
+//    }
+
+    public int updateProjectLike(Long projectId) {
+        return 0;
+    }
 }

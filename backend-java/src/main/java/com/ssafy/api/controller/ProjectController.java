@@ -25,7 +25,7 @@ import static com.ssafy.common.util.JsonUtil.getListMapFromString;
 
 @RestController
 @RequestMapping("/api/project")
-public class ProjectController {
+public class ProjectController{
 
     @Autowired
     ProjectService projectService;
@@ -241,6 +241,22 @@ public class ProjectController {
         return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
     }
 
+    @GetMapping("/title/{title}")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "프로젝트 목록 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectProjectByTitle(
+            @PathVariable("title") String title) throws IOException {
+
+        List<ProjectDto> projects=projectService.selectProjectByTitle(title);
+        if (projects==null){
+            return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "프로젝트 목록이 없습니다.", null));
+        }
+        return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+    }
+
     @PostMapping("/join")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -272,5 +288,50 @@ public class ProjectController {
             return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "등록된 프로젝트가 없습니다.", null));
         }
         return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+    }
+
+    @GetMapping("/like")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectProjectLikeOrder() throws IOException {
+
+        List<ProjectDto> projects=projectService.selectProjectLikeOrder();
+        if (projects==null){
+            return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "등록된 프로젝트가 없습니다.", null));
+        }
+        return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+    }
+
+    @GetMapping("/deadline")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectProjectDeadlineOrder() throws IOException {
+
+        List<ProjectDto> projects=projectService.selectProjectDeadlineOrder();
+        if (projects==null){
+            return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "등록된 프로젝트가 없습니다.", null));
+        }
+        return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+    }
+
+    @PostMapping("/like")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> updateProjectLike(@RequestBody ProjectIdPostReq projectIdPostReq) throws IOException {
+
+        int likeCode=projectService.updateProjectLike(projectIdPostReq.getId());
+        if (likeCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "등록된 프로젝트가 없습니다."));
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 }
