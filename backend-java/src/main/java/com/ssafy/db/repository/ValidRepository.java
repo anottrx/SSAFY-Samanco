@@ -39,17 +39,9 @@ public class ValidRepository {
 
     public boolean isProjectValid(Long projectId){
         // project 지워지면 등록 가능
-//        User user = jpaQueryFactory.select(qUser).from(qUser)
-//                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
-//        if (user==null){    // 사용자가 탈퇴했거나 없으면
-//            return false;
-//        }
         Project project = jpaQueryFactory.selectFrom(qProject)
                 .where(qProject.id.eq(projectId), qProject.isDeleted.eq(false)).fetchOne();
 
-//        if (project!=null){     // 진행중인 프로젝트가 있으면
-//            return false;
-//        }
         if (project==null){
             return false;
         }

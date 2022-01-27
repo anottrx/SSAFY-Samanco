@@ -108,13 +108,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDto selectByUser(Long userId) {
         User result = projectRepositorySupport.selectByUser(userId);
+        if (result==null){
+            return null;
+        }
         Long projectId = result.getProjectId();
         if (projectId==null){
             return null;
         }
 
-//        String projectJoinStatus = result.getProjectJoinStatus();
-//        if ("OK".equals(projectJoinStatus))
         return selectProject(projectId);
     }
 
@@ -138,7 +139,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto projectEntityToDto(Project result) {
-        List<User> results=projectRepositorySupport.selectUsers(result.getId());
+        List<User> results=projectRepositorySupport.selectProjectUsers(result.getId());
         int[] currentPositionSize=new int[4];
         for (User user: results){
             String position= user.getProjectPosition();
