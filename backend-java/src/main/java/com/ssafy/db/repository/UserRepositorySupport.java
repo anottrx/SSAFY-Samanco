@@ -2,6 +2,7 @@ package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.model.UserDto;
+import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.request.UserUpdatePostReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.entity.QProject;
@@ -25,53 +26,25 @@ public class UserRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
-    QProject qProject=QProject.project;
-
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
-//    public Optional<User> findUserByUserId(String email) {
-//        User user = jpaQueryFactory.select(qUser).from(qUser)
-//                .where(qUser.email.eq(email)).fetchOne();
-//        if(user == null) return Optional.empty();
-//        return Optional.ofNullable(user);
-//    }
+    @Autowired
+    ValidRepository valid;
 
-    public boolean isValid(Long userId){
-        User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
-        if (user==null){
-            return false;
-        }
-        return true;
-    }
-
-    public boolean isProjectValid(Long userId){
-        // project 지워지면 등록 가능
-        User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
-        if (user==null){    // 사용자가 탈퇴했거나 없으면
-            return false;
-        }
-        Project project = jpaQueryFactory.selectFrom(qProject)
-                .where(qProject.id.eq(user.getProjectId()), qProject.isDeleted.eq(false)).fetchOne();
-
-        if (project!=null){     // 진행중인 프로젝트가 있으면
-            return false;
-        }
-        return true;
-    }
     public User findUserByEmail(String email){
         return jpaQueryFactory.select(qUser).from(qUser)
                 .where(qUser.email.eq(email), qUser.isDeleted.eq(false)).fetchOne();
     }
 
+    // create 할때
     public User findUserByNickname(String nickname) {
         return jpaQueryFactory.select(qUser).from(qUser)
                 .where(qUser.nickname.eq(nickname), qUser.isDeleted.eq(false)).fetchOne();
     }
 
+    // update 할때
     public User findUserByNickname(Long id, String nickname) {
         return jpaQueryFactory.select(qUser).from(qUser)
                 .where(qUser.nickname.eq(nickname), qUser.isDeleted.eq(false), qUser.id.ne(id)).fetchOne();
@@ -79,27 +52,18 @@ public class UserRepositorySupport {
 
     @Transactional
     public int updateUser(UserUpdatePostReq userUpdateInfo) {
-//        User user=jpaQueryFactory.select(qUser).from(qUser)
-//                .where(qUser.id.eq(userUpdateInfo.getUserId())).fetchOne();
-
         Long userId=userUpdateInfo.getUserId();
-        if (isValid(userId)) {
-            String password = passwordEncoder.encode(userUpdateInfo.getPassword());
-            String phone = userUpdateInfo.getPhone();
-            String name = userUpdateInfo.getName();
-            String birthday = (userUpdateInfo.getBirthday());
-            String description = (userUpdateInfo.getDescription());
-            String nickname = (userUpdateInfo.getNickname());
-//            int generation = (userUpdateInfo.getGeneration());
-            String link = (userUpdateInfo.getLink());
-//            String studentId = (userUpdateInfo.getStudentId());
-
+        if (valid.isUserValid(userId)) {
             jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
-                    .set(qUser.name, name).set(qUser.password, password).set(qUser.phone, phone).set(qUser.birthday, birthday)
-                    .set(qUser.description, description).set(qUser.description, description).set(qUser.nickname, nickname)
-//                    .set(qUser.generation, generation)
-                    .set(qUser.link, link)
-//                    .set(qUser.studentId, studentId)
+                    .set(qUser.name, userUpdateInfo.getName())
+                    .set(qUser.password, passwordEncoder.encode(userUpdateInfo.getPassword()))
+                    .set(qUser.phone, userUpdateInfo.getPhone())
+                    .set(qUser.birthday, userUpdateInfo.getBirthday())
+                    .set(qUser.description, userUpdateInfo.getDescription())
+                    .set(qUser.position, userUpdateInfo.getPosition())
+                    .set(qUser.nickname, userUpdateInfo.getNickname())
+                    .set(qUser.link, userUpdateInfo.getLink())
+                    .set(qUser.userClass, userUpdateInfo.getUserClass())
                     .execute();
 
             return 200;
@@ -109,14 +73,13 @@ public class UserRepositorySupport {
 
     @Transactional
     public int updateUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
-        if (isProjectValid(userId)) {
+        if (valid.updateUserProjectValid(userId, projectId)) {
             jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
                     .set(qUser.projectId, projectId)
                     .set(qUser.projectPosition, projectPosition)
                     .set(qUser.projectJoinStatus, projectJoinStatus).execute();
             return 200;
         }
-
         return 401;
     }
 
@@ -126,12 +89,13 @@ public class UserRepositorySupport {
                 .set(qUser.isDeleted, true).execute();
     }
 
-    public int updatePasswordUserProject(UserUpdatePostReq userUpdateInfo) {
-        Long userId=userUpdateInfo.getUserId();
-        if (isValid(userId)) {
+    @Transactional
+    public int updateUserPassword(UserLoginPostReq userUpdateInfo) {
+        String email=userUpdateInfo.getEmail();
+        if (valid.isUserValid(email)) {
             String password = passwordEncoder.encode(userUpdateInfo.getPassword());
 
-            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+            jpaQueryFactory.update(qUser).where(qUser.email.eq(email))
                     .set(qUser.password, password).execute();
 
             return 200;
@@ -147,10 +111,4 @@ public class UserRepositorySupport {
         return jpaQueryFactory.selectFrom(qUser).where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
     }
 
-//    public Long selectByUser(Long userId) {
-//        if (isValid(userId)){
-//            return jpaQueryFactory.select(qUser.projectId).from(qUser).where(qUser.id.eq(userId)).fetchOne();
-//        }
-//        return null;
-//    }
 }

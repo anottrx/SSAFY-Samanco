@@ -32,4 +32,5 @@ public interface ProjectService {
     List<ProjectDto> selectProjectDeadlineOrder();
 
     int updateProjectLike(Long id);
+
 }

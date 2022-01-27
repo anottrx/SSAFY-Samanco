@@ -194,7 +194,7 @@ public class ProjectServiceImpl implements ProjectService {
             Calendar cmpDate = Calendar.getInstance();
             cmpDate.setTime(endDate); //특정 일자
             long deadline = (cmpDate.getTimeInMillis() - todayDate.getTimeInMillis()) / (24*60*60*1000) + 1;
-            System.out.println(deadline + "일 차이");
+//            System.out.println(deadline + "일 차이");
 
             projectDto.setDeadline(deadline);
         } catch (ParseException e) {
@@ -269,4 +269,5 @@ public class ProjectServiceImpl implements ProjectService {
     public int updateProjectLike(Long id) {
         return projectRepositorySupport.updateProjectLike(id);
     }
+
 }
