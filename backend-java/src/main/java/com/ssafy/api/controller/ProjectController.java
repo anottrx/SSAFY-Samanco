@@ -1,9 +1,11 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.model.ProjectDto;
+import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
-import com.ssafy.api.response.ProjectSelectAllPostRes;
-import com.ssafy.api.response.ProjectSelectPostRes;
+import com.ssafy.api.response.ProjectSelectAllRes;
+import com.ssafy.api.response.ProjectSelectRes;
+import com.ssafy.api.response.UserSelectAllRes;
 import com.ssafy.api.service.ProjectService;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
@@ -63,7 +65,7 @@ public class ProjectController{
             @RequestParam(required = false, value="totalEmbeddedSize", defaultValue = "0") int totalEmbeddedSize,
             @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {
 
-        ProjectRegisterPostReq registerInfo=new ProjectRegisterPostReq();
+        ProjectRegisterReq registerInfo=new ProjectRegisterReq();
         registerInfo.setCollectStatus(collectStatus);
         registerInfo.setTitle(title);
         registerInfo.setHostId(hostId);
@@ -76,8 +78,6 @@ public class ProjectController{
         registerInfo.setTotalMobileSize(totalMobileSize);
         registerInfo.setTotalEmbeddedSize(totalEmbeddedSize);
         registerInfo.setTotalSize(totalBackendSize+totalEmbeddedSize+totalFrontendSize+totalMobileSize);
-
-//        registerInfo.setStacks(getListMapFromString(stacks));
 
         if (files!=null) {
             System.out.println(files[0].getOriginalFilename());
@@ -147,8 +147,8 @@ public class ProjectController{
             @RequestParam(required = false, value="totalEmbeddedSize", defaultValue = "0") int totalEmbeddedSize,
             @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {
 
-        ProjectUpdatePostReq updateInfo=new ProjectUpdatePostReq();
-        updateInfo.setId(projectId);
+        ProjectUpdateReq updateInfo=new ProjectUpdateReq();
+        updateInfo.setProjectId(projectId);
         updateInfo.setCollectStatus(collectStatus);
         updateInfo.setTitle(title);
         updateInfo.setHostId(hostId);
@@ -167,9 +167,9 @@ public class ProjectController{
         // project update
         int projectCode=projectService.updateProject(updateInfo);
         // project 스택 update
-        stackService.updateStack(updateInfo.getStacks(), updateInfo.getId(), 2);
+        stackService.updateStack(updateInfo.getStacks(), updateInfo.getProjectId(), 2);
         // project 이미지 update
-        fileService.updateFile(files, updateInfo.getId(), 2);
+        fileService.updateFile(files, updateInfo.getProjectId(), 2);
         if (projectCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트는 유효하지 않습니다."));
         } else if (projectCode==402){
@@ -183,11 +183,10 @@ public class ProjectController{
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> delete(
-            @RequestBody @ApiParam(value="project id, host id", required = true) ProjectDeletePostReq deleteInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> delete(@RequestBody ProjectUserIdReq deleteInfo) throws IOException {
 
         // project delete
-        projectService.deleteProject(deleteInfo.getHostId(), deleteInfo.getId());
+        projectService.deleteProject(deleteInfo.getUserId(), deleteInfo.getProjectId());
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -199,14 +198,13 @@ public class ProjectController{
             @ApiResponse(code = 401, message = "가입한 프로젝트 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectProjectByHost(
-            @RequestBody @ApiParam(value="host id", required = true) UserIdPostReq userInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectProjectByHost(@RequestBody UserIdReq userInfo) throws IOException {
 
         ProjectDto project=projectService.selectByHost(userInfo.getUserId());
         if (project==null){
-            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "가입한 프로젝트가 없습니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "가입한 프로젝트가 없습니다.", null));
         }
-        return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
+        return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
     }
 
     @PostMapping("/user")
@@ -216,13 +214,13 @@ public class ProjectController{
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectProjectByUser(
-            @RequestBody @ApiParam(value="user id", required = true) UserIdPostReq userInfo) throws IOException {
+            @RequestBody @ApiParam(value="user id", required = true) UserIdReq userInfo) throws IOException {
 
         ProjectDto project=projectService.selectByUser(userInfo.getUserId());
         if (project==null){
-            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "가입한 프로젝트가 없습니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "가입한 프로젝트가 없습니다.", null));
         }
-        return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
+        return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
     }
 
     @PostMapping("/view")
@@ -232,13 +230,13 @@ public class ProjectController{
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectProject(
-            @RequestBody @ApiParam(value="project id", required = true) ProjectIdPostReq projectInfo) throws IOException {
+            @RequestBody @ApiParam(value="project id", required = true) ProjectIdReq projectInfo) throws IOException {
 
-        ProjectDto project=projectService.selectProject(projectInfo.getId());
+        ProjectDto project=projectService.selectProject(projectInfo.getProjectId());
         if (project==null){
-            return ResponseEntity.status(200).body(ProjectSelectPostRes.of(401, "유효하지 않은 프로젝트입니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
         }
-        return ResponseEntity.status(200).body(ProjectSelectPostRes.of(200, "Success", project));
+        return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
     }
 
     @GetMapping("/title/{title}")
@@ -252,9 +250,9 @@ public class ProjectController{
 
         List<ProjectDto> projects=projectService.selectProjectByTitle(title);
         if (projects==null){
-            return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "프로젝트 목록이 없습니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectAllRes.of(401, "프로젝트 목록이 없습니다.", null));
         }
-        return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+        return ResponseEntity.status(200).body(ProjectSelectAllRes.of(200, "Success", projects));
     }
 
     @PostMapping("/join")
@@ -263,12 +261,12 @@ public class ProjectController{
             @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> joinProject(@RequestBody ProjectJoinPostReq projectInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> joinProject(@RequestBody ProjectJoinReq projectInfo) throws IOException {
 
-        Long projectId=projectInfo.getId();
+        Long projectId=projectInfo.getProjectId();
         Long userId=projectInfo.getUserId();
         String position= projectInfo.getPosition();
-        int projectJoinCode=projectService.joinProject(projectId, userId, position);
+        int projectJoinCode= userService.updateUserProject(userId, projectId, position, "BEFORE");
         if (projectJoinCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트에 가입할 수 없습니다."));
         }
@@ -285,9 +283,24 @@ public class ProjectController{
 
         List<ProjectDto> projects=projectService.selectProjectAll();
         if (projects==null){
-            return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "등록된 프로젝트가 없습니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectAllRes.of(401, "등록된 프로젝트가 없습니다.", null));
         }
-        return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+        return ResponseEntity.status(200).body(ProjectSelectAllRes.of(200, "Success", projects));
+    }
+
+    @PostMapping("/joinlist")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectUsers(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
+
+        List<UserDto> users=userService.selectProjectUsers(projectUserIdReq.getUserId(), projectUserIdReq.getProjectId());
+        if (users==null){
+            return ResponseEntity.status(200).body(UserSelectAllRes.of(401, "함께 프로젝트에 가입되어 있는 사용자가 없습니다.", null));
+        }
+        return ResponseEntity.status(200).body(UserSelectAllRes.of(200, "Success", users));
     }
 
     @GetMapping("/like")
@@ -300,9 +313,9 @@ public class ProjectController{
 
         List<ProjectDto> projects=projectService.selectProjectLikeOrder();
         if (projects==null){
-            return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "등록된 프로젝트가 없습니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectAllRes.of(401, "등록된 프로젝트가 없습니다.", null));
         }
-        return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+        return ResponseEntity.status(200).body(ProjectSelectAllRes.of(200, "Success", projects));
     }
 
     @GetMapping("/deadline")
@@ -315,9 +328,9 @@ public class ProjectController{
 
         List<ProjectDto> projects=projectService.selectProjectDeadlineOrder();
         if (projects==null){
-            return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(401, "등록된 프로젝트가 없습니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectAllRes.of(401, "등록된 프로젝트가 없습니다.", null));
         }
-        return ResponseEntity.status(200).body(ProjectSelectAllPostRes.of(200, "Success", projects));
+        return ResponseEntity.status(200).body(ProjectSelectAllRes.of(200, "Success", projects));
     }
 
     @PostMapping("/like")
@@ -326,9 +339,9 @@ public class ProjectController{
             @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> updateProjectLike(@RequestBody ProjectIdPostReq projectIdPostReq) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> updateProjectLike(@RequestBody ProjectIdReq projectIdReq) throws IOException {
 
-        int likeCode=projectService.updateProjectLike(projectIdPostReq.getId());
+        int likeCode=projectService.updateProjectLike(projectIdReq.getProjectId());
         if (likeCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "등록된 프로젝트가 없습니다."));
         }

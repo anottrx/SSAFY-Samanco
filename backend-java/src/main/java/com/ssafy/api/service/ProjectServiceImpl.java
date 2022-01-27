@@ -2,15 +2,12 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.model.PositionDto;
 import com.ssafy.api.model.ProjectDto;
-import com.ssafy.api.request.ProjectDeletePostReq;
-import com.ssafy.api.request.ProjectJoinPostReq;
-import com.ssafy.api.request.ProjectRegisterPostReq;
-import com.ssafy.api.request.ProjectUpdatePostReq;
+import com.ssafy.api.request.ProjectRegisterReq;
+import com.ssafy.api.request.ProjectUpdateReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -39,20 +36,20 @@ public class ProjectServiceImpl implements ProjectService {
 //    PasswordEncoder passwordEncoder;
 
     @Override
-    public Project createProject(ProjectRegisterPostReq projectRegisterPostReq) {
+    public Project createProject(ProjectRegisterReq projectRegisterReq) {
         Project project = new Project();
-        project.setHostId(projectRegisterPostReq.getHostId());
-        project.setHostPosition(projectRegisterPostReq.getHostPosition());
-        project.setCollectStatus(projectRegisterPostReq.getCollectStatus());
-        project.setDescription(projectRegisterPostReq.getDescription());
-        project.setSize(projectRegisterPostReq.getTotalSize());
-        project.setTitle(projectRegisterPostReq.getTitle());
-        project.setStartDate(projectRegisterPostReq.getStartDate());
-        project.setEndDate(projectRegisterPostReq.getEndDate());
-        project.setTotalBackendSize(projectRegisterPostReq.getTotalBackendSize());
-        project.setTotalFrontendSize(projectRegisterPostReq.getTotalFrontendSize());
-        project.setTotalMobileSize(projectRegisterPostReq.getTotalMobileSize());
-        project.setTotalEmbeddedSize(projectRegisterPostReq.getTotalEmbeddedSize());
+        project.setHostId(projectRegisterReq.getHostId());
+        project.setHostPosition(projectRegisterReq.getHostPosition());
+        project.setCollectStatus(projectRegisterReq.getCollectStatus());
+        project.setDescription(projectRegisterReq.getDescription());
+        project.setSize(projectRegisterReq.getTotalSize());
+        project.setTitle(projectRegisterReq.getTitle());
+        project.setStartDate(projectRegisterReq.getStartDate());
+        project.setEndDate(projectRegisterReq.getEndDate());
+        project.setTotalBackendSize(projectRegisterReq.getTotalBackendSize());
+        project.setTotalFrontendSize(projectRegisterReq.getTotalFrontendSize());
+        project.setTotalMobileSize(projectRegisterReq.getTotalMobileSize());
+        project.setTotalEmbeddedSize(projectRegisterReq.getTotalEmbeddedSize());
 
 //        String hostPosition= projectRegisterPostReq.getHostPosition();
 //        if ("frontend".equalsIgnoreCase(hostPosition)){
@@ -69,7 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public int updateProject(ProjectUpdatePostReq updateInfo) {
+    public int updateProject(ProjectUpdateReq updateInfo) {
         return projectRepositorySupport.updateProject(updateInfo);
     }
 
@@ -137,12 +134,6 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         return projects;
-    }
-
-    @Override
-    public int joinProject(Long projectId, Long userId, String position) {
-//        int joinProjectCode=projectRepositorySupport.joinProject(projectId, position);
-        return projectRepositorySupport.joinProject(projectId, userId, position);
     }
 
     @Override
@@ -269,5 +260,6 @@ public class ProjectServiceImpl implements ProjectService {
     public int updateProjectLike(Long id) {
         return projectRepositorySupport.updateProjectLike(id);
     }
+
 
 }

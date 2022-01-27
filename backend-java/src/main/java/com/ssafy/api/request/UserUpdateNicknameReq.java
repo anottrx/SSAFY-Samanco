@@ -9,11 +9,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@ApiModel("UserUpdateNicknamePostReq")
-public class UserUpdateNicknamePostReq {
+public class UserUpdateNicknameReq {
 
-    @ApiModelProperty(name="id", example="1")
-    Long id;
-    @ApiModelProperty(name="nickname", example="싸피싸만코")
+    Long userId;
     String nickname;
 }

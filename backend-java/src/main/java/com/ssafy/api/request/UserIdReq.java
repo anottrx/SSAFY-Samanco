@@ -9,8 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@ApiModel("ProjectIdPostReq")
-public class ProjectIdPostReq {
-    @ApiModelProperty(name="id", example="10")
-    private Long id;
+@ApiModel("UserIdPostReq")
+public class UserIdReq {
+    private Long userId;
 }
