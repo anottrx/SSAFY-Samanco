@@ -3,6 +3,7 @@ import ItemList from "../../components/Club/ItemList";
 import SearchBar from "../../components/Common/Search";
 import StackTagList from "../../components/Club/StackTagList";
 import Carousel from "../../components/Club/Carousel";
+import MyClub from "../../components/Club/MyClub";
 
 import styled from "@emotion/styled";
 import { Button, Divider } from "@mui/material";
@@ -38,6 +39,9 @@ export default function Project() {
     <Layout>
       <h1>Project</h1>
       <ItemWrapper >
+        <MyClub label="내 프로젝트"></MyClub>
+    
+        <CusDivider variant="middle" />
         <ProjectActions>
           <SearchBar target="project"></SearchBar>
           <CusButton variant="outlined" size="medium"
