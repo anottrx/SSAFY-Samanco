@@ -10,7 +10,7 @@ import {
   updateNicknameAPI,
   deleteUserAPI,
 } from "../../pages/api/user";
-import { TextField } from "@mui/icons-material";
+import { TextField } from "@mui/material";
 
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
@@ -43,7 +43,7 @@ export default function MyInfo() {
   const cookies = new Cookies();
   const [cookie, setCookie] = useCookies(["userToken"]);
 
-  useEffect(() => {
+  function getUserInfo() {
     const token = cookie.userToken;
 
     getUserLoginTokenAPI(token).then((res) => {
@@ -72,14 +72,18 @@ export default function MyInfo() {
         inputState.class = res.user.userClass;
         inputState.generation = res.user.generation;
         inputState.studentId = res.user.studentId;
-        inputState.position = res.user.projectPosition;
+        inputState.position = res.user.position;
         inputState.password = res.user.password;
         inputState.link = res.user.link;
-        inputState.description = res.description;
+        inputState.description = res.user.description;
         // inputState.stacks = res.user.stacks;
         // inputState.file = res.user.file;
       });
     });
+  }
+
+  useEffect(() => {
+    getUserInfo();
   }, []);
 
   const handleNicknameChange = (e) => {
@@ -103,15 +107,17 @@ export default function MyInfo() {
       }
 
       if (isNormal) {
-        // console.log(nicknameInfo);
         updateNicknameAPI(nicknameInfo).then((res) => {
+          console.log("닉네임 수정 가능한지 확인한 결과" + JSON.stringify(res));
           if (res.statusCode == 200) {
-            setNicknameChange(false);
-            // sessionStorage.setItem("nickname", nicknameInfo.nickname);
+            if (window.confirm("닉네임 수정이 가능합니다. 수정하시겠습니까?")) {
+              //업데이트 API 실행하기
+              setNicknameChange(false);
+            } else {
+            }
           } else {
             alert(`${res.message}`);
           }
-          console.log("닉네임 수정 가능한지 확인한 결과" + JSON.stringify(res));
         });
       }
     } else {
@@ -235,7 +241,7 @@ export default function MyInfo() {
         <div className="mb-6">
           <label>반</label>
           <input
-          id="class"
+            id="class"
             value={inputState.class || ""}
             disabled={onlyView ? true : false}
             onChange={handleChange}
@@ -290,14 +296,17 @@ export default function MyInfo() {
         </div>
         <div className="mb-6">
           <label>자기소개</label>
-          {/* <TextField
-            id="outlined-textarea"
+          <br />
+          <TextField
+            id="description"
             placeholder="자기자신에 대해 소개해주세요"
-            fullWidth
+            // fullWidth
             rows={4}
             multiline
-            value={inputState.description}
-            disabled={onlyView ? true : false}/> */}
+            value={inputState.description || ""}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
         </div>
         <div className="mb-6">
           <label>이미지</label>
