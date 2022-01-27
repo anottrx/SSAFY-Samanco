@@ -69,11 +69,16 @@ public class UserRepositorySupport {
 
     @Transactional
     public int updateUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
-        if (valid.updateUserProjectValid(userId, projectId)) {
-            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
-                    .set(qUser.projectId, projectId)
-                    .set(qUser.projectPosition, projectPosition)
-                    .set(qUser.projectJoinStatus, projectJoinStatus).execute();
+        if (valid.isUserValid(userId) && valid.isProjectValid(projectId)) {
+            if (projectPosition!=null) {
+                jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                        .set(qUser.projectId, projectId)
+                        .set(qUser.projectPosition, projectPosition)
+                        .set(qUser.projectJoinStatus, projectJoinStatus).execute();
+            } else {
+                jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                        .set(qUser.projectJoinStatus, projectJoinStatus).execute();
+            }
             return 200;
         }
         return 401;

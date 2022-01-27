@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
 		if (userResult==null || userResult.getProjectId()!=projectId){
 			return null;
 		}
-		List<User> results = projectRepositorySupport.selectUsers(projectId);
+		List<User> results = projectRepositorySupport.selectProjectUsers(projectId);
 		if (results==null){
 			return null;
 		}
@@ -184,9 +184,24 @@ public class UserServiceImpl implements UserService {
 		for (User result: results){
 			users.add(userEntityToDto(result));
 		}
-
 		return users;
+	}
 
+	@Override
+	public List<UserDto> selectJoinUsers(Long userId, Long projectId) {
+		Project projectResult = projectRepositorySupport.selectByHost(userId);
+		if (projectResult==null || projectResult.getId()!=projectId){
+			return null;
+		}
+		List<User> results = projectRepositorySupport.selectJoinUsers(projectId);
+		if (results==null){
+			return null;
+		}
+		List<UserDto> users=new ArrayList<>();
+		for (User result: results){
+			users.add(userEntityToDto(result));
+		}
+		return users;
 	}
 
 	@Override

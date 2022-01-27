@@ -119,7 +119,7 @@ public class ProjectRepositorySupport {
         return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false)).orderBy(qProject.id.desc()).fetch();
     }
 
-    public List<User> selectUsers(Long projectId) {
+    public List<User> selectProjectUsers(Long projectId) {
         return jpaQueryFactory.selectFrom(qUser)
                 .where(qUser.projectId.eq(projectId), qUser.isDeleted.eq(false), qUser.projectJoinStatus.eq("OK"))
                 .fetch();
@@ -148,4 +148,9 @@ public class ProjectRepositorySupport {
         return 200;
     }
 
+    public List<User> selectJoinUsers(Long projectId) {
+        return jpaQueryFactory.selectFrom(qUser)
+                .where(qUser.projectId.eq(projectId), qUser.isDeleted.eq(false), qUser.projectJoinStatus.eq("BEFORE"))
+                .fetch();
+    }
 }

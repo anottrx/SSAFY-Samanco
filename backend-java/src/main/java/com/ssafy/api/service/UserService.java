@@ -30,4 +30,6 @@ public interface UserService {
     int updateNickCheck(Long id, String nickname);
 	UserDto userEntityToDto(User user);
     List<UserDto> selectProjectUsers(Long userId, Long projectId);
+
+    List<UserDto> selectJoinUsers(Long userId, Long projectId);
 }
