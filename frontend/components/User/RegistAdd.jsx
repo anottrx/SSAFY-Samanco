@@ -37,7 +37,7 @@ export default function RegistInfo() {
     email: "",
     nickname: "",
     name: "",
-    class: "",
+    userClass: "",
     generation: "",
     studentId: "",
   });
@@ -92,7 +92,7 @@ export default function RegistInfo() {
     inputState.userId = sessionStorage.getItem("userId");
     inputState.nickname = sessionStorage.getItem("nickname");
     inputState.name = sessionStorage.getItem("name");
-    inputState.class = sessionStorage.getItem("userClass");
+    inputState.userClass = sessionStorage.getItem("userClass");
     inputState.generation = sessionStorage.getItem("generation");
     inputState.studentId = sessionStorage.getItem("studentId");
     inputState.password = sessionStorage.getItem("password");
@@ -132,6 +132,7 @@ export default function RegistInfo() {
   };
 
   const positionHandleChange = (e) => {
+    console.log(e.target.value);
     inputState.position = e.target.value;
   };
 
@@ -183,9 +184,10 @@ export default function RegistInfo() {
         delete inputState.stacks[key];
       }
     });
-    
+
     if (isNormal) {
       const formData = new FormData();
+      console.log("inputState" + JSON.stringify(inputState));
 
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
@@ -194,13 +196,13 @@ export default function RegistInfo() {
           // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
         } else {
           formData.append(key, value);
-          // console.log(key + " " + value);
+          console.log(key + " " + value);
         }
       });
 
       formData.append("file", files);
 
-      for (var key of formData.entries()) {
+      for (let key of formData.entries()) {
         console.log("key", `${key}`);
       }
 
@@ -247,7 +249,6 @@ export default function RegistInfo() {
           >
             Image Upload
           </ImgUploadBtn>
-
           <input
             ref={uploadRef}
             type="file"
@@ -301,9 +302,10 @@ export default function RegistInfo() {
             <br />
             <Select
               id="position"
-              name="position"
-              onChange={positionHandleChange}
-              defaultValue=""
+              onChange={(e) => {
+                positionHandleChange(e);
+                handleChange(e);
+              }}
               value={inputState.position || ""}
               sx={{ minWidth: 370, fontSize: 14 }}
             >

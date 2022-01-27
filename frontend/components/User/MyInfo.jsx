@@ -24,7 +24,7 @@ export default function MyInfo() {
     email: "",
     phone: "",
     nickname: "",
-    class: "",
+    userClass: "",
     birthday: "",
     generation: "",
     studentId: "",
@@ -69,7 +69,7 @@ export default function MyInfo() {
         inputState.name = res.user.name;
         inputState.birthday = res.user.birthday;
         inputState.phone = res.user.phone;
-        inputState.class = res.user.userClass;
+        inputState.userClass = res.user.userClass;
         inputState.generation = res.user.generation;
         inputState.studentId = res.user.studentId;
         inputState.position = res.user.position;
@@ -241,8 +241,8 @@ export default function MyInfo() {
         <div className="mb-6">
           <label>반</label>
           <input
-            id="class"
-            value={inputState.class || ""}
+            id="userClass"
+            value={inputState.userClass || ""}
             disabled={onlyView ? true : false}
             onChange={handleChange}
           />
