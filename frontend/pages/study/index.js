@@ -41,11 +41,12 @@ export default function Study() {
           <SearchBar></SearchBar>
           <CusButton variant="outlined" size="medium"
             onClick={() => {
-              sessionStorage.getItem("userId")?
-              Router.push("/study/regist")
-              :
-              alert("로그인이 필요한 작업입니다.");
-              Router.push("/login");
+              if (sessionStorage.getItem("userId"))
+                Router.push("/study/regist")
+              else {
+                alert("로그인이 필요한 작업입니다.");
+                Router.push("/login");
+              }
             }}>
             등록
           </CusButton>
