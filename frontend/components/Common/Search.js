@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import {useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
 
-
+import {getProjectBytitle} from "../../pages/api/project"
 
 function SearchBar(props) {
     const [keyword, setKeyword] = useState("");
@@ -19,9 +19,16 @@ function SearchBar(props) {
     useEffect(() => {
         if (keyword !== "")
             console.log(keyword)
-        if (props.target === "project" && keyword) {
+        if (props.target === "project") {
             // 프로젝트 페이지를 위한 검색창
-            // dispatch(projectActions.setProjectFilteringKeyword({keyword}))
+            if (!keyword)
+                dispatch(projectActions.setProjectFilterList({list: null}))
+            else {
+                getProjectBytitle(keyword)
+                .then(res => 
+                    dispatch(projectActions.setProjectFilterList({list: res.projects}))
+                )
+            }
         }
     }, [keyword])
 

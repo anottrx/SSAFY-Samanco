@@ -25,10 +25,11 @@ function ItemList(props) {
     
     const dispatch = useDispatch();
     
-    let clubData, setDetail, setList;
+    let clubData, filterData, setDetail, setList;
     
     if (props.from === "project") {
         clubData = useSelector(({ project }) => project.projectList);
+        filterData = useSelector(({ project }) => project.projectFilterList);
         setDetail = useCallback(
             ({detail}) => {
                 dispatch(projectActions.setProjectDetail({detail}))
@@ -130,6 +131,27 @@ function ItemList(props) {
             :
             <CusGrid container maxWidth="lg" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4}}>
             {
+                filterData!=null?
+                filterData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
+                    return (
+                        <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}  onClick={()=>{
+                            getProjectById({id: data.id})
+                            .then(res => {
+                                setDetail({detail: res.project});
+                                
+                                // api 작성
+                                Router.push({
+                                    pathname: `/${props.from}/[id]`,
+                                    query: { id: data.id }
+                                })
+                            })
+                            
+                        }}>
+                            <Item data={data}></Item> 
+                        </Grid>
+                    )
+                })
+                :
                 clubData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                     return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={data.id}  onClick={()=>{
@@ -167,9 +189,14 @@ export function Item(props) {
         text-align: left;
     `
 
-    const CusBadge = styled(Badge)`
-        top: 30px;
+    const CusCountBadge = styled(Badge)`
+        top: 25px;
         right: 30px;
+    ` 
+
+    const CusDeadlineBadge = styled(Badge)`
+        top: 125px;
+        right: 70px;
     ` 
 
     let totalSize = 0, currSize = 0;
@@ -180,7 +207,13 @@ export function Item(props) {
 
     return (
         <Container>
-            <CusBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusBadge>
+            <CusCountBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusCountBadge>
+            {
+                data.deadline?
+                <CusDeadlineBadge badgeContent={"마감까지 "+ data.deadline+"일 남았어요!"} color="warning"></CusDeadlineBadge>
+                :
+                null
+            }
             <Card>
                 {
                     // data.file?

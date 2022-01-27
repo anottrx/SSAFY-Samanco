@@ -48,6 +48,14 @@ async function getProjectById(data) {
     .catch(err => err.response.data)
 }
 
+async function getProjectBytitle(title) {
+    return await api
+    .get("/api/project/title/"+title)
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
 export {
-    registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById
+    registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
+    getProjectBytitle
 }

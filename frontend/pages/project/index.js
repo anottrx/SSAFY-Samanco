@@ -39,7 +39,7 @@ export default function Project() {
       <h1>Project</h1>
       <ItemWrapper >
         <ProjectActions>
-          <SearchBar></SearchBar>
+          <SearchBar target="project"></SearchBar>
           <CusButton variant="outlined" size="medium"
             onClick={() => {
               sessionStorage.getItem("userId")?
