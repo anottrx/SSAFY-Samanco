@@ -23,7 +23,6 @@ import { useTheme } from '@mui/material/styles';
 function ItemList(props) {
     //-------------- redux dispatch로 값 저장, selector로 불러오기
     
-    
     const dispatch = useDispatch();
     
     let clubData, setDetail, setList;

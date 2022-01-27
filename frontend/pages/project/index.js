@@ -42,7 +42,11 @@ export default function Project() {
           <SearchBar></SearchBar>
           <CusButton variant="outlined" size="medium"
             onClick={() => {
-              Router.push("/project/regist");
+              sessionStorage.getItem("userId")?
+                Router.push("/project/regist")
+                :
+                alert("로그인이 필요한 작업입니다.");
+                Router.push("/login");
             }}>
             등록하기
           </CusButton>
