@@ -4,6 +4,7 @@ import project from './project';
 import study from "./study"; 
 import meeting from "./meeting";
 import board from "./board";
+import apply from "./apply";
 
 const reducer = (state, action) => { 
     if (action.type === HYDRATE) { 
@@ -14,7 +15,8 @@ const reducer = (state, action) => {
         project, 
         meeting,
         board,
-        study
+        study,
+        apply
         // 여기에 추가 
     })(state, action); 
 } 
