@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -45,7 +46,6 @@ public class ProjectServiceImpl implements ProjectService {
         project.setCollectStatus(projectRegisterPostReq.getCollectStatus());
         project.setDescription(projectRegisterPostReq.getDescription());
         project.setSize(projectRegisterPostReq.getTotalSize());
-        project.setCollectStatus(projectRegisterPostReq.getCollectStatus());
         project.setTitle(projectRegisterPostReq.getTitle());
         project.setStartDate(projectRegisterPostReq.getStartDate());
         project.setEndDate(projectRegisterPostReq.getEndDate());
@@ -185,7 +185,88 @@ public class ProjectServiceImpl implements ProjectService {
         projectDto.setLikes(result.getLikes());
         projectDto.setPositions(positions);
 
-        return  projectDto;
+        // 마감일 계산
+        Calendar todayDate = Calendar.getInstance();
+        todayDate.setTime(new Date()); //금일 날짜
+        Date endDate = null;
+        try {
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse(projectDto.getEndDate());
+            Calendar cmpDate = Calendar.getInstance();
+            cmpDate.setTime(endDate); //특정 일자
+            long deadline = (cmpDate.getTimeInMillis() - todayDate.getTimeInMillis()) / (24*60*60*1000) + 1;
+            System.out.println(deadline + "일 차이");
 
+            projectDto.setDeadline(deadline);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  projectDto;
+    }
+
+    @Override
+    public List<ProjectDto> selectProjectByTitle(String title) {
+        List<Project> results=projectRepositorySupport.selectByTitle(title);
+        if (results==null){
+            return null;
+        }
+        List<ProjectDto> projects=new ArrayList<>();
+        for (Project result: results) {
+            ProjectDto project=projectEntityToDto(result);
+            Long projectId=project.getId();
+            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
+            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+            projects.add(project);
+        }
+
+        return projects;
+
+    }
+
+    @Override
+    public List<ProjectDto> selectProjectLikeOrder() {
+        List<Project> results=projectRepositorySupport.selectProjectLikeOrder();
+        if (results==null){
+            return null;
+        }
+        List<ProjectDto> projects=new ArrayList<>();
+        for (Project result: results) {
+            ProjectDto project=projectEntityToDto(result);
+            Long projectId=project.getId();
+            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
+            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+            projects.add(project);
+        }
+
+        return projects;
+    }
+
+    @Override
+    public List<ProjectDto> selectProjectDeadlineOrder() {
+        List<Project> results=projectRepositorySupport.selectProjectAll();
+        if (results==null){
+            return null;
+        }
+        List<ProjectDto> projects=new ArrayList<>();
+        for (Project result: results) {
+            ProjectDto project=projectEntityToDto(result);
+            Long projectId=project.getId();
+            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
+            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+            projects.add(project);
+        }
+
+        Collections.sort(projects, new Comparator<ProjectDto>() {
+            @Override
+            public int compare(ProjectDto o1, ProjectDto o2) {
+                return (int) (o1.getDeadline()-o2.getDeadline());
+            }
+        });
+
+        return projects;
+    }
+
+    @Override
+    public int updateProjectLike(Long id) {
+        return projectRepositorySupport.updateProjectLike(id);
     }
 }

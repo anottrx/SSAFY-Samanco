@@ -27,14 +27,14 @@ public class ProjectDto {
     private String hostPosition;
     private Long hit;
     private FileDto file;
+    private Long deadline;
 
     public ProjectDto(Long id, String title, String collectStatus, List<PositionDto> positions,
                       List<StackGradeDto> stacks, String description, String startDate, String endDate, Long likes,
-                      Long hostId, String hostPosition, Long hit, FileDto file) {
+                      Long hostId, String hostPosition, Long hit, FileDto file, Long deadline) {
         this.id = id;
         this.title = title;
         this.collectStatus = collectStatus;
-//        this.size = size;
         this.positions = positions;
         this.stacks = stacks;
         this.description = description;
@@ -45,5 +45,7 @@ public class ProjectDto {
         this.hostPosition = hostPosition;
         this.hit = hit;
         this.file = file;
+        this.deadline = deadline;
     }
 }
+
