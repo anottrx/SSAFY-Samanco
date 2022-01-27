@@ -120,8 +120,17 @@ async function approveProject(data) {
     .catch(err => err.response.data)
 }
 
+async function getProjectByUserId(id) {
+    return await api
+    .post("/api/project/user", {
+        userId: id
+    })
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
 export {
     registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
     getProjectBytitle, getProjectByDeadLine, updateProjectLike, getProjectByLike,
-    joinProjectAPI, getUserByjoin, approveProject
+    joinProjectAPI, getUserByjoin, approveProject, getProjectByUserId
 }
