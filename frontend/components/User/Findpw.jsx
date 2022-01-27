@@ -17,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import CheckEmailCode from "./CheckEmailCode";
 
 export default function FindPassword() {
   // 비밀번호 재설정
@@ -56,11 +57,13 @@ export default function FindPassword() {
 
   const codeHandleChange = (e) => {
     setCode(e.target.value);
-    //   const { id, value } = e.target;
-    //   setInputState((prevState) => ({
-    //     ...prevState,
-    //     [id]: value,
-    //   }));
+    // console.log(e)
+    // const { id, value } = e.target;
+    // setCode((prevState) => ({
+    //   ...prevState,
+    //   // [id]: value,
+    //   code : e.target.innerText
+    // }));
   };
 
   const sendEmailClick = (e) => {
@@ -108,7 +111,7 @@ export default function FindPassword() {
       <input
         type="text"
         id="code"
-        value={code}
+        value={code || ''}
         placeholder="인증번호"
         onChange={codeHandleChange}
         required=""
@@ -126,7 +129,7 @@ export default function FindPassword() {
   const ShowEmailAgain = () => (
     <div>
       <button onClick={setSendEmailButtonWork}>
-        인증코드를 못 받으셨나요?
+        인증코드 재발급 / 이메일 변경
       </button>
     </div>
   );
@@ -192,31 +195,8 @@ export default function FindPassword() {
         <br />
         {showEmailAgainText ? <ShowEmailAgain /> : null}
         <br />
-         {showCodeInput ? <ShowCodeInputCheck /> : null}
+        {showCodeInput ? <CheckEmailCode />: null}
         <br />
-        {/* <FormControl sx={{ width: 280 }}>
-          <OutlinedInput
-            id="password"
-            placeholder="비밀번호"
-            type={inputState.showPassword ? "text" : "password"}
-            value={inputState.password}
-            onChange={handleChange}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  //   onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {inputState.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Password"
-          />
-        </FormControl>
-         */}
         {sendEmailButton ? (
           <>
             <Button
@@ -234,7 +214,7 @@ export default function FindPassword() {
               sx={{ width: 280 }}
               onClick={checkCodeClick}
             >
-              인증하기
+              비밀번호 재설정하기
             </Button>
           </>
         )}
