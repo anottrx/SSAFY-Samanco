@@ -144,7 +144,7 @@ function MyApp({ Component, pageProps }) {
                   cookies.set("userToken", "");
                   setIsLogin(false);
                   setUserId(null);
-                  // window.location.replace("/")
+                  window.location.replace("/")
                 }}
                 className="site-nav-item"
               >
