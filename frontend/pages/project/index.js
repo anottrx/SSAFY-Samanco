@@ -3,6 +3,7 @@ import ItemList from "../../components/Club/ItemList";
 import SearchBar from "../../components/Common/Search";
 import StackTagList from "../../components/Club/StackTagList";
 import Carousel from "../../components/Club/Carousel";
+import MyClub from "../../components/Club/MyClub";
 
 import styled from "@emotion/styled";
 import { Button, Divider } from "@mui/material";
@@ -38,15 +39,19 @@ export default function Project() {
     <Layout>
       <h1>Project</h1>
       <ItemWrapper >
+        <MyClub label="내 프로젝트" from="project"></MyClub>
+    
+        <CusDivider variant="middle" />
         <ProjectActions>
-          <SearchBar></SearchBar>
+          <SearchBar target="project"></SearchBar>
           <CusButton variant="outlined" size="medium"
             onClick={() => {
-              sessionStorage.getItem("userId")?
+              if (sessionStorage.getItem("userId"))
                 Router.push("/project/regist")
-                :
+              else {
                 alert("로그인이 필요한 작업입니다.");
                 Router.push("/login");
+              }
             }}>
             등록하기
           </CusButton>
@@ -57,8 +62,8 @@ export default function Project() {
     
       <CusDivider variant="middle" />
 
-      <Carousel label="인기 많은 프로젝트"></Carousel>
-      <Carousel label="곧 마감 되는 프로젝트"></Carousel>
+      <Carousel label="곧 마감 되는 프로젝트" target="project" subject="deadline"></Carousel>
+      <Carousel label="인기 많은 프로젝트" target="project" subject="likes"></Carousel>
     </Layout>
   );
 }

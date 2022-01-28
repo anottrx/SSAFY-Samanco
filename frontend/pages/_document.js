@@ -23,7 +23,6 @@ export default class RootDocument extends Document {
               }
             `}
           </style>
-          <link rel="stylesheet" href="/fonts/fonts.css"></link>
         </Head>
         <body>
           <Main />
