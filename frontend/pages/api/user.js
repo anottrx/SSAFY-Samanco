@@ -133,7 +133,7 @@ async function updateNicknameAPI(inputData) {
   // 회원가입한 후 사용자가 닉네임 수정할 때 닉네임 중복 체크
   return await api
     .post("/api/user/nickcheck", {
-      id: inputData.id,
+      userId: inputData.id,
       nickname: inputData.nickname,
     })
     .then((res) => res.data)
