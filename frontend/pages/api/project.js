@@ -1,3 +1,4 @@
+import { ta } from "date-fns/locale";
 import api, { fileUrl } from "./index";
 
 // 프로젝트 등록
@@ -44,9 +45,13 @@ async function getProjectAllAPI() {
 }
 
 // 프로젝트 좋아요
-async function updateProjectLike(id) {
+async function updateProjectLike(data) {
     return await api
-    .post("/api/project/like", {projectId: id})
+    .post("/api/project/like", {
+        tag: data.tag,
+        tagId: data.projectId,
+        userId: data.userId
+    })
     .then(res => res.data)
     .catch(err => err.response.data)
 }
@@ -155,6 +160,7 @@ async function quitProject(data) {
     .catch(err => err.response.data)
 }
 
+// 프로젝트에 등록된 스택 리스트 불러오기
 async function projectStackList() {
     return await api
     .get("/api/project/stack")

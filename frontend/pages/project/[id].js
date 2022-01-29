@@ -7,12 +7,13 @@ import PositionList from "../../components/Club/PositionList"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import { Card, Container, Skeleton, CardContent, Typography, 
     Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, 
     DialogTitle, ButtonGroup, FormControl, RadioGroup,
     Radio, FormControlLabel } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Router from "next/router";
 
 import * as projectActions from '../../store/module/project';
@@ -20,6 +21,8 @@ import { deleteAPI, updateProjectLike, joinProjectAPI, getProjectById } from "..
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
+    const [like, changeLike] = useState(detail.likes);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -31,7 +34,7 @@ const ProjectDetail = () => {
         .then(res => {
             dispatch(projectActions.setProjectDetail({detail: res.project}))
     });
-    }, []);
+    }, [like]);
 
     const DetailWrapper = styled.div`
         display: flex;
@@ -249,16 +252,26 @@ const ProjectDetail = () => {
                         <span>{detail.hit}</span>
                     </Button>
                     <Button onClick={() => {
+                        changeLike(!like);
                         if (sessionStorage.getItem("userId")) {
                             // To do: 좋아요 api 호출
                             console.log("좋아요");
-                            updateProjectLike(detail.id).then(res => console.log(res))
+                            updateProjectLike({
+                                tag: "PROJECT",
+                                projectId: detail.id, // 프로젝트 아이디
+                                userId: sessionStorage.getItem("userId")
+                            }).then(res => console.log(res))
                         } else {
                             alert("로그인이 필요한 작업입니다.");
                             Router.push("/login")
                         }
-                    }}>
-                        <FavoriteIcon /> 
+                    }} variant={like? "contained":"outlined"}>
+                        {
+                            like?
+                            <FavoriteIcon /> 
+                            :
+                            <FavoriteBorderIcon /> 
+                        }
                         <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
