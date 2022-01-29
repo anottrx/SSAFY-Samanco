@@ -121,13 +121,15 @@ export default function RegistInfo() {
   const changeHandle = (value, name) => {
     inputState[name] = value;
     // console.log(name + " " + value)
+    
   };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+    inputState[id] = e.target.value;
     setInputState((prevState) => ({
       ...prevState,
-      [id]: value,
+      // [id]: value,
     }));
   };
 
@@ -273,7 +275,7 @@ export default function RegistInfo() {
             </Typography>
             <br />
             <OutlinedInput
-              type="number"
+              type="tel"
               id="phone"
               placeholder="01012345678"
               value={inputState.phone}
