@@ -131,24 +131,6 @@ public class ProjectRepositorySupport {
                 .where(qProject.isDeleted.eq(false), qProject.title.contains(title)).fetch();
     }
 
-//    public List<Project> selectProjectLikeOrder() {
-//        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false))
-//                .orderBy(qProject.likes.desc()).fetch();
-//    }
-
-//    @Transactional
-//    public int updateProjectLike(Long projectId) {
-//        if (!isValid(projectId)){
-//            return 401;
-//        }
-//
-//        jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-//                .set(qProject.likes, qProject.likes.add(1))
-//                .execute();
-//
-//        return 200;
-//    }
-
     public List<User> selectJoinUsers(Long projectId) {
         return jpaQueryFactory.selectFrom(qUser)
                 .where(qUser.projectId.eq(projectId), qUser.isDeleted.eq(false), qUser.projectJoinStatus.eq("BEFORE"))

@@ -80,7 +80,7 @@ public class ValidRepository {
         return false;
     }
 
-    private boolean isBoardValid(Long boardId) {
+    public boolean isBoardValid(Long boardId) {
         Board board = jpaQueryFactory.selectFrom(qBoard)
             .where(qBoard.id.eq(boardId), qBoard.isDeleted.eq(false)).fetchOne();
 
@@ -90,7 +90,7 @@ public class ValidRepository {
         return true;
     }
 
-    private boolean isStudyValid(Long studyId) {
+    public boolean isStudyValid(Long studyId) {
         Study study = jpaQueryFactory.selectFrom(qStudy)
                 .where(qStudy.id.eq(studyId), qStudy.isDeleted.eq(false)).fetchOne();
 
