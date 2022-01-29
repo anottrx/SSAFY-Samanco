@@ -55,7 +55,8 @@ async function updateProjectLike(id) {
 async function getProjectById(data) {
     return await api
     .post("/api/project/view", {
-        projectId: data.id
+        projectId: data.projectId,
+        userId: data.userId
     })
     .then(res => res.data)
     .catch(err => err.response.data)

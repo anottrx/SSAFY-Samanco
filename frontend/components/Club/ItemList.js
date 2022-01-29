@@ -222,7 +222,11 @@ export function Item(props) {
 
     return (
         <Container onClick={()=>{
-            getProjectById({id: data.id})
+            getProjectById({
+                projectId: data.id, 
+                userId: sessionStorage.getItem("userId") == null? 
+                    0: sessionStorage.getItem("userId")
+            })
             .then(res => {
                 setDetail({detail: res.project});
                 
