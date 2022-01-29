@@ -12,6 +12,7 @@ import {
 import { TextField, Button } from "@mui/material";
 import styled from "@emotion/styled";
 import StackLevelList from "../Common/Stack/StackLevelList";
+import LinkList from "../Common/LinkList";
 
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
@@ -21,6 +22,7 @@ export default function MyInfo() {
   const [checkPassword, setCheckPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [links, setLinks] = useState([]);
 
   const [inputState, setInputState] = useState({
     userId: "",
@@ -86,6 +88,8 @@ export default function MyInfo() {
         inputState.link = res.user.link;
         inputState.description = res.user.description;
         inputState.stacks = res.user.stacks;
+
+        setLinks(inputState.link.split(" "));
         // inputState.file = res.user.file;
         setLoading(true);
         // ShowStack(inputState.stacks);
@@ -376,12 +380,13 @@ export default function MyInfo() {
             </div>
             <div className="mb-6">
               <label>링크</label>
-              <input
+              {/* <input
                 id="link"
                 value={inputState.link || ""}
                 disabled={onlyView ? true : false}
                 onChange={handleChange}
-              />
+              /> */}
+               <LinkList items={links} />
             </div>
             <div className="mb-6">
               <label>스택</label>
