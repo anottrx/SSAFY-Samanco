@@ -5,6 +5,7 @@ import study from "./study";
 import meeting from "./meeting";
 import board from "./board";
 import apply from "./apply";
+import user from "./user";
 
 const reducer = (state, action) => { 
     if (action.type === HYDRATE) { 
@@ -16,7 +17,8 @@ const reducer = (state, action) => {
         meeting,
         board,
         study,
-        apply
+        apply,
+        user
         // 여기에 추가 
     })(state, action); 
 } 

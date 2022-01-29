@@ -12,22 +12,22 @@ import { Container, Skeleton, Card, CardContent, Typography, Divider,
     DialogContentText, FormControl, RadioGroup,FormControlLabel, 
     Radio, DialogActions} from "@mui/material"
 
-import { getUserByjoin } from "../../pages/api/project"
-import * as applyActions from '../../store/module/apply';
+import { getUserAtProject } from "../../pages/api/project"
+import * as projectActions from '../../store/module/project';
 
 
 function ProjectInfo(){
     let clubData = useSelector(({ project }) => project.myProject);
-    const applyData = useSelector(({ apply }) => apply.applyList);
+    const userData = useSelector(({ project }) => project.userList);
     const dispatch = useDispatch();
    
     useLayoutEffect(() => {
-        getUserByjoin({
-        projectId: clubData.id,
-        userId: sessionStorage.getItem("userId")
+        getUserAtProject({
+            projectId: clubData.id,
+            userId: sessionStorage.getItem("userId")
         })
         .then(res => { 
-            dispatch(applyActions.setApplyList({list: res.users}))
+            dispatch(projectActions.setUserList({list: res.users}))
         })
         .catch(err => console.log(err))
     }, []);
@@ -251,7 +251,9 @@ function ProjectInfo(){
         function ProjectUser(props) {
             const UserWrapper = styled.div`
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex-wrap: wrap;
+
             & > div {
                 display: flex;
                 flex-direction: column;
@@ -265,16 +267,41 @@ function ProjectInfo(){
 
             return (
                 <UserWrapper>
-                    <div>팀원</div>
-                    {
-                        applyData == null?
-                        <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
-                        applyData.map(user => {
-                            return (
-                                <UserCard key={user.id} user={user}></UserCard>
-                            )
-                        })
-                    }
+                    <div>
+                        <div>팀장</div>
+                        <div>
+                        {
+                            userData == null?
+                            <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
+                            userData.map(user => {
+                                return (
+                                    <UserCard 
+                                    key={user.id} 
+                                    user={user}
+                                    ></UserCard>
+                                )
+                            })
+                        }
+                        </div>
+                    </div>
+                    <div>
+                        <div>팀원</div>
+                        <div>
+                        {
+                            userData == null?
+                            <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
+                            userData.map(user => {
+                                return (
+                                    <UserCard 
+                                    key={user.id} 
+                                    user={user} 
+                                    projectId={clubData.id}
+                                    hostId={clubData.hostId}></UserCard>
+                                )
+                            })
+                        }
+                        </div>
+                    </div>
                 </UserWrapper>
             )
         }
