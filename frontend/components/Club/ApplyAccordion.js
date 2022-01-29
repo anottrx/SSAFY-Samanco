@@ -10,6 +10,8 @@ import styled from '@emotion/styled';
 import { getUserByjoin } from "../../pages/api/project"
 import { useDispatch } from 'react-redux';
 
+import { forceReload } from "../../util/ForceReload";
+
 
 
 function ApplyAccordion(props) {
@@ -108,7 +110,8 @@ function ApplyAccordion(props) {
                               userId: sessionStorage.getItem("userId")
                               })
                               .then(res => { 
-                                  dispatch(applyActions.setApplyList({list: res.users}))
+                                  dispatch(applyActions.setApplyList({list: res.users}));
+                                  forceReload();
                               })
                               .catch(err => console.log(err))
                           } else {
@@ -131,7 +134,8 @@ function ApplyAccordion(props) {
                               userId: sessionStorage.getItem("userId")
                               })
                               .then(res => { 
-                                  dispatch(applyActions.setApplyList({list: res.users}))
+                                  dispatch(applyActions.setApplyList({list: res.users}));
+                                  forceReload();
                               })
                               .catch(err => console.log(err))
                           } else {
