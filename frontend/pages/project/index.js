@@ -39,7 +39,7 @@ export default function Project() {
     <Layout>
       <h1>Project</h1>
       <ItemWrapper >
-        <MyClub label="내 프로젝트" from="project"></MyClub>
+        {/* <MyClub label="내 프로젝트" from="project"></MyClub> */}
     
         <CusDivider variant="middle" />
         <ProjectActions>
