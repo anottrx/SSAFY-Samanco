@@ -119,17 +119,19 @@ export default function RegistInfo() {
   //   // 리렌더링 X
   // };
   const changeHandle = (value, name) => {
-    inputState[name] = value;
-    // console.log(name + " " + value)
-    
+    if (name == "birthday") {
+      inputState.birthday = value;
+    } else {
+      inputState[name] = value;
+    }
+    console.log("생일 " + JSON.stringify(inputState));
   };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    inputState[id] = e.target.value;
     setInputState((prevState) => ({
       ...prevState,
-      // [id]: value,
+      [id]: value,
     }));
   };
 
@@ -212,8 +214,8 @@ export default function RegistInfo() {
       }
 
       updateUserAPI(formData).then((res) => {
-        console.log(res)
-        console.log(JSON.stringify(res))
+        console.log(res);
+        console.log(JSON.stringify(res));
         if (res.statusCode == 200) {
           sessionStorage.clear();
           sessionStorage.setItem("userId", inputState.userId);
@@ -275,10 +277,10 @@ export default function RegistInfo() {
             </Typography>
             <br />
             <OutlinedInput
-              type="tel"
+              type="number"
               id="phone"
               placeholder="01012345678"
-              value={inputState.phone}
+              value={inputState.phone || ""}
               onChange={(e) => {
                 handleChange(e);
               }}

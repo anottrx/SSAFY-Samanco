@@ -473,7 +473,7 @@ export default function Regist() {
             </Typography>
           </div>
           <OutlinedInput
-            type="tel"
+            type="number"
             id="studentId"
             value={inputState.studentId}
             placeholder="싸피에서 받은 학번"
