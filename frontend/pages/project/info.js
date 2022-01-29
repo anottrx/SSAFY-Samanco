@@ -275,10 +275,11 @@ function ProjectInfo(){
                             <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
                             userData.map(user => {
                                 return (
+                                    user.id == clubData.hostId? 
                                     <UserCard 
                                     key={user.id} 
                                     user={user}
-                                    ></UserCard>
+                                    ></UserCard> : null
                                 )
                             })
                         }
@@ -292,11 +293,12 @@ function ProjectInfo(){
                             <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
                             userData.map(user => {
                                 return (
+                                    user.id != clubData.hostId? 
                                     <UserCard 
                                     key={user.id} 
                                     user={user} 
                                     projectId={clubData.id}
-                                    hostId={clubData.hostId}></UserCard>
+                                    hostId={clubData.hostId}></UserCard> : null
                                 )
                             })
                         }

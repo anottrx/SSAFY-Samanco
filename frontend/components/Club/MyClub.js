@@ -56,8 +56,11 @@ function MyClub(props){
     }
 
     useEffect(() => {
-        getProjectByUserId(sessionStorage.getItem("userId"))
-        .then(res => dispatch(projectActions.setMyProject({project: res.project})));
+        getProjectByUserId(parseInt(sessionStorage.getItem("userId")))
+        .then(res => {
+            console.log(res)
+            dispatch(projectActions.setMyProject({project: res.project}))
+        });
     }, [])
 
     return (

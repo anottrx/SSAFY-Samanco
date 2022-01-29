@@ -125,7 +125,7 @@ async function getUserByjoin(data) {
 async function approveProject(data) {
     return await api
     .post("/api/project/approve", {
-        joinTag: data.jointag,
+        joinTag: data.joinTag,
         projectId: data.projectId,
         hostId: data.hostId,
         userId: data.userId
