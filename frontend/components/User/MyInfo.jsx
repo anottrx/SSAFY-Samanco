@@ -346,7 +346,6 @@ export default function MyInfo() {
             <div className="mb-6">
               <label>이름</label>
               <input
-                defaultvalue={inputState.name}
                 value={inputState.name || ""}
                 disabled
               />
