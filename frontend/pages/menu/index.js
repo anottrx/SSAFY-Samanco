@@ -5,11 +5,11 @@ import { useRouter } from 'next/router'
 
 const menu = () => {
   const { pathname } = useRouter(); // pathname: 현재 path 
-  let [userId, setUserId] = useState(null);
+  let [nickname, setNickname] = useState(null);
 
   useEffect(() => {
-    setUserId(sessionStorage.getItem("userId"));
-  }, [userId]);
+    setNickname(sessionStorage.getItem("nickname"));
+  }, [nickname]);
 
   let links = [
     {path:"/", label:"메인"},
@@ -51,7 +51,7 @@ const menu = () => {
       <Link href="/board">
         <a className={styles.link}>게시판</a>
       </Link> */}
-      {userId === "admin" ? <Link href="/admin"><a className={styles.link}>회원관리</a></Link> :null}
+      {(nickname === "admin" || nickname === "관리자")? <Link href="/admin"><a className={styles.link}>회원관리</a></Link> :null}
     </div>
   );
 };
