@@ -26,6 +26,7 @@ public class ProjectDto {
     private FileDto file;
     private Long deadline;
     private boolean userLike=false;
+    private String projectJoinStatus;
 
 }
 

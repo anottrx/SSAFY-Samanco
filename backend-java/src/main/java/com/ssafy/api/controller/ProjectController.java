@@ -234,7 +234,14 @@ public class ProjectController{
     public ResponseEntity<? extends BaseResponseBody> selectProject(
             @RequestBody @ApiParam(value="project id", required = true) ProjectUserIdReq projectInfo) throws IOException {
 
-        ProjectDto project=projectService.selectProject(projectInfo.getUserId(), projectInfo.getProjectId());
+        Long projectId= projectInfo.getProjectId();
+        Long userId = projectInfo.getUserId();
+
+        ProjectDto project=projectService.selectProject(userId, projectId);
+        UserDto user=userService.selectUser(userId);
+        if (user!=null && projectId==user.getProjectId()) {
+            project.setProjectJoinStatus(user.getProjectJoinStatus());
+        }
         if (project==null){
             return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
         }

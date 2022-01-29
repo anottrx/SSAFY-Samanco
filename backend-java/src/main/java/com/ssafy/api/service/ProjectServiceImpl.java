@@ -99,6 +99,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
         project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
         UserLike userLike = userLikeRepositorySupport.userLike(userId, projectId, "project");
+
         if (userLike!=null) {
             project.setUserLike(true);
         }
