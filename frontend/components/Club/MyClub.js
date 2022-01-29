@@ -1,4 +1,4 @@
-import {Card, CardContent, Button} from "@mui/material";
+import {Card, CardContent, Button, Divider} from "@mui/material";
 import styled from "@emotion/styled";
 import * as projectActions from '../../store/module/project';
 import { useSelector, useDispatch } from 'react-redux';
@@ -45,6 +45,10 @@ function MyClub(props){
         max-width: 430px;
     `
 
+    const CusDivider = styled(Divider)`
+      margin: 20px 0px;
+    `
+
     const dispatch = useDispatch();
     let clubData;
     if (props.from === "project") {
@@ -57,8 +61,9 @@ function MyClub(props){
     }, [])
 
     return (
-        typeof(clubData) === "undefined"?
+        typeof(clubData) === "undefined" || clubData == null?
         null : 
+        <>
         <MyClubWrapper>
             <h2>{props.label}</h2>
             <CusCard>
@@ -82,6 +87,8 @@ function MyClub(props){
                 </CusCardContent>
             </CusCard>
         </MyClubWrapper>
+        <CusDivider variant="middle" />
+        </>
     )
 }
 

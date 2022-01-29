@@ -10,7 +10,9 @@ function ProjectInfo(){
                 Object.keys(clubData).map((key, index) => {
                     let value = JSON.stringify(clubData[key]);
                     return (
-                        <div key={index}>{key} : {value}</div>
+                        <>
+                            <div key={index}>{key} : {value}</div>
+                        </>
                     )
                 })
             }
