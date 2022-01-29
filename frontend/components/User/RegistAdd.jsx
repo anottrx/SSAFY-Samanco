@@ -196,6 +196,10 @@ export default function RegistInfo() {
       console.log("inputState" + JSON.stringify(inputState));
       console.log(inputState);
 
+      if (inputState.phone == "") {
+        inputState.phone = "00000000000";
+      }
+
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
         if (key === "stacks") {
@@ -203,7 +207,7 @@ export default function RegistInfo() {
           // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
         } else {
           formData.append(key, value);
-          console.log(key + " " + value);
+          // console.log(key + " " + value);
         }
       });
 

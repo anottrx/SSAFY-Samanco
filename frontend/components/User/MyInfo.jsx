@@ -79,7 +79,9 @@ export default function MyInfo() {
         console.log("내 정보 보기 결과: " + JSON.stringify(res));
         inputState.name = res.user.name;
         inputState.birthday = res.user.birthday;
-        inputState.phone = res.user.phone;
+        if (res.user.phone !== "00000000000") {
+          inputState.phone = res.user.phone;
+        }
         inputState.userClass = res.user.userClass;
         inputState.generation = res.user.generation;
         inputState.studentId = res.user.studentId;
@@ -351,10 +353,7 @@ export default function MyInfo() {
             </div>
             <div className="mb-6">
               <label>이름</label>
-              <input
-                value={inputState.name || ""}
-                disabled
-              />
+              <input value={inputState.name || ""} disabled />
             </div>
             <div className="mb-6">
               <label>분야</label>
@@ -386,11 +385,11 @@ export default function MyInfo() {
                 disabled={onlyView ? true : false}
                 onChange={handleChange}
               /> */}
-               <LinkList items={links} />
+              <LinkList items={links} />
             </div>
             <div className="mb-6">
               <label>스택</label>
-              <StackLevelList  items={inputState.stacks} />
+              <StackLevelList items={inputState.stacks} />
             </div>
             <div className="mb-6">
               <label>자기소개</label>
