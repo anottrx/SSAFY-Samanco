@@ -147,12 +147,12 @@ public class UserController {
 		User user = userService.createUser(registerInfo);
 		// 회원 이미지 입력
 		if (files!=null) {
-			fileService.saveFile(files, user.getId(), 1);
+			fileService.saveFile(files, user.getId(), "user");
 		}
 		// user 스택 입력
 		if (stacks!=null) {
 			registerInfo.setStacks(getListMapFromString(stacks));
-			stackService.createStack(registerInfo.getStacks(), user.getId(), 1);
+			stackService.createStack(registerInfo.getStacks(), user.getId(), "user");
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
@@ -230,11 +230,11 @@ public class UserController {
 		// 회원 스택 수정
 		if (stacks!=null) {
 			updateInfo.setStacks(getListMapFromString(stacks));
-			stackService.updateStack(updateInfo.getStacks(), userId, 1);
+			stackService.updateStack(updateInfo.getStacks(), userId, "user");
 		}
 		// 회원 이미지 입력
 		if (files!=null) {
-			fileService.updateFile(files, userId, 1);
+			fileService.updateFile(files, userId, "user");
 		}
 
 

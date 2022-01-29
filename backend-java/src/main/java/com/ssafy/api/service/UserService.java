@@ -34,5 +34,5 @@ public interface UserService {
 	int quitProject(Long userId, Long projectId);
 	int joinCancelProject(Long userId, Long projectId);
 
-	int userLikeTarget(UserLikeTargetReq userLikeTargetReq);
+	int userLikeTag(UserLikeTagReq userLikeTagReq);
 }

@@ -7,10 +7,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserLikeTargetReq {
+public class UserLikeTagReq {
 
     private Long userId;
-    private Long targetId;
+    private Long tagId;
     private String tag;
 
 }

@@ -59,17 +59,6 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTotalMobileSize(projectRegisterReq.getTotalMobileSize());
         project.setTotalEmbeddedSize(projectRegisterReq.getTotalEmbeddedSize());
 
-//        String hostPosition= projectRegisterPostReq.getHostPosition();
-//        if ("frontend".equalsIgnoreCase(hostPosition)){
-//            project.setCurrentFrontendSize(1);
-//        } else if ("backend".equalsIgnoreCase(hostPosition)){
-//            project.setCurrentBackendSize(1);
-//        } else if ("mobile".equalsIgnoreCase(hostPosition)){
-//            project.setCurrentMobileSize(1);
-//        } else if ("embedded".equalsIgnoreCase(hostPosition)){
-//            project.setCurrentEmbeddedSize(1);
-//        }
-
         return projectRepository.save(project);
     }
 
@@ -81,8 +70,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void deleteProject(Long userId, Long projectId) {
         projectRepositorySupport.deleteProject(userId, projectId);
-        stackRepositorySupport.deleteStack(projectId, 2);
-        fileRepositorySupport.deleteFile(projectId, 2);
+        stackRepositorySupport.deleteStack(projectId, "project");
+        fileRepositorySupport.deleteFile(projectId, "project");
     }
 
     @Override
@@ -94,8 +83,8 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectDto project=projectEntityToDto(result);
         Long projectId=project.getId();
 //        projectRepositorySupport.setCurrentSize(project);
-        project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
-        project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+        project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
+        project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
 
         return project;
     }
@@ -107,8 +96,8 @@ public class ProjectServiceImpl implements ProjectService {
             return null;
         }
         ProjectDto project=projectEntityToDto(result);
-        project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
-        project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+        project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
+        project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
         UserLike userLike = userLikeRepositorySupport.userLike(userId, projectId, "project");
         if (userLike!=null) {
             project.setUserLike(true);
@@ -141,8 +130,8 @@ public class ProjectServiceImpl implements ProjectService {
         for (Project result: results) {
             ProjectDto project=projectEntityToDto(result);
             Long projectId=project.getId();
-            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
-            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+            project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
+            project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
             projects.add(project);
         }
 
@@ -222,8 +211,8 @@ public class ProjectServiceImpl implements ProjectService {
         for (Project result: results) {
             ProjectDto project=projectEntityToDto(result);
             Long projectId=project.getId();
-            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
-            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+            project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
+            project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
             projects.add(project);
         }
 
@@ -241,8 +230,8 @@ public class ProjectServiceImpl implements ProjectService {
         for (Project result: results) {
             ProjectDto project=projectEntityToDto(result);
             Long projectId=project.getId();
-            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
-            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+            project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
+            project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
             projects.add(project);
         }
         Collections.sort(projects, new Comparator<ProjectDto>() {
@@ -265,8 +254,8 @@ public class ProjectServiceImpl implements ProjectService {
         for (Project result: results) {
             ProjectDto project=projectEntityToDto(result);
             Long projectId=project.getId();
-            project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
-            project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+            project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
+            project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
             projects.add(project);
         }
 
