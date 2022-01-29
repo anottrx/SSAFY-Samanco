@@ -11,6 +11,7 @@ import {
 } from "../../pages/api/user";
 import { TextField, Button } from "@mui/material";
 import styled from "@emotion/styled";
+import StackLevelList from "../Common/Stack/StackLevelList";
 
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
@@ -87,6 +88,7 @@ export default function MyInfo() {
         inputState.stacks = res.user.stacks;
         // inputState.file = res.user.file;
         setLoading(true);
+        // ShowStack(inputState.stacks);
       });
     });
   }
@@ -383,11 +385,7 @@ export default function MyInfo() {
             </div>
             <div className="mb-6">
               <label>스택</label>
-              {/* {stacks.map((item) => {
-            if (item.HTML > 0) {
-              console.log("dd")
-            }
-          })} */}
+              <StackLevelList  items={inputState.stacks} />
             </div>
             <div className="mb-6">
               <label>자기소개</label>
