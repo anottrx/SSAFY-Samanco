@@ -98,6 +98,7 @@ function ApplyAccordion(props) {
                         props.approveAPI({
                           projectId: props.clubId, 
                           userId: data.id,
+                          hostId: sessionStorage.getItem("userId"),
                           joinTag: "OK"
                         }).then(res => {
                           if (res.statusCode == 200) {
@@ -120,6 +121,7 @@ function ApplyAccordion(props) {
                         props.approveAPI({
                           projectId: props.clubId, 
                           userId: data.id,
+                          hostId: sessionStorage.getItem("userId"),
                           joinTag: "NO"
                         }).then(res => {
                           if (res.statusCode == 200) {

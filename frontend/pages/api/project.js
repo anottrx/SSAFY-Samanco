@@ -55,7 +55,8 @@ async function updateProjectLike(id) {
 async function getProjectById(data) {
     return await api
     .post("/api/project/view", {
-        projectId: data.id
+        projectId: data.projectId,
+        userId: data.userId
     })
     .then(res => res.data)
     .catch(err => err.response.data)
@@ -97,6 +98,17 @@ async function joinProjectAPI(data) {
     .catch(err => err.response.data)
 }
 
+// 같은 프로젝트에 있는 유저 조회하기
+async function getUserAtProject(data) {
+    return await api
+    .post("/api/project/userlist", {
+        projectId: data.projectId,
+        userId: data.userId
+    })
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
 // 프로젝트 지원한 유저 목록 목록
 async function getUserByjoin(data) {
     return await api
@@ -108,18 +120,21 @@ async function getUserByjoin(data) {
     .catch(err => err.response.data)
 }
 
+
 // 프로젝트 가입 승인(OK), 거절(NO) 
 async function approveProject(data) {
     return await api
     .post("/api/project/approve", {
-        joinTag: data.jointag,
+        joinTag: data.joinTag,
         projectId: data.projectId,
+        hostId: data.hostId,
         userId: data.userId
     })
     .then(res => res.data)
     .catch(err => err.response.data)
 }
 
+// 사용자가 속해있는 프로젝트 보기
 async function getProjectByUserId(id) {
     return await api
     .post("/api/project/user", {
@@ -129,8 +144,18 @@ async function getProjectByUserId(id) {
     .catch(err => err.response.data)
 }
 
+// 프로젝트 탈퇴
+async function quitProject(data) {
+    return await api
+    .post("/api/project/quit", {
+        userId: data.userId, 
+        projectId: data.projectId
+    })
+}
+
 export {
     registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
     getProjectBytitle, getProjectByDeadLine, updateProjectLike, getProjectByLike,
-    joinProjectAPI, getUserByjoin, approveProject, getProjectByUserId
+    joinProjectAPI, getUserByjoin, approveProject, getProjectByUserId,
+    getUserAtProject, quitProject
 }

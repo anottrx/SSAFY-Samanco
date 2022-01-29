@@ -4,8 +4,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.request.UserLoginReq;
 import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.db.entity.QUser;
+import com.ssafy.db.entity.QUserLike;
 import com.ssafy.db.entity.User;
 
+import com.ssafy.db.entity.UserLike;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;

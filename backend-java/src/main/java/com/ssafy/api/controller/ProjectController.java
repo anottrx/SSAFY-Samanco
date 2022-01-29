@@ -202,7 +202,7 @@ public class ProjectController{
 
         ProjectDto project=projectService.selectByHost(userInfo.getUserId());
         if (project==null){
-            return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "가입한 프로젝트가 없습니다.", null));
+            return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "호스트인 프로젝트가 없습니다.", null));
         }
         return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
     }
@@ -229,9 +229,9 @@ public class ProjectController{
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectProject(
-            @RequestBody @ApiParam(value="project id", required = true) ProjectIdReq projectInfo) throws IOException {
+            @RequestBody @ApiParam(value="project id", required = true) ProjectUserIdReq projectInfo) throws IOException {
 
-        ProjectDto project=projectService.selectProject(projectInfo.getProjectId());
+        ProjectDto project=projectService.selectProject(projectInfo.getUserId(), projectInfo.getProjectId());
         if (project==null){
             return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
         }
@@ -326,6 +326,34 @@ public class ProjectController{
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
+    @PostMapping("/changehost")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "프로젝트 호스트 변경 불가"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> changeHostProject(@RequestBody ProjectChangeHostReq projectChangeHostReq) throws IOException {
+        Long projectId= projectChangeHostReq.getProjectId();
+        Long oldHostId=projectChangeHostReq.getOldHostId();
+        Long newHostId=projectChangeHostReq.getNewHostId();
+        String newHostPosition= projectChangeHostReq.getNewHostPosition();
+        UserDto user=userService.selectUser(newHostId);
+        System.out.println(user);
+        if (user==null || user.getProjectId()!= projectId || !"OK".equalsIgnoreCase(user.getProjectJoinStatus())){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트의 호스트를 넘길 수 없습니다."));
+        }
+        ProjectDto project=projectService.selectByHost(oldHostId);
+        System.out.println(project);
+        if (project==null || projectId!=project.getId()){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "프로젝트의 호스트를 넘길 수 없습니다."));
+        }
+
+        int updateProjectHost=projectService.updateProjectHost(projectId, newHostId, newHostPosition);
+
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+
+    }
+
     @GetMapping
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -333,6 +361,21 @@ public class ProjectController{
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectProjectAll() throws IOException {
+
+        List<ProjectDto> projects=projectService.selectProjectAll();
+        if (projects==null || projects.size()==0){
+            return ResponseEntity.status(200).body(ProjectSelectAllRes.of(401, "등록된 프로젝트가 없습니다.", null));
+        }
+        return ResponseEntity.status(200).body(ProjectSelectAllRes.of(200, "Success", projects));
+    }
+
+    @GetMapping("/stack")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectProjectStacks() throws IOException {
 
         List<ProjectDto> projects=projectService.selectProjectAll();
         if (projects==null || projects.size()==0){
@@ -404,15 +447,20 @@ public class ProjectController{
     @PostMapping("/like")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+            @ApiResponse(code = 401, message = "유효하지 않은 사용자"),
+            @ApiResponse(code = 401, message = "유효하지 않은 타겟"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> updateProjectLike(@RequestBody ProjectIdReq projectIdReq) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> updateProjectLike(@RequestBody UserLikeTargetReq userLikeTargetReq) throws IOException {
 
-        int likeCode=projectService.updateProjectLike(projectIdReq.getProjectId());
+        int likeCode=userService.userLikeTarget(userLikeTargetReq);
         if (likeCode==401){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "등록된 프로젝트가 없습니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
+        } else if (likeCode==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 타겟입니다."));
+        } else if (likeCode==201){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(201, "좋아요 취소"));
         }
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "좋아요"));
     }
 }

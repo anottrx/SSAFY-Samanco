@@ -1,9 +1,11 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.model.UserDto;
+import com.ssafy.api.request.UserLikeTargetReq;
 import com.ssafy.api.request.UserLoginReq;
 import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.db.entity.Project;
+import com.ssafy.db.entity.UserLike;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +38,15 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	ProjectRepositorySupport projectRepositorySupport;
+
+	@Autowired
+	UserLikeRepository userLikeRepository;
+
+	@Autowired
+	UserLikeRepositorySupport userLikeRepositorySupport;
+
+	@Autowired
+	ValidRepository valid;
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -234,6 +245,32 @@ public class UserServiceImpl implements UserService {
 		}
 		return 402;
 
+	}
+
+	@Override
+	public int userLikeTarget(UserLikeTargetReq userLikeTargetReq) {
+		Long userId= userLikeTargetReq.getUserId();
+		Long targetId=userLikeTargetReq.getTargetId();
+		String tag=userLikeTargetReq.getTag();
+		if (!valid.isUserValid(userId)){
+			return 401;
+		}
+		if (!valid.isTargetValid(targetId, tag)){
+			return 402;
+		}
+
+		UserLike result=userLikeRepositorySupport.userLike(userId, targetId, tag);
+		if (result==null){
+			UserLike userLike=new UserLike();
+			userLike.setUserId(userId);
+			userLike.setTargetId(targetId);
+			userLike.setTag(tag);
+			userLikeRepository.save(userLike);
+			return 200;
+		} else {
+			userLikeRepositorySupport.deleteUserLike(userId, targetId, tag);
+			return 201;
+		}
 	}
 
 	@Override

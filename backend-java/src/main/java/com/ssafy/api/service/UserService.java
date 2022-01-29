@@ -1,9 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.model.UserDto;
-import com.ssafy.api.request.UserLoginReq;
-import com.ssafy.api.request.UserRegisterReq;
-import com.ssafy.api.request.UserUpdateReq;
+import com.ssafy.api.request.*;
 import com.ssafy.db.entity.User;
 
 import java.util.List;
@@ -35,4 +33,6 @@ public interface UserService {
     List<UserDto> selectJoinUsers(Long userId, Long projectId);
 	int quitProject(Long userId, Long projectId);
 	int joinCancelProject(Long userId, Long projectId);
+
+	int userLikeTarget(UserLikeTargetReq userLikeTargetReq);
 }
