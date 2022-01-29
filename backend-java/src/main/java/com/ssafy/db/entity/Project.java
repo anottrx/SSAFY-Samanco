@@ -34,7 +34,7 @@ public class Project extends BaseEntity{
     private String description;
     private String startDate;
     private String endDate;
-    private Long likes=0l;
+//    private Long likes=0l;
     private Long hostId;
     private String hostPosition;
     private Long hit=0l;

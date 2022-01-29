@@ -21,12 +21,13 @@ public class ProjectDto {
     private String description;
     private String startDate;
     private String endDate;
-    private Long likes;
+    private int likes;  // Long으로 캐스팅이 안됨..
     private Long hostId;
     private String hostPosition;
     private Long hit;
     private FileDto file;
     private Long deadline;
+    private boolean userLike=false;
 
 }
 

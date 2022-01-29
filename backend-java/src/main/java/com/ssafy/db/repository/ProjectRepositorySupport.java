@@ -101,7 +101,7 @@ public class ProjectRepositorySupport {
     }
 
     @Transactional
-    public Project selectProject(Long projectId) {
+    public Project selectProject(Long userId, Long projectId) {
         Project result = jpaQueryFactory.selectFrom(qProject)
                 .where(qProject.id.eq(projectId), qProject.isDeleted.eq(false)).fetchOne();
         if (result==null){
@@ -111,6 +111,7 @@ public class ProjectRepositorySupport {
         jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
                 .set(qProject.hit, qProject.hit.add(1))
                 .execute();
+
         return result;
     }
 
@@ -130,27 +131,37 @@ public class ProjectRepositorySupport {
                 .where(qProject.isDeleted.eq(false), qProject.title.contains(title)).fetch();
     }
 
-    public List<Project> selectProjectLikeOrder() {
-        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false))
-                .orderBy(qProject.likes.desc()).fetch();
-    }
+//    public List<Project> selectProjectLikeOrder() {
+//        return jpaQueryFactory.selectFrom(qProject).where(qProject.isDeleted.eq(false))
+//                .orderBy(qProject.likes.desc()).fetch();
+//    }
 
-    @Transactional
-    public int updateProjectLike(Long projectId) {
-        if (!isValid(projectId)){
-            return 401;
-        }
-
-        jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-                .set(qProject.likes, qProject.likes.add(1))
-                .execute();
-
-        return 200;
-    }
+//    @Transactional
+//    public int updateProjectLike(Long projectId) {
+//        if (!isValid(projectId)){
+//            return 401;
+//        }
+//
+//        jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+//                .set(qProject.likes, qProject.likes.add(1))
+//                .execute();
+//
+//        return 200;
+//    }
 
     public List<User> selectJoinUsers(Long projectId) {
         return jpaQueryFactory.selectFrom(qUser)
                 .where(qUser.projectId.eq(projectId), qUser.isDeleted.eq(false), qUser.projectJoinStatus.eq("BEFORE"))
                 .fetch();
+    }
+
+    @Transactional
+    public int updateProjectHost(Long projectId, Long newHostId, String newHostPosition) {
+        jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
+                .set(qProject.hostId, newHostId)
+                .set(qProject.hostPosition, newHostPosition)
+                .execute();
+
+        return 200;
     }
 }

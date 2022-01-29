@@ -44,8 +44,6 @@ public class QProject extends EntityPathBase<Project> {
     //inherited
     public final BooleanPath isDeleted = _super.isDeleted;
 
-    public final NumberPath<Long> likes = createNumber("likes", Long.class);
-
     //inherited
     public final NumberPath<Long> modifiedBy = _super.modifiedBy;
 

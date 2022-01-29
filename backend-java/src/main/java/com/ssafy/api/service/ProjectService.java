@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.model.ProjectDto;
+import com.ssafy.api.request.ProjectChangeHostReq;
 import com.ssafy.api.request.ProjectRegisterReq;
 import com.ssafy.api.request.ProjectUpdateReq;
 import com.ssafy.db.entity.Project;
@@ -16,7 +17,7 @@ public interface ProjectService {
     void deleteProject(Long userId, Long projectId);
 
     ProjectDto selectByHost(Long userId);
-    ProjectDto selectProject(Long projectId);
+    ProjectDto selectProject(Long userId, Long projectId);
 
     ProjectDto selectByUser(Long userId);
     List<ProjectDto> selectProjectAll();
@@ -26,7 +27,5 @@ public interface ProjectService {
 
     List<ProjectDto> selectProjectLikeOrder();
     List<ProjectDto> selectProjectDeadlineOrder();
-
-    int updateProjectLike(Long id);
-
+    int updateProjectHost(Long projectId, Long newHostId, String newHostPosition);
 }

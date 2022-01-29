@@ -2,10 +2,12 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.model.PositionDto;
 import com.ssafy.api.model.ProjectDto;
+import com.ssafy.api.request.ProjectChangeHostReq;
 import com.ssafy.api.request.ProjectRegisterReq;
 import com.ssafy.api.request.ProjectUpdateReq;
 import com.ssafy.db.entity.Project;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.UserLike;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     FileRepositorySupport fileRepositorySupport;
+
+    @Autowired
+    ValidRepository valid;
+
+    @Autowired
+    UserLikeRepositorySupport userLikeRepositorySupport;
 
 //    @Autowired
 //    UserRepositorySupport userRepositorySupport;  // 사용 못함
@@ -93,14 +101,18 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto selectProject(Long projectId) {
-        Project result=projectRepositorySupport.selectProject(projectId);
+    public ProjectDto selectProject(Long userId, Long projectId) {
+        Project result=projectRepositorySupport.selectProject(userId, projectId);
         if (result==null){
             return null;
         }
         ProjectDto project=projectEntityToDto(result);
         project.setStacks(stackRepositorySupport.selectStack(projectId, 2));
         project.setFile(fileRepositorySupport.selectFile(projectId, 2));
+        UserLike userLike = userLikeRepositorySupport.userLike(userId, projectId, "project");
+        if (userLike!=null) {
+            project.setUserLike(true);
+        }
 
         return project;
     }
@@ -116,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
             return null;
         }
 
-        return selectProject(projectId);
+        return selectProject(userId, projectId);
     }
 
     @Override
@@ -139,6 +151,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto projectEntityToDto(Project result) {
+        // position
         List<User> results=projectRepositorySupport.selectProjectUsers(result.getId());
         int[] currentPositionSize=new int[4];
         for (User user: results){
@@ -164,6 +177,10 @@ public class ProjectServiceImpl implements ProjectService {
         positions.add(new PositionDto("currentEmbedded", currentPositionSize[3]));
         positions.add(new PositionDto("totalSize", result.getSize()));
         positions.add(new PositionDto("currentSize", results.size()));
+
+        // like
+        int likes=userLikeRepositorySupport.countUserLikeByTarget(result.getId(), "project");
+
         ProjectDto projectDto=new ProjectDto();
         projectDto.setId(result.getId());
         projectDto.setDescription(result.getDescription());
@@ -174,7 +191,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectDto.setTitle(result.getTitle());
         projectDto.setCollectStatus(result.getCollectStatus());
         projectDto.setHostPosition(result.getHostPosition());
-        projectDto.setLikes(result.getLikes());
+        projectDto.setLikes(likes);
         projectDto.setPositions(positions);
 
         // 마감일 계산
@@ -216,7 +233,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> selectProjectLikeOrder() {
-        List<Project> results=projectRepositorySupport.selectProjectLikeOrder();
+        List<Project> results=projectRepositorySupport.selectProjectAll();
         if (results==null){
             return null;
         }
@@ -228,6 +245,12 @@ public class ProjectServiceImpl implements ProjectService {
             project.setFile(fileRepositorySupport.selectFile(projectId, 2));
             projects.add(project);
         }
+        Collections.sort(projects, new Comparator<ProjectDto>() {
+            @Override
+            public int compare(ProjectDto o1, ProjectDto o2) {
+                return (int) (o2.getLikes()-o1.getLikes());
+            }
+        });
 
         return projects;
     }
@@ -258,9 +281,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public int updateProjectLike(Long id) {
-        return projectRepositorySupport.updateProjectLike(id);
+    public int updateProjectHost(Long projectId, Long newHostId, String newHostPosition) {
+        return projectRepositorySupport.updateProjectHost(projectId, newHostId, newHostPosition);
     }
-
 
 }
