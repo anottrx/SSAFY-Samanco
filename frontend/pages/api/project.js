@@ -114,6 +114,7 @@ async function approveProject(data) {
     .post("/api/project/approve", {
         joinTag: data.jointag,
         projectId: data.projectId,
+        hostId: data.hostId,
         userId: data.userId
     })
     .then(res => res.data)
