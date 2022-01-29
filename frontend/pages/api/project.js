@@ -151,11 +151,21 @@ async function quitProject(data) {
         userId: data.userId, 
         projectId: data.projectId
     })
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
+async function projectStackList() {
+    return await api
+    .get("/api/project/stack")
+    .then(res => res.data)
+    .catch(err => err.response.data)
+
 }
 
 export {
     registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
     getProjectBytitle, getProjectByDeadLine, updateProjectLike, getProjectByLike,
     joinProjectAPI, getUserByjoin, approveProject, getProjectByUserId,
-    getUserAtProject, quitProject
+    getUserAtProject, quitProject, projectStackList
 }
