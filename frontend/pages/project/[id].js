@@ -12,7 +12,7 @@ import { Card, Container, Skeleton, CardContent, Typography,
     Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, 
     DialogTitle, ButtonGroup, FormControl, FormLabel, RadioGroup,
     Radio, FormControlLabel } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 
 import { deleteAPI, updateProjectLike, joinProjectAPI } from "../api/project";
@@ -217,6 +217,16 @@ const ProjectDetail = () => {
         
         const [selectPosition, setSelectPosition] = useState("");
 
+        let positions = {};
+        
+        useEffect(() => {
+            detail.positions.map(pos => {
+                if (!pos.position.includes("size"))
+                    positions[pos.position] = pos.size;
+            })
+            console.log(positions)
+        },[])
+
         return (
             <ActionWrapper>
                 <ButtonGroup variant="outlined" aria-label="text button group">
@@ -271,12 +281,15 @@ const ProjectDetail = () => {
                                 >
                                     {
                                         detail.positions.map((data, index) => {
-                                            
+                                            let name = data.position.split("total")[1] || data.position.split("current")[1];
+
+                                            positions[data.position] = data.size;
                                             return (
-                                                data.position.includes("total") && data.size > 0 && data.position!=="totalSize"?
+                                                data.position.includes("current") && data.position!=="currentSize"
+                                                && positions["total"+name] > 0 && positions["total"+name] > positions["current"+name]?
                                                 <FormControlLabel 
-                                                    key={index} value={data.position.split("total")[1]} 
-                                                    control={<Radio />} label={data.position.split("total")[1]} />
+                                                    key={index} value={name} 
+                                                    control={<Radio />} label={name} />
                                                 :
                                                 null
                                             )

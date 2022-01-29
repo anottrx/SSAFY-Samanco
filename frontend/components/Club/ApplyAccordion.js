@@ -111,13 +111,13 @@ function ApplyAccordion(props) {
                               })
                               .then(res => { 
                                   dispatch(applyActions.setApplyList({list: res.users}));
-                                  forceReload();
                               })
                               .catch(err => console.log(err))
                           } else {
                             alert(`${res.message}`)
                           }
-                        })
+                        });
+                        forceReload();
                       }}><CheckIcon/></Button>
                       <Button  onClick={() => {
                         // 가입 거절
@@ -135,13 +135,14 @@ function ApplyAccordion(props) {
                               })
                               .then(res => { 
                                   dispatch(applyActions.setApplyList({list: res.users}));
-                                  forceReload();
                               })
                               .catch(err => console.log(err))
                           } else {
                             alert(`${res.message}`)
                           }
-                        })
+                        });
+                        
+                        forceReload();
                       }}><CloseIcon/></Button>
                     </ButtonWrapper>
 
