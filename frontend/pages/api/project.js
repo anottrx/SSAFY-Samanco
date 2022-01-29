@@ -29,8 +29,8 @@ async function updateAPI(formData) {
 async function deleteAPI(data) {
     return await api
     .post("/api/project/delete", {
-        "projectId": data.id,
-        "userId": data.hostId,
+        projectId: data.id,
+        userId: data.hostId,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
@@ -160,18 +160,31 @@ async function quitProject(data) {
     .catch(err => err.response.data)
 }
 
+// 프로젝트 방장 변경
+async function changeProjectHost(data) {
+    return await api
+    .post("/api/project/changehost", {
+        projectId: data.projectId, 
+        oldHostId: data.oldHostId,  // 현재
+        newHostId: data.newHostId,  // 바뀔
+        newHostPosition: data.newHostPosition   // 바뀔
+    })
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
+
 // 프로젝트에 등록된 스택 리스트 불러오기
 async function projectStackList() {
     return await api
     .get("/api/project/stack")
     .then(res => res.data)
     .catch(err => err.response.data)
-
 }
 
 export {
     registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
     getProjectBytitle, getProjectByDeadLine, updateProjectLike, getProjectByLike,
     joinProjectAPI, getUserByjoin, approveProject, getProjectByUserId,
-    getUserAtProject, quitProject, projectStackList
+    getUserAtProject, quitProject, projectStackList, changeProjectHost
 }
