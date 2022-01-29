@@ -3,9 +3,7 @@ import Router from "next/router";
 import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSelectRegister";
 
 import {
-  checkLoginTokenInfo,
-  registAPI,
-  getUserTokenAPI,
+  getUserLoginTokenAPI,
   getUserInfoAPI,
   updateUserAPI,
 } from "../../pages/api/user";
@@ -26,7 +24,6 @@ import MenuItem from "@mui/material/MenuItem";
 
 export default function RegistInfo() {
   const [inputState, setInputState] = useState({
-    email: "",
     phone: "",
     birthday: "",
     stacks: [],
@@ -35,21 +32,14 @@ export default function RegistInfo() {
     description: "",
     image_id: "",
     // 이미 입력된 값들
-    // userId: "",
-    // email: "",
-    // nickname: "",
-    // name: "",
-    // userClass: "",
-    // generation: "",
-    // studentId: "",
-    password: sessionStorage.getItem("password"),
-    userId: sessionStorage.getItem("userId"),
-    email: sessionStorage.getItem("email"),
-    nickname: sessionStorage.getItem("nickname"),
-    name: sessionStorage.getItem("name"),
-    userClass: sessionStorage.getItem("userClass"),
-    generation: sessionStorage.getItem("generation"),
-    studentId: sessionStorage.getItem("studentId"),
+    email: "",
+    userId: "",
+    email: "",
+    nickname: "",
+    name: "",
+    class: "",
+    generation: "",
+    studentId: "",
   });
 
   const positionOptions = [
@@ -99,6 +89,14 @@ export default function RegistInfo() {
   const uploadRef = useRef(null);
 
   useEffect(() => {
+    inputState.userId = sessionStorage.getItem("userId");
+    inputState.nickname = sessionStorage.getItem("nickname");
+    inputState.name = sessionStorage.getItem("name");
+    inputState.class = sessionStorage.getItem("userClass");
+    inputState.generation = sessionStorage.getItem("generation");
+    inputState.studentId = sessionStorage.getItem("studentId");
+    inputState.password = sessionStorage.getItem("password");
+
     preview();
   });
 
@@ -120,11 +118,9 @@ export default function RegistInfo() {
   //   inputState[id] = value;
   //   // 리렌더링 X
   // };
-
   const changeHandle = (value, name) => {
     inputState[name] = value;
-    // inputState.stacks = { HTML: value };
-    // 리렌더링 X
+    // console.log(name + " " + value)
   };
 
   const handleChange = (e) => {
@@ -136,9 +132,10 @@ export default function RegistInfo() {
   };
 
   const positionHandleChange = (e) => {
-    setInputState({
-      position: e.target.value,
-    });
+    console.log(e.target.value);
+    inputState.position = e.target.value;
+    console.log("inputState" + JSON.stringify(inputState));
+    console.log(inputState);
   };
 
   const [links, setLinks] = useState([]);
@@ -149,14 +146,13 @@ export default function RegistInfo() {
       linkList = linkList + " " + linkArr[i];
     }
     linkList = linkList.trim();
-    setInputState({
-      link: linkList,
-    });
+    inputState.link = linkList;
+    // setInputState({
+    //   link: linkList,
+    // });
   }
 
-  const phoneReg = /^[0-9]{8,13}$/;
-  // 전화번호 정규표현식
-
+  const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
   const koreanReg = /[ㄱ-ㅎㅏ-ㅣ가-힇ㆍ ᆢ]/g;
 
   const handleSubmit = (event) => {
@@ -185,34 +181,22 @@ export default function RegistInfo() {
       Django: inputState.Django,
       Redis: inputState.Redis,
     };
+    Object.keys(inputState.stacks).forEach(function (key) {
+      if (inputState.stacks[key] === 0) {
+        delete inputState.stacks[key];
+      }
+    });
 
     if (isNormal) {
       const formData = new FormData();
-
-      // setInputState({
-        // userId: sessionStorage.getItem("userId"),
-        // email: sessionStorage.getItem("email"),
-        // nickname: sessionStorage.getItem("nickname"),
-        // name: sessionStorage.getItem("name"),
-        // userClass: sessionStorage.getItem("userClass"),
-        // generation: sessionStorage.getItem("generation"),
-        // studentId: sessionStorage.getItem("studentId"),
-        // password: sessionStorage.getItem("password"),
-      // });
-      console.log(
-        "이후" +
-          inputState.userId +
-          " " +
-          inputState.email +
-          " " +
-          inputState.studentId
-      );
+      console.log("inputState" + JSON.stringify(inputState));
+      console.log(inputState);
 
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
         if (key === "stacks") {
-          formData.append(key, JSON.stringify(value));
-          console.log(value);
+          formData.append(key, "[" + JSON.stringify(value) + "]");
+          // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
         } else {
           formData.append(key, value);
           console.log(key + " " + value);
@@ -221,20 +205,21 @@ export default function RegistInfo() {
 
       formData.append("file", files);
 
-      for (var key of formData.entries()) {
+      for (let key of formData.entries()) {
         console.log("key", `${key}`);
       }
 
       updateUserAPI(formData).then((res) => {
-        console.log(res);
-        sessionStorage.clear();
-        sessionStorage.setItem("userId", inputState.userId);
-        sessionStorage.setItem("email", inputState.email);
-        sessionStorage.setItem("nickname", inputState.nickname);
+        console.log(res)
+        console.log(JSON.stringify(res))
         if (res.statusCode == 200) {
-          alert("회원정보 추가 성공");
-          window.history.forward();
-          window.location.replace("/");
+          sessionStorage.clear();
+          sessionStorage.setItem("userId", inputState.userId);
+          sessionStorage.setItem("email", inputState.email);
+          sessionStorage.setItem("nickname", inputState.nickname);
+          // alert("회원정보 추가 성공");
+          // window.history.forward();
+          // window.location.replace("/");
         } else {
           alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
         }
@@ -269,7 +254,6 @@ export default function RegistInfo() {
           >
             Image Upload
           </ImgUploadBtn>
-
           <input
             ref={uploadRef}
             type="file"
@@ -309,8 +293,7 @@ export default function RegistInfo() {
               <DatePickerWrapper>
                 <DatePicker
                   label=""
-                  value={inputState.birthday}
-                  // onChange={handleChange}
+                  onChange={handleChange}
                   changeHandle={changeHandle}
                 ></DatePicker>
               </DatePickerWrapper>
@@ -324,9 +307,10 @@ export default function RegistInfo() {
             <br />
             <Select
               id="position"
-              name="position"
-              onChange={positionHandleChange}
-              defaultValue=""
+              onChange={(e) => {
+                positionHandleChange(e);
+                handleChange(e);
+              }}
               value={inputState.position || ""}
               sx={{ minWidth: 370, fontSize: 14 }}
             >

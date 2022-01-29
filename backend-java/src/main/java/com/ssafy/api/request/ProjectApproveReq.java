@@ -8,7 +8,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ProjectApproveReq {
+
     private Long projectId;
     private Long userId;
     private String joinTag;
+    private Long hostId;
 }

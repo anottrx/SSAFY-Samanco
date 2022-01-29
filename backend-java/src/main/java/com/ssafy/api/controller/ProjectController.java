@@ -86,9 +86,9 @@ public class ProjectController{
         // project create
         Project project = projectService.createProject(registerInfo);
         // user's projectId, joinStatus position update
-        int addProjectCode=userService.updateUserProject(project.getHostId(), project.getId(), hostPosition, "OK");
+        int joinProjectCode=userService.joinUserProject(project.getHostId(), project.getId(), hostPosition, "OK");
 
-        if (addProjectCode==401){
+        if (joinProjectCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 등록할 수 없습니다."));
         }
         // project 스택 입력
@@ -265,7 +265,7 @@ public class ProjectController{
         Long projectId=projectInfo.getProjectId();
         Long userId=projectInfo.getUserId();
         String position= projectInfo.getPosition();
-        int projectJoinCode= userService.updateUserProject(userId, projectId, position, "BEFORE");
+        int projectJoinCode= userService.joinUserProject(userId, projectId, position, "BEFORE");
         if (projectJoinCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트에 가입할 수 없습니다."));
         }
@@ -282,11 +282,14 @@ public class ProjectController{
 
         Long projectId=projectApproveReq.getProjectId();
         Long userId=projectApproveReq.getUserId();
+        Long hostId=projectApproveReq.getHostId();
         String joinTag=projectApproveReq.getJoinTag();
 
-        int projectJoinCode= userService.updateUserProject(userId, projectId, null, joinTag);
-        if (projectJoinCode==401){
+        int projectApproveCode= userService.approveUserProject(hostId, userId, projectId, joinTag);
+        if (projectApproveCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 사용자는 프로젝트에 가입할 수 없습니다."));
+        } else if (projectApproveCode==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "승인 권한이 없습니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -297,15 +300,28 @@ public class ProjectController{
             @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> quitProject(@RequestBody ProjectApproveReq projectApproveReq) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> quitProject(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
+        int projectQuitCode=userService.quitProject(projectUserIdReq.getUserId(), projectUserIdReq.getProjectId());
+        if (projectQuitCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
+        } else if (projectQuitCode==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 탈퇴할 수 없습니다."));
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
 
-        Long projectId=projectApproveReq.getProjectId();
-        Long userId=projectApproveReq.getUserId();
-        String joinTag=projectApproveReq.getJoinTag();
-
-        int projectJoinCode= userService.updateUserProject(userId, projectId, null, joinTag);
-        if (projectJoinCode==401){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 사용자는 프로젝트에 가입할 수 없습니다."));
+    @PostMapping("/joincancel")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> joinCancelProject(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
+        int projectJoinCancelCode=userService.joinCancelProject(projectUserIdReq.getUserId(), projectUserIdReq.getProjectId());
+        if (projectJoinCancelCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
+        } else if (projectJoinCancelCode==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트 지원 취소를 할 수 없습니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }

@@ -68,20 +68,21 @@ public class UserRepositorySupport {
     }
 
     @Transactional
-    public int updateUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
-        if (valid.isUserValid(userId) && valid.isProjectValid(projectId)) {
-            if (projectPosition!=null) {
-                jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
-                        .set(qUser.projectId, projectId)
-                        .set(qUser.projectPosition, projectPosition)
-                        .set(qUser.projectJoinStatus, projectJoinStatus).execute();
-            } else {
-                jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
-                        .set(qUser.projectJoinStatus, projectJoinStatus).execute();
-            }
+    public int joinUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus) {
+        if (valid.updateUserProjectValid(userId, projectId)) {
+            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                    .set(qUser.projectId, projectId)
+                    .set(qUser.projectPosition, projectPosition)
+                    .set(qUser.projectJoinStatus, projectJoinStatus).execute();
             return 200;
         }
         return 401;
+    }
+    @Transactional
+    public int approveUserProject(Long userId, String projectJoinStatus) {
+        jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                .set(qUser.projectJoinStatus, projectJoinStatus).execute();
+        return 200;
     }
 
     @Transactional
@@ -112,4 +113,16 @@ public class UserRepositorySupport {
         return jpaQueryFactory.selectFrom(qUser).where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
     }
 
+    @Transactional
+    public int resetUserProject(Long userId) {
+        if (valid.isUserValid(userId)) {
+            jpaQueryFactory.update(qUser).where(qUser.id.eq(userId))
+                    .set(qUser.projectId, 0l)
+                    .set(qUser.projectPosition, "")
+                    .set(qUser.projectJoinStatus, "").execute();
+
+            return 200;
+        }
+        return 401;
+    }
 }

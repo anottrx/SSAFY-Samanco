@@ -4,13 +4,13 @@ import Router from "next/router";
 import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
 import {
-  getUserTokenAPI,
+  getUserLoginTokenAPI,
   getUserInfoAPI,
   updateUserAPI,
   updateNicknameAPI,
   deleteUserAPI,
 } from "../../pages/api/user";
-import { TextField } from "@mui/icons-material";
+import { TextField } from "@mui/material";
 
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
@@ -24,7 +24,7 @@ export default function MyInfo() {
     email: "",
     phone: "",
     nickname: "",
-    class: "",
+    userClass: "",
     birthday: "",
     generation: "",
     studentId: "",
@@ -34,78 +34,96 @@ export default function MyInfo() {
     description: "",
     image_id: "",
   });
+
   const [nicknameInfo, setNicknameInfo] = useState({
-    newNickname: "",
-    curUserId: "",
+    nickname: "",
+    id: sessionStorage.getItem("userId"),
   });
 
   const cookies = new Cookies();
   const [cookie, setCookie] = useCookies(["userToken"]);
 
-  const token = cookie.userToken;
-  const [uesrIdNum, setUserIdNum] = useState("");
-  async function getUserToken() {
-    getUserTokenAPI(token).then((res) => {
-      // console.log("token: " + token);
-      // console.log("res: " + res);
+  function getUserInfo() { // 사용자 정보 가져오는 함수
+    const token = cookie.userToken;
 
+    getUserLoginTokenAPI(token).then((res) => {
       if (res.statusCode == 200) {
       } else {
-        alert(`${res.email}`);
       }
-      console.log("getUserToken" + res);
+      console.log("getUserLoginTokenAPI 관련 결과" + JSON.stringify(res));
+      // setInputState({
+      //   userId: res.userId,
+      //   email: res.email,
+      //   nickname: res.nickname,
+      // });
+      inputState.userId = res.userId;
+      inputState.email = res.email;
+      inputState.nickname = res.nickname;
 
-      setInputState({
-        userId: res.userId,
-        email: res.email,
-        nickname: res.nickname,
-      });
-      setUserIdNum({
-        userIdNum: res.userId,
-      });
-      setNicknameInfo({
-        curUserId: res.userId,
-      });
-    });
-  }
-
-  async function getUserInfo() {
-    setUserIdNum({
-      userIdNum: sessionStorage.getItem("userId"),
-    });
-    console.log("UserID는 " + sessionStorage.getItem("userId"));
-    getUserInfoAPI("45").then((res) => {
-      if (res.statusCode == 200) {
-      } else {
-        alert(`${res.email}`);
-      }
-      console.log("getUserInfoAPI" + res.user);
-
-      setInputState({
-        phone: res.phone,
-        class: res.class,
-        birthday: res.birthday,
-        generation: res.generation,
-        studentId: res.studentId,
-        stacks: res.stacks,
-        position: res.position,
-        link: res.link,
-        description: res.description,
-        image_id: res.image_id,
-      });
-      setNicknameInfo({
-        curUserId: res.userId,
+      const userId = res.userId;
+      getUserInfoAPI(userId).then((res) => {
+        if (res.statusCode == 200) {
+        } else {
+        }
+        console.log("내 정보 보기 결과: " + JSON.stringify(res));
+        inputState.name = res.user.name;
+        inputState.birthday = res.user.birthday;
+        inputState.phone = res.user.phone;
+        inputState.userClass = res.user.userClass;
+        inputState.generation = res.user.generation;
+        inputState.studentId = res.user.studentId;
+        inputState.position = res.user.position;
+        inputState.password = res.user.password;
+        inputState.link = res.user.link;
+        inputState.description = res.user.description;
+        inputState.stacks = res.user.stacks;
+        // inputState.file = res.user.file;
       });
     });
   }
 
   useEffect(() => {
-    // getUserToken();
     getUserInfo();
-    console.log(
-      inputState.userId + " " + inputState.email + " " + inputState.nickname
-    );
   }, []);
+
+  const handleNicknameChange = (e) => {
+    setNicknameInfo({
+      nickname: e.target.value,
+      id: sessionStorage.getItem("userId"),
+    });
+  };
+
+  const handleNicknameClick = (e) => {
+    e.preventDefault();
+    // 닉네임 바꿀 수 있는지 확인
+    if (nicknameChange) {
+      let isNormal = true;
+      if (
+        nicknameInfo.nickname == "" ||
+        nicknameInfo.nickname == "admin" ||
+        nicknameInfo.nickname == "관리자"
+      ) {
+        isNormal = false;
+      }
+
+      if (isNormal) {
+        updateNicknameAPI(nicknameInfo).then((res) => {
+          console.log("닉네임 수정 가능한지 확인한 결과" + JSON.stringify(res));
+          if (res.statusCode == 200) {
+            if (window.confirm("닉네임 수정이 가능합니다. 수정하시겠습니까?")) {
+              //업데이트 API 실행하기
+              setNicknameChange(false);
+            } else {
+            }
+          } else {
+            alert(`${res.message}`);
+          }
+        });
+      }
+    } else {
+      setNicknameChange(true);
+    }
+  };
 
   const handleUpdateClick = (e) => {
     e.preventDefault();
@@ -143,45 +161,6 @@ export default function MyInfo() {
       } else {
         alert(msg);
       }
-    }
-  };
-
-  const handleNicknameChange = (e) => {
-    setNicknameInfo({
-      newNickname: e.target.value,
-    });
-  };
-  const handleNicknameClick = (e) => {
-    e.preventDefault();
-    // 닉네임 바꾸기
-    if (nicknameChange) {
-      // setNicknameChange(false);
-      setNicknameInfo({
-        curUserId: inputState.userId,
-      });
-
-      let isNormal = true;
-      if (nicknameInfo.newNickname == "") {
-        isNormal = false;
-      }
-      if (isNormal) {
-        updateNicknameAPI(nicknameInfo).then((res) => {
-          console.log(
-            "닉네임 업데이트할 때 입력값" +
-              nicknameInfo.newNickname +
-              " " +
-              nicknameInfo.curUserId
-          );
-          if (res.statusCode == 200) {
-            setNicknameChange(false);
-          } else {
-            alert(`${res.message}`);
-          }
-          console.log("닉네임 업데이트결과" + res);
-        });
-      }
-    } else {
-      setNicknameChange(true);
     }
   };
 
@@ -261,7 +240,12 @@ export default function MyInfo() {
         </div>
         <div className="mb-6">
           <label>반</label>
-          <input value={inputState.class || ""} disabled />
+          <input
+            id="userClass"
+            value={inputState.userClass || ""}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
         </div>
         <div className="mb-6">
           <label>학번</label>
@@ -312,14 +296,17 @@ export default function MyInfo() {
         </div>
         <div className="mb-6">
           <label>자기소개</label>
-          {/* <TextField
-            id="outlined-textarea"
+          <br />
+          <TextField
+            id="description"
             placeholder="자기자신에 대해 소개해주세요"
-            fullWidth
+            // fullWidth
             rows={4}
             multiline
-            value={inputState.description}
-            disabled={onlyView ? true : false}/> */}
+            value={inputState.description || ""}
+            disabled={onlyView ? true : false}
+            onChange={handleChange}
+          />
         </div>
         <div className="mb-6">
           <label>이미지</label>

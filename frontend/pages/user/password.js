@@ -2,7 +2,7 @@ import LostPassword from "../../components/User/LostPassword";
 import React, { useEffect } from "react";
 import Router from "next/router";
 
-export default function FindPasswordPage() {
+export default function ResetPasswordPage() {
   
   useEffect(() => {
     if (sessionStorage.getItem("userId")) {

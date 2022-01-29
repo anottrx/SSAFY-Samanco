@@ -58,7 +58,7 @@ public class ValidRepository {
             return false;
         }
         String status=user.getProjectJoinStatus();
-        if (status==null||status.equals("NO")||status.equals("CANCEL")) {   // 진행중인 프로젝트 없음
+        if (status==null|| status=="" ||status.equals("NO")||status.equals("CANCEL")) {   // 진행중인 프로젝트 없음
             return true;
         }
         Long curProjectId=user.getProjectId();

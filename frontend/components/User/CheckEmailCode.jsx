@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { checkEmailPWAPI } from "../../pages/api/user";
 
-export default function CheckEmailCode() {
+export default function CheckEmailCode(props) {
   const [code, setCode] = useState("");
   const [authFin, setAuthFin] = useState(false);
 
@@ -27,6 +27,7 @@ export default function CheckEmailCode() {
       console.log(value);
       //   checkEmailPWAPI(value).then((res) => {
       //     setEmailCodeRes({ code: res.statusCode, msg: res.message });
+      props.changeHandle(true, "code");
       setAuthFin(true);
       //   });
     }
