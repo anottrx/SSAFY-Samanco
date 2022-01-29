@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getUserInfoAPI } from "../../pages/api/user";
 import { TextField } from "@mui/icons-material";
 import StackLevelList from "../Common/Stack/StackLevelList";
+import LinkList from "../Common/LinkList";
 
 export default function UserInfo() {
   const [userValue, setUserValue] = useState({
@@ -14,6 +15,7 @@ export default function UserInfo() {
     image_id: "",
   });
   const [loading, setLoading] = useState(false);
+  const [links, setLinks] = useState([]);
 
   async function getUserInfo() {
     getUserInfoAPI(userValue.userId).then((res) => {
@@ -28,6 +30,7 @@ export default function UserInfo() {
       userValue.link = res.user.link;
       userValue.description = res.user.description;
       userValue.stacks = res.user.stacks;
+      setLinks(userValue.link.split(" "));
       // userValue.image_id = res.user.image_id;
 
       if (userValue.stacks != "") {
@@ -60,7 +63,17 @@ export default function UserInfo() {
             </div>
             <div className="mb-6">
               <label>링크</label>
-              <label>{userValue.link || ""}</label>
+              <LinkList items={links} />
+              {/* <label>{userValue.link || ""}</label> */}
+              {/* <div>
+                {links.map((item, index) => {
+                  return (
+                    <a href={item} target="_blank" key={index}>
+                      {item}&nbsp; 
+                    </a>
+                  );
+                })}
+              </div> */}
             </div>
             <div className="mb-6">
               <label>스택</label>
