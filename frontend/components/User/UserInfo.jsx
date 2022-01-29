@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getUserInfoAPI } from "../../pages/api/user";
 import { TextField } from "@mui/icons-material";
+import StackLevelList from "../Common/Stack/StackLevelList";
 
 export default function UserInfo() {
   const [userValue, setUserValue] = useState({
@@ -26,12 +27,12 @@ export default function UserInfo() {
       userValue.position = res.user.position;
       userValue.link = res.user.link;
       userValue.description = res.user.description;
-      // userValue.stacks = res.user.stacks;
+      userValue.stacks = res.user.stacks;
       // userValue.image_id = res.user.image_id;
 
-      if (userValue.nickname != "") {
+      if (userValue.stacks != "") {
         setLoading(true);
-
+        console.log(JSON.stringify(userValue.stacks));
         console.log(JSON.stringify(userValue));
         console.log(loading);
       }
@@ -39,7 +40,7 @@ export default function UserInfo() {
   }
 
   useEffect(() => {
-    userValue.userId = 49;
+    userValue.userId = 54;
     getUserInfo();
   }, []);
 
@@ -63,26 +64,22 @@ export default function UserInfo() {
             </div>
             <div className="mb-6">
               <label>스택</label>
-              <label>{userValue.stacks || ""}</label>
-              {/* {stacks.map((item) => {
-            if (item.HTML > 0) {
-              console.log("dd")
-            }
-          })} */}
+              <StackLevelList items={userValue.stacks} />
             </div>
             <div className="mb-6">
               <label>자기소개</label>
               <label>{userValue.description || ""}</label>
               {/* <TextField
-            id="outlined-textarea"
-            fullWidth
-            rows={4}
-            multiline
-            value={inputState.description} */}
+                id="outlined-textarea"
+                fullWidth
+                rows={4}
+                multiline
+                value={userValue.description|| ""} 
+                /> */}
             </div>
             <div className="mb-6">
               <label>이미지</label>
-              <label>{userValue.image_id || ""}</label>
+              {/* <label>{userValue.image_id || ""}</label> */}
             </div>{" "}
           </div>
         ) : (
