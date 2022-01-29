@@ -23,7 +23,7 @@ public class StackServiceImpl implements StackService{
     StackRepositorySupport stackRepositorySupport;
 
     @Override
-    public void createStack(List<Map<String, Integer>> stacks, Long id, int flag) {
+    public void createStack(List<Map<String, Integer>> stacks, Long tagId, String tag) {
         if (stacks==null){
             return;
         }
@@ -34,31 +34,29 @@ public class StackServiceImpl implements StackService{
                 StackGrade stackGrade=new StackGrade();
                 stackGrade.setName(name);
                 stackGrade.setGrade(grade);
-                if (flag==1) {
-                    stackGrade.setUserId(id);
-                } else if (flag==2) {
-                    stackGrade.setProjectId(id);
-                } else if (flag==3) {
-                    stackGrade.setStudyId(id);
-                }
+                stackGrade.setTagId(tagId);
+                stackGrade.setTag(tag);
                 stackRepository.save(stackGrade);
             }
         }
     }
 
     @Override
-    public void updateStack(List<Map<String, Integer>> stacks, Long id, int flag) {
+    public void updateStack(List<Map<String, Integer>> stacks, Long tagId, String tag) {
         if (stacks==null){
             return;
         }
-        stackRepositorySupport.deleteStack(id, flag);
-        createStack(stacks, id, flag);
-
-
+        stackRepositorySupport.deleteStack(tagId, tag);
+        createStack(stacks, tagId, tag);
     }
 
     @Override
-    public List<StackGradeDto> selectStack(Long id, int flag) {
-        return stackRepositorySupport.selectStack(id, flag);
+    public List<StackGradeDto> selectStack(Long tagId, String tag) {
+        return stackRepositorySupport.selectStack(tagId, tag);
+    }
+
+    @Override
+    public List<String> selectStackAll(String tag) {
+        return stackRepositorySupport.selectStackAll(tag);
     }
 }

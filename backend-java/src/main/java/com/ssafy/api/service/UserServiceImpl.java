@@ -1,7 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.model.UserDto;
-import com.ssafy.api.request.UserLikeTargetReq;
+import com.ssafy.api.request.UserLikeTagReq;
 import com.ssafy.api.request.UserLoginReq;
 import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.db.entity.Project;
@@ -101,8 +101,8 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(Long userId) {
 		// stack, file, project, study, board, comment 다 지우기.
 		userRepositorySupport.deleteUser(userId);
-		stackRepositorySupport.deleteStack(userId, 1);
-		fileRepositorySupport.deleteFile(userId, 1);
+		stackRepositorySupport.deleteStack(userId, "user");
+		fileRepositorySupport.deleteFile(userId, "user");
 		Project project=projectRepositorySupport.selectByHost(userId);
 		if (project!=null){
 			projectRepositorySupport.deleteProject(userId, project.getId());
@@ -188,8 +188,8 @@ public class UserServiceImpl implements UserService {
 		user.setProjectPosition(result.getProjectPosition());
 		user.setProjectId(result.getProjectId());
 		user.setProjectJoinStatus(result.getProjectJoinStatus());
-		user.setFile(fileRepositorySupport.selectFile(userId, 1));
-		user.setStacks(stackRepositorySupport.selectStack(userId, 1));
+		user.setFile(fileRepositorySupport.selectFile(userId, "user"));
+		user.setStacks(stackRepositorySupport.selectStack(userId, "user"));
 
 		return user;
 	}
@@ -248,27 +248,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int userLikeTarget(UserLikeTargetReq userLikeTargetReq) {
-		Long userId= userLikeTargetReq.getUserId();
-		Long targetId=userLikeTargetReq.getTargetId();
-		String tag=userLikeTargetReq.getTag();
+	public int userLikeTag(UserLikeTagReq userLikeTagReq) {
+		Long userId= userLikeTagReq.getUserId();
+		Long tagId= userLikeTagReq.getTagId();
+		String tag= userLikeTagReq.getTag();
 		if (!valid.isUserValid(userId)){
 			return 401;
 		}
-		if (!valid.isTargetValid(targetId, tag)){
+		if (!valid.isTargetValid(tagId, tag)){
 			return 402;
 		}
 
-		UserLike result=userLikeRepositorySupport.userLike(userId, targetId, tag);
+		UserLike result=userLikeRepositorySupport.userLike(userId, tagId, tag);
 		if (result==null){
 			UserLike userLike=new UserLike();
 			userLike.setUserId(userId);
-			userLike.setTargetId(targetId);
+			userLike.setTagId(tagId);
 			userLike.setTag(tag);
 			userLikeRepository.save(userLike);
 			return 200;
 		} else {
-			userLikeRepositorySupport.deleteUserLike(userId, targetId, tag);
+			userLikeRepositorySupport.deleteUserLike(userId, tagId, tag);
 			return 201;
 		}
 	}
