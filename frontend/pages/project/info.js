@@ -15,6 +15,7 @@ import { Container, Skeleton, Card, CardContent, Typography, Divider,
 import { getUserAtProject } from "../../pages/api/project"
 import * as projectActions from '../../store/module/project';
 
+import Router from "next/router";
 
 function ProjectInfo(){
     let clubData = useSelector(({ project }) => project.myProject);
@@ -59,7 +60,7 @@ function ProjectInfo(){
 
     const DetailHeader = styled.div`
         display: flex;    
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         margin: 20px 0px; 
         & > h2 {
@@ -105,6 +106,13 @@ function ProjectInfo(){
 
         return (
             <>
+            {
+            sessionStorage.getItem("userId") == detail.hostId?
+                <Button variant="outlined" onClick={() => {Router.push("/project/applylist")}}>
+                    지원자 목록 조회
+                </Button>
+                : null
+            }
             <ButtonGroup variant="outlined">
                 {
                     sessionStorage.getItem("userId") == clubData.hostId?
@@ -253,21 +261,31 @@ function ProjectInfo(){
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+            width: 100%;
 
             & > div {
                 display: flex;
                 flex-direction: column;
-                flex: 1;
                 margin: 10px;
             }
             & .no-user{
                 font-size: 14px;
             }
-        `
+            & .fill {
+                display: flex;
+                flex: 1;
+            }
+            `
+
+            const FollowerWrapper = styled.div`
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap
+            `
 
             return (
                 <UserWrapper>
-                    <div>
+                    <div style={{width: "fit-content"}}>
                         <div>팀장</div>
                         <div>
                         {
@@ -287,7 +305,7 @@ function ProjectInfo(){
                     </div>
                     <div>
                         <div>팀원</div>
-                        <div>
+                        <FollowerWrapper>
                         {
                             userData == null?
                             <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
@@ -302,7 +320,7 @@ function ProjectInfo(){
                                 )
                             })
                         }
-                        </div>
+                        </FollowerWrapper>
                     </div>
                 </UserWrapper>
             )
