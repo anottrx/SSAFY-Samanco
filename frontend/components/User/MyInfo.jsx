@@ -159,12 +159,23 @@ export default function MyInfo() {
     // 닉네임 바꿀 수 있는지 확인
     if (nicknameChange) {
       let isNormal = true;
-      if (
-        nicknameInfo.nickname == "" ||
+      let msg = "";
+      if (nicknameInfo.nickname == "") {
+        msg = "닉네임을 입력해주세요";
+        isNormal = false;
+      } else if (
         nicknameInfo.nickname == "admin" ||
         nicknameInfo.nickname == "관리자"
       ) {
+        msg = "해당 닉네임은 사용이 불가능합니다";
         isNormal = false;
+      } else if (nicknameInfo.nickname == inputState.nickname) {
+        msg = "현재 닉네임과 동일합니다";
+        isNormal = false;
+      }
+      if (!isNormal) {
+        alert(msg);
+        setNicknameChange(false);
       }
 
       if (isNormal) {
