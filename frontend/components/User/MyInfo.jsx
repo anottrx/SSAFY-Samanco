@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import userData from "../../data/userData.json";
+import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
 import Cookies from "universal-cookie";
 import { useCookies } from "react-cookie";
@@ -10,13 +9,17 @@ import {
   updateNicknameAPI,
   deleteUserAPI,
 } from "../../pages/api/user";
-import { TextField } from "@mui/material";
+import { TextField, Button } from "@mui/material";
+import styled from "@emotion/styled";
 
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
   const [onlyView, setOnlyView] = useState(true);
   const [finishUpdate, setFinishUpdate] = useState(false);
   const [nicknameChange, setNicknameChange] = useState(false);
+  const [checkPassword, setCheckPassword] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const [inputState, setInputState] = useState({
     userId: "",
@@ -43,7 +46,17 @@ export default function MyInfo() {
   const cookies = new Cookies();
   const [cookie, setCookie] = useCookies(["userToken"]);
 
-  function getUserInfo() { // 사용자 정보 가져오는 함수
+  const [files, setFiles] = useState("");
+
+  const onImgChange = (event) => {
+    const file = event.target.files[0];
+    setFiles(file);
+  };
+
+  const uploadRef = useRef(null);
+
+  async function getUserInfo() {
+    // 사용자 정보 가져오는 함수
     const token = cookie.userToken;
 
     getUserLoginTokenAPI(token).then((res) => {
@@ -51,11 +64,6 @@ export default function MyInfo() {
       } else {
       }
       console.log("getUserLoginTokenAPI 관련 결과" + JSON.stringify(res));
-      // setInputState({
-      //   userId: res.userId,
-      //   email: res.email,
-      //   nickname: res.nickname,
-      // });
       inputState.userId = res.userId;
       inputState.email = res.email;
       inputState.nickname = res.nickname;
@@ -78,19 +86,64 @@ export default function MyInfo() {
         inputState.description = res.user.description;
         inputState.stacks = res.user.stacks;
         // inputState.file = res.user.file;
+        setLoading(true);
       });
     });
   }
 
+  const ImgUploadBtn = styled(Button)`
+    padding: 20px;
+    border: 1px dashed grey;
+    min-width: 150px;
+    min-height: 150px;
+    margin: 10px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  `;
+
   useEffect(() => {
     getUserInfo();
+    preview();
   }, []);
+
+  const preview = () => {
+    if (!files) return false;
+
+    const imgEl = document.querySelector("#img_box");
+    const reader = new FileReader();
+
+    reader.onload = () =>
+      (imgEl.style.backgroundImage = `url(${reader.result})`);
+
+    imgEl.innerText = "";
+    reader.readAsDataURL(files);
+  };
 
   const handleNicknameChange = (e) => {
     setNicknameInfo({
       nickname: e.target.value,
       id: sessionStorage.getItem("userId"),
     });
+  };
+
+  const PromptPasswordCheck = (e) => {
+    return (
+      <>
+        <div id="dialog" title="Basic dialog">
+          <input
+            id="password"
+            value={inputState.password}
+            type="password"
+            onChange={handleChange}
+            size="25"
+          />
+        </div>
+      </>
+    );
   };
 
   const handleNicknameClick = (e) => {
@@ -110,9 +163,46 @@ export default function MyInfo() {
         updateNicknameAPI(nicknameInfo).then((res) => {
           console.log("닉네임 수정 가능한지 확인한 결과" + JSON.stringify(res));
           if (res.statusCode == 200) {
+            setCheckPassword(true);
+
             if (window.confirm("닉네임 수정이 가능합니다. 수정하시겠습니까?")) {
               //업데이트 API 실행하기
-              setNicknameChange(false);
+              const formData = new FormData();
+              console.log("inputState" + JSON.stringify(inputState));
+              console.log(inputState);
+
+              Object.keys(inputState).map((key) => {
+                let value = inputState[key];
+                if (key === "stacks") {
+                  formData.append(key, "[" + JSON.stringify(value) + "]");
+                  // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
+                } else {
+                  formData.append(key, value);
+                  console.log(key + " " + value);
+                }
+              });
+
+              formData.append("file", files);
+
+              for (let key of formData.entries()) {
+                console.log("key", `${key}`);
+              }
+
+              updateUserAPI(formData).then((res) => {
+                console.log(res);
+                console.log(JSON.stringify(res));
+                if (res.statusCode == 200) {
+                  sessionStorage.clear();
+                  sessionStorage.setItem("userId", inputState.userId);
+                  sessionStorage.setItem("email", inputState.email);
+                  sessionStorage.setItem("nickname", inputState.nickname);
+                  setNicknameChange(false);
+                } else {
+                  alert(
+                    "회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode
+                  );
+                }
+              });
             } else {
             }
           } else {
@@ -199,121 +289,149 @@ export default function MyInfo() {
   };
 
   return (
-    <>
-      <div>
-        <h1>내정보</h1>
-        {finishUpdate ? (
-          <button onClick={handleUpdateFinishClick}>수정완료</button>
-        ) : (
-          <button onClick={handleUpdateClick}>수정하기</button>
-        )}
-        <div className="mb-6">
-          <label>이메일</label>
-          <input
-            id="email"
-            type="email"
-            disabled
-            value={inputState.email || ""}
-          />
-        </div>
-        <div className="mb-6">
-          <label>닉네임</label>
-          <input
-            id="nickname"
-            value={inputState.nickname || ""}
-            disabled={nicknameChange ? false : true}
-            // disabled={onlyView ? true : false}
-            onChange={(e) => {
-              handleNicknameChange(e);
-              handleChange(e);
-            }}
-          />
-          {nicknameChange ? (
-            <button onClick={handleNicknameClick}>수정완료</button>
-          ) : (
-            <button onClick={handleNicknameClick}>수정하기</button>
-          )}
-        </div>
-        <div className="mb-6">
-          <label>기수</label>
-          <input value={inputState.generation || ""} disabled />
-        </div>
-        <div className="mb-6">
-          <label>반</label>
-          <input
-            id="userClass"
-            value={inputState.userClass || ""}
-            disabled={onlyView ? true : false}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="mb-6">
-          <label>학번</label>
-          <input value={inputState.studentId || ""} disabled />
-        </div>
-        <div className="mb-6">
-          <label>이름</label>
-          <input value={inputState.name || ""} disabled />
-        </div>
-        <div className="mb-6">
-          <label>분야</label>
-          <input
-            id="position"
-            defaultValue={inputState.position || ""}
-            disabled={onlyView ? true : false}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="mb-6">
-          <label>생년월일</label>
-          <input value={inputState.birthday || ""} disabled />
-        </div>
-        <div className="mb-6">
-          <label>전화번호</label>
-          <input
-            id="phone"
-            defaultValue={inputState.phone || ""}
-            disabled={onlyView ? true : false}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="mb-6">
-          <label>링크</label>
-          <input
-            id="link"
-            defaultValue={inputState.link || ""}
-            disabled={onlyView ? true : false}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="mb-6">
-          <label>스택</label>
-          {/* {stacks.map((item) => {
+    <div>
+      {loading ? (
+        <div>
+          <div>
+            <h1>내정보</h1>
+            {finishUpdate ? (
+              <button onClick={handleUpdateFinishClick}>수정완료</button>
+            ) : (
+              <button onClick={handleUpdateClick}>수정하기</button>
+            )}
+            <div className="mb-6">
+              <label>이메일</label>
+              <input
+                id="email"
+                type="email"
+                disabled
+                value={inputState.email || ""}
+              />
+            </div>
+            <div className="mb-6">
+              <label>닉네임</label>
+              <input
+                id="nickname"
+                value={inputState.nickname || ""}
+                disabled={nicknameChange ? false : true}
+                // disabled={onlyView ? true : false}
+                onChange={(e) => {
+                  handleNicknameChange(e);
+                  handleChange(e);
+                }}
+              />
+              {nicknameChange ? (
+                <button onClick={handleNicknameClick}>수정완료</button>
+              ) : (
+                <button onClick={handleNicknameClick}>수정하기</button>
+              )}
+            </div>
+            <div className="mb-6">
+              <label>기수</label>
+              <input value={inputState.generation || ""} disabled />
+            </div>
+            <div className="mb-6">
+              <label>반</label>
+              <input
+                id="userClass"
+                value={inputState.userClass || ""}
+                disabled={onlyView ? true : false}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-6">
+              <label>학번</label>
+              <input value={inputState.studentId || ""} disabled />
+            </div>
+            <div className="mb-6">
+              <label>이름</label>
+              <input
+                defaultvalue={inputState.name}
+                value={inputState.name || ""}
+                disabled
+              />
+            </div>
+            <div className="mb-6">
+              <label>분야</label>
+              <input
+                id="position"
+                value={inputState.position || ""}
+                disabled={onlyView ? true : false}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-6">
+              <label>생년월일</label>
+              <input value={inputState.birthday || ""} disabled />
+            </div>
+            <div className="mb-6">
+              <label>전화번호</label>
+              <input
+                id="phone"
+                value={inputState.phone || ""}
+                disabled={onlyView ? true : false}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-6">
+              <label>링크</label>
+              <input
+                id="link"
+                value={inputState.link || ""}
+                disabled={onlyView ? true : false}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-6">
+              <label>스택</label>
+              {/* {stacks.map((item) => {
             if (item.HTML > 0) {
               console.log("dd")
             }
           })} */}
+            </div>
+            <div className="mb-6">
+              <label>자기소개</label>
+              <br />
+              <TextField
+                id="description"
+                placeholder="자기자신에 대해 소개해주세요"
+                // fullWidth
+                rows={4}
+                multiline
+                value={inputState.description || ""}
+                disabled={onlyView ? true : false}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-6">
+              <label>이미지</label>
+              <ImgUploadBtn
+                id="img_box"
+                onClick={(event) => {
+                  event.preventDefault();
+                  uploadRef.current.click();
+                }}
+              >
+                Image Upload
+              </ImgUploadBtn>
+              <input
+                ref={uploadRef}
+                type="file"
+                className="imgInput"
+                id="projectImg"
+                accept="image/*"
+                name="file"
+                encType="multipart/form-data"
+                onChange={onImgChange}
+              ></input>
+            </div>
+          </div>
+          <button onClick={handleQuitClick}>탈퇴하기</button>
         </div>
-        <div className="mb-6">
-          <label>자기소개</label>
-          <br />
-          <TextField
-            id="description"
-            placeholder="자기자신에 대해 소개해주세요"
-            // fullWidth
-            rows={4}
-            multiline
-            value={inputState.description || ""}
-            disabled={onlyView ? true : false}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="mb-6">
-          <label>이미지</label>
-          {/* <text>{image_id}</text> */}
-        </div>
-      </div>
-      <button onClick={handleQuitClick}>탈퇴하기</button>
-    </>
+      ) : (
+        <></>
+      )}
+    </div>
   );
 }
