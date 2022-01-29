@@ -1,5 +1,5 @@
 import Layout from "../../components/layout";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styled from "@emotion/styled";
 import StackList from "../../components/Club/StackList"
@@ -10,15 +10,28 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { Card, Container, Skeleton, CardContent, Typography, 
     Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, 
-    DialogTitle, ButtonGroup, FormControl, FormLabel, RadioGroup,
+    DialogTitle, ButtonGroup, FormControl, RadioGroup,
     Radio, FormControlLabel } from "@mui/material";
 import { useEffect, useState } from "react";
 import Router from "next/router";
 
-import { deleteAPI, updateProjectLike, joinProjectAPI } from "../api/project";
+import * as projectActions from '../../store/module/project';
+import { deleteAPI, updateProjectLike, joinProjectAPI, getProjectById } from "../api/project";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        getProjectById({
+            projectId: detail.id, 
+            userId: sessionStorage.getItem("userId") == null? 
+                0: sessionStorage.getItem("userId")
+        })
+        .then(res => {
+            dispatch(projectActions.setProjectDetail({detail: res.project}))
+    });
+    }, []);
 
     const DetailWrapper = styled.div`
         display: flex;
@@ -226,6 +239,7 @@ const ProjectDetail = () => {
             })
             console.log(positions)
         },[])
+        
 
         return (
             <ActionWrapper>
