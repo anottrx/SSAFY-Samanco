@@ -244,7 +244,7 @@ function projectUpdate() {
                                 if (res.statusCode == 200) {
                                     alert("프로젝트가 수정되었습니다.")
                                     // To do: 해당 페이지로 이동
-                                    Router.push("/project");
+                                    Router.push("/project/"+inputValue.projectId);
                                 } else {
                                     alert(`${res.message}`)
                                 }
