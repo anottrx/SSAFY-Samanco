@@ -157,14 +157,14 @@ function MyApp({ Component, pageProps }) {
             </>
           ) : (
             <>
-              <span>
-                <Link href="/login" className="site-nav-item" style={styles.link}>
-                  로그인&nbsp;&nbsp;
+              <span className="site-nav-item" style={styles.link}>
+                <Link href="/login">
+                  로그인
                 </Link>
               </span>
-              <span>    
-                <Link href="/regist" className="site-nav-item" style={styles.link}>
-                  회원가입&nbsp;
+              <span className="site-nav-item" style={styles.link}>    
+                <Link href="/regist" >
+                  회원가입
                 </Link>
               </span>  
             </>
