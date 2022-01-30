@@ -315,7 +315,9 @@ public class ProjectController{
         if (projectQuitCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
         } else if (projectQuitCode==402){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 탈퇴할 수 없습니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "프로젝트를 탈퇴할 수 없습니다."));
+        } else if (projectQuitCode==403){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(403, "호스트는 권한을 넘긴 후 탈퇴하거나 프로젝트를 삭제하세요."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }

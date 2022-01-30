@@ -25,15 +25,6 @@ public class StudyRepositorySupport {
     QUser qUser=QUser.user;
     QUserStudy qUserStudy=QUserStudy.userStudy;
 
-    public boolean isValid(Long id){
-        Study study = jpaQueryFactory.select(qStudy).from(qStudy)
-                .where(qStudy.id.eq(id), qStudy.isDeleted.eq(false)).fetchOne();
-        if (study==null){
-            return false;
-        }
-        return true;
-    }
-
     @Transactional
     public void deleteStudy(Long userId, Long studyId) {
         // isDelete=true
@@ -54,8 +45,8 @@ public class StudyRepositorySupport {
             return 401;
         }
 
-        Study study = jpaQueryFactory.selectFrom(qStudy).where(qStudy.id.eq(studyId), qUserStudy.isDeleted.eq(false)).fetchOne();
-        if (study.getHostId()!=hostId){
+        Study study = jpaQueryFactory.selectFrom(qStudy).where(qStudy.id.eq(studyId), qStudy.isDeleted.eq(false)).fetchOne();
+        if (study==null || study.getHostId()!=hostId){
             return 402;
         }
 
@@ -70,9 +61,9 @@ public class StudyRepositorySupport {
         return 200;
     }
 
-    public Study selectByHost(Long userId) {
+    public List<Study> selectByHost(Long userId) {
        return jpaQueryFactory.selectFrom(qStudy)
-               .where(qStudy.isDeleted.eq(false), qStudy.hostId.eq(userId)).fetchOne();
+               .where(qStudy.isDeleted.eq(false), qStudy.hostId.eq(userId)).fetch();
     }
 
     public List<Study> selectByUser(Long userId) {
@@ -132,13 +123,6 @@ public class StudyRepositorySupport {
     }
 
     public int joinUserStudy(Long userId, Long studyId, String studyJoinStatus) {
-        if (!valid.isUserValid(userId)){
-            return 401;
-        }
-        if (!valid.isStudyValid(studyId)){
-            return 402;
-        }
-
         UserStudy userStudy = jpaQueryFactory.selectFrom(qUserStudy)
                 .where(qUserStudy.userId.eq(userId), qUserStudy.studyId.eq(studyId),
                         (qUserStudy.studyJoinStatus.equalsIgnoreCase("OK").or(qUserStudy.studyJoinStatus.equalsIgnoreCase("before"))))
@@ -146,7 +130,7 @@ public class StudyRepositorySupport {
         if (userStudy!=null){
             return 403;
         }
-        
+        userStudy=new UserStudy();
         userStudy.setUserId(userId);
         userStudy.setStudyId(studyId);
         userStudy.setStudyJoinStatus(studyJoinStatus);
@@ -162,4 +146,19 @@ public class StudyRepositorySupport {
 
     }
 
+    @Transactional
+    public int approveStudy(Long userId, Long studyId, String joinTag) {
+        jpaQueryFactory.update(qUserStudy)
+                .where(qUserStudy.userId.eq(userId), qUserStudy.studyId.eq(studyId))
+                .set(qUserStudy.studyJoinStatus, joinTag)
+                .execute();
+
+        return 200;
+    }
+
+    public UserStudy selectUserStudy(Long userId, Long studyId) {
+        return jpaQueryFactory.selectFrom(qUserStudy)
+                .where(qUserStudy.userId.eq(userId), qUserStudy.studyId.eq(studyId))
+                .fetchOne();
+    }
 }

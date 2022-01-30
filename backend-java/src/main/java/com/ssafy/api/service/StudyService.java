@@ -12,8 +12,8 @@ public interface StudyService {
 
     Study createStudy(StudyRegisterReq studyRegisterReq);
     int updateStudy(StudyUpdateReq updateInfo);
-    void deleteStudy(Long userId, Long studyId);
-    StudyDto selectByHost(Long userId);
+    int deleteStudy(Long userId, Long studyId);
+    List<StudyDto> selectByHost(Long userId);
     StudyDto selectStudy(Long userId, Long studyId);
     List<StudyDto> selectByUser(Long userId);
     List<StudyDto> selectStudyAll();
@@ -28,4 +28,6 @@ public interface StudyService {
     int quitStudy(Long userId, Long studyId);
 
     int joinCancelStudy(Long userId, Long studyId);
+
+    int changeHostStudy(Long studyId, Long oldHostId, Long newHostId);
 }
