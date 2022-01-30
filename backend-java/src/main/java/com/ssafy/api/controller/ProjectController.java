@@ -234,7 +234,14 @@ public class ProjectController{
     public ResponseEntity<? extends BaseResponseBody> selectProject(
             @RequestBody @ApiParam(value="project id", required = true) ProjectUserIdReq projectInfo) throws IOException {
 
-        ProjectDto project=projectService.selectProject(projectInfo.getUserId(), projectInfo.getProjectId());
+        Long projectId= projectInfo.getProjectId();
+        Long userId = projectInfo.getUserId();
+
+        ProjectDto project=projectService.selectProject(userId, projectId);
+        UserDto user=userService.selectUser(userId);
+        if (user!=null && projectId==user.getProjectId()) {
+            project.setProjectJoinStatus(user.getProjectJoinStatus());
+        }
         if (project==null){
             return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
         }
@@ -278,7 +285,7 @@ public class ProjectController{
     @PostMapping("/approve")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+            @ApiResponse(code = 401, message = "가입승인 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> approveProject(@RequestBody ProjectApproveReq projectApproveReq) throws IOException {
@@ -300,7 +307,7 @@ public class ProjectController{
     @PostMapping("/quit")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 탈퇴 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> quitProject(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
@@ -316,7 +323,7 @@ public class ProjectController{
     @PostMapping("/joincancel")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 지원 취소 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> joinCancelProject(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
@@ -410,7 +417,7 @@ public class ProjectController{
     })
     public ResponseEntity<? extends BaseResponseBody> selectJoinUsers(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
 
-        List<UserDto> users=userService.selectJoinUsers(projectUserIdReq.getUserId(), projectUserIdReq.getProjectId());
+        List<UserDto> users=userService.selectProjectJoinUsers(projectUserIdReq.getUserId(), projectUserIdReq.getProjectId());
         if (users==null || users.size()==0){
             return ResponseEntity.status(200).body(UserSelectAllRes.of(401, "프로젝트에 지원한 사용자가 없습니다.", null));
         }

@@ -5,6 +5,7 @@ import com.ssafy.api.request.UserLikeTagReq;
 import com.ssafy.api.request.UserLoginReq;
 import com.ssafy.api.request.UserUpdateReq;
 import com.ssafy.db.entity.Project;
+import com.ssafy.db.entity.Study;
 import com.ssafy.db.entity.UserLike;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	ProjectRepositorySupport projectRepositorySupport;
+
+	@Autowired
+	StudyRepositorySupport studyRepositorySupport;
 
 	@Autowired
 	UserLikeRepository userLikeRepository;
@@ -212,7 +216,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDto> selectJoinUsers(Long userId, Long projectId) {
+	public List<UserDto> selectProjectJoinUsers(Long userId, Long projectId) {
 		Project projectResult = projectRepositorySupport.selectByHost(userId);
 		if (projectResult==null || projectResult.getId()!=projectId){
 			return null;
@@ -271,6 +275,43 @@ public class UserServiceImpl implements UserService {
 			userLikeRepositorySupport.deleteUserLike(userId, tagId, tag);
 			return 201;
 		}
+	}
+
+	@Override
+	public List<UserDto> selectStudyUsers(Long userId, Long studyId) {
+		List<Study> studies = studyRepositorySupport.selectByUser(userId);
+		for (Study study: studies){
+			if (study.getId()==studyId){
+				List<User> results = studyRepositorySupport.selectStudyUsers(studyId);
+
+				if (results==null || results.size()==0){
+					return null;
+				}
+				List<UserDto> users=new ArrayList<>();
+				for (User result: results){
+					users.add(userEntityToDto(result));
+				}
+				return users;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public List<UserDto> selectStudyJoinUsers(Long userId, Long studyId) {
+		Study studyResults = studyRepositorySupport.selectByHost(userId);
+		if (studyResults==null || studyResults.getId()!=studyId){
+			return null;
+		}
+		List<User> results = studyRepositorySupport.selectJoinUsers(studyId);
+		if (results==null){
+			return null;
+		}
+		List<UserDto> users=new ArrayList<>();
+		for (User result: results){
+			users.add(userEntityToDto(result));
+		}
+		return users;
 	}
 
 	@Override
