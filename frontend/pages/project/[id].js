@@ -17,7 +17,9 @@ import { useEffect, useState, useRef } from "react";
 import Router from "next/router";
 
 import * as projectActions from '../../store/module/project';
-import { deleteAPI, updateProjectLike, joinProjectAPI, getProjectById } from "../api/project";
+import { deleteAPI, updateProjectLike, joinProjectAPI, getProjectById, joinCancelProject } from "../api/project";
+
+import { forceReload } from "../../util/ForceReload";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -220,19 +222,22 @@ const ProjectDetail = () => {
             }
         `
         const [open, setOpen] = useState(false);
+        const [joinCancel,setJoinCalcel] = useState(false);
 
         const JoinDialogOpen = () => { 
             if (sessionStorage.getItem("userId"))
-                setOpen(true) 
+            setOpen(true) 
             else {
                 alert("로그인이 필요한 작업입니다.")
                 Router.push("/login")
             }
         }
         const JoinDialogClose = () => { setOpen(false) }
-        
-        const [selectPosition, setSelectPosition] = useState("");
 
+        const JoinCancelDialogOpen = () => {setJoinCalcel(true)}
+        const JoinCancelDialogClose = () => {setJoinCalcel(false)}
+        
+        const [selectPosition, setSelectPosition] = useState(null);
         let positions = {};
         
         useEffect(() => {
@@ -284,10 +289,16 @@ const ProjectDetail = () => {
                             지원자 목록 조회
                         </Button>
                         : 
-                        // 글 작성한 사람 !=== 현재 로그인 한 사람 => 지원하기 버튼
-                        <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                        null
                     } 
-                    
+                    {
+                        detail.projectJoinStatus == null || detail.projectJoinStatus == "CANCEL "?
+                        <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button> : null
+                    }
+                    {
+                        detail.projectJoinStatus == "BEFORE"?
+                        <Button variant="outlined" onClick={JoinCancelDialogOpen}>지원취소</Button> : null
+                    }
                 </div>
                     <Dialog
                         open={open}
@@ -301,11 +312,13 @@ const ProjectDetail = () => {
                         원하는 포지션을 선택해주세요.<br></br>
                             <FormControl> 
                                 <RadioGroup
-                                    aria-labelledby="demo-controlled-radio-buttons-group"
-                                    name="controlled-radio-buttons-group"
+                                    name="position"
                                     value={selectPosition}
-                                    onChange={(e) => {setSelectPosition(e.target.value)}}
-                                >
+                                    onChange={(e) => {
+                                        e.persist();
+                                        setSelectPosition(e.target.value)
+                                        console.log(selectPosition)
+                                    }}>
                                     {
                                         detail.positions.map((data, index) => {
                                             let name = data.position.split("total")[1] || data.position.split("current")[1];
@@ -344,8 +357,42 @@ const ProjectDetail = () => {
                                 }
                             })
                             .catch(err => console.log(err));
+                            forceReload();
                         }} autoFocus>
                             확인
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog
+                        open={joinCancel}
+                        onClose={JoinCancelDialogClose}
+                        >
+                        <DialogTitle>
+                            {"지원 취소 하시겠습니까?"}
+                        </DialogTitle>
+                        <DialogContent>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={JoinCancelDialogClose}>아니요</Button>
+                        <Button onClick={() => {
+                            JoinCancelDialogClose();
+                            // 지원 취소 api
+                            joinCancelProject({
+                                projectId: detail.id,
+                                userId: sessionStorage.getItem("userId")
+                            })
+                            .then(res => {
+                                if (res.statusCode === 200) {
+                                    alert("프로젝트 지원 취소가 되었습니다.")
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            })
+                            .catch(err => console.log(err));
+                            forceReload();
+                        }} autoFocus>
+                            예
                         </Button>
                         </DialogActions>
                     </Dialog>

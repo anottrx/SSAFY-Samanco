@@ -91,11 +91,22 @@ async function getProjectByLike() {
     .catch(err => err.response.data)
 }
 
-// 프로젝트 가입
+// 프로젝트 지원
 async function joinProjectAPI(data) {
     return await api
     .post("/api/project/join", {
         position: data.position,
+        projectId: data.projectId,
+        userId: data.userId
+    })
+    .then(res => res.data)
+    .catch(err => err.response.data)
+}
+
+// 프로젝트 지원 취소
+async function joinCancelProject(data) {
+    return await api
+    .post("/api/project/joincancel", {
         projectId: data.projectId,
         userId: data.userId
     })
@@ -186,5 +197,6 @@ export {
     registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
     getProjectBytitle, getProjectByDeadLine, updateProjectLike, getProjectByLike,
     joinProjectAPI, getUserByjoin, approveProject, getProjectByUserId,
-    getUserAtProject, quitProject, projectStackList, changeProjectHost
+    getUserAtProject, quitProject, projectStackList, changeProjectHost,
+    joinCancelProject
 }

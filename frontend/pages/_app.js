@@ -64,13 +64,17 @@ function MyApp({ Component, pageProps }) {
 
   let [isLogin, setIsLogin] = useState(false);
   let [userId, setUserId] = useState(null);
+  let [nickname, setNickname] = useState(null);
 
   const cookies = new Cookies();
 
   useEffect(() => {
-    setIsLogin(cookies.get("userToken" || ""));
-    setUserId(sessionStorage.getItem("userId"));
-  }, [isLogin, userId]);
+    const userNickname = sessionStorage.getItem("nickname")
+    if (cookies.get("userToken")!='' && userNickname != null) {
+      setIsLogin(true);
+      setNickname(userNickname)
+    }
+  }, [isLogin, nickname]);
   
   return (
     // PersistGate : state를 조회한 후 리덕스에 저장할 때까지 웹 어플리케이션의 UI가 렌더링되는 것을 지연시킴
@@ -132,7 +136,7 @@ function MyApp({ Component, pageProps }) {
         <div>
           {props.isLogin ? (
             <>
-              <UserSpan>{sessionStorage.nickname}님, 안녕하세요</UserSpan>
+              <UserSpan>{nickname}님, 안녕하세요</UserSpan>
               <Link href="/myinfo" className="site-nav-item" style={styles.link}>
                 마이페이지
               </Link>
