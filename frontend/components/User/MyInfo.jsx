@@ -11,6 +11,8 @@ import {
 } from "../../pages/api/user";
 import { TextField, Button } from "@mui/material";
 import styled from "@emotion/styled";
+import StackLevelList from "../Common/Stack/StackLevelList";
+import LinkList from "../Common/LinkList";
 
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
@@ -20,6 +22,7 @@ export default function MyInfo() {
   const [checkPassword, setCheckPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [links, setLinks] = useState([]);
 
   const [inputState, setInputState] = useState({
     userId: "",
@@ -76,7 +79,9 @@ export default function MyInfo() {
         console.log("내 정보 보기 결과: " + JSON.stringify(res));
         inputState.name = res.user.name;
         inputState.birthday = res.user.birthday;
-        inputState.phone = res.user.phone;
+        if (res.user.phone !== "00000000000") {
+          inputState.phone = res.user.phone;
+        }
         inputState.userClass = res.user.userClass;
         inputState.generation = res.user.generation;
         inputState.studentId = res.user.studentId;
@@ -85,8 +90,11 @@ export default function MyInfo() {
         inputState.link = res.user.link;
         inputState.description = res.user.description;
         inputState.stacks = res.user.stacks;
+
+        setLinks(inputState.link.split(" "));
         // inputState.file = res.user.file;
         setLoading(true);
+        // ShowStack(inputState.stacks);
       });
     });
   }
@@ -151,12 +159,23 @@ export default function MyInfo() {
     // 닉네임 바꿀 수 있는지 확인
     if (nicknameChange) {
       let isNormal = true;
-      if (
-        nicknameInfo.nickname == "" ||
+      let msg = "";
+      if (nicknameInfo.nickname == "") {
+        msg = "닉네임을 입력해주세요";
+        isNormal = false;
+      } else if (
         nicknameInfo.nickname == "admin" ||
         nicknameInfo.nickname == "관리자"
       ) {
+        msg = "해당 닉네임은 사용이 불가능합니다";
         isNormal = false;
+      } else if (nicknameInfo.nickname == inputState.nickname) {
+        msg = "현재 닉네임과 동일합니다";
+        isNormal = false;
+      }
+      if (!isNormal) {
+        alert(msg);
+        setNicknameChange(false);
       }
 
       if (isNormal) {
@@ -345,11 +364,7 @@ export default function MyInfo() {
             </div>
             <div className="mb-6">
               <label>이름</label>
-              <input
-                defaultvalue={inputState.name}
-                value={inputState.name || ""}
-                disabled
-              />
+              <input value={inputState.name || ""} disabled />
             </div>
             <div className="mb-6">
               <label>분야</label>
@@ -375,20 +390,17 @@ export default function MyInfo() {
             </div>
             <div className="mb-6">
               <label>링크</label>
-              <input
+              {/* <input
                 id="link"
                 value={inputState.link || ""}
                 disabled={onlyView ? true : false}
                 onChange={handleChange}
-              />
+              /> */}
+              <LinkList items={links} />
             </div>
             <div className="mb-6">
               <label>스택</label>
-              {/* {stacks.map((item) => {
-            if (item.HTML > 0) {
-              console.log("dd")
-            }
-          })} */}
+              <StackLevelList items={inputState.stacks} />
             </div>
             <div className="mb-6">
               <label>자기소개</label>
