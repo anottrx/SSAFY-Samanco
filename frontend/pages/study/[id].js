@@ -1,22 +1,38 @@
 import Layout from "../../components/layout";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styled from "@emotion/styled";
 import StackList from "../../components/Club/StackList"
-import PositionList from "../../components/Club/PositionList"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Router from "next/router";
 
-import { deleteAPI } from "../api/study";
+import * as studyActions from '../../store/module/study';
+import { deleteAPI, updateStudyLike, joinStudyAPI, getStudyById, joinCancelStudy } from "../api/study";
 
+import { forceReload } from "../../util/ForceReload";
 
 const StudyDetail = () => { 
     const detail = useSelector(({ study }) => study.studyDetail);
+    const [like, changeLike] = useState(detail.userLike);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        getStudyById({
+            studyId: detail.id, 
+            userId: sessionStorage.getItem("userId") == null? 
+                0: sessionStorage.getItem("userId")
+        })
+        .then(res => {
+            dispatch(studyActions.setStudyDetail({detail: res.study}))
+    });
+    }, [like]);
 
     const DetailWrapper = styled.div`
         display: flex;
@@ -79,12 +95,16 @@ const StudyDetail = () => {
 
         const deleteDialogOpen = () => { setOpen(true) }
         const deleteOperation = () => {
-            // To do: projectId, userId 수정해야함!
-            let data = {id: 1, userId: 1};
+            let data = {id: detail.id, hostId: parseInt(sessionStorage.getItem("userId"))};
+            console.log(data)
             deleteAPI(data)
             .then(res => {
-                if (res.statusCode == 200)
+                if (res.statusCode == 200){
                     console.log("삭제")
+                    Router.push("/study")
+                }
+                else
+                    alert(`${res.message}`)
             })
             .catch(err => console.log(err))
             setOpen(false);
@@ -202,9 +222,20 @@ const StudyDetail = () => {
             }
         `
         const [open, setOpen] = useState(false);
+        const [joinCancel,setJoinCalcel] = useState(false);
 
-        const JoinDialogOpen = () => { setOpen(true) }
+        const JoinDialogOpen = () => { 
+            if (sessionStorage.getItem("userId"))
+            setOpen(true) 
+            else {
+                alert("로그인이 필요한 작업입니다.")
+                Router.push("/login")
+            }
+        }
         const JoinDialogClose = () => { setOpen(false) }
+
+        const JoinCancelDialogOpen = () => {setJoinCalcel(true)}
+        const JoinCancelDialogClose = () => {setJoinCalcel(false)}
 
         return (
             <ActionWrapper>
@@ -214,14 +245,24 @@ const StudyDetail = () => {
                         <span>{detail.hit}</span>
                     </Button>
                     <Button onClick={() => {
-                        sessionStorage.getItem("userId")?
-                        // To do: 좋아요 api 호출
-                        console.log("좋아요")
-                        : 
-                        alert("로그인이 필요한 작업입니다.");
-                        Router.push("/login")
-                    }}>
+                        changeLike(!like);
+                        if (sessionStorage.getItem("userId")) {
+                            updateStudyLike({
+                                tag: "STUDY",
+                                studyId: detail.id, // 스터디 아이디
+                                userId: sessionStorage.getItem("userId")
+                            }).then(res => console.log(res))
+                        } else {
+                            alert("로그인이 필요한 작업입니다.");
+                            Router.push("/login")
+                        }
+                    }} variant={like? "contained":"outlined"}>
+                    {
+                        like?
                         <FavoriteIcon /> 
+                        :
+                        <FavoriteBorderIcon /> 
+                    }
                         <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
@@ -234,9 +275,16 @@ const StudyDetail = () => {
                             지원자 목록 조회
                         </Button>
                         : 
-                        // 글 작성한 사람 !=== 현재 로그인 한 사람 => 지원하기 버튼
-                        <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                        null
                     } 
+                    {
+                        detail.studyJoinStatus == null || detail.studyJoinStatus == "CANCEL "?
+                        <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button> : null
+                    }
+                    {
+                        detail.studyJoinStatus == "BEFORE"?
+                        <Button variant="outlined" onClick={JoinCancelDialogOpen}>지원취소</Button> : null
+                    }
                 </div>
                     <Dialog
                         open={open}
@@ -252,8 +300,55 @@ const StudyDetail = () => {
                         </DialogContent>
                         <DialogActions>
                         <Button onClick={JoinDialogClose}>취소</Button>
-                        <Button onClick={JoinDialogClose} autoFocus>
+                        <Button onClick={() => {
+                            JoinDialogClose();
+                            joinStudyAPI({
+                                studyId: detail.id,
+                                userId: sessionStorage.getItem("userId")
+                            })
+                            .then(res => {
+                                if (res.statusCode === 200) {
+                                    alert("스터디 지원 신청이 되었습니다.")
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            })
+                            .catch(err => console.log(err));
+                            forceReload();
+                        }} autoFocus>
                             확인
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog
+                        open={joinCancel}
+                        onClose={JoinCancelDialogClose}
+                        >
+                        <DialogTitle>
+                            {"지원 취소 하시겠습니까?"}
+                        </DialogTitle>
+                        <DialogContent>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={JoinCancelDialogClose}>아니요</Button>
+                        <Button onClick={() => {
+                            JoinCancelDialogClose();
+                            joinCancelStudy({
+                                studyId: detail.id,
+                                userId: sessionStorage.getItem("userId")
+                            })
+                            .then(res => {
+                                if (res.statusCode === 200) {
+                                    alert("프로젝트 지원 취소가 되었습니다.")
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            })
+                            .catch(err => console.log(err));
+                            forceReload();
+                        }} autoFocus>
+                            예
                         </Button>
                         </DialogActions>
                     </Dialog>

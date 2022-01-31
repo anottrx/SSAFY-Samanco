@@ -4,8 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 
 import {useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
+import * as studyActions from '../../store/module/study';
 
 import {getProjectBytitle} from "../../pages/api/project"
+import {getStudyBytitle} from "../../pages/api/study"
 
 function SearchBar(props) {
     const [keyword, setKeyword] = useState("");
@@ -27,6 +29,18 @@ function SearchBar(props) {
                 getProjectBytitle(keyword)
                 .then(res => 
                     dispatch(projectActions.setProjectFilterList({list: res.projects}))
+                )
+            }
+        } else if (props.target === "study") {
+            // 스터디 페이지를 위한 검색창
+            if (!keyword)
+                dispatch(studyActions.setStudyFilterList({list: null}))
+            else {
+                getStudyBytitle(keyword)
+                .then(res => {
+                    console.log(res.studies);
+                    dispatch(studyActions.setStudyFilterList({list: res.studies}));
+                }
                 )
             }
         }
