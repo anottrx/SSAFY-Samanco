@@ -80,7 +80,10 @@ export default function MyInfo() {
         inputState.name = res.user.name;
         const today = new Date();
         const todayYear = today.getFullYear().toString().slice(2);
-        if (res.user.birthday.toString().slice(0, 2) != todayYear) {
+        if (
+          res.user.birthday != null &&
+          res.user.birthday.toString().slice(0, 2) != todayYear
+        ) {
           inputState.birthday = res.user.birthday;
         }
         if (res.user.phone !== "00000000000") {
@@ -95,7 +98,9 @@ export default function MyInfo() {
         inputState.description = res.user.description;
         inputState.stacks = res.user.stacks;
 
-        setLinks(inputState.link.split(" "));
+        if (res.user.link != null) {
+          setLinks(inputState.link.split(" "));
+        }
         // inputState.file = res.user.file;
         setLoading(true);
         // ShowStack(inputState.stacks);
