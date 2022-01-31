@@ -25,7 +25,6 @@ const position = [
 function projectUpdate() {
     const detail = useSelector(({ project }) => project.projectDetail);
     const url = "../../../backend-java";
-    console.log(detail)
 
     const CusPaper = styled(Paper)`
         width: 100%;
@@ -125,7 +124,6 @@ function projectUpdate() {
 
     async function validateCheck() {
         let [check, msg] = [true, ""]
-        console.log("inputValue",inputValue)
         
         if (typeof(inputValue.title)=='undefined')
             inputValue["title"] = detail.title;

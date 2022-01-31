@@ -12,6 +12,7 @@ import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
 
 import { getProjectAllAPI, getProjectById } from "../../pages/api/project"
+import { getStudyAllAPI, getStudyById } from "../../pages/api/study"
 
 import StackList from "./StackList"
 import stackData from "../../data/StackData.json"
@@ -45,6 +46,7 @@ function ItemList(props) {
         )
     } else if (props.from === "study") {
         clubData = useSelector(({ study }) => study.studyList);
+        filterData = useSelector(({ study }) => study.studyFilterList);
         setDetail = useCallback(
             ({detail}) => {
                 dispatch(studyActions.setStudyDetail({detail}))
@@ -73,20 +75,23 @@ function ItemList(props) {
     const lgMatches = useMediaQuery(theme.breakpoints.up('lg'));
     
     let purPage = useRef(1);
-    let allPage = parseInt(clubData.length / purPage.current);
-    if (clubData.length % purPage.current > 0) allPage += 1;
+    let allPage = 1;
+    if (clubData){
+        allPage = parseInt(clubData.length / purPage.current);
+        if (clubData.length % purPage.current > 0) allPage += 1;
 
-    if (lgMatches) {
-        purPage.current = 8;
-    }
-    else if (mdMatches) {
-        purPage.current = 6;
-    } 
-    else if (smMatches) {
-        purPage.current = 4;
-    } 
-    else if (xsMaches) {
-        purPage.current = 2;
+        if (lgMatches) {
+            purPage.current = 8;
+        }
+        else if (mdMatches) {
+            purPage.current = 6;
+        } 
+        else if (smMatches) {
+            purPage.current = 4;
+        } 
+        else if (xsMaches) {
+            purPage.current = 2;
+        }
     }
 
     // 화면에 요소를 그리기 전에 store에 저장된 아이템 리스트가 있는지 확인
@@ -97,7 +102,7 @@ function ItemList(props) {
         if (props.from === "project") {
             getProjectAllAPI().then(res => setList({list: res.projects}));
         } else if (props.from === "study") {
-            getProjectAllAPI().then(res => setList({list: res.projects}));
+            getStudyAllAPI().then(res => setList({list: res.studies}));
         } else {
             setList({list: projectJSONData});
         }
@@ -124,7 +129,7 @@ function ItemList(props) {
     return (
         <>
         {
-            clubData.length==0?
+            !clubData || clubData.length==0?
             <CusGrid>
                 <CusCard>등록된 데이터가 없습니다.</CusCard>
             </CusGrid>
@@ -215,31 +220,52 @@ export function Item(props) {
     ` 
 
     let totalSize = 0, currSize = 0;
-    data.positions.map((curr) => {
-        if (curr.position === "totalSize") totalSize = curr.size;
-        if (curr.position === "currentSize") currSize = curr.size;
-    })
+    if (from === "project") {
+        data.positions.map((curr) => {
+            if (curr.position === "totalSize") totalSize = curr.size;
+            if (curr.position === "currentSize") currSize = curr.size;
+        })
+    }
 
     return (
         <Container onClick={()=>{
-            getProjectById({
-                projectId: data.id, 
-                userId: sessionStorage.getItem("userId") == null? 
-                    0: sessionStorage.getItem("userId")
-            })
-            .then(res => {
-                setDetail({detail: res.project});
-                
-                // api 작성
-                Router.push({
-                    pathname: `/${from}/[id]`,
-                    query: { id: data.id }
+            if (from === "project") {
+                getProjectById({
+                    projectId: data.id, 
+                    userId: sessionStorage.getItem("userId") == null? 
+                        0: sessionStorage.getItem("userId")
                 })
-            })
-            
+                .then(res => {
+                    setDetail({detail: res.project});
+                    Router.push({
+                        pathname: `/${from}/[id]`,
+                        query: { id: data.id }
+                    })
+                })
+            } else if (from === "study") {
+                getStudyById({
+                    studyId: data.id, 
+                    userId: sessionStorage.getItem("userId") == null? 
+                        0: sessionStorage.getItem("userId")
+                })
+                .then(res => {
+                    setDetail({detail: res.study});
+                    Router.push({
+                        pathname: `/${from}/[id]`,
+                        query: { id: data.id }
+                    })
+                })
+            }
         }}>
-            <CusCountBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusCountBadge>
-            <CusDeadlineBadge badgeContent={"D-"+ (data.deadline!=0? data.deadline: "DAY" ) + " | ♥ "+data.likes}></CusDeadlineBadge>
+            {
+                from === "project"?
+                <>
+                    <CusCountBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusCountBadge>
+                    <CusDeadlineBadge badgeContent={"D-"+ (data.deadline!=0? data.deadline: "DAY" ) + " | ♥ "+data.likes}></CusDeadlineBadge>
+                </>
+                :
+                <CusDeadlineBadge badgeContent={"♥ "+data.likes}></CusDeadlineBadge>
+            }
             {/* <CusLikeBadge badgeContent={"좋아요 "+data.likes)}></CusLikeBadge> */}
 
             <Card>

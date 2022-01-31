@@ -1,8 +1,10 @@
 import {Card, CardContent, Button, Divider} from "@mui/material";
 import styled from "@emotion/styled";
 import * as projectActions from '../../store/module/project';
+import * as studyActions from '../../store/module/study';
 import { useSelector, useDispatch } from 'react-redux';
 import {getProjectByUserId} from "../../pages/api/project"
+import {getStudyByUserId} from "../../pages/api/study"
 import { useEffect, useCallback } from "react";
 
 import StackList from "../Club/StackList"
@@ -53,15 +55,33 @@ function MyClub(props){
     let clubData;
     if (props.from === "project") {
         clubData = useSelector(({ project }) => project.myProject);
+    } else if (props.from === "study") {
+        clubData = useSelector(({ study }) => study.myStudy);
     }
 
     useEffect(() => {
-        getProjectByUserId(parseInt(sessionStorage.getItem("userId")))
-        .then(res => {
-            console.log(res)
-            dispatch(projectActions.setMyProject({project: res.project}))
-            dispatch(projectActions.setProjectDetail({detail: res.project}))
-        });
+        switch (props.from) {
+            case "project":
+                getProjectByUserId(parseInt(sessionStorage.getItem("userId")))
+                .then(res => {
+                    console.log(res)
+                    dispatch(projectActions.setMyProject({project: res.project}))
+                    dispatch(projectActions.setProjectDetail({detail: res.project}))
+                });
+                break;
+            case "study":
+                getStudyByUserId(parseInt(sessionStorage.getItem("userId")))
+                .then(res => {
+                    console.log(res)
+                    // To Do: 내 스터디 리스트 처리
+                    dispatch(studyActions.setMyStudy({study: res.studies[0]}))
+                    dispatch(studyActions.setStudyDetail({detail: res.study}))
+                });
+                break;
+            default:
+                break;
+        }
+        
     }, [])
 
     return (
@@ -75,16 +95,27 @@ function MyClub(props){
                     <div className="img-wrapper"></div>
                     <ProjectInfo>
                         <div className="title">{clubData.title}</div>
-                        <div className="date">{clubData.startDate} ~ {clubData.endDate}</div>
+                        {
+                            props.from === "project"?
+                            <div className="date">{clubData.startDate} ~ {clubData.endDate}</div>
+                            :
+                            <div className="date">{clubData.schedule}</div>
+                        }
                         
                         {/* 리스트에서 보이는 클럽 스택은 최대 3개까지 표시 */}
-                        <StackList stackData={clubData.stacks.length > 3? 
-                            clubData.stacks.slice(0,3)
-                            : 
-                            clubData.stacks
-                        }></StackList>
+                        {
+                            clubData.stacks?
+                            <StackList stackData={clubData.stacks.length > 3? 
+                                clubData.stacks.slice(0,3)
+                                : 
+                                clubData.stacks
+                            }></StackList>: null
+                        }
                         <Button variant="outlined" onClick={() => {
-                            Router.push("/project/info")
+                            if (props.from === "project")
+                                Router.push("/project/info")
+                            else if (props.from === "study")
+                                Router.push("/study/info")
                         }}>상세 보기 </Button>
                     </ProjectInfo>
                     
