@@ -13,7 +13,7 @@ import { Card, Container, Skeleton, CardContent, Typography,
     Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, 
     DialogTitle, ButtonGroup, FormControl, RadioGroup,
     Radio, FormControlLabel } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 
 import * as projectActions from '../../store/module/project';
@@ -23,7 +23,7 @@ import { forceReload } from "../../util/ForceReload";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
-    const [like, changeLike] = useState(detail.likes);
+    const [like, changeLike] = useState(detail.userLike);
 
     const dispatch = useDispatch();
 
@@ -259,7 +259,6 @@ const ProjectDetail = () => {
                     <Button onClick={() => {
                         changeLike(!like);
                         if (sessionStorage.getItem("userId")) {
-                            // To do: 좋아요 api 호출
                             console.log("좋아요");
                             updateProjectLike({
                                 tag: "PROJECT",
