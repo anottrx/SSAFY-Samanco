@@ -126,7 +126,7 @@ async function getUserAtProject(data) {
 }
 
 // 프로젝트 지원한 유저 목록 목록
-async function getUserByjoin(data) {
+async function getProjectUserByjoin(data) {
     return await api
     .post("/api/project/joinlist", {
         projectId: data.projectId,
@@ -196,7 +196,7 @@ async function projectStackList() {
 export {
     registAPI, updateAPI, deleteAPI, getProjectAllAPI, getProjectById,
     getProjectBytitle, getProjectByDeadLine, updateProjectLike, getProjectByLike,
-    joinProjectAPI, getUserByjoin, approveProject, getProjectByUserId,
+    joinProjectAPI, getProjectUserByjoin, approveProject, getProjectByUserId,
     getUserAtProject, quitProject, projectStackList, changeProjectHost,
     joinCancelProject
 }
