@@ -1,7 +1,7 @@
 import {DesktopDatePicker, } from '@mui/lab';
 import { useState, useEffect } from "react";
 import { TextField } from '@mui/material';
-import dateFormat, { masks } from "dateformat";
+import dateFormat from "dateformat";
 
 export let getDateValue;
 

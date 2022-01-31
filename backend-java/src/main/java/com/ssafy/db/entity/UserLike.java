@@ -18,6 +18,6 @@ public class UserLike {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String tag;
-    private Long targetId;
+    private Long tagId;
     private Long userId;
 }

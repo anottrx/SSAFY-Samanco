@@ -23,7 +23,7 @@ public class QUserLike extends EntityPathBase<UserLike> {
 
     public final StringPath tag = createString("tag");
 
-    public final NumberPath<Long> targetId = createNumber("targetId", Long.class);
+    public final NumberPath<Long> tagId = createNumber("tagId", Long.class);
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 

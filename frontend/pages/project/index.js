@@ -54,7 +54,7 @@ export default function Project() {
             등록하기
           </CusButton>
         </ProjectActions>
-        <StackTagList></StackTagList>
+        <StackTagList from="project"></StackTagList>
         <ItemList from="project"></ItemList>
       </ItemWrapper>
     

@@ -60,6 +60,7 @@ function MyClub(props){
         .then(res => {
             console.log(res)
             dispatch(projectActions.setMyProject({project: res.project}))
+            dispatch(projectActions.setProjectDetail({detail: res.project}))
         });
     }, [])
 
