@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MyInfo from "../../components/User/MyInfo";
 import Router from "next/router";
+import MyInfoLayout from "../../components/User/MenuLayout";
 
 export default function MyInfoPage() {
   useEffect(() => {
@@ -14,7 +15,9 @@ export default function MyInfoPage() {
 
   return (
     <>
-      <MyInfo />
+      <MyInfoLayout>
+        <MyInfo />
+      </MyInfoLayout>
     </>
   );
 }
