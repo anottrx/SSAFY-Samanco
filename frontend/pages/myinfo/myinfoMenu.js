@@ -12,6 +12,7 @@ const MyInfoMenu = () => {
   }, [nickname]);
 
   let links = [
+    { path: "/", label: "메인" },
     { path: "/myinfo", label: "내 정보" },
     { path: "/myinfo/pw", label: "비밀번호 재설정" },
   ];
