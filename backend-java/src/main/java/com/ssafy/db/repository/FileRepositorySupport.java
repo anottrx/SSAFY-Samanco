@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -21,34 +22,18 @@ public class FileRepositorySupport {
     QFiles qFiles=QFiles.files;
 
     @Transactional
-    public void deleteFile(Long id, int flag) {
-        List<Files> results=null;
-        if (flag==1){
-            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.userId.eq(id)).fetch();
-        } else if(flag==2){
-            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.projectId.eq(id)).fetch();
-        } else if (flag==3){
-            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.studyId.eq(id)).fetch();
-        } else if (flag==4){
-            results = jpaQueryFactory.selectFrom(qFiles).where(qFiles.boardId.eq(id)).fetch();
-        }
+    public void deleteFile(Long tagId, String tag) {
+        List<Files> results=jpaQueryFactory.selectFrom(qFiles)
+                .where(qFiles.tagId.eq(tagId), qFiles.tag.equalsIgnoreCase(tag)).fetch();
+
         for (Files file: results){
             jpaQueryFactory.delete(qFiles).where(qFiles.eq(file)).execute();
         }
     }
 
-    public FileDto selectFile(Long id, int flag){
-//        List<Files> results=null;
-        Files result=null;
-        if (flag==1){
-            result = jpaQueryFactory.selectFrom(qFiles).where(qFiles.userId.eq(id)).fetchOne();
-        } else if(flag==2){
-            result = jpaQueryFactory.selectFrom(qFiles).where(qFiles.projectId.eq(id)).fetchOne();
-        } else if (flag==3){
-            result = jpaQueryFactory.selectFrom(qFiles).where(qFiles.studyId.eq(id)).fetchOne();
-        } else if (flag==4){
-//            result = jpaQueryFactory.selectFrom(qFiles).where(qFiles.boardId.eq(id)).fetchOne();
-        }
+    public FileDto selectFile(Long tagId, String tag){
+        Files result=jpaQueryFactory.selectFrom(qFiles)
+                .where(qFiles.tagId.eq(tagId), qFiles.tag.equalsIgnoreCase(tag)).fetchOne();
 
         if (result==null){
             return null;
@@ -58,5 +43,20 @@ public class FileRepositorySupport {
         file.setOriginFile(result.getOriginFile());
         file.setSaveFolder(result.getSaveFolder());
         return file;
+    }
+
+    public List<FileDto> selectFiles(Long tagId, String tag){
+        List<Files> results=jpaQueryFactory.selectFrom(qFiles)
+                .where(qFiles.tagId.eq(tagId), qFiles.tag.equalsIgnoreCase(tag)).fetch();
+
+        List<FileDto> files=new ArrayList<>();
+        for (Files result: results) {
+            FileDto file = new FileDto();
+            file.setSaveFile(result.getSaveFile());
+            file.setOriginFile(result.getOriginFile());
+            file.setSaveFolder(result.getSaveFolder());
+            files.add(file);
+        }
+        return files;
     }
 }

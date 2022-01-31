@@ -7,10 +7,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { quitProject } from "../../pages/api/project"
 
+import ForceReload from "../../util/ForceReload"
+
 export default function UserCard({user, projectId, hostId}) {
     const CusCard = styled(Card)`
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         width: fit-content;
+        min-width: 200px;
+        min-height: 150px;
         padding: 10px;
+        margin-right: 10px;
 
         & .card-header{
             display: flex;
@@ -44,6 +52,9 @@ export default function UserCard({user, projectId, hostId}) {
             padding: 3px;
             text-align: center;
         }
+        & .user-content {
+            font-size: 12px;
+        }
     `
 
     return (
@@ -60,7 +71,15 @@ export default function UserCard({user, projectId, hostId}) {
                         // 유저 탈퇴시키기
                         quitProject({
                             userId: user.id, 
-                            projectId: projectId})
+                            projectId: projectId
+                        }).then(res => {
+                            if (res.data.statusCode == 200) {
+                                alert("해당 유저를 내보냈습니다.")
+                                ForceReload();
+                            } else {
+                                alert(`${res.data.message}`)
+                            }
+                        })
                     }}>
                         <DeleteIcon />
                     </IconButton>
@@ -70,17 +89,23 @@ export default function UserCard({user, projectId, hostId}) {
             </div>
             <div className="card-content">
                 {
+                    user.description? 
+                    <div>{user.description}</div>
+                    :
+                    <div className="user-content">작성된 자기소개가 없어요.</div>
+                }
+                {
                     user.link? 
                     <div className="linkWrapper">
                         <Link underline="none" href={user.link} target="_blank">
                         <LinkIcon />{user.link}</Link>
                     </div>
-                    : null
+                    : <div className="user-content"><LinkIcon />등록된 링크가 없습니다.</div>
                 }
                 {
                     user.stacks?
                     <StackLevelList items={user.stacks}></StackLevelList>
-                    :null
+                    :<div className="user-content"><LinkIcon />등록된 스택이 없습니다.</div>
                 }
                 {/* <StackItem title={user.projectPosition}></StackItem> */}
                 <div className="user-position">{user.projectPosition}</div>

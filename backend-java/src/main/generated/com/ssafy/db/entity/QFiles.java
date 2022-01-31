@@ -21,8 +21,6 @@ public class QFiles extends EntityPathBase<Files> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
-    public final NumberPath<Long> boardId = createNumber("boardId", Long.class);
-
     //inherited
     public final NumberPath<Long> createdBy = _super.createdBy;
 
@@ -42,15 +40,13 @@ public class QFiles extends EntityPathBase<Files> {
 
     public final StringPath originFile = createString("originFile");
 
-    public final NumberPath<Long> projectId = createNumber("projectId", Long.class);
-
     public final StringPath saveFile = createString("saveFile");
 
     public final StringPath saveFolder = createString("saveFolder");
 
-    public final NumberPath<Long> studyId = createNumber("studyId", Long.class);
+    public final StringPath tag = createString("tag");
 
-    public final NumberPath<Long> userId = createNumber("userId", Long.class);
+    public final NumberPath<Long> tagId = createNumber("tagId", Long.class);
 
     public QFiles(String variable) {
         super(Files.class, forVariable(variable));

@@ -1,10 +1,12 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.model.ProjectDto;
+import com.ssafy.api.model.StackGradeDto;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
 import com.ssafy.api.response.ProjectSelectAllRes;
 import com.ssafy.api.response.ProjectSelectRes;
+import com.ssafy.api.response.StackSelectAllRes;
 import com.ssafy.api.response.UserSelectAllRes;
 import com.ssafy.api.service.ProjectService;
 import com.ssafy.api.service.FileService;
@@ -92,13 +94,14 @@ public class ProjectController{
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 등록할 수 없습니다."));
         }
         // project 스택 입력
+        System.out.println(stacks);
         if (stacks!=null) {
             registerInfo.setStacks(getListMapFromString(stacks));
-            stackService.createStack(registerInfo.getStacks(), project.getId(), 2);
+            stackService.createStack(registerInfo.getStacks(), project.getId(), "project");
         }
         // project 이미지 입력
         if (files!=null) {
-            fileService.saveFile(files, project.getId(), 2);
+            fileService.saveFile(files, project.getId(), "project");
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -167,9 +170,9 @@ public class ProjectController{
         // project update
         int projectCode=projectService.updateProject(updateInfo);
         // project 스택 update
-        stackService.updateStack(updateInfo.getStacks(), updateInfo.getProjectId(), 2);
+        stackService.updateStack(updateInfo.getStacks(), updateInfo.getProjectId(), "project");
         // project 이미지 update
-        fileService.updateFile(files, updateInfo.getProjectId(), 2);
+        fileService.updateFile(files, updateInfo.getProjectId(), "project");
         if (projectCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 프로젝트는 유효하지 않습니다."));
         } else if (projectCode==402){
@@ -231,7 +234,14 @@ public class ProjectController{
     public ResponseEntity<? extends BaseResponseBody> selectProject(
             @RequestBody @ApiParam(value="project id", required = true) ProjectUserIdReq projectInfo) throws IOException {
 
-        ProjectDto project=projectService.selectProject(projectInfo.getUserId(), projectInfo.getProjectId());
+        Long projectId= projectInfo.getProjectId();
+        Long userId = projectInfo.getUserId();
+
+        ProjectDto project=projectService.selectProject(userId, projectId);
+        UserDto user=userService.selectUser(userId);
+        if (user!=null && projectId==user.getProjectId()) {
+            project.setProjectJoinStatus(user.getProjectJoinStatus());
+        }
         if (project==null){
             return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
         }
@@ -275,7 +285,7 @@ public class ProjectController{
     @PostMapping("/approve")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+            @ApiResponse(code = 401, message = "가입승인 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> approveProject(@RequestBody ProjectApproveReq projectApproveReq) throws IOException {
@@ -297,7 +307,7 @@ public class ProjectController{
     @PostMapping("/quit")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 탈퇴 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> quitProject(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
@@ -313,7 +323,7 @@ public class ProjectController{
     @PostMapping("/joincancel")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 프로젝트에 가입 불가"),
+            @ApiResponse(code = 401, message = "해당 프로젝트 지원 취소 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> joinCancelProject(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
@@ -377,11 +387,11 @@ public class ProjectController{
     })
     public ResponseEntity<? extends BaseResponseBody> selectProjectStacks() throws IOException {
 
-        List<ProjectDto> projects=projectService.selectProjectAll();
-        if (projects==null || projects.size()==0){
-            return ResponseEntity.status(200).body(ProjectSelectAllRes.of(401, "등록된 프로젝트가 없습니다.", null));
-        }
-        return ResponseEntity.status(200).body(ProjectSelectAllRes.of(200, "Success", projects));
+        List<String> stacks=stackService.selectStackAll("project");
+//        if (stacks==null || stacks.size()==0){
+//            return ResponseEntity.status(200).body(ProjectSelectAllRes.of(401, "등록된 프로젝트가 없습니다.", null));
+//        }
+        return ResponseEntity.status(200).body(StackSelectAllRes.of(200, "Success", stacks));
     }
 
     @PostMapping("/userlist")
@@ -407,7 +417,7 @@ public class ProjectController{
     })
     public ResponseEntity<? extends BaseResponseBody> selectJoinUsers(@RequestBody ProjectUserIdReq projectUserIdReq) throws IOException {
 
-        List<UserDto> users=userService.selectJoinUsers(projectUserIdReq.getUserId(), projectUserIdReq.getProjectId());
+        List<UserDto> users=userService.selectProjectJoinUsers(projectUserIdReq.getUserId(), projectUserIdReq.getProjectId());
         if (users==null || users.size()==0){
             return ResponseEntity.status(200).body(UserSelectAllRes.of(401, "프로젝트에 지원한 사용자가 없습니다.", null));
         }
@@ -451,9 +461,9 @@ public class ProjectController{
             @ApiResponse(code = 401, message = "유효하지 않은 타겟"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> updateProjectLike(@RequestBody UserLikeTargetReq userLikeTargetReq) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> updateProjectLike(@RequestBody UserLikeTagReq userLikeTagReq) throws IOException {
 
-        int likeCode=userService.userLikeTarget(userLikeTargetReq);
+        int likeCode=userService.userLikeTag(userLikeTagReq);
         if (likeCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
         } else if (likeCode==402){

@@ -1,5 +1,5 @@
 import Layout from "../../components/layout";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styled from "@emotion/styled";
 import StackList from "../../components/Club/StackList"
@@ -7,18 +7,36 @@ import PositionList from "../../components/Club/PositionList"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import { Card, Container, Skeleton, CardContent, Typography, 
     Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, 
-    DialogTitle, ButtonGroup, FormControl, FormLabel, RadioGroup,
+    DialogTitle, ButtonGroup, FormControl, RadioGroup,
     Radio, FormControlLabel } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Router from "next/router";
 
-import { deleteAPI, updateProjectLike, joinProjectAPI } from "../api/project";
+import * as projectActions from '../../store/module/project';
+import { deleteAPI, updateProjectLike, joinProjectAPI, getProjectById, joinCancelProject } from "../api/project";
+
+import { forceReload } from "../../util/ForceReload";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
+    const [like, changeLike] = useState(detail.likes);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        getProjectById({
+            projectId: detail.id, 
+            userId: sessionStorage.getItem("userId") == null? 
+                0: sessionStorage.getItem("userId")
+        })
+        .then(res => {
+            dispatch(projectActions.setProjectDetail({detail: res.project}))
+    });
+    }, [like]);
 
     const DetailWrapper = styled.div`
         display: flex;
@@ -204,18 +222,32 @@ const ProjectDetail = () => {
             }
         `
         const [open, setOpen] = useState(false);
+        const [joinCancel,setJoinCalcel] = useState(false);
 
         const JoinDialogOpen = () => { 
             if (sessionStorage.getItem("userId"))
-                setOpen(true) 
+            setOpen(true) 
             else {
                 alert("로그인이 필요한 작업입니다.")
                 Router.push("/login")
             }
         }
         const JoinDialogClose = () => { setOpen(false) }
+
+        const JoinCancelDialogOpen = () => {setJoinCalcel(true)}
+        const JoinCancelDialogClose = () => {setJoinCalcel(false)}
         
-        const [selectPosition, setSelectPosition] = useState("");
+        const [selectPosition, setSelectPosition] = useState(null);
+        let positions = {};
+        
+        useEffect(() => {
+            detail.positions.map(pos => {
+                if (!pos.position.includes("size"))
+                    positions[pos.position] = pos.size;
+            })
+            console.log(positions)
+        },[])
+        
 
         return (
             <ActionWrapper>
@@ -225,16 +257,26 @@ const ProjectDetail = () => {
                         <span>{detail.hit}</span>
                     </Button>
                     <Button onClick={() => {
+                        changeLike(!like);
                         if (sessionStorage.getItem("userId")) {
                             // To do: 좋아요 api 호출
                             console.log("좋아요");
-                            updateProjectLike(detail.id).then(res => console.log(res))
+                            updateProjectLike({
+                                tag: "PROJECT",
+                                projectId: detail.id, // 프로젝트 아이디
+                                userId: sessionStorage.getItem("userId")
+                            }).then(res => console.log(res))
                         } else {
                             alert("로그인이 필요한 작업입니다.");
                             Router.push("/login")
                         }
-                    }}>
-                        <FavoriteIcon /> 
+                    }} variant={like? "contained":"outlined"}>
+                        {
+                            like?
+                            <FavoriteIcon /> 
+                            :
+                            <FavoriteBorderIcon /> 
+                        }
                         <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
@@ -247,10 +289,16 @@ const ProjectDetail = () => {
                             지원자 목록 조회
                         </Button>
                         : 
-                        // 글 작성한 사람 !=== 현재 로그인 한 사람 => 지원하기 버튼
-                        <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button>
+                        null
                     } 
-                    
+                    {
+                        detail.projectJoinStatus == null || detail.projectJoinStatus == "CANCEL "?
+                        <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button> : null
+                    }
+                    {
+                        detail.projectJoinStatus == "BEFORE"?
+                        <Button variant="outlined" onClick={JoinCancelDialogOpen}>지원취소</Button> : null
+                    }
                 </div>
                     <Dialog
                         open={open}
@@ -264,19 +312,24 @@ const ProjectDetail = () => {
                         원하는 포지션을 선택해주세요.<br></br>
                             <FormControl> 
                                 <RadioGroup
-                                    aria-labelledby="demo-controlled-radio-buttons-group"
-                                    name="controlled-radio-buttons-group"
+                                    name="position"
                                     value={selectPosition}
-                                    onChange={(e) => {setSelectPosition(e.target.value)}}
-                                >
+                                    onChange={(e) => {
+                                        e.persist();
+                                        setSelectPosition(e.target.value)
+                                        console.log(selectPosition)
+                                    }}>
                                     {
                                         detail.positions.map((data, index) => {
-                                            
+                                            let name = data.position.split("total")[1] || data.position.split("current")[1];
+
+                                            positions[data.position] = data.size;
                                             return (
-                                                data.position.includes("total") && data.size > 0 && data.position!=="totalSize"?
+                                                data.position.includes("current") && data.position!=="currentSize"
+                                                && positions["total"+name] > 0 && positions["total"+name] > positions["current"+name]?
                                                 <FormControlLabel 
-                                                    key={index} value={data.position.split("total")[1]} 
-                                                    control={<Radio />} label={data.position.split("total")[1]} />
+                                                    key={index} value={name} 
+                                                    control={<Radio />} label={name} />
                                                 :
                                                 null
                                             )
@@ -304,8 +357,42 @@ const ProjectDetail = () => {
                                 }
                             })
                             .catch(err => console.log(err));
+                            forceReload();
                         }} autoFocus>
                             확인
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog
+                        open={joinCancel}
+                        onClose={JoinCancelDialogClose}
+                        >
+                        <DialogTitle>
+                            {"지원 취소 하시겠습니까?"}
+                        </DialogTitle>
+                        <DialogContent>
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={JoinCancelDialogClose}>아니요</Button>
+                        <Button onClick={() => {
+                            JoinCancelDialogClose();
+                            // 지원 취소 api
+                            joinCancelProject({
+                                projectId: detail.id,
+                                userId: sessionStorage.getItem("userId")
+                            })
+                            .then(res => {
+                                if (res.statusCode === 200) {
+                                    alert("프로젝트 지원 취소가 되었습니다.")
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            })
+                            .catch(err => console.log(err));
+                            forceReload();
+                        }} autoFocus>
+                            예
                         </Button>
                         </DialogActions>
                     </Dialog>
