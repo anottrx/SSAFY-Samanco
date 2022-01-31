@@ -9,6 +9,9 @@ import {LocalizationProvider } from '@mui/lab';
 import StackSelect from "../../components/Common/Stack/StackSelect";
 
 import styled from "@emotion/styled";
+import { updateAPI } from "../api/study"
+
+import Router from "next/router";
 
 function studyUpdate() {
     const detail = useSelector(({ study }) => study.studyDetail);
@@ -46,9 +49,9 @@ function studyUpdate() {
     `
 
     const [inputValue, setInputValue] = useState({
+        studyId: detail.id,
         schedule: detail.schedule,
-        startDate: detail.startDate,
-        endDate: detail.endDate,
+        hostId: sessionStorage.getItem("userId"),
         stacks: detail.stacks,
         positions: detail.positions
     });
@@ -91,11 +94,21 @@ function studyUpdate() {
             inputValue["title"] = detail.title;
         else if (inputValue.title=="")
             [check, msg] = [false, "스터디 이름을 입력해주세요."]
-        else if (typeof(inputValue.size)=='undefined' || inputValue.size == 0)   
+        if (typeof(inputValue.collectStatus)=='undefined')
+            inputValue["collectStatus"] = detail.collectStatus;
+        if (typeof(inputValue.description)=='undefined')
+            inputValue["description"] = detail.description;
+        if (typeof(inputValue.stacks)=='undefined')   
+            inputValue["stacks"] = detail.stacks;
+        if (typeof(inputValue.size)=='undefined')
+            inputValue["size"] = detail.size;
+        else if (inputValue.size == 0 || inputValue.size == "")   
             [check, msg] = [false, "스터디 인원은 한 명 이상이여야 합니다."]
-        else if (typeof(inputValue.schedule)=='undefined' || inputValue.schedule == "")   
+        if (typeof(inputValue.schedule)=='undefined')
+            inputValue["schedule"] = detail.schedule;
+        else if (inputValue.schedule == "")   
             [check, msg] = [false, "스터디가 진행될 스케쥴을 입력해주세요."]
-        else if (typeof(inputValue.stacks)=='undefined' || inputValue.stacks.length == 0)   
+        if (typeof(inputValue.stacks)=='undefined' || inputValue.stacks.length == 0)   
             [check, msg] = [false, "스터디 주제를 선택해주세요."]
 
         if (!check)
@@ -159,7 +172,8 @@ function studyUpdate() {
                     defaultValue={detail.size}
                     value={inputValue.size}/>
 
-                <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴" onChange={(e) => changeHandle(e.target.value, "schedule")}
+                <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴" 
+                    onChange={(e) => changeHandle(e.target.value, "schedule")}
                     defaultValue={detail.schedule}
                     value={inputValue.schedule}/>
                 
@@ -171,10 +185,11 @@ function studyUpdate() {
                             const formData = new FormData();
 
                             Object.keys(inputValue).map(key => {
-                                if (key!=="positions"){
-                                    let value = inputValue[key];
+                                let value = inputValue[key];
+                                if (key === 'stacks' || key == 'positions')
                                     formData.append(key, JSON.stringify(value));
-                                }
+                                else 
+                                    formData.append(key, value);
                             })
 
                             formData.append("file",files);
@@ -184,13 +199,15 @@ function studyUpdate() {
                                 console.log(`${key}`);
                             } 
 
-                            // updateAPI(formData).then((res) => {
-                            //     if (res.statusCode == 200) {
-                            //         alert("프로젝트가 수정되었습니다.")
-                            //         // To do: 해당 페이지로 이동
-                            //         Router.push("/study");
-                            //     }
-                            // });
+                            updateAPI(formData).then((res) => {
+                                console.log(res)
+                                if (res.statusCode == 200) {
+                                    alert("스터디 수정되었습니다.")
+                                    Router.push("/study/"+inputValue.studyId);
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            });
                         }
                     }}>수정하기</Button>
                 </div>
