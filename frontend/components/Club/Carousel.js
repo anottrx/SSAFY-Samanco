@@ -10,7 +10,9 @@ import { Item } from "./ItemList";
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProjectByDeadLine, getProjectByLike } from "../../pages/api/project"
+import { getStudyByLike } from "../../pages/api/study"
 import * as projectActions from '../../store/module/project';
+import * as studyActions from '../../store/module/study';
 import { Router } from "next/router";
 
 const CarouselWrapper = styled.div`
@@ -27,7 +29,7 @@ const CarouselWrapper = styled.div`
 `
 
 export default function Carousel(props) {
-    let [projectData, setProjectData] = useState([]);
+    let [clubData, setClubData] = useState([]);
     const theme = useTheme();
     
     const xsMaches = useMediaQuery(theme.breakpoints.up('xs'));
@@ -42,30 +44,30 @@ export default function Carousel(props) {
     });
 
     if (lgMatches) {
-        if (projectData.length >= 4) {
+        if (clubData.length >= 4) {
             settings.slidesToShow = 4;
             settings.slidesToScroll = 4;
         } else {
-            settings.slidesToShow = projectData.length;
-            settings.slidesToScroll = projectData.length;
+            settings.slidesToShow = clubData.length;
+            settings.slidesToScroll = clubData.length;
         }
     }
     else if (mdMatches) {
-        if (projectData.length >= 3) {
+        if (clubData.length >= 3) {
             settings.slidesToShow = 3;
             settings.slidesToScroll = 3;
         } else {
-            settings.slidesToShow = projectData.length;
-            settings.slidesToScroll = projectData.length;
+            settings.slidesToShow = clubData.length;
+            settings.slidesToScroll = clubData.length;
         }
     } 
     else if (smMatches) {
-        if (projectData.length >= 2) {
+        if (clubData.length >= 2) {
             settings.slidesToShow = 2;
             settings.slidesToScroll = 2;
         } else {
-            settings.slidesToShow = projectData.length;
-            settings.slidesToScroll = projectData.length;
+            settings.slidesToShow = clubData.length;
+            settings.slidesToScroll = clubData.length;
         }
     } 
     else if (xsMaches) {
@@ -97,10 +99,13 @@ export default function Carousel(props) {
     useEffect(() => {
       if (props.target === "project") {
         if (props.subject === "deadline") {
-            getProjectByDeadLine().then(res => setProjectData(res.projects))
+            getProjectByDeadLine().then(res => setClubData(res.projects))
         } else {
-            getProjectByLike().then(res => setProjectData(res.projects))
+            getProjectByLike().then(res => setClubData(res.projects))
         }
+      } 
+      else if (props.target === "study") {
+            getStudyByLike().then(res => setClubData(res.studies))
       }
     }, []);
 
@@ -109,7 +114,7 @@ export default function Carousel(props) {
         <h2>{props.label}</h2>
         <Slider {...settings}>
         {
-            projectData.map((data, index) => {
+            clubData.map((data, index) => {
                 return (
                     <Item key={index} data={data} setDetail={setDetail} from={props.target}></Item> 
                 )
