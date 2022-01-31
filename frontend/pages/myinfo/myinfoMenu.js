@@ -15,9 +15,8 @@ const MyInfoMenu = () => {
   const onMouseOver = (e) => {
     e.target.style.color = "black";
   };
-
   const onMouseOut = (e) => {
-    e.target.style.color = "#666666";
+    e.target.style.color = "black";
   };
 
   return (
@@ -32,24 +31,22 @@ const MyInfoMenu = () => {
                   fontWeight: "bolder",
                 }}
               >
-                {link.label}|{pathname.split("/")[1]}|{link.path.split("/")[1]}
+                {link.label}
               </a>
             ) : (
               <a
                 className={styles.link}
                 style={{
-                  fontWeight: "bold",
-                  color: "#666666",
+                  color: "black",
                 }}
-                onMouseEnter={(e) => {
-                  onMouseOver(e);
-                }}
-                onMouseOut={(e) => {
-                  onMouseOut(e);
-                }}
+                // onMouseEnter={(e) => {
+                //   onMouseOver(e);
+                // }}
+                // onMouseOut={(e) => {
+                //   onMouseOut(e);
+                // }}
               >
-                {link.label}|여기||{pathname.split("/")[2]}|
-                {link.path.split("/")[2]}
+                {link.label}
               </a>
             )}
           </Link>
