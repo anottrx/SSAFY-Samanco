@@ -3,17 +3,14 @@ import React, { useState, useEffect } from "react";
 import Router from "next/router";
 import CheckEmailCode from "./CheckEmailCode";
 import { useCookies } from "react-cookie";
-
 import { resetPWAPI } from "../../pages/api/user";
 import {
   Box,
   OutlinedInput,
   Button,
-  Select,
   Typography,
   MenuItem,
 } from "@mui/material";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import styled from "@emotion/styled";
 import session from "redux-persist/lib/storage/session";
 
@@ -83,12 +80,17 @@ export default function ResetPassword() {
         console.log(res);
         alert(`${res.message}`);
         if (res.statusCode == 200) {
+          if (sessionStorage.getItem("nickname") == null) {
+            // 비밀번호를 잃어버려서 재설정하는 경우
             sessionStorage.clear();
-          // 페이지 이동
-          window.history.forward();
-          window.location.replace("/login");
+            window.history.forward();
+            window.location.replace("/login");
+          } else {
+            // 로그인한 사용자가 비밀번호를 재설정하는 경우
+            Router.push("/myinfo");
+          }
         } else {
-          console.log("회원가입실패");
+          console.log("비밀번호 재설정 실패");
         }
       });
     } else {
@@ -106,7 +108,7 @@ export default function ResetPassword() {
         justifyContent="center"
         sx={{ flexDirection: "column" }}
         alignItems="center"
-        minHeight="70vh"
+        // minHeight="70vh"
         onSubmit={handleSubmit}
       >
         {/* 비밀번호 */}

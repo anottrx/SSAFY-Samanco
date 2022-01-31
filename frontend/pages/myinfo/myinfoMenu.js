@@ -9,7 +9,7 @@ const MyInfoMenu = () => {
   let links = [
     { path: "/", label: "메인", name: "/myinfo/main" },
     { path: "/myinfo", label: "내 정보", name: "/myinfo" },
-    { path: "/myinfo/pw", label: "비밀번호 재설정", name: "/myinfo/pw" },
+    { path: "/myinfo/password", label: "비밀번호 재설정", name: "/myinfo/password" },
   ];
 
   const onMouseOver = (e) => {
