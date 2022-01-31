@@ -3,6 +3,7 @@ import ItemList from "../../components/Club/ItemList";
 import SearchBar from "../../components/Common/Search";
 import StackTagList from "../../components/Club/StackTagList";
 import Carousel from "../../components/Club/Carousel";
+import MyClub from "../../components/Club/MyClub";
 
 import styled from "@emotion/styled";
 import { Button, Divider } from "@mui/material";
@@ -37,8 +38,9 @@ export default function Study() {
     <Layout>
       <h1>Study</h1>
       <ItemWrapper>
+        <MyClub label="내 스터디" from="study"></MyClub>
         <StudyActions>
-          <SearchBar></SearchBar>
+          <SearchBar target="study"></SearchBar>
           <CusButton variant="outlined" size="medium"
             onClick={() => {
               if (sessionStorage.getItem("userId"))
@@ -52,14 +54,14 @@ export default function Study() {
           </CusButton>
         </StudyActions>
 
-        <StackTagList></StackTagList>
+        <StackTagList from="study"></StackTagList>
         <ItemList from="study"></ItemList>
       </ItemWrapper>
 
       <CusDivider variant="middle" />
 
-      <Carousel label="인기 많은 스터디"></Carousel>
-      <Carousel label="곧 마감 되는 스터디"></Carousel>
+      <Carousel label="인기 많은 스터디" target="study" subject="deadline"></Carousel>
+      {/* <Carousel label="곧 마감 되는 스터디" target="study" subject="likes"></Carousel> */}
     </Layout>
   );
 }
