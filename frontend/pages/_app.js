@@ -153,9 +153,10 @@ function MyApp({ Component, pageProps }) {
           TransitionComponent={Fade}
         >
           <MenuItem
-            onClick={() => {
-              handleClose();
+            onClick={(e) => {
+              e.preventDefault();
               Router.push("/myinfo");
+              handleClose();
             }}
           >
             <span
@@ -165,19 +166,21 @@ function MyApp({ Component, pageProps }) {
               마이페이지
             </span>
           </MenuItem>
-          <MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              console.log("누름")
+              alert("로그아웃 되었습니다.");
+              sessionStorage.clear();
+              cookies.set("userToken", "");
+              setIsLogin(false);
+              setUserId(null);
+              window.location.replace("/");
+              handleClose();
+            }}
+          >
             <span
               className="site-nav-item"
               style={styles.link}
-              onClick={() => {
-                handleClose();
-                alert("로그아웃 되었습니다.");
-                sessionStorage.clear();
-                cookies.set("userToken", "");
-                setIsLogin(false);
-                setUserId(null);
-                window.location.replace("/");
-              }}
             >
               로그아웃
             </span>
