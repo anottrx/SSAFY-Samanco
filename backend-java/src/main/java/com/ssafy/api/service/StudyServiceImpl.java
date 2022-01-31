@@ -8,6 +8,7 @@ import com.ssafy.api.request.StudyUpdateReq;
 import com.ssafy.db.entity.Study;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.UserLike;
+import com.ssafy.db.entity.UserStudy;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,24 +63,39 @@ public class StudyServiceImpl implements StudyService {
     }
 
     @Override
-    public void deleteStudy(Long userId, Long studyId) {
+    public int deleteStudy(Long userId, Long studyId) {
+        if (!valid.isUserValid(userId)){
+            return 401;
+        }
+        if (!valid.isStudyValid(studyId)){
+            return 402;
+        }
+        Study study = studyRepositorySupport.selectStudy(studyId);
+        if (study==null || study.getHostId()!=userId){
+            return 402;
+        }
         studyRepositorySupport.deleteStudy(userId, studyId);
         stackRepositorySupport.deleteStack(studyId, "study");
         fileRepositorySupport.deleteFile(studyId, "study");
+        return 200;
     }
 
     @Override
-    public StudyDto selectByHost(Long userId) {
-        Study result = studyRepositorySupport.selectByHost(userId);
-        if (result==null){
+    public List<StudyDto> selectByHost(Long userId) {
+        List<Study> results = studyRepositorySupport.selectByHost(userId);
+        if (results.size()==0){
             return null;
         }
-        StudyDto study=studyEntityToDto(result);
-        Long studyId=study.getId();
-        study.setStacks(stackRepositorySupport.selectStack(studyId, "study"));
-        study.setFile(fileRepositorySupport.selectFile(studyId, "study"));
+        List<StudyDto> studies=new ArrayList<>();
+        for (Study result: results) {
+            StudyDto study=studyEntityToDto(result);
+            Long studyId=study.getId();
+            study.setStacks(stackRepositorySupport.selectStack(studyId, "study"));
+            study.setFile(fileRepositorySupport.selectFile(studyId, "study"));
+            studies.add(study);
+        }
 
-        return study;
+        return studies;
     }
 
     @Override
@@ -204,34 +220,81 @@ public class StudyServiceImpl implements StudyService {
 
     @Override
     public int joinUserStudy(Long userId, Long studyId, String studyJoinStatus) {
+        if (!valid.isUserValid(userId)){
+            return 401;
+        }
+        if (!valid.isStudyValid(studyId)){
+            return 402;
+        }
+
         return studyRepositorySupport.joinUserStudy(userId, studyId, studyJoinStatus);
     }
 
     @Override
     public int approveUserStudy(Long hostId, Long userId, Long studyId, String joinTag) {
+        if (!valid.isUserValid(userId) || !valid.isUserValid(hostId)){
+            return 401;
+        }
+        if (!valid.isStudyValid(studyId)){
+            return 402;
+        }
         Study study = studyRepositorySupport.selectStudy(studyId);
-        if (study==null || study.getId()!=studyId || study.getHostId()!=hostId){
+        if (!study.getHostId().equals(hostId)){
             return 401;
         }
 
-        return 0;
+        UserStudy userStudy = studyRepositorySupport.selectUserStudy(userId, studyId);
+        if (userStudy==null){
+            return 403;
+        }
+        return studyRepositorySupport.approveStudy(userId, studyId, joinTag);
     }
 
     @Override
     public int quitStudy(Long userId, Long studyId) {
-//        if (!valid.isUserValid(userId)){
-//            return 401;
-//        }
+        UserStudy userStudy = studyRepositorySupport.selectUserStudy(userId, studyId);
+        if (userStudy==null || !"ok".equalsIgnoreCase(userStudy.getStudyJoinStatus())){
+            return 401;
+        }
+        Study study = studyRepositorySupport.selectStudy(studyId);
+        if (study==null){
+            return 402;
+        }
+        System.out.println(study+" "+ userId);
+        if (study.getHostId().equals(userId)){
+            return 403;
+        }
         studyRepositorySupport.quitStudy(userId, studyId);
         return 200;
     }
 
     @Override
     public int joinCancelStudy(Long userId, Long studyId) {
-//        if (!valid.isUserValid(userId)){
-//            return 401;
-//        }
+        UserStudy userStudy = studyRepositorySupport.selectUserStudy(userId, studyId);
+        if (userStudy==null || !"before".equalsIgnoreCase(userStudy.getStudyJoinStatus())){
+            return 401;
+        }
+        Study study = studyRepositorySupport.selectStudy(studyId);
+        if (study==null){
+            return 402;
+        }
+
         studyRepositorySupport.quitStudy(userId, studyId);
+        return 200;
+    }
+
+    @Override
+    public int changeHostStudy(Long studyId, Long oldHostId, Long newHostId) {
+        Study study = studyRepositorySupport.selectStudy(studyId);
+        if (study==null || study.getHostId()!=oldHostId){
+            return 401;
+        }
+        UserStudy userStudy = studyRepositorySupport.selectUserStudy(newHostId, studyId);
+        if (userStudy==null){
+            return 402;
+        }
+
+        studyRepositorySupport.updateStudyHost(studyId, newHostId);
         return 200;
     }
 
