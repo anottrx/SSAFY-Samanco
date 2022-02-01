@@ -54,6 +54,17 @@ public class StudyServiceImpl implements StudyService {
 
     @Override
     public int updateStudy(StudyUpdateReq updateInfo) {
+        Long studyId=updateInfo.getStudyId();
+        Long hostId=updateInfo.getHostId();
+        if (!valid.isUserValid(hostId)){
+            return 401;
+        }
+
+        Study study = studyRepositorySupport.selectStudy(studyId);
+        if (study==null || study.getHostId()!=hostId){
+            return 402;
+        }
+
         return studyRepositorySupport.updateStudy(updateInfo);
     }
 
