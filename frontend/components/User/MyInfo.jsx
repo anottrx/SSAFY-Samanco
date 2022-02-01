@@ -189,11 +189,11 @@ export default function MyInfo() {
 
       if (isNormal) {
         updateNicknameAPI(nicknameInfo).then((res) => {
-          console.log("닉네임 수정 가능한지 확인한 결과" + JSON.stringify(res));
+          console.log("닉네임 변경 가능한지 확인한 결과" + JSON.stringify(res));
           if (res.statusCode == 200) {
             setCheckPassword(true);
 
-            if (window.confirm("닉네임 수정이 가능합니다. 수정하시겠습니까?")) {
+            if (window.confirm("닉네임 변경이 가능합니다.")) {
               //업데이트 API 실행하기
               const formData = new FormData();
               console.log("inputState" + JSON.stringify(inputState));
@@ -349,9 +349,9 @@ export default function MyInfo() {
                 }}
               />
               {nicknameChange ? (
-                <button onClick={handleNicknameClick}>수정완료</button>
+                <button onClick={handleNicknameClick}>중복 확인 완료</button>
               ) : (
-                <button onClick={handleNicknameClick}>수정하기</button>
+                <button onClick={handleNicknameClick}>중복 확인</button>
               )}
             </div>
             <div className="mb-6">
