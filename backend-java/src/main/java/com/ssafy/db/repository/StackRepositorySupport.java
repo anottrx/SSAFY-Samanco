@@ -44,8 +44,8 @@ public class StackRepositorySupport {
     }
 
     public List<String> selectStackAll(String tag) {
-        List<String> results = jpaQueryFactory.selectDistinct(qStackGrade.tag).from(qStackGrade)
-                .where(qStackGrade.tag.equalsIgnoreCase(tag)).orderBy(qStackGrade.tag.asc()).fetch();;
+        List<String> results = jpaQueryFactory.selectDistinct(qStackGrade.name).from(qStackGrade)
+                .where(qStackGrade.tag.equalsIgnoreCase(tag)).orderBy(qStackGrade.name.asc()).fetch();;
 
         List<String> stacks=new ArrayList<>();
         for (String result: results) {

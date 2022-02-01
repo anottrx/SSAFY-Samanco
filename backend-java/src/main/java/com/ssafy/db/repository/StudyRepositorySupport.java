@@ -103,7 +103,7 @@ public class StudyRepositorySupport {
 
     public List<Study> selectByTitle(String title) {
         return jpaQueryFactory.selectFrom(qStudy)
-                .where(qStudy.isDeleted.eq(false), qStudy.title.contains(title)).fetch();
+                .where(qStudy.isDeleted.eq(false), qStudy.title.contains(title)).orderBy(qStudy.id.desc()).fetch();
     }
 
     public List<User> selectJoinUsers(Long studyId) {

@@ -3,10 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.model.StudyDto;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
-import com.ssafy.api.response.StudySelectAllRes;
-import com.ssafy.api.response.StudySelectRes;
-import com.ssafy.api.response.StackSelectAllRes;
-import com.ssafy.api.response.UserSelectAllRes;
+import com.ssafy.api.response.*;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StudyService;
 import com.ssafy.api.service.StackService;
@@ -197,13 +194,15 @@ public class StudyController {
             @ApiResponse(code = 401, message = "해당 스터디 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectStudy(
-            @RequestBody @ApiParam(value="study id", required = true) StudyUserIdReq studyInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectStudy(@RequestBody StudyUserIdReq studyInfo) throws IOException {
 
-        StudyDto study=studyService.selectStudy(studyInfo.getUserId(), studyInfo.getStudyId());
-        if (study==null){
+        Long userId = studyInfo.getUserId();
+        Long studyId = studyInfo.getStudyId();
+        StudyDto study=studyService.selectStudy(userId, studyId);
+        if (study==null) {
             return ResponseEntity.status(200).body(StudySelectRes.of(401, "유효하지 않은 스터디입니다.", null));
         }
+
         return ResponseEntity.status(200).body(StudySelectRes.of(200, "Success", study));
     }
 
@@ -397,7 +396,7 @@ public class StudyController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "유효하지 않은 사용자"),
-            @ApiResponse(code = 401, message = "유효하지 않은 타겟"),
+            @ApiResponse(code = 401, message = "유효하지 않은 태그"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> updateStudyLike(@RequestBody UserLikeTagReq userLikeTagReq) throws IOException {
@@ -406,7 +405,7 @@ public class StudyController {
         if (likeCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
         } else if (likeCode==402){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 타겟입니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 태그입니다."));
         } else if (likeCode==201){
             return ResponseEntity.status(200).body(BaseResponseBody.of(201, "좋아요 취소"));
         }
