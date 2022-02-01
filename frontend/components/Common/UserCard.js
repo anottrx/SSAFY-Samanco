@@ -9,7 +9,7 @@ import { quitProject } from "../../pages/api/project"
 
 import ForceReload from "../../util/ForceReload"
 
-export default function UserCard({user, projectId, hostId}) {
+export default function UserCard({user, clubId, hostId}) {
     const CusCard = styled(Card)`
         display: flex;
         flex-direction: column;
@@ -71,7 +71,7 @@ export default function UserCard({user, projectId, hostId}) {
                         // 유저 탈퇴시키기
                         quitProject({
                             userId: user.id, 
-                            projectId: projectId
+                            clubId: clubId
                         }).then(res => {
                             if (res.data.statusCode == 200) {
                                 alert("해당 유저를 내보냈습니다.")
@@ -103,10 +103,12 @@ export default function UserCard({user, projectId, hostId}) {
                     : <div className="user-content"><LinkIcon />등록된 링크가 없습니다.</div>
                 }
                 {
+                    // To Do: 스터디일 경우 표시 X
                     user.stacks?
                     <StackLevelList items={user.stacks}></StackLevelList>
                     :<div className="user-content"><LinkIcon />등록된 스택이 없습니다.</div>
                 }
+                {/* To Do: 스터디일 경우 표시 X */}
                 {/* <StackItem title={user.projectPosition}></StackItem> */}
                 <div className="user-position">{user.projectPosition}</div>
             </div>
