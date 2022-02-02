@@ -38,17 +38,7 @@ public class StudyRepositorySupport {
 
     @Transactional
     public int updateStudy(StudyUpdateReq studyUpdateInfo){
-
         Long studyId=studyUpdateInfo.getStudyId();
-        Long hostId=studyUpdateInfo.getHostId();
-        if (!valid.isUserValid(hostId)){
-            return 401;
-        }
-
-        Study study = jpaQueryFactory.selectFrom(qStudy).where(qStudy.id.eq(studyId), qStudy.isDeleted.eq(false)).fetchOne();
-        if (study==null || study.getHostId()!=hostId){
-            return 402;
-        }
 
         jpaQueryFactory.update(qStudy).where(qStudy.id.eq(studyId))
                 .set(qStudy.title, studyUpdateInfo.getTitle())
@@ -103,7 +93,7 @@ public class StudyRepositorySupport {
 
     public List<Study> selectByTitle(String title) {
         return jpaQueryFactory.selectFrom(qStudy)
-                .where(qStudy.isDeleted.eq(false), qStudy.title.contains(title)).fetch();
+                .where(qStudy.isDeleted.eq(false), qStudy.title.contains(title)).orderBy(qStudy.id.desc()).fetch();
     }
 
     public List<User> selectJoinUsers(Long studyId) {

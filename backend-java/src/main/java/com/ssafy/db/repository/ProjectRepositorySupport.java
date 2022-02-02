@@ -128,7 +128,7 @@ public class ProjectRepositorySupport {
 
     public List<Project> selectByTitle(String title) {
         return jpaQueryFactory.selectFrom(qProject)
-                .where(qProject.isDeleted.eq(false), qProject.title.contains(title)).fetch();
+                .where(qProject.isDeleted.eq(false), qProject.title.contains(title)).orderBy(qProject.id.desc()).fetch();
     }
 
     public List<User> selectJoinUsers(Long projectId) {

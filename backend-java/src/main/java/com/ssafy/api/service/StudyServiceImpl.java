@@ -1,20 +1,15 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.model.PositionDto;
 import com.ssafy.api.model.StudyDto;
-import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.StudyRegisterReq;
 import com.ssafy.api.request.StudyUpdateReq;
 import com.ssafy.db.entity.Study;
-import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.UserLike;
 import com.ssafy.db.entity.UserStudy;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -59,6 +54,17 @@ public class StudyServiceImpl implements StudyService {
 
     @Override
     public int updateStudy(StudyUpdateReq updateInfo) {
+        Long studyId=updateInfo.getStudyId();
+        Long hostId=updateInfo.getHostId();
+        if (!valid.isUserValid(hostId)){
+            return 401;
+        }
+
+        Study study = studyRepositorySupport.selectStudy(studyId);
+        if (study==null || study.getHostId()!=hostId){
+            return 402;
+        }
+
         return studyRepositorySupport.updateStudy(updateInfo);
     }
 
@@ -108,8 +114,12 @@ public class StudyServiceImpl implements StudyService {
         study.setStacks(stackRepositorySupport.selectStack(studyId, "study"));
         study.setFile(fileRepositorySupport.selectFile(studyId, "study"));
         UserLike userLike = userLikeRepositorySupport.userLike(userId, studyId, "study");
+        UserStudy userStudy = studyRepositorySupport.selectUserStudy(userId, studyId);
         if (userLike!=null) {
             study.setUserLike(true);
+        }
+        if (userStudy!=null){
+            study.setStudyJoinStatus(userStudy.getStudyJoinStatus());
         }
 
         return study;
@@ -163,6 +173,7 @@ public class StudyServiceImpl implements StudyService {
         studyDto.setHit(result.getHit());
         studyDto.setTitle(result.getTitle());
         studyDto.setCollectStatus(result.getCollectStatus());
+        studyDto.setSchedule(result.getSchedule());
         studyDto.setLikes(likes);
 
         return  studyDto;
