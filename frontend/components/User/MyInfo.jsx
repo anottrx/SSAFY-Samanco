@@ -78,7 +78,14 @@ export default function MyInfo() {
         }
         console.log("내 정보 보기 결과: " + JSON.stringify(res));
         inputState.name = res.user.name;
-        inputState.birthday = res.user.birthday;
+        const today = new Date();
+        const todayYear = today.getFullYear().toString().slice(2);
+        if (
+          res.user.birthday != null &&
+          res.user.birthday.toString().slice(0, 2) != todayYear
+        ) {
+          inputState.birthday = res.user.birthday;
+        }
         if (res.user.phone !== "00000000000") {
           inputState.phone = res.user.phone;
         }
@@ -91,7 +98,9 @@ export default function MyInfo() {
         inputState.description = res.user.description;
         inputState.stacks = res.user.stacks;
 
-        setLinks(inputState.link.split(" "));
+        if (res.user.link != null) {
+          setLinks(inputState.link.split(" "));
+        }
         // inputState.file = res.user.file;
         setLoading(true);
         // ShowStack(inputState.stacks);

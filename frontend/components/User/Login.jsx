@@ -182,7 +182,9 @@ export default function Login() {
             gutterBottom
             sx={{ width: 300, fontSize: 13.5, mr: 2 }}
           >
-            <Link href="/user/password">비밀번호 재설정</Link>{" "}
+            <span className="site-nav-item">
+              <Link href="/user/password">비밀번호 재설정</Link>
+            </span>
           </Typography>
           <span> </span>
           <Typography
@@ -191,7 +193,9 @@ export default function Login() {
             gutterBottom
             sx={{ width: 300, fontSize: 13.5, mr: 2 }}
           >
-            <Link href="/regist">회원가입</Link>
+            <span className="site-nav-item">
+              <Link href="/regist">회원가입</Link>
+            </span>
           </Typography>
         </div>
         <br />

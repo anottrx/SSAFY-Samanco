@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import MyInfo from "../../components/User/MyInfo";
+import ResetPassword from "../../components/User/ResetPassword";
 import Router from "next/router";
 import MyInfoLayout from "../../components/User/MenuLayout";
 
-export default function MyInfoPage() {
+export default function ResetPasswordPage() {
   useEffect(() => {
-    document.title = "내정보 | 싸피사만코";
+    document.title = "비밀번호 재설정 | 싸피사만코";
 
     if (!sessionStorage.getItem("userId")) {
       alert("로그인하신 뒤에 사용가능합니다");
@@ -16,7 +16,8 @@ export default function MyInfoPage() {
   return (
     <>
       <MyInfoLayout>
-        <MyInfo />
+        <h1>비밀번호 재설정</h1>
+        <ResetPassword />
       </MyInfoLayout>
     </>
   );

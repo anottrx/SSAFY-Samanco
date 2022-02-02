@@ -10,7 +10,7 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Router from "next/router";
-import Button from '@mui/material/Button';
+import { Button, Menu, MenuItem, Fade } from '@mui/material';
 import Cookies from "universal-cookie";
 
 import styled from "@emotion/styled";
@@ -42,6 +42,8 @@ const styles = {
   link: {
     marginRight: "10px",
     color: "black",
+    fontSize: "14px",
+    padding: "0px"
   },
   main: {
     flex: 1,
@@ -120,14 +122,73 @@ function MyApp({ Component, pageProps }) {
   );
 
   function HeaderLink(props) {
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
     
-  const UserSpan = styled.span`
-    color: black;
-    margin-right: 5px;
-    background-color: white;
-    padding: 5px;
-    border-radius: 5px;
-  `
+    const UserSpan = styled.button`
+      color: black;
+      margin-right: 5px;
+      background-color: white;
+      padding: 5px;
+      border-radius: 5px;
+    `
+  
+    const UserMenu = () => (
+      <div>
+        <Menu
+          id="fade-menu"
+          MenuListProps={{
+            "aria-labelledby": "fade-button",
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Fade}
+        >
+          <MenuItem
+            onClick={(e) => {
+              e.preventDefault();
+              Router.push("/myinfo");
+              handleClose();
+            }}
+          >
+            <span
+              className="site-nav-item"
+              style={styles.link}
+            >
+              마이페이지
+            </span>
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              console.log("누름")
+              alert("로그아웃 되었습니다.");
+              sessionStorage.clear();
+              cookies.set("userToken", "");
+              setIsLogin(false);
+              setUserId(null);
+              window.location.replace("/");
+              handleClose();
+            }}
+          >
+            <span
+              className="site-nav-item"
+              style={styles.link}
+            >
+              로그아웃
+            </span>
+          </MenuItem>
+        </Menu>
+      </div>
+    )
+
     return (
       <div style={styles.headerLink}>
         <Link href="/">
@@ -136,39 +197,29 @@ function MyApp({ Component, pageProps }) {
         <div>
           {props.isLogin ? (
             <>
-              <UserSpan>{nickname}님, 안녕하세요</UserSpan>
-              <Link href="/myinfo" className="site-nav-item" style={styles.link}>
-                마이페이지
-              </Link>
               <span
-                style={styles.link}
-                onClick={() => {
-                  alert("로그아웃 되었습니다.");
-                  sessionStorage.clear();
-                  cookies.set("userToken", "");
-                  setIsLogin(false);
-                  setUserId(null);
-                  window.location.replace("/")
-                }}
-                className="site-nav-item"
+                id="fade-button"
+                aria-controls={open ? "fade-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
               >
-                로그아웃
+                <UserSpan>{nickname}님, 안녕하세요</UserSpan>
               </span>
+              <UserMenu />
             </>
           ) : (
             <>
-              <Button href="/login" sx={{fontSize:12}}>
-                로그인
-              </Button>
-              <Button href="/regist" sx={{fontSize:12}}>
-                회원가입
-              </Button>
-              {/* <Link href="/login" style={styles.link}>
-                로그인
-              </Link>
-              <Link href="/regist" style={styles.link}>
-                회원가입
-              </Link> */}
+              <span className="site-nav-item" style={styles.link}>
+                <Link href="/login">
+                  로그인
+                </Link>
+              </span>
+              <span className="site-nav-item" style={styles.link}>    
+                <Link href="/regist">
+                  회원가입
+                </Link>
+              </span>  
             </>
           )}
         </div>
