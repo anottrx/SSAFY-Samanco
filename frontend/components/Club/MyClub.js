@@ -1,3 +1,6 @@
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import {Card, CardContent, Button, Divider} from "@mui/material";
 import styled from "@emotion/styled";
 import * as projectActions from '../../store/module/project';
@@ -5,11 +8,23 @@ import * as studyActions from '../../store/module/study';
 import { useSelector, useDispatch } from 'react-redux';
 import {getProjectByUserId} from "../../pages/api/project"
 import {getStudyByUserId} from "../../pages/api/study"
-import { useEffect, useCallback } from "react";
+import { useLayoutEffect, useState } from "react";
 
 import StackList from "../Club/StackList"
 import Router from "next/router";
 
+const CarouselWrapper = styled.div`
+    text-align: left;
+    padding: 0px 0px 20px 0px;
+
+    & .slick-slide{
+        padding: 10px;
+    }
+
+    & .slick-prev:before, .slick-next:before {
+        color: #837e7e;
+    }
+`
 
 function MyClub(props){
     const MyClubWrapper = styled.div`
@@ -34,7 +49,8 @@ function MyClub(props){
         clubData = useSelector(({ study }) => study.myStudy);
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
+        console.log(props.from)
         switch (props.from) {
             case "project":
                 getProjectByUserId(parseInt(sessionStorage.getItem("userId")))
@@ -48,7 +64,7 @@ function MyClub(props){
                 .then(res => {
                     // To Do: 내 스터디 리스트 처리
                     dispatch(studyActions.setMyStudy({study: res.studies}))
-                    dispatch(studyActions.setStudyDetail({detail: res.studies}))
+                    // dispatch(studyActions.setStudyDetail({detail: res.studies}))
                 });
                 break;
             default:
@@ -63,24 +79,13 @@ function MyClub(props){
         <>
             <MyClubWrapper>
                 <h2>{props.label}</h2>
-                {
-                    // props.from === "project"?
-                    <MyClubItem clubData={clubData}></MyClubItem>
-                    // :
-                    // clubData.map((data, index) => {
-                    //     return (
-                    //         <MyClubItem data={data} key={index} ></MyClubItem>
-                    //     )
-                    // })
-                }
+                <MyClubItem clubData={clubData}></MyClubItem>
             </MyClubWrapper>
             <CusDivider variant="middle" />
         </>
     )
 
     function MyClubItem({clubData}) {
-        console.log("data", clubData, Object.keys(clubData).length)
-
         const CusCardContent = styled(CardContent)`
             display: flex;
             flex-direction: row;
@@ -105,10 +110,26 @@ function MyClub(props){
         const CusCard = styled(Card)`
             max-width: 430px;
         `
+
+        const [settings, changeSettings] = useState({
+            dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 1,
+            slidesToScroll: 1
+        })
+        
+        console.log('clubData', clubData, [clubData].length,  Object.keys(clubData).length)
+
         return (
-                Object.keys(clubData).length == 1? 
+            Object.keys(clubData).length !== 16? 
+                <CarouselWrapper>
+                <Slider {...settings}>
+                {
                 // 스터디이면
-                clubData.map(data => {
+                // clubData.map(data => console.log(data))
+                Object.keys(clubData).map((key, index) => {
+                    let data = clubData[key];
                     return (
                         <CusCard>
                             <CusCardContent>
@@ -133,15 +154,18 @@ function MyClub(props){
                                     }
                                     <Button variant="outlined" onClick={() => {
                                         if (props.from === "project"){
-                                            dispatch(projectActions.setMyProject({project: data}))
+                                            // dispatch(projectActions.setMyProject({project: data}))
                                             dispatch(projectActions.setProjectDetail({detail: data}))
                                             Router.push("/project/info")
                                             
                                         }
                                         else if (props.from === "study"){
-                                            dispatch(studyActions.setMyStudy({study: data}))
+                                            // dispatch(studyActions.setMyStudy({study: data}))
                                             dispatch(studyActions.setStudyDetail({detail: data}))
-                                            Router.push("/study/info");
+                                            Router.push({
+                                                pathname: '/study/info/[sid]',
+                                                query: { sid: data.id },
+                                            });
                                         }
                                     }}>상세 보기 </Button>
                                 </ProjectInfo>
@@ -149,6 +173,9 @@ function MyClub(props){
                         </CusCard>
                     )
                 })
+                }
+                </Slider>
+                </CarouselWrapper>
                 :
                 // 프로젝트이면
                 <CusCard>

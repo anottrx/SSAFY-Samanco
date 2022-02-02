@@ -38,7 +38,12 @@ export default function Study() {
     <Layout>
       <h1>Study</h1>
       <ItemWrapper>
-        <MyClub label="내 스터디" from="study"></MyClub>
+        {
+          sessionStorage.getItem("userId")?
+          <MyClub label="내 스터디" from="study"></MyClub>
+          :
+          null
+        }
         <StudyActions>
           <SearchBar target="study"></SearchBar>
           <CusButton variant="outlined" size="medium"
