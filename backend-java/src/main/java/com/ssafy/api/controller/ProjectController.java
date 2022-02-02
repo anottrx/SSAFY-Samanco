@@ -239,11 +239,11 @@ public class ProjectController{
 
         ProjectDto project=projectService.selectProject(userId, projectId);
         UserDto user=userService.selectUser(userId);
-        if (user!=null && projectId==user.getProjectId()) {
-            project.setProjectJoinStatus(user.getProjectJoinStatus());
-        }
         if (project==null){
             return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
+        }
+        if (user!=null && projectId==user.getProjectId()) {
+            project.setProjectJoinStatus(user.getProjectJoinStatus());
         }
         return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
     }
@@ -315,7 +315,9 @@ public class ProjectController{
         if (projectQuitCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
         } else if (projectQuitCode==402){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트를 탈퇴할 수 없습니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "프로젝트를 탈퇴할 수 없습니다."));
+        } else if (projectQuitCode==403){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(403, "호스트는 권한을 넘긴 후 탈퇴하거나 프로젝트를 삭제하세요."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -458,7 +460,7 @@ public class ProjectController{
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "유효하지 않은 사용자"),
-            @ApiResponse(code = 401, message = "유효하지 않은 타겟"),
+            @ApiResponse(code = 401, message = "유효하지 않은 태그"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> updateProjectLike(@RequestBody UserLikeTagReq userLikeTagReq) throws IOException {
@@ -467,7 +469,7 @@ public class ProjectController{
         if (likeCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
         } else if (likeCode==402){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 타겟입니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 태그입니다."));
         } else if (likeCode==201){
             return ResponseEntity.status(200).body(BaseResponseBody.of(201, "좋아요 취소"));
         }
