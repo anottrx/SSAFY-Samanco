@@ -7,6 +7,7 @@ import Router from "next/router";
 import * as boardActions from '../../store/module/board';
 import BoardSearch from "./BoardSearch";
 import style from "@emotion/styled";
+import Cookies from "universal-cookie";
 
 import Datas from "./data/boardData.json"; //임의 데이터
 
@@ -58,9 +59,15 @@ function BoardList(props) {
         [dispatch],
     )
 
+    const cookies = new Cookies();
+    const [isLogin, setIsLogin] = useState(false);
     let [articles,setArticles] = useState([]);
     
     useEffect(()=>{
+        if (cookies.get("userToken")!='' && sessionStorage.getItem("nickname") != null) {
+            setIsLogin(true);
+        }
+
         var articlesArray = [];
         Datas.map((data)=>{
             if(data.tag === props.tag){
@@ -92,12 +99,14 @@ function BoardList(props) {
             <ItemWrapper>
                 <ProjectActions>
                     <BoardSearch></BoardSearch>
-                    <CusButton variant="outlined" size="medium"
+                    {isLogin? 
+                    (<CusButton variant="outlined" size="medium"
                         onClick={() => {
                         Router.push("/board/BoardRegist");
                         }}>
                         등록하기
-                    </CusButton>
+                    </CusButton>):(<></>)}
+                    
                 </ProjectActions>
             </ItemWrapper>
             <TableContainer>

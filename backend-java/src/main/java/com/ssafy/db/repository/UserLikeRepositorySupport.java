@@ -5,7 +5,6 @@ import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.QUserLike;
 import com.ssafy.db.entity.UserLike;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -22,21 +21,21 @@ public class UserLikeRepositorySupport {
     @Autowired
     ValidRepository valid;
 
-    public UserLike userLike(Long userId, Long targetId, String tag) {
+    public UserLike userLike(Long userId, Long tagId, String tag) {
         return jpaQueryFactory.selectFrom(qUserLike)
-                .where(qUserLike.userId.eq(userId), qUserLike.targetId.eq(targetId), qUserLike.tag.equalsIgnoreCase(tag))
+                .where(qUserLike.userId.eq(userId), qUserLike.tagId.eq(tagId), qUserLike.tag.equalsIgnoreCase(tag))
                 .fetchOne();
     }
 
     @Transactional
-    public void deleteUserLike(Long userId, Long targetId, String tag) {
+    public void deleteUserLike(Long userId, Long tagId, String tag) {
         jpaQueryFactory.delete(qUserLike)
-                .where(qUserLike.userId.eq(userId), qUserLike.targetId.eq(targetId), qUserLike.tag.equalsIgnoreCase(tag))
+                .where(qUserLike.userId.eq(userId), qUserLike.tagId.eq(tagId), qUserLike.tag.equalsIgnoreCase(tag))
                 .execute();
     }
 
-    public int countUserLikeByTarget(Long targetId, String tag) {
+    public int countUserLikeByTarget(Long tagId, String tag) {
         return jpaQueryFactory.selectFrom(qUserLike)
-                .where(qUserLike.targetId.eq(targetId), qUserLike.tag.equalsIgnoreCase(tag)).fetch().size();
+                .where(qUserLike.tagId.eq(tagId), qUserLike.tag.equalsIgnoreCase(tag)).fetch().size();
     }
 }

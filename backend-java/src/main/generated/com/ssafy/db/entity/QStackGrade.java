@@ -42,11 +42,9 @@ public class QStackGrade extends EntityPathBase<StackGrade> {
 
     public final StringPath name = createString("name");
 
-    public final NumberPath<Long> projectId = createNumber("projectId", Long.class);
+    public final StringPath tag = createString("tag");
 
-    public final NumberPath<Long> studyId = createNumber("studyId", Long.class);
-
-    public final NumberPath<Long> userId = createNumber("userId", Long.class);
+    public final NumberPath<Long> tagId = createNumber("tagId", Long.class);
 
     public QStackGrade(String variable) {
         super(StackGrade.class, forVariable(variable));

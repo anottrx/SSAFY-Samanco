@@ -17,16 +17,14 @@ public class Files extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String saveFolder;
-
     private String saveFile;
-
     private String originFile;
-
-    private Long boardId;
-    private Long userId;
-    private Long studyId;
-    private Long projectId;
+    private Long tagId;
+    private String tag;
+//    private Long boardId;
+//    private Long userId;
+//    private Long studyId;
+//    private Long projectId;
 
 }

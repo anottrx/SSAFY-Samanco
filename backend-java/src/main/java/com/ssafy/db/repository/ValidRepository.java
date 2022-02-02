@@ -57,7 +57,7 @@ public class ValidRepository {
             return false;
         }
         String status=user.getProjectJoinStatus();
-        if (status==null|| status=="" ||status.equals("NO")||status.equals("CANCEL")) {   // 진행중인 프로젝트 없음
+        if (status==null|| status=="" ||status.equalsIgnoreCase("NO")||status.equalsIgnoreCase("CANCEL")) {   // 진행중인 프로젝트 없음
             return true;
         }
         Long curProjectId=user.getProjectId();
@@ -80,7 +80,7 @@ public class ValidRepository {
         return false;
     }
 
-    private boolean isBoardValid(Long boardId) {
+    public boolean isBoardValid(Long boardId) {
         Board board = jpaQueryFactory.selectFrom(qBoard)
             .where(qBoard.id.eq(boardId), qBoard.isDeleted.eq(false)).fetchOne();
 
@@ -90,7 +90,7 @@ public class ValidRepository {
         return true;
     }
 
-    private boolean isStudyValid(Long studyId) {
+    public boolean isStudyValid(Long studyId) {
         Study study = jpaQueryFactory.selectFrom(qStudy)
                 .where(qStudy.id.eq(studyId), qStudy.isDeleted.eq(false)).fetchOne();
 

@@ -26,11 +26,12 @@ function BoardRegist() {
             display:none;
         }
     `
+    
     const currencies = [
-        {
-            value: 'notice',
-            label: '공지사항',
-        },
+        // {
+        //     value: 'notice',
+        //     label: '공지사항',
+        // },
         {
             value: 'free',
             label: '자유게시판',
@@ -49,6 +50,8 @@ function BoardRegist() {
         },
     ];
 
+    const adminCurrencies = [{value: 'notice', label: '공지사항'}].concat(currencies)
+
     //파일 업로드 부분
     const FileUploadBtn = styled(Button)`
         padding: 10px;
@@ -56,6 +59,8 @@ function BoardRegist() {
         width : 100%;
     `
 
+    const [userId, setUserId] = useState(null);
+    const [nickname, setNickname] = useState(null);
     const [inputValue, setInputValue] = useState({});
 
     const [formData, changeFormData] = useState(new FormData());
@@ -81,6 +86,9 @@ function BoardRegist() {
     });
 
     const preview = () => {
+        setUserId(sessionStorage.getItem("userId"));
+        setNickname(sessionStorage.getItem("nickname"));
+
         let fileName;
         if (!files) return false;
 
@@ -101,7 +109,20 @@ function BoardRegist() {
         <Layout>
             <h1>Board Regist</h1>
             <CusPaper>   
-                <TextField
+                {nickname=="admin"? (<TextField
+                    className={styles.boardRegistTag}
+                    id="filled-select-currency"
+                    select
+                    label="태그"
+                    
+                    onChange={(e) => changeHandle(e.target.value, "tag")}
+                    >
+                    {adminCurrencies.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>) : (<TextField
                     className={styles.boardRegistTag}
                     id="filled-select-currency"
                     select
@@ -114,13 +135,14 @@ function BoardRegist() {
                         {option.label}
                         </MenuItem>
                     ))}
-                </TextField>
+                </TextField>)}
+               
 
                 <TextField fullWidth name="title" label="제목" onChange={(e) => changeHandle(e.target.value, "title")}
                     value={inputValue.title}/>
 
-                <TextField fullWidth name="userId" label="아이디" onChange={(e) => changeHandle(e.target.value, "userId")}
-                    value={inputValue.userId}/>    
+                {/* <TextField fullWidth name="userId" label="아이디" onChange={(e) => changeHandle(e.target.value, "userId")}
+                    value={inputValue.userId}/>     */}
                 <TextField
                     id="outlined-textarea"
                     name="content"

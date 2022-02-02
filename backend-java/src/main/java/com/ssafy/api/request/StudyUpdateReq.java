@@ -21,13 +21,9 @@ public class StudyUpdateReq {
 
     @ApiModelProperty(example="ING")
     private String collectStatus;
-
-    @ApiModelProperty(name="schedule", example="평일 9시~6시")
     private String schedule;
     private String description;
-
     private int size;
-
     @ApiModelProperty(example="[{java: 3}, {HTML: 2}]")
     private List<Map<String, Integer>> stacks;
 

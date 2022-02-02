@@ -30,9 +30,13 @@ public interface UserService {
     int updateNickCheck(Long id, String nickname);
 	UserDto userEntityToDto(User user);
     List<UserDto> selectProjectUsers(Long userId, Long projectId);
-    List<UserDto> selectJoinUsers(Long userId, Long projectId);
+    List<UserDto> selectProjectJoinUsers(Long userId, Long projectId);
 	int quitProject(Long userId, Long projectId);
 	int joinCancelProject(Long userId, Long projectId);
 
-	int userLikeTarget(UserLikeTargetReq userLikeTargetReq);
+	int userLikeTag(UserLikeTagReq userLikeTagReq);
+
+    List<UserDto> selectStudyUsers(Long userId, Long studyId);
+
+	List<UserDto> selectStudyJoinUsers(Long userId, Long studyId);
 }

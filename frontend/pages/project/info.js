@@ -12,9 +12,10 @@ import { Container, Skeleton, Card, CardContent, Typography, Divider,
     DialogContentText, FormControl, RadioGroup,FormControlLabel, 
     Radio, DialogActions} from "@mui/material"
 
-import { getUserAtProject } from "../../pages/api/project"
+import { deleteAPI, getUserAtProject, changeProjectHost, getProjectByUserId, quitProject } from "../../pages/api/project"
 import * as projectActions from '../../store/module/project';
 
+import Router from "next/router";
 
 function ProjectInfo(){
     let clubData = useSelector(({ project }) => project.myProject);
@@ -29,7 +30,14 @@ function ProjectInfo(){
         .then(res => { 
             dispatch(projectActions.setUserList({list: res.users}))
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
+
+        getProjectByUserId(parseInt(sessionStorage.getItem("userId")))
+        .then(res => {
+            console.log(res)
+            dispatch(projectActions.setMyProject({project: res.project}))
+            dispatch(projectActions.setProjectDetail({detail: res.project}))
+        });
     }, []);
 
     const CusContainer = styled(Container)`
@@ -59,7 +67,7 @@ function ProjectInfo(){
 
     const DetailHeader = styled.div`
         display: flex;    
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         margin: 20px 0px; 
         & > h2 {
@@ -88,23 +96,34 @@ function ProjectInfo(){
     )
 
     function DetailOperation({detail}) {
-        const [open, setOpen] = useState(false);
+        const [openQuit, setOpenQuit] = useState(false);
+        const [openUsers, setOpenUsers] = useState(false);
     
         const QuitDialogOpen = () => { 
             if (sessionStorage.getItem("userId"))
-                setOpen(true) 
+                setOpenQuit(true) 
             else {
                 alert("로그인이 필요한 작업입니다.")
                 Router.push("/login")
             }
         }
-        const QuitDialogClose = () => { setOpen(false) }
+        const QuitDialogClose = () => { setOpenQuit(false) }
+
+        const UserDialogOpen = () => {setOpenUsers(true)}
+        const UserDialogClose = () => {setOpenUsers(false)}
         
         const [hostAssign, setHostAssign] = useState(null);
-
+        const [nextHost, setNextHost] = useState(null);
 
         return (
             <>
+            {
+            sessionStorage.getItem("userId") == detail.hostId?
+                <Button variant="outlined" onClick={() => {Router.push("/project/applylist")}}>
+                    지원자 목록 조회
+                </Button>
+                : null
+            }
             <ButtonGroup variant="outlined">
                 {
                     sessionStorage.getItem("userId") == clubData.hostId?
@@ -115,8 +134,64 @@ function ProjectInfo(){
                 } 
                 <Button onClick={QuitDialogOpen}>탈퇴</Button>
             </ButtonGroup>
+
             <Dialog
-                open={open}
+                open={openUsers}
+                onClose={UserDialogClose}>
+                <DialogTitle>
+                    {"방장 권한을 넘길 유저를 선택해주세요."}
+                </DialogTitle>
+                <DialogContent>
+                    <FormControl> 
+                        <RadioGroup
+                            name="newHost"
+                            onChange={(e) => {
+                                e.persist();
+                                setNextHost(e.target.value)
+                                console.log(nextHost)
+                            }}>
+                            {
+                                userData.map(user => {
+                                    return (
+                                        user.id!==clubData.hostId?
+                                        <FormControlLabel value={user.id+","+user.projectPosition}
+                                            control={<Radio />} label={user.nickname} /> : null
+                                    )
+                                })
+                            }
+                            
+                        </RadioGroup>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={UserDialogClose}>취소</Button>
+                    <Button onClick={() => {
+                        let [newHostId, newHostPosition] = nextHost.split(",");
+                        changeProjectHost({
+                            projectId: clubData.id,
+                            oldHostId: clubData.hostId,
+                            newHostId: newHostId,
+                            newHostPosition: newHostPosition
+                        }).then(res => {
+                            if (res.statusCode == 200) {
+                                alert("방장이 변경되었습니다.")
+                                quitProject({
+                                    userId: clubData.hostId,
+                                    projectId: clubData.id
+                                });
+                                Router.push("/project");
+                            } else (
+                                alert(`${res.message}`)
+                            )
+                            // 페이지 새로고침
+                        })
+                    }}>확인</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* 탈퇴 다이얼로그 */}
+            <Dialog
+                open={openQuit}
                 onClose={QuitDialogClose}
                 >
                 <DialogTitle>
@@ -136,10 +211,10 @@ function ProjectInfo(){
                                 value={hostAssign}
                                 onChange={(e) => {setHostAssign(e.target.value)}}
                             >
+                                <FormControlLabel value="quit"
+                                                control={<Radio />} label="방장 권한 넘기기" />
                                 <FormControlLabel value="delete" 
                                                 control={<Radio />} label="프로젝트 삭제" />
-                                <FormControlLabel value="leave"
-                                                control={<Radio />} label="방장 권한 넘기기" />
                             </RadioGroup>
                         </FormControl>
 
@@ -152,25 +227,29 @@ function ProjectInfo(){
                     QuitDialogClose();
 
                     if (hostAssign!== null) {
-                        if (hostAssign === "leave") {
+                        if (hostAssign === "quit") {
+                            console.log("quit");
+                            if (clubData.positions[9].size == 1) {
+                                alert("팀원이 존재하지 않습니다.")
+                            } else
+                                UserDialogOpen();
                             // 방장 권한 넘기기
                         } else if (hostAssign === "delete") {
+                            console.log("delete");
+                            deleteAPI({
+                                id: clubData.id,
+                                hostId: sessionStorage.getItem("userId")
+                            }).then(res => {
+                                if (res.statusCode === 200) {
+                                    alert("프로젝트가 삭제 되었습니다.");
+                                    Router.push("/project")
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            })
                             // 프로젝트 삭제
                         }
                     }
-                    // joinProjectAPI({
-                    //     position: selectPosition,
-                    //     projectId: detail.id,
-                    //     userId: sessionStorage.getItem("userId")
-                    // })
-                    // .then(res => {
-                    //     if (res.statusCode === 200) {
-                    //         alert("프로젝트 지원 신청이 되었습니다.")
-                    //     } else {
-                    //         alert(`${res.message}`)
-                    //     }
-                    // })
-                    // .catch(err => console.log(err));
                 }} autoFocus>
                     확인
                 </Button>
@@ -253,21 +332,31 @@ function ProjectInfo(){
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+            width: 100%;
 
             & > div {
                 display: flex;
                 flex-direction: column;
-                flex: 1;
                 margin: 10px;
             }
             & .no-user{
                 font-size: 14px;
             }
-        `
+            & .fill {
+                display: flex;
+                flex: 1;
+            }
+            `
+
+            const FollowerWrapper = styled.div`
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap
+            `
 
             return (
                 <UserWrapper>
-                    <div>
+                    <div style={{width: "fit-content"}}>
                         <div>팀장</div>
                         <div>
                         {
@@ -287,7 +376,7 @@ function ProjectInfo(){
                     </div>
                     <div>
                         <div>팀원</div>
-                        <div>
+                        <FollowerWrapper>
                         {
                             userData == null?
                             <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
@@ -302,7 +391,7 @@ function ProjectInfo(){
                                 )
                             })
                         }
-                        </div>
+                        </FollowerWrapper>
                     </div>
                 </UserWrapper>
             )

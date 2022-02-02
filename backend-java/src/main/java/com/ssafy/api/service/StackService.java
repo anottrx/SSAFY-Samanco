@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.model.ProjectDto;
 import com.ssafy.api.model.StackGradeDto;
 import com.ssafy.db.entity.StackGrade;
 import com.ssafy.db.entity.User;
@@ -9,7 +10,8 @@ import java.util.Map;
 
 public interface StackService {
 
-    void createStack(List<Map<String, Integer>> stacks, Long id, int flag);
-    void updateStack(List<Map<String, Integer>> stacks, Long id, int flag);
-    List<StackGradeDto> selectStack(Long id, int flag);
+    void createStack(List<Map<String, Integer>> stacks, Long tagId, String tag);
+    void updateStack(List<Map<String, Integer>> stacks, Long tagId, String tag);
+    List<StackGradeDto> selectStack(Long tagId, String tag);
+    List<String> selectStackAll(String tag);
 }
