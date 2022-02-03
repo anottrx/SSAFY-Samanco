@@ -7,11 +7,11 @@ import LinkIcon from '@mui/icons-material/Link';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from '@emotion/styled';
-import { getUserByjoin } from "../../pages/api/project"
+import { getProjectUserByjoin } from "../../pages/api/project"
+import { getStudyUserByjoin } from "../../pages/api/study"
 import { useDispatch } from 'react-redux';
 
 import { forceReload } from "../../util/ForceReload";
-
 
 
 function ApplyAccordion(props) {
@@ -97,46 +97,114 @@ function ApplyAccordion(props) {
                     <ButtonWrapper className="btnGroup" variant="outlined" aria-label="outlined button group">
                       <Button onClick={() => {
                         // 가입 승인
-                        props.approveAPI({
-                          projectId: props.clubId, 
+                        let approveData = {
                           userId: data.id,
                           hostId: sessionStorage.getItem("userId"),
                           joinTag: "OK"
-                        }).then(res => {
+                        };
+                        let joinData = {
+                          userId: sessionStorage.getItem("userId")
+                        }
+                        switch (props.from) {
+                          case "project":
+                            approveData = {
+                              ...approveData,
+                              projectId: props.clubId,
+                            };
+                            joinData = {
+                              ...joinData,
+                              projectId: props.clubId,
+                            };
+                            break;
+                          case "study":
+                            approveData = {
+                              ...approveData,
+                              studyId: props.clubId,
+                            };
+                            joinData = {
+                              ...joinData,
+                              studyId: props.clubId,
+                            }
+                            break;
+                          default:
+                            break;
+                        }
+
+                        props.approveAPI(approveData).then(res => {
                           if (res.statusCode == 200) {
                             alert("해당 유저의 가입을 승인하였습니다.")
-                            getUserByjoin({ // 재조회
-                              projectId: props.clubId,
-                              userId: sessionStorage.getItem("userId")
-                              })
-                              .then(res => { 
-                                  dispatch(applyActions.setApplyList({list: res.users}));
-                              })
-                              .catch(err => console.log(err))
+                            if (props.from === "project"){
+                              getProjectUserByjoin(joinData) // 재조회
+                                .then(res => { 
+                                    dispatch(applyActions.setApplyList({list: res.users}));
+                                })
+                                .catch(err => console.log(err))
+                            } else {
+                              getStudyUserByjoin(joinData) // 재조회
+                                .then(res => { 
+                                    dispatch(applyActions.setApplyList({list: res.users}));
+                                })
+                                .catch(err => console.log(err))
+                            }
                           } else {
                             alert(`${res.message}`)
                           }
                         });
+                        
                         forceReload();
                       }}><CheckIcon/></Button>
                       <Button  onClick={() => {
                         // 가입 거절
-                        props.approveAPI({
-                          projectId: props.clubId, 
+                        let approveData = {
                           userId: data.id,
                           hostId: sessionStorage.getItem("userId"),
                           joinTag: "NO"
-                        }).then(res => {
+                        };
+                        let joinData = {
+                          userId: sessionStorage.getItem("userId")
+                        }
+
+                        switch (props.from) {
+                          case "project":
+                            approveData = {
+                              ...approveData,
+                              projectId: props.clubId,
+                            };
+                            joinData = {
+                              ...joinData,
+                              projectId: props.clubId,
+                            };
+                            break;
+                          case "study":
+                            approveData = {
+                              ...approveData,
+                              studyId: props.clubId,
+                            };
+                            joinData = {
+                              ...joinData,
+                              studyId: props.clubId,
+                            }
+                            break;
+                          default:
+                            break;
+                        }
+
+                        props.approveAPI(approveData).then(res => {
                           if (res.statusCode == 200) {
                             alert("해당 유저의 가입을 거절하였습니다.")
-                            getUserByjoin({ // 재조회
-                              projectId: props.clubId,
-                              userId: sessionStorage.getItem("userId")
-                              })
-                              .then(res => { 
-                                  dispatch(applyActions.setApplyList({list: res.users}));
-                              })
-                              .catch(err => console.log(err))
+                            if (props.from === "project"){
+                              getProjectUserByjoin(joinData) // 재조회
+                                .then(res => { 
+                                    dispatch(applyActions.setApplyList({list: res.users}));
+                                })
+                                .catch(err => console.log(err))
+                            } else {
+                              getStudyUserByjoin(joinData) // 재조회
+                                .then(res => { 
+                                    dispatch(applyActions.setApplyList({list: res.users}));
+                                })
+                                .catch(err => console.log(err))
+                            }
                           } else {
                             alert(`${res.message}`)
                           }

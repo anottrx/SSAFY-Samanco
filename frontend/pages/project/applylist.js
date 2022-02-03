@@ -4,7 +4,7 @@ import * as applyActions from '../../store/module/apply';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useLayoutEffect } from "react"
-import { getUserByjoin, approveProject } from "../../pages/api/project"
+import { getProjectUserByjoin, approveProject } from "../../pages/api/project"
 
 function ApplyList() {
     const detail = useSelector(({ project }) => project.projectDetail);
@@ -12,7 +12,7 @@ function ApplyList() {
     const dispatch = useDispatch();
     
     useLayoutEffect(() => {
-        getUserByjoin({
+        getProjectUserByjoin({
         projectId: detail.id,
         userId: sessionStorage.getItem("userId")
         })
@@ -29,6 +29,7 @@ function ApplyList() {
                 applyData={applyData}
                 approveAPI={approveProject}
                 clubId={detail.id}
+                from="project"
             ></ApplyAccordion>
         </Layout>
     )

@@ -9,6 +9,7 @@ export default function item(props){
         margin-right: 10px;
         margin-bottom: 5px;
         background-Color: #${color};
+        border: 1px solid white;
     `
 
     return (

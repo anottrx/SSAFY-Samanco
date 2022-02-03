@@ -9,7 +9,7 @@ import {
   updateNicknameAPI,
   deleteUserAPI,
 } from "../../pages/api/user";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Box } from "@mui/material";
 import styled from "@emotion/styled";
 import StackLevelList from "../Common/Stack/StackLevelList";
 import LinkList from "../Common/LinkList";
@@ -189,11 +189,11 @@ export default function MyInfo() {
 
       if (isNormal) {
         updateNicknameAPI(nicknameInfo).then((res) => {
-          console.log("닉네임 수정 가능한지 확인한 결과" + JSON.stringify(res));
+          console.log("닉네임 변경 가능한지 확인한 결과" + JSON.stringify(res));
           if (res.statusCode == 200) {
             setCheckPassword(true);
 
-            if (window.confirm("닉네임 수정이 가능합니다. 수정하시겠습니까?")) {
+            if (window.confirm("닉네임 변경이 가능합니다.")) {
               //업데이트 API 실행하기
               const formData = new FormData();
               console.log("inputState" + JSON.stringify(inputState));
@@ -327,126 +327,143 @@ export default function MyInfo() {
             ) : (
               <button onClick={handleUpdateClick}>수정하기</button>
             )}
-            <div className="mb-6">
-              <label>이메일</label>
-              <input
-                id="email"
-                type="email"
-                disabled
-                value={inputState.email || ""}
-              />
-            </div>
-            <div className="mb-6">
-              <label>닉네임</label>
-              <input
-                id="nickname"
-                value={inputState.nickname || ""}
-                disabled={nicknameChange ? false : true}
-                // disabled={onlyView ? true : false}
-                onChange={(e) => {
-                  handleNicknameChange(e);
-                  handleChange(e);
-                }}
-              />
-              {nicknameChange ? (
-                <button onClick={handleNicknameClick}>수정완료</button>
-              ) : (
-                <button onClick={handleNicknameClick}>수정하기</button>
-              )}
-            </div>
-            <div className="mb-6">
-              <label>기수</label>
-              <input value={inputState.generation || ""} disabled />
-            </div>
-            <div className="mb-6">
-              <label>반</label>
-              <input
-                id="userClass"
-                value={inputState.userClass || ""}
-                disabled={onlyView ? true : false}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-6">
-              <label>학번</label>
-              <input value={inputState.studentId || ""} disabled />
-            </div>
-            <div className="mb-6">
-              <label>이름</label>
-              <input value={inputState.name || ""} disabled />
-            </div>
-            <div className="mb-6">
-              <label>분야</label>
-              <input
-                id="position"
-                value={inputState.position || ""}
-                disabled={onlyView ? true : false}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-6">
-              <label>생년월일</label>
-              <input value={inputState.birthday || ""} disabled />
-            </div>
-            <div className="mb-6">
-              <label>전화번호</label>
-              <input
-                id="phone"
-                value={inputState.phone || ""}
-                disabled={onlyView ? true : false}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-6">
-              <label>링크</label>
-              {/* <input
+            <Box justifyContent="center" alignItems="center">
+              <div>
+                <Box className="ssafyImgInfo" sx={{ width: "100%" }}>
+                  <Box
+                    className="userBasicInfo"
+                    sx={{ width: "60%", display: "inline-block" }}
+                  >
+                    <Box sx={{ width: "40%" }}>
+                      <label>{inputState.name}님, 환영합니다</label>
+                      {/* <input value={inputState.name || ""} disabled /> */}
+                    </Box>
+                    <Box
+                      className="ssafyInfo"
+                      sx={{ width: "60%", display: "inline-block" }}
+                    >
+                      <Box sx={{ width: "30%", display: "inline-block" }}>
+                        싸피
+                        <label>{inputState.generation}기</label>
+                        {/* <input value={inputState.generation || ""} disabled /> */}
+                      </Box>
+                      <Box sx={{ width: "30%", display: "inline-block" }}>
+                        <label>{inputState.userClass}반</label>
+                        {/* <input
+                    id="userClass"
+                    value={inputState.userClass || ""}
+                    disabled={onlyView ? true : false}
+                    onChange={handleChange}
+                  /> */}
+                      </Box>
+                      <Box sx={{ width: "30%", display: "inline-block" }}>
+                        <label>학번 {inputState.studentId}</label>
+                        {/* <input value={inputState.studentId || ""} disabled /> */}
+                      </Box>
+                    </Box>
+                    <Box sx={{ width: "40%" }}>
+                      <label>이메일 주소 : {inputState.email}</label>
+                      {/* <input value={inputState.email || ""} disabled /> */}
+                    </Box>
+                    <Box sx={{ width: "40%" }}>
+                      <label>닉네임</label>
+                      <input
+                        id="nickname"
+                        value={inputState.nickname || ""}
+                        disabled={nicknameChange ? false : true}
+                        // disabled={onlyView ? true : false}
+                        onChange={(e) => {
+                          handleNicknameChange(e);
+                          handleChange(e);
+                        }}
+                      />
+                      {nicknameChange ? (
+                        <button onClick={handleNicknameClick}>
+                          중복 확인 완료
+                        </button>
+                      ) : (
+                        <button onClick={handleNicknameClick}>중복 확인</button>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box
+                    className="imgInfo"
+                    sx={{ width: "40%", display: "inline-block" }}
+                  >
+                    {/* <label>이미지</label> */}
+                    <ImgUploadBtn
+                      id="img_box"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        uploadRef.current.click();
+                      }}
+                    >
+                      Image Upload
+                    </ImgUploadBtn>
+                    <input
+                      ref={uploadRef}
+                      type="file"
+                      className="imgInput"
+                      id="projectImg"
+                      accept="image/*"
+                      name="file"
+                      encType="multipart/form-data"
+                      onChange={onImgChange}
+                    ></input>
+                  </Box>
+                </Box>
+              </div>
+              <div className="mb-6">
+                <label>생년월일</label>
+                <input value={inputState.birthday || ""} disabled />
+              </div>
+              <div className="mb-6">
+                <label>전화번호</label>
+                <input
+                  id="phone"
+                  value={inputState.phone || ""}
+                  disabled={onlyView ? true : false}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-6">
+                <label>분야</label>
+                <input
+                  id="position"
+                  value={inputState.position || ""}
+                  disabled={onlyView ? true : false}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-6">
+                <label>스택</label>
+                <StackLevelList items={inputState.stacks} />
+              </div>
+              <div className="mb-6">
+                <label>자기소개</label>
+                <br />
+                <TextField
+                  id="description"
+                  placeholder="자기자신에 대해 소개해주세요"
+                  // fullWidth
+                  rows={4}
+                  multiline
+                  value={inputState.description || ""}
+                  disabled={onlyView ? true : false}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-6">
+                <label>링크</label>
+                {/* <input
                 id="link"
                 value={inputState.link || ""}
                 disabled={onlyView ? true : false}
                 onChange={handleChange}
               /> */}
-              <LinkList items={links} />
-            </div>
-            <div className="mb-6">
-              <label>스택</label>
-              <StackLevelList items={inputState.stacks} />
-            </div>
-            <div className="mb-6">
-              <label>자기소개</label>
-              <br />
-              <TextField
-                id="description"
-                placeholder="자기자신에 대해 소개해주세요"
-                // fullWidth
-                rows={4}
-                multiline
-                value={inputState.description || ""}
-                disabled={onlyView ? true : false}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-6">
-              <label>이미지</label>
-              <ImgUploadBtn
-                id="img_box"
-                onClick={(event) => {
-                  event.preventDefault();
-                  uploadRef.current.click();
-                }}
-              >
-                Image Upload
-              </ImgUploadBtn>
-              <input
-                ref={uploadRef}
-                type="file"
-                className="imgInput"
-                id="projectImg"
-                accept="image/*"
-                name="file"
-                encType="multipart/form-data"
-                onChange={onImgChange}
-              ></input>
-            </div>
+                <LinkList items={links} />
+              </div>
+            </Box>
           </div>
           <button onClick={handleQuitClick}>탈퇴하기</button>
         </div>

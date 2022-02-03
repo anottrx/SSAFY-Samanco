@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
-import Layout from "../../components/layout";
-import StackList from "../../components/Club/StackList"
-import PositionList from "../../components/Club/PositionList"
-import UserCard from "../../components/Common/UserCard";
+import Layout from "../../../components/layout";
+import StackList from "../../../components/Club/StackList"
+import UserCard from "../../../components/Common/UserCard";
 
 import { useState, useLayoutEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,32 +11,36 @@ import { Container, Skeleton, Card, CardContent, Typography, Divider,
     DialogContentText, FormControl, RadioGroup,FormControlLabel, 
     Radio, DialogActions} from "@mui/material"
 
-import { deleteAPI, getUserAtProject, changeProjectHost, getProjectByUserId, quitProject } from "../../pages/api/project"
-import * as projectActions from '../../store/module/project';
+import { deleteAPI, getUserAtStudy, changeStudyHost, getStudyByUserId, quitStudy } from "../../api/study"
+import * as studyActions from '../../../store/module/study';
 
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 
-function ProjectInfo(){
-    let clubData = useSelector(({ project }) => project.projectDetail);
-    const userData = useSelector(({ project }) => project.userList);
+import { forceReload } from "../../../util/ForceReload";
+
+function StudyInfo(){
+    let clubData = useSelector(({ study }) => study.studyDetail);
+    let userData = useSelector(({ study }) => study.userList);
     const dispatch = useDispatch();
+
+    let { sid } = useRouter().query;
    
     useLayoutEffect(() => {
-        getUserAtProject({
-            projectId: clubData.id,
+        getUserAtStudy({
+            // studyId: clubData.id,
+            studyId: sid,
             userId: sessionStorage.getItem("userId")
         })
         .then(res => { 
-            dispatch(projectActions.setUserList({list: res.users}))
+            dispatch(studyActions.setUserList({list: res.users}))
         })
         .catch(err => console.log(err));
 
-        getProjectByUserId(parseInt(sessionStorage.getItem("userId")))
+        getStudyByUserId(parseInt(sessionStorage.getItem("userId")))
         .then(res => {
-            dispatch(projectActions.setMyProject({project: res.project}))
-            dispatch(projectActions.setProjectDetail({detail: res.project}))
+            dispatch(studyActions.setStudyDetail({detail: res.studies.filter(data => data.id == sid)[0]}))
         });
-    }, []);
+    }, [sid]);
 
     const CusContainer = styled(Container)`
         float: left;
@@ -81,15 +84,21 @@ function ProjectInfo(){
         <Layout>
             <CusContainer maxWidth="md">
                 <br></br>
-                <DetailHeader>
-                    <DetailOperation detail={clubData}></DetailOperation>
-                </DetailHeader>
-                <h2>{clubData.title}</h2>
-                <DetailWrapper maxWidth="sm">
-                    <CusSkeleton variant="rectangular" animation={false} />
-                    <ProjectInfo detail={clubData}></ProjectInfo>
-                </DetailWrapper> 
-                <ProjectDetail></ProjectDetail>
+                {
+                    clubData?
+                    <>
+                    <DetailHeader>
+                        <DetailOperation detail={clubData}></DetailOperation>
+                    </DetailHeader>
+                    <h2>{clubData.title}</h2>
+                    <DetailWrapper maxWidth="sm">
+                        <CusSkeleton variant="rectangular" animation={false} />
+                        <StudyInfo detail={clubData}></StudyInfo>
+                    </DetailWrapper> 
+                    <StudyDetail></StudyDetail>
+                    </>
+                    : null
+                }
             </CusContainer>
         </Layout>
     )
@@ -118,7 +127,7 @@ function ProjectInfo(){
             <>
             {
             sessionStorage.getItem("userId") == detail.hostId?
-                <Button variant="outlined" onClick={() => {Router.push("/project/applylist")}}>
+                <Button variant="outlined" onClick={() => {Router.push("/study/applylist")}}>
                     지원자 목록 조회
                 </Button>
                 : <div></div>
@@ -127,7 +136,7 @@ function ProjectInfo(){
                 {
                     sessionStorage.getItem("userId") == clubData.hostId?
                     <Button onClick={() => {
-                        Router.push("/project/update");
+                        Router.push("/study/update");
                     }}>수정</Button>
                     : null
                 } 
@@ -150,11 +159,11 @@ function ProjectInfo(){
                                 console.log(nextHost)
                             }}>
                             {
-                                userData?
+                                userData && userData !== null?
                                 userData.map(user => {
                                     return (
                                         user.id!==clubData.hostId?
-                                        <FormControlLabel value={user.id+","+user.projectPosition}
+                                        <FormControlLabel value={user.id}
                                             control={<Radio />} label={user.nickname} /> : null
                                     )
                                 }) : null
@@ -166,24 +175,24 @@ function ProjectInfo(){
                 <DialogActions>
                     <Button onClick={UserDialogClose}>취소</Button>
                     <Button onClick={() => {
-                        let [newHostId, newHostPosition] = nextHost.split(",");
-                        changeProjectHost({
-                            projectId: clubData.id,
+                        let newHostId = nextHost;
+                        changeStudyHost({
+                            studyId: clubData.id,
                             oldHostId: clubData.hostId,
-                            newHostId: newHostId,
-                            newHostPosition: newHostPosition
+                            newHostId: newHostId
                         }).then(res => {
                             if (res.statusCode == 200) {
                                 alert("방장이 변경되었습니다.")
-                                quitProject({
+                                quitStudy({
                                     userId: clubData.hostId,
-                                    projectId: clubData.id
+                                    studyId: clubData.id
                                 });
-                                Router.push("/project");
+                                Router.push("/study");
                             } else (
                                 alert(`${res.message}`)
                             )
                             // 페이지 새로고침
+                            forceReload();
                         })
                     }}>확인</Button>
                 </DialogActions>
@@ -195,7 +204,7 @@ function ProjectInfo(){
                 onClose={QuitDialogClose}
                 >
                 <DialogTitle>
-                    {"프로젝트를 탈퇴 하시겠습니까?"}
+                    {"스터디를 탈퇴 하시겠습니까?"}
                 </DialogTitle>
                 <DialogContent>
                 {
@@ -203,7 +212,7 @@ function ProjectInfo(){
                     sessionStorage.getItem("userId") == detail.hostId?
                     
                     <DialogContentText>
-                    프로젝트를 삭제하거나 방장 권한을 넘길 수 있습니다.<br></br>
+                    스터디를 삭제하거나 방장 권한을 넘길 수 있습니다.<br></br>
                         <FormControl> 
                             <RadioGroup
                                 aria-labelledby="demo-controlled-radio-buttons-group"
@@ -214,7 +223,7 @@ function ProjectInfo(){
                                 <FormControlLabel value="quit"
                                                 control={<Radio />} label="방장 권한 넘기기" />
                                 <FormControlLabel value="delete" 
-                                                control={<Radio />} label="프로젝트 삭제" />
+                                                control={<Radio />} label="스터디 삭제" />
                             </RadioGroup>
                         </FormControl>
 
@@ -225,14 +234,14 @@ function ProjectInfo(){
                 <Button onClick={QuitDialogClose}>취소</Button>
                 <Button onClick={() => {
                     QuitDialogClose();
-                    // 방장일 때
+
                     if (sessionStorage.getItem("userId") == detail.hostId) {
                         if (hostAssign === null) {
-                            alert("프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.")
+                            alert("스터디 삭제 또는 방장 권한 넘기기를 선택해주세요.")
                         }
-                        else if (hostAssign === "quit") {
+                        if (hostAssign === "quit") {
                             console.log("quit");
-                            if (clubData.positions[9].size == 1) {
+                            if (userData.length == 1) {
                                 alert("팀원이 존재하지 않습니다.")
                             } else
                                 UserDialogOpen();
@@ -240,12 +249,12 @@ function ProjectInfo(){
                         } else if (hostAssign === "delete") {
                             console.log("delete");
                             deleteAPI({
-                                id: clubData.id,
+                                id: sid,
                                 hostId: sessionStorage.getItem("userId")
                             }).then(res => {
                                 if (res.statusCode === 200) {
-                                    alert("프로젝트가 삭제 되었습니다.");
-                                    Router.push("/project")
+                                    alert("스터디가 삭제 되었습니다.");
+                                    Router.push("/study")
                                 } else {
                                     alert(`${res.message}`)
                                 }
@@ -254,13 +263,13 @@ function ProjectInfo(){
                         }
                     } else {
                         // 방장이 아닐 때
-                        quitProject({
+                        quitStudy({
                             userId: sessionStorage.getItem("userId"),
-                            projectId: clubData.id
+                            studyId: clubData.id
                         }).then(res => {
                             if (res.statusCode === 200) {
-                                alert("프로젝트가 탈퇴 되었습니다.")
-                                Router.push("/project")
+                                alert("스터디가 탈퇴 되었습니다.")
+                                Router.push("/study")
                             } else {
                                 alert(`${res.message}`)
                             }
@@ -275,7 +284,7 @@ function ProjectInfo(){
         )
     }
 
-    function ProjectInfo(){
+    function StudyInfo(){
         const DateWrapper = styled.div`
             display: flex;
             flex-direction: row;
@@ -302,15 +311,11 @@ function ProjectInfo(){
                 <StackList stackData={clubData.stacks}></StackList>
                 <br />
                 <RowWrapper>
-                    <div>
-                        <div>현재 팀원</div>
-                        <PositionList positionData={clubData.positions}></PositionList>  
-                    </div>
                     <DateWrapper>
                         <div>
-                            <div>진행 기간</div>
+                            <div>진행 스케쥴</div>
                             <Typography>
-                                {clubData.startDate} ~  {clubData.endDate}
+                                {clubData.schedule}
                             </Typography>
                         </div>
                     </DateWrapper>    
@@ -319,7 +324,7 @@ function ProjectInfo(){
         )
     }
 
-    function ProjectDetail() {
+    function StudyDetail() {
         const CusCard = styled(Card)`
             margin-top: 10px;
         `
@@ -329,21 +334,25 @@ function ProjectInfo(){
                 <CardContent>
                     <Typography sx={{ fontSize: 16 }}  variant="body1">
                     {
+                        clubData.description && clubData.description.includes("\n")?
                         clubData.description.split('\n').map((line, index) => {
                             return (<span key={index}>{line}<br/></span>)
                         })
+                        : 
+                        <span>{clubData.description}</span>
                     }
                     </Typography>
                     <br />
                     <Divider light />
                     <br />
-                    <ProjectUser detail={clubData}></ProjectUser>
+                    <StudyUser detail={clubData}></StudyUser>
                     <br />
                 </CardContent>
             </CusCard>
         )
 
-        function ProjectUser(props) {
+        function StudyUser({detail}) {
+            console.log(detail)
             const UserWrapper = styled.div`
             display: flex;
             flex-direction: row;
@@ -376,15 +385,16 @@ function ProjectInfo(){
                         <div>팀장</div>
                         <div>
                         {
-                            userData == null?
-                            <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
+                            !userData || userData == null?
+                            <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>
+                            :
                             userData.map(user => {
                                 return (
                                     user.id == clubData.hostId? 
                                     <UserCard 
                                     key={user.id} 
                                     user={user}
-                                    from="project"
+                                    from="study"
                                     ></UserCard> : null
                                 )
                             })
@@ -395,17 +405,18 @@ function ProjectInfo(){
                         <div>팀원</div>
                         <FollowerWrapper>
                         {
-                            userData == null?
-                            <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>:
+                            !userData || userData == null?
+                            <div className="no-user">아직 팀원이 없어요 ㅠ.ㅠ</div>
+                            :
                             userData.map(user => {
                                 return (
                                     user.id != clubData.hostId? 
                                     <UserCard 
                                     key={user.id} 
                                     user={user} 
-                                    projectId={clubData.id}
+                                    clubId={clubData.id}
                                     hostId={clubData.hostId}
-                                    from="project"
+                                    from="study"
                                     ></UserCard> : null
                                 )
                             })
@@ -420,4 +431,4 @@ function ProjectInfo(){
 
 
 
-export default ProjectInfo
+export default StudyInfo
