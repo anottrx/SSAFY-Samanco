@@ -130,7 +130,7 @@ function StudyInfo(){
                 <Button variant="outlined" onClick={() => {Router.push("/study/applylist")}}>
                     지원자 목록 조회
                 </Button>
-                : null
+                : <div></div>
             }
             <ButtonGroup variant="outlined">
                 {
@@ -237,7 +237,7 @@ function StudyInfo(){
 
                     if (sessionStorage.getItem("userId") == detail.hostId) {
                         if (hostAssign === null) {
-                            alert("프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.")
+                            alert("스터디 삭제 또는 방장 권한 넘기기를 선택해주세요.")
                         }
                         if (hostAssign === "quit") {
                             console.log("quit");
@@ -253,7 +253,7 @@ function StudyInfo(){
                                 hostId: sessionStorage.getItem("userId")
                             }).then(res => {
                                 if (res.statusCode === 200) {
-                                    alert("프로젝트가 삭제 되었습니다.");
+                                    alert("스터디가 삭제 되었습니다.");
                                     Router.push("/study")
                                 } else {
                                     alert(`${res.message}`)
@@ -265,7 +265,7 @@ function StudyInfo(){
                         // 방장이 아닐 때
                         quitStudy({
                             userId: sessionStorage.getItem("userId"),
-                            projectId: clubData.id
+                            studyId: clubData.id
                         }).then(res => {
                             if (res.statusCode === 200) {
                                 alert("스터디가 탈퇴 되었습니다.")

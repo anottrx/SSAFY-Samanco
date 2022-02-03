@@ -8,22 +8,37 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-import { Card, Container, Skeleton, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ButtonGroup } from "@mui/material";
+import { Card, Container, Skeleton, CardContent, Typography, 
+    Divider, Button, Dialog, DialogActions, DialogContent, 
+    DialogContentText, DialogTitle, ButtonGroup, FormControl,
+    RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { useState, useEffect } from "react";
 import Router from "next/router";
 
 import * as studyActions from '../../store/module/study';
-import { deleteAPI, updateStudyLike, joinStudyAPI, getStudyById, joinCancelStudy } from "../api/study";
+import { deleteAPI, updateStudyLike, joinStudyAPI, 
+    getStudyById, joinCancelStudy, getUserAtStudy,
+    changeStudyHost, quitStudy } from "../api/study";
 
 import { forceReload } from "../../util/ForceReload";
 
 const StudyDetail = () => { 
     const detail = useSelector(({ study }) => study.studyDetail);
+    const userData = useSelector(({ study }) => study.userList);
     const [like, changeLike] = useState(detail.userLike);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
+        getUserAtStudy({
+            studyId: detail.id,
+            userId: sessionStorage.getItem("userId")
+        })
+        .then(res => { 
+            dispatch(studyActions.setUserList({list: res.users}))
+        })
+        .catch(err => console.log(err));
+
         getStudyById({
             studyId: detail.id, 
             userId: sessionStorage.getItem("userId") == null? 
@@ -91,7 +106,7 @@ const StudyDetail = () => {
                 <h2>{detail.title}</h2>
                 {
                     sessionStorage.getItem("userId") == detail.hostId?
-                    <DetailOperation></DetailOperation> : null
+                    <DetailOperation detail={detail} />: null
                 }
             </DetailHeader>
             <DetailWrapper maxWidth="sm">
@@ -112,46 +127,172 @@ const StudyDetail = () => {
         </CusContainer>
     </Layout>);
 
-    function DetailOperation() {
-        const [open, setOpen] = useState(false);
+    function DetailOperation({detail}) {
+        const [openQuit, setOpenQuit] = useState(false);
+        const [openUsers, setOpenUsers] = useState(false);
 
-        const deleteDialogOpen = () => { setOpen(true) }
-        const deleteOperation = () => {
-            let data = {id: detail.id, hostId: parseInt(sessionStorage.getItem("userId"))};
-            console.log(data)
-            deleteAPI(data)
-            .then(res => {
-                if (res.statusCode == 200){
-                    console.log("삭제")
-                    Router.push("/study")
-                }
-                else
-                    alert(`${res.message}`)
-            })
-            .catch(err => console.log(err))
-            setOpen(false);
+        const QuitDialogOpen = () => { 
+            if (sessionStorage.getItem("userId"))
+                setOpenQuit(true) 
+            else {
+                alert("로그인이 필요한 작업입니다.")
+                Router.push("/login")
+            }
         }
-        const deleteDialogClose = () => { setOpen(false) }
+        const QuitDialogClose = () => { setOpenQuit(false) }
 
+        const UserDialogOpen = () => {setOpenUsers(true)}
+        const UserDialogClose = () => {setOpenUsers(false)}
+        
+        const [hostAssign, setHostAssign] = useState(null);
+        const [nextHost, setNextHost] = useState(null);
 
         return (
             <>
             <ButtonGroup variant="outlined">
-                <Button onClick={() => {
-                    Router.push("/study/update");
-                }}>수정</Button>
-                <Button onClick={deleteDialogOpen}>삭제</Button>
+                {
+                    sessionStorage.getItem("userId") == detail.hostId?
+                    <Button onClick={() => {
+                        Router.push("/study/update");
+                    }}>수정</Button>
+                    : null
+                } 
+                <Button onClick={QuitDialogOpen}>탈퇴</Button>
             </ButtonGroup>
+
             <Dialog
-                open={open}
-                onClose={deleteDialogClose}
+                open={openUsers}
+                onClose={UserDialogClose}>
+                <DialogTitle>
+                    {"방장 권한을 넘길 유저를 선택해주세요."}
+                </DialogTitle>
+                <DialogContent>
+                    <FormControl> 
+                        <RadioGroup
+                            name="newHost"
+                            onChange={(e) => {
+                                e.persist();
+                                setNextHost(e.target.value)
+                                console.log(nextHost)
+                            }}>
+                            {
+                                userData && userData !== null?
+                                userData.map(user => {
+                                    return (
+                                        user.id!==detail.hostId?
+                                        <FormControlLabel value={user.id}
+                                            control={<Radio />} label={user.nickname} /> : null
+                                    )
+                                }) : null
+                            }
+                            
+                        </RadioGroup>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={UserDialogClose}>취소</Button>
+                    <Button onClick={() => {
+                        let newHostId = nextHost;
+                        changeStudyHost({
+                            studyId: detail.id,
+                            oldHostId: detail.hostId,
+                            newHostId: newHostId
+                        }).then(res => {
+                            if (res.statusCode == 200) {
+                                alert("방장이 변경되었습니다.")
+                                quitStudy({
+                                    userId: detail.hostId,
+                                    studyId: detail.id
+                                });
+                                Router.push("/study");
+                            } else (
+                                alert(`${res.message}`)
+                            )
+                            // 페이지 새로고침
+                            forceReload();
+                        })
+                    }}>확인</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* 탈퇴 다이얼로그 */}
+            <Dialog
+                open={openQuit}
+                onClose={QuitDialogClose}
                 >
                 <DialogTitle>
-                    {"삭제 하시겠습니까?"}
+                    {"스터디를 탈퇴 하시겠습니까?"}
                 </DialogTitle>
+                <DialogContent>
+                {
+                    // 방장일 경우 방장 넘기기
+                    sessionStorage.getItem("userId") == detail.hostId?
+                    
+                    <DialogContentText>
+                    스터디를 삭제하거나 방장 권한을 넘길 수 있습니다.<br></br>
+                        <FormControl> 
+                            <RadioGroup
+                                aria-labelledby="demo-controlled-radio-buttons-group"
+                                name="controlled-radio-buttons-group"
+                                value={hostAssign}
+                                onChange={(e) => {setHostAssign(e.target.value)}}
+                            >
+                                <FormControlLabel value="quit"
+                                                control={<Radio />} label="방장 권한 넘기기" />
+                                <FormControlLabel value="delete" 
+                                                control={<Radio />} label="스터디 삭제" />
+                            </RadioGroup>
+                        </FormControl>
+
+                    </DialogContentText>: null
+                }
+                </DialogContent>
                 <DialogActions>
-                <Button onClick={deleteDialogClose}>취소</Button>
-                <Button onClick={deleteOperation} autoFocus>
+                <Button onClick={QuitDialogClose}>취소</Button>
+                <Button onClick={() => {
+                    QuitDialogClose();
+
+                    if (sessionStorage.getItem("userId") == detail.hostId) {
+                        if (hostAssign === null) {
+                            alert("스터디 삭제 또는 방장 권한 넘기기를 선택해주세요.")
+                        }
+                        if (hostAssign === "quit") {
+                            console.log("quit");
+                            if (userData.length == 1) {
+                                alert("팀원이 존재하지 않습니다.")
+                            } else
+                                UserDialogOpen();
+                            // 방장 권한 넘기기
+                        } else if (hostAssign === "delete") {
+                            console.log("delete");
+                            deleteAPI({
+                                id: sid,
+                                hostId: sessionStorage.getItem("userId")
+                            }).then(res => {
+                                if (res.statusCode === 200) {
+                                    alert("스터디가 삭제 되었습니다.");
+                                    Router.push("/study")
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            })
+                            // 프로젝트 삭제
+                        }
+                    } else {
+                        // 방장이 아닐 때
+                        quitStudy({
+                            userId: sessionStorage.getItem("userId"),
+                            studyId: clubData.id
+                        }).then(res => {
+                            if (res.statusCode === 200) {
+                                alert("스터디가 탈퇴 되었습니다.")
+                                Router.push("/study")
+                            } else {
+                                alert(`${res.message}`)
+                            }
+                        })
+                    }
+                }} autoFocus>
                     확인
                 </Button>
                 </DialogActions>
