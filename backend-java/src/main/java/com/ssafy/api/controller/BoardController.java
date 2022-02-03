@@ -179,20 +179,20 @@ public class BoardController {
         return ResponseEntity.status(200).body(BoardSelectAllRes.of(200, "Success", boards));
     }
 
-//    @GetMapping
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "성공"),
-//            @ApiResponse(code = 401, message = "게시글 목록 없음"),
-//            @ApiResponse(code = 500, message = "서버 오류")
-//    })
-//    public ResponseEntity<? extends BaseResponseBody> selectBoardAll() throws IOException {
-//
-//        List<BoardDto> boards=boardService.selectBoardAll();
-//        if (boards==null || boards.size()==0){
-//            return ResponseEntity.status(200).body(BoardSelectAllRes.of(401, "게시글 목록이 없습니다.", null));
-//        }
-//        return ResponseEntity.status(200).body(BoardSelectAllRes.of(200, "Success", boards));
-//    }
+    @GetMapping
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "게시글 목록 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectBoardAll() throws IOException {
+
+        List<BoardDto> boards=boardService.selectBoardAll();
+        if (boards==null || boards.size()==0){
+            return ResponseEntity.status(200).body(BoardSelectAllRes.of(401, "게시글 목록이 없습니다.", null));
+        }
+        return ResponseEntity.status(200).body(BoardSelectAllRes.of(200, "Success", boards));
+    }
 
     @GetMapping("/like")
     @ApiResponses({
