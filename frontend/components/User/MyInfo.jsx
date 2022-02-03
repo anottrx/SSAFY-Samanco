@@ -103,6 +103,8 @@ export default function MyInfo() {
     }
   };
 
+  const [userBirthday, setUserBirthday] = useState("");
+
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
     const token = cookie.userToken;
@@ -130,6 +132,11 @@ export default function MyInfo() {
           // &&  res.user.birthday.toString().slice(0, 2) != todayYear
         ) {
           inputState.birthday = res.user.birthday;
+          let year = inputState.birthday.slice(0, 2);
+          year = Number(year) > 25 ? 19 + year : 20 + year;
+          let month = inputState.birthday.slice(2, 4);
+          let day = inputState.birthday.slice(4, 6);
+          setUserBirthday(year + "-" + month + "-" + day);
         }
         if (res.user.phone !== "00000000000") {
           inputState.phone = res.user.phone;
@@ -315,7 +322,7 @@ export default function MyInfo() {
     console.log("업데이트 준비");
     let isNormal = true;
     let msg = "";
-    
+
     // if (!phoneReg.test(inputState.phone)) {
     //   isNormal = false;
     //   msg = "전화번호 양식을 확인해주세요.";
@@ -352,10 +359,10 @@ export default function MyInfo() {
       });
       const stacksArr = [];
       Object.keys(inputState.stacks).forEach(function (key) {
-        stacksArr.push({"name":key, "grade":inputState.stacks[key]});
+        stacksArr.push({ name: key, grade: inputState.stacks[key] });
       });
-      inputState.stacks_get = stacksArr
-      
+      inputState.stacks_get = stacksArr;
+
       loginAPI(loginInfo).then((res) => {
         console.log(loginInfo.email + " " + loginInfo.password);
         if (res.statusCode == 200) {
@@ -438,6 +445,30 @@ export default function MyInfo() {
     }));
   };
 
+  const DetailWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+  `;
+  const CusSkeleton = styled.div`
+    // display: flex;
+    flex: 1;
+    min-width: 250px;
+    min-height: 200px;
+    height: auto;
+  `;
+  const ContentWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 0px 30px;
+    flex: 1;
+  `;
+  const ContentWrapper2 = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0px;
+    flex: 1;
+  `;
+
   return (
     <div>
       {loading ? (
@@ -486,18 +517,20 @@ export default function MyInfo() {
             // sx={{mb: 2 }}
             >
               <div>
-                <Box
+                {/* <Box
                   className="ssafyImgInfo"
                   sx={{
                     // display: "inline-block",
                     mb: 2,
                     // verticalAlign: "top",
                   }}
-                >
-                  <Box
+                > */}
+                <DetailWrapper maxWidth="sm">
+                  {/* <Box
                     className="imgInfo"
                     sx={{ width: "40%", display: "inline-block" }}
-                  >
+                  > */}
+                  <CusSkeleton>
                     {/* <label>이미지</label> */}
                     <ImgUploadBtn
                       id="img_box"
@@ -518,11 +551,13 @@ export default function MyInfo() {
                       encType="multipart/form-data"
                       onChange={onImgChange}
                     ></input>
-                  </Box>
-                  <Box
+                  </CusSkeleton>
+                  {/* </Box> */}
+                  {/* <Box
                     className="userBasicInfo"
                     sx={{ width: "60%", display: "inline-block" }}
-                  >
+                  > */}
+                  <ContentWrapper>
                     <Box sx={{ width: "100%", fontSize: "20px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
@@ -531,7 +566,7 @@ export default function MyInfo() {
                     </Box>
                     <Box
                       className="ssafyInfo"
-                      sx={{ width: "100%", display: "inline-block", mb: 2 }}
+                      sx={{ width: "100%", display: "inline-block", mb: 1 }}
                     >
                       싸피
                       <label>{inputState.generation}기</label>
@@ -545,152 +580,165 @@ export default function MyInfo() {
                   /> */}
                       <label>(학번 {inputState.studentId})</label>
                     </Box>
-                    <Box whiteSpace="nowrap" sx={{ mb: 2 }}>
-                      <label>이메일 주소 : {inputState.email}</label>
-                      {/* <input value={inputState.email || ""} disabled /> */}
-                    </Box>
-                    <div sx={{ mb: 2 }}>
+                    <Box whiteSpace="nowrap" sx={{ mb: 1 }}>
                       <label>
-                        <span>닉네임</span>
+                        이메일 주소
+                        {/* {inputState.email} */}
+                        <input value={inputState.email || ""} disabled />
+                      </label>
+                    </Box>
+                    <div sx={{ mb: 1 }}>
+                      <label>
+                        <span style={{ width: "70px" }}>닉네임</span>
                         <input
                           id="nickname"
                           value={inputState.nickname || ""}
-                          disabled={nicknameChange ? false : true}
-                          // disabled={onlyView ? true : false}
-                          // sx={{ width: "40%" }}
+                          disabled={onlyView ? true : false}
+                          style={{ display: "inline-block", width: "240px" }}
                           onChange={(e) => {
                             handleNicknameChange(e);
                             handleChange(e);
                           }}
                         />
                       </label>
-                      {nicknameChange ? (
-                        <button onClick={handleNicknameClick}>
-                          중복 확인 완료
-                        </button>
+                      {finishUpdate ? (
+                        nicknameChange ? (
+                          <button onClick={handleNicknameClick}>
+                            중복 확인 완료
+                          </button>
+                        ) : (
+                          <button onClick={handleNicknameClick}>
+                            중복 확인
+                          </button>
+                        )
                       ) : (
-                        <button onClick={handleNicknameClick}>중복 확인</button>
+                        <></>
                       )}
                     </div>
-                  </Box>
-                </Box>
+                  </ContentWrapper>
+                  {/* </Box> */}
+                  {/* </Box> */}
+                </DetailWrapper>
               </div>
-              <Box sx={{ mb: 2, verticalAlign: "center" }}>
-                <label style={{ fontSize: "16px", width: "40" }}>
-                  생년월일
-                </label>
-                {onlyView ? (
+              <ContentWrapper2>
+                <Box sx={{ mb: 2, verticalAlign: "center" }}>
+                  <label style={{ fontSize: "16px", width: "40" }}>
+                    생년월일
+                  </label>
+                  {onlyView ? (
+                    <input
+                      value={userBirthday}
+                      // value={inputState.birthday}
+                      disabled
+                      style={{ width: "60%" }}
+                    />
+                  ) : (
+                    <LocalizationProvider dateAdapter={DateAdapter}>
+                      <DatePickerWrapper>
+                        <DatePicker
+                          value={inputState.birthday || ""}
+                          label=""
+                          changeHandle={changeHandle}
+                        ></DatePicker>
+                      </DatePickerWrapper>
+                    </LocalizationProvider>
+                  )}
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  <label>전화번호</label>
                   <input
-                    value={inputState.birthday}
-                    disabled
-                    style={{ width: "60%" }}
-                  />
-                ) : (
-                  <LocalizationProvider dateAdapter={DateAdapter}>
-                    <DatePickerWrapper>
-                      <DatePicker
-                        value={inputState.birthday || ""}
-                        label=""
-                        changeHandle={changeHandle}
-                      ></DatePicker>
-                    </DatePickerWrapper>
-                  </LocalizationProvider>
-                )}
-              </Box>
-              <Box sx={{ mb: 2 }}>
-                <label>전화번호</label>
-                <input
-                  id="phone"
-                  value={inputState.phone || ""}
-                  disabled={onlyView ? true : false}
-                  onChange={handleChange}
-                />
-              </Box>
-              <Box sx={{ mb: 2 }}>
-                <label>분야</label>
-                {onlyView ? (
-                  <input
-                    id="position"
-                    disabled
-                    value={inputState.position || ""}
+                    id="phone"
+                    value={inputState.phone || ""}
+                    disabled={onlyView ? true : false}
                     onChange={handleChange}
                   />
-                ) : (
-                  <Select
-                    id="position"
-                    onChange={(e) => {
-                      positionHandleChange(e);
-                      handleChange(e);
-                    }}
-                    value={inputState.position || ""}
-                    sx={{ minWidth: 350, height: 35, fontSize: 13 }}
-                  >
-                    {positionOptions.map((u, i) => {
-                      return (
-                        <MenuItem
-                          key={i}
-                          value={u.value}
-                          sx={{ minWidth: 120, fontSize: 14 }}
-                        >
-                          {u.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                )}
-                {/* <input
+                </Box>
+                <Box sx={{ mb: 2 }}>
+                  <label>분야</label>
+                  {onlyView ? (
+                    <input
+                      id="position"
+                      disabled
+                      value={inputState.position || ""}
+                      onChange={handleChange}
+                    />
+                  ) : (
+                    <Select
+                      id="position"
+                      onChange={(e) => {
+                        positionHandleChange(e);
+                        handleChange(e);
+                      }}
+                      value={inputState.position || ""}
+                      sx={{ minWidth: 350, height: 35, fontSize: 13 }}
+                    >
+                      {positionOptions.map((u, i) => {
+                        return (
+                          <MenuItem
+                            key={i}
+                            value={u.value}
+                            sx={{ minWidth: 120, fontSize: 14 }}
+                          >
+                            {u.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  )}
+                  {/* <input
                   id="position"
                   value={inputState.position || ""}
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-              </Box>
-              <div>
-                <label>스택</label>
-                {onlyView && inputState.stacks_get != null ? (
-                  <StackLevelList items={inputState.stacks_get}  />
-                ) : (
-                  <StackLevelSelectRegister
-                    values={inputState.stacks, inputState.stacks_get}
-                    changeHandle={changeHandle}
+                </Box>
+                <div>
+                  <label>스택</label>
+                  {onlyView && inputState.stacks_get != null ? (
+                    <StackLevelList items={inputState.stacks_get} />
+                  ) : (
+                    <StackLevelSelectRegister
+                      values={(inputState.stacks, inputState.stacks_get)}
+                      changeHandle={changeHandle}
+                    />
+                  )}
+                </div>
+                <Box sx={{ mb: 2 }}>
+                  <label>자기소개</label>
+                  <br />
+                  <TextField
+                    id="description"
+                    placeholder="자기자신에 대해 소개해주세요"
+                    // fullWidth
+                    sx={{ width: "80%" }}
+                    rows={4}
+                    multiline
+                    value={inputState.description || ""}
+                    disabled={onlyView ? true : false}
+                    onChange={handleChange}
                   />
-                )}
-              </div>
-              <Box sx={{ mb: 2 }}>
-                <label>자기소개</label>
-                <br />
-                <TextField
-                  id="description"
-                  placeholder="자기자신에 대해 소개해주세요"
-                  // fullWidth
-                  sx={{ width: "80%" }}
-                  rows={4}
-                  multiline
-                  value={inputState.description || ""}
-                  disabled={onlyView ? true : false}
-                  onChange={handleChange}
-                />
-              </Box>
-              <Box>
-                <label>링크</label>
-                {onlyView ? (
-                  <LinkList items={links} />
-                ) : (
-                  <Autocomplete
-                    multiple
-                    freeSolo
-                    // options={links}
-                    // getOptionLabel={(option) => option}
-                    value={links || []}
-                    options={links.map((l) => l.value)}
-                    getOptionLabel={(option) => (option ? option : "option")}
-                    renderInput={(params) => <TextField {...params} />}
-                    onChange={(e, option, reason) => {
-                      handleLinksChange(option);
-                    }}
-                  />
-                )}
-              </Box>
+                </Box>
+                <Box>
+                  <label>링크</label>
+                  {onlyView ? (
+                    <LinkList items={links} />
+                  ) : (
+                    <Autocomplete
+                      multiple
+                      freeSolo
+                      // options={links}
+                      // getOptionLabel={(option) => option}
+                      value={links || []}
+                      options={links.map((l) => l.value)}
+                      getOptionLabel={(option) => (option ? option : "option")}
+                      renderInput={(params) => <TextField {...params} />}
+                      onChange={(e, option, reason) => {
+                        handleLinksChange(option);
+                      }}
+                    />
+                  )}
+                </Box>
+              </ContentWrapper2>
             </Box>
           </div>
           {finishUpdate ? (
