@@ -27,6 +27,7 @@ const ProjectDetail = () => {
     const detail = useSelector(({ project }) => project.projectDetail);
     const userData = useSelector(({ project }) => project.userList);
     const [like, changeLike] = useState(detail.userLike);
+    let blob, imageUrl;
 
     const dispatch = useDispatch();
 
@@ -46,8 +47,14 @@ const ProjectDetail = () => {
                 0: sessionStorage.getItem("userId")
         })
         .then(res => {
-            dispatch(projectActions.setProjectDetail({detail: res.project}))
-    });
+            dispatch(projectActions.setProjectDetail({detail: res.project}));
+
+            blob = new Blob([new ArrayBuffer(detail.file.imageByteArr)], { type: "image/png" })
+            imageUrl = URL.createObjectURL(blob);
+
+            console.log(blob);
+            console.log(detail.file.imageByteArr);
+        });
     }, [like]);
 
     const DetailWrapper = styled.div`
@@ -111,7 +118,8 @@ const ProjectDetail = () => {
                 {
                     detail.collectStatus === "ING"? 
                     <ImageWrapper>
-                    <CusSkeleton variant="rectangular" animation={false} />
+                    <img src={imageUrl} width={200} height={200}></img>
+                    {/* <CusSkeleton variant="rectangular" animation={false} /> */}
                     </ImageWrapper>
                     :
                     <ImageWrapper>
@@ -410,8 +418,7 @@ function DetailOperation({detail}) {
             detail.positions.map(pos => {
                 if (!pos.position.includes("size"))
                     positions[pos.position] = pos.size;
-            })
-            console.log(positions)
+            });
         },[])
         
 

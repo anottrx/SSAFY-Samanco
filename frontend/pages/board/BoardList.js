@@ -5,13 +5,11 @@ import { styled } from '@mui/material/styles';
 import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination, Button} from '@mui/material';
 import Router from "next/router";
 import * as boardActions from '../../store/module/board';
-import BoardSearch from "./BoardSearch";
+import SearchBar from "../../components/Common/Search";
 import style from "@emotion/styled";
 import Cookies from "universal-cookie";
 
-import {getBoardListAPI, viewBoardAPI} from "../api/board";
-
-import Datas from "./data/boardData.json"; //임의 데이터
+import { getBoardListAPI } from "../api/board";
 
 //게시글 목록 페이지
 
@@ -56,7 +54,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function BoardList(props) {
     const dispatch = useDispatch();
-
+    let tag = props.tag;
+    
     let boardData, setDetail, filterData, setArticles;
 
     boardData = useSelector(({ board }) => board.boardList);
@@ -86,21 +85,27 @@ function BoardList(props) {
         }
     },[]);
 
+    useEffect(() => {
+      console.log("filterData",filterData)
+    }, [filterData]);
+    
+
     
     useLayoutEffect(() => {
-        // 빈 배열이면 배열 요청
+        // To do: tag 바뀔 때마다 태그로 리스트 불러오기
+        // /api/board/tag/{tag}
         getBoardListAPI().then((res => {
             if (res.boards)
                 setArticles({list: res.boards});
             else
                 setArticles({list: []});
         }));
-    }, [])
+    }, [tag])
 
     async function viewBoard(e) {
         let title = e.target.value;
         console.log(title)
-        viewBoardAPI(title).then((res => {
+        getArticleByTitle(title).then((res => {
             setDetail({detail: res.board});
             Router.push({
                 pathname: `/${title}`,
@@ -133,7 +138,7 @@ function BoardList(props) {
         <>
             <ItemWrapper>
                 <ProjectActions>
-                    <BoardSearch></BoardSearch>
+                    <SearchBar target="board"></SearchBar>
                     {isLogin? 
                     (<CusButton variant="outlined" size="medium"
                         onClick={() => {
@@ -157,44 +162,51 @@ function BoardList(props) {
                     </TableHead>
                     <TableBody>
                         {
-                            boardData && typeof(filterData)=="undefined"?
-                            boardData.slice(purPage.current * (page-1), purPage.current * page).map((data) => (
-                                <StyledTableRow key={data.boardId}>
-                                <StyledTableCell component="th" scope="row" onClick={()=>{
-                                    Router.push("/board/"+data.title); setDetail({detail: data}); }}
-                                >{data.title}</StyledTableCell>
-                                <StyledTableCell align="right">{data.userId}</StyledTableCell>
-                                <StyledTableCell align="right">{data.startDate}</StyledTableCell>
-                                <StyledTableCell align="right">{data.likes}</StyledTableCell>
-                                <StyledTableCell align="right">{data.hit}</StyledTableCell>
-                                </StyledTableRow>
-                            ))
-                            :
+                            !boardData || boardData.length === 0 ?
                             <StyledTableRow>
                                 <StyledTableCell>
                                     등록된 게시물이 없습니다.
                                 </StyledTableCell>
                             </StyledTableRow>
-                        }
-                        {
-                            typeof(filterData)!=="undefined"? 
-                            filterData.slice(purPage.current * (page-1), purPage.current * page).map((data) => (
-                                <StyledTableRow key={data.boardId}>
-                                <StyledTableCell component="th" scope="row" onClick={()=>{
-                                    Router.push("/board/"+data.title); setDetail({detail: data}); }}
-                                >{data.title}</StyledTableCell>
-                                <StyledTableCell align="right">{data.userId}</StyledTableCell>
-                                <StyledTableCell align="right">{data.startDate}</StyledTableCell>
-                                <StyledTableCell align="right">{data.likes}</StyledTableCell>
-                                <StyledTableCell align="right">{data.hit}</StyledTableCell>
-                                </StyledTableRow>
-                            ))
                             :
-                            <StyledTableRow>
-                                <StyledTableCell>
-                                    등록된 게시물이 없습니다.
-                                </StyledTableCell>
-                            </StyledTableRow>
+                            <>
+                            {
+                                filterData!==null?
+                                filterData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
+                                    return(
+                                    <StyledTableRow key={data.boardId}>
+                                        <StyledTableCell component="th" scope="row"
+                                            onClick={()=>{
+                                                setDetail({detail: data}); 
+                                                Router.push("/board/"+data.boardId); 
+                                            }}
+                                        >{data.title}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.userId}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.startDate}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.likes}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.hit}</StyledTableCell>
+                                    </StyledTableRow>
+                                    )
+                                })
+                                :
+                                boardData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
+                                    return (
+                                    <StyledTableRow key={data.boardId}>
+                                        <StyledTableCell component="th" scope="row" 
+                                            onClick={()=>{
+                                                setDetail({detail: data}); 
+                                                Router.push("/board/"+data.boardId); 
+                                            }}>
+                                            {data.title}
+                                        </StyledTableCell>
+                                        <StyledTableCell align="right">{data.userId}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.startDate}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.likes}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.hit}</StyledTableCell>
+                                    </StyledTableRow>
+                                )})
+                            }
+                            </>
                         }
                     </TableBody>
                 </Table>

@@ -13,7 +13,7 @@ import Router from "next/router";
 import CommentList from "./CommentList"
 
 import SendIcon from '@mui/icons-material/Send';
-import { viewBoardAPI} from "../api/board";
+import { getArticleById } from "../api/board";
 
 //게시글 상세보기 페이지
 
@@ -26,15 +26,14 @@ const BoardDetail = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const url = window.location.href;
-        const parts = url.split('/');
-        console.log(parts)
-        const lastSegment = parts.pop() || parts.pop();
-        viewBoardAPI(lastSegment)
+        getArticleById({
+            boardId:detail.boardId,
+            userId: sessionStorage.getItem("userId")
+        })
         .then(res => {
             dispatch(boardActions.setBoardDetail({detail: res.board}))
-    } );
-    console.log(detail)
+        });
+        console.log(detail)
     }, [like]);
 
     const CusContainer = styled(Container)`
@@ -125,8 +124,8 @@ const BoardDetail = () => {
                 margin-left: 10px;
             }
         `
-        //게시글 제목(title),작성자 아이디(userId),작성날짜(startDate),내용(content)
         return (
+            detail?
             <>
             <CusCard>
                 <CardContent>
@@ -156,6 +155,7 @@ const BoardDetail = () => {
                 </CardContent>
             </CusCard>
             </>
+            : null
         )
     }
 
