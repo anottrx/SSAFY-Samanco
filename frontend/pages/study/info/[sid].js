@@ -16,20 +16,22 @@ import * as studyActions from '../../../store/module/study';
 
 import Router, { useRouter } from "next/router";
 
+import { forceReload } from "../../../util/ForceReload";
+
 function StudyInfo(){
     let clubData = useSelector(({ study }) => study.studyDetail);
     let userData = useSelector(({ study }) => study.userList);
     const dispatch = useDispatch();
 
-    const { sid } = useRouter().query;
+    let { sid } = useRouter().query;
    
     useLayoutEffect(() => {
         getUserAtStudy({
-            studyId: clubData.id,
+            // studyId: clubData.id,
+            studyId: sid,
             userId: sessionStorage.getItem("userId")
         })
         .then(res => { 
-            console.log(res.users)
             dispatch(studyActions.setUserList({list: res.users}))
         })
         .catch(err => console.log(err));
@@ -38,7 +40,7 @@ function StudyInfo(){
         .then(res => {
             dispatch(studyActions.setStudyDetail({detail: res.studies.filter(data => data.id == sid)[0]}))
         });
-    }, []);
+    }, [sid]);
 
     const CusContainer = styled(Container)`
         float: left;
@@ -82,15 +84,21 @@ function StudyInfo(){
         <Layout>
             <CusContainer maxWidth="md">
                 <br></br>
-                <DetailHeader>
-                    <DetailOperation detail={clubData}></DetailOperation>
-                </DetailHeader>
-                <h2>{clubData.title}</h2>
-                <DetailWrapper maxWidth="sm">
-                    <CusSkeleton variant="rectangular" animation={false} />
-                    <StudyInfo detail={clubData}></StudyInfo>
-                </DetailWrapper> 
-                <StudyDetail></StudyDetail>
+                {
+                    clubData?
+                    <>
+                    <DetailHeader>
+                        <DetailOperation detail={clubData}></DetailOperation>
+                    </DetailHeader>
+                    <h2>{clubData.title}</h2>
+                    <DetailWrapper maxWidth="sm">
+                        <CusSkeleton variant="rectangular" animation={false} />
+                        <StudyInfo detail={clubData}></StudyInfo>
+                    </DetailWrapper> 
+                    <StudyDetail></StudyDetail>
+                    </>
+                    : null
+                }
             </CusContainer>
         </Layout>
     )
@@ -229,7 +237,7 @@ function StudyInfo(){
                     if (hostAssign!== null) {
                         if (hostAssign === "quit") {
                             console.log("quit");
-                            if (clubData.positions[9].size == 1) {
+                            if (userData.length == 1) {
                                 alert("팀원이 존재하지 않습니다.")
                             } else
                                 UserDialogOpen();
@@ -237,7 +245,7 @@ function StudyInfo(){
                         } else if (hostAssign === "delete") {
                             console.log("delete");
                             deleteAPI({
-                                id: clubData.id,
+                                id: sid,
                                 hostId: sessionStorage.getItem("userId")
                             }).then(res => {
                                 if (res.statusCode === 200) {
@@ -326,7 +334,8 @@ function StudyInfo(){
             </CusCard>
         )
 
-        function StudyUser(props) {
+        function StudyUser({detail}) {
+            console.log(detail)
             const UserWrapper = styled.div`
             display: flex;
             flex-direction: row;
@@ -368,6 +377,7 @@ function StudyInfo(){
                                     <UserCard 
                                     key={user.id} 
                                     user={user}
+                                    from="study"
                                     ></UserCard> : null
                                 )
                             })
@@ -387,8 +397,10 @@ function StudyInfo(){
                                     <UserCard 
                                     key={user.id} 
                                     user={user} 
-                                    studyId={clubData.id}
-                                    hostId={clubData.hostId}></UserCard> : null
+                                    clubId={clubData.id}
+                                    hostId={clubData.hostId}
+                                    from="study"
+                                    ></UserCard> : null
                                 )
                             })
                         }
