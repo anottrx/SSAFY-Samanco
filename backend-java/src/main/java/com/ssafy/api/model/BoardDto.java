@@ -4,24 +4,23 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class StudyDto {
+public class BoardDto {
 
-    private Long id;
+    private Long boardId;
+    private Long userId;
     private String title;
-    private String collectStatus;     // ING, END
-    private List<StackGradeDto> stacks;
-    private String description;
-    private String schedule;
+    private String content;
     private int likes;  // Long으로 캐스팅이 안됨..
     private Long hostId;
     private Long hit=0l;
-    private int size=6;
-    private FileDto file;
+    private List<FileDto> files;
+    private String startDate;
+    private String endDate;
     private boolean userLike=false;
-    private String studyJoinStatus;
 }

@@ -3,10 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.model.StudyDto;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
-import com.ssafy.api.response.StudySelectAllRes;
-import com.ssafy.api.response.StudySelectRes;
-import com.ssafy.api.response.StackSelectAllRes;
-import com.ssafy.api.response.UserSelectAllRes;
+import com.ssafy.api.response.*;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StudyService;
 import com.ssafy.api.service.StackService;
@@ -150,8 +147,13 @@ public class StudyController {
     public ResponseEntity<? extends BaseResponseBody> delete(@RequestBody StudyUserIdReq deleteInfo) throws IOException {
 
         // study delete
-        studyService.deleteStudy(deleteInfo.getUserId(), deleteInfo.getStudyId());
+        int deleteCode=studyService.deleteStudy(deleteInfo.getUserId(), deleteInfo.getStudyId());
 
+        if (deleteCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
+        } else if (deleteCode==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "유효하지 않은 스터디입니다."));
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -162,13 +164,13 @@ public class StudyController {
             @ApiResponse(code = 401, message = "가입한 스터디 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectStudyByHost(@RequestBody UserIdReq userInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectStudiesByHost(@RequestBody UserIdReq userInfo) throws IOException {
 
-        StudyDto study=studyService.selectByHost(userInfo.getUserId());
-        if (study==null){
-            return ResponseEntity.status(200).body(StudySelectRes.of(401, "호스트인 스터디가 없습니다.", null));
+        List<StudyDto> studies=studyService.selectByHost(userInfo.getUserId());
+        if (studies==null){
+            return ResponseEntity.status(200).body(StudySelectAllRes.of(401, "호스트인 스터디가 없습니다.", null));
         }
-        return ResponseEntity.status(200).body(StudySelectRes.of(200, "Success", study));
+        return ResponseEntity.status(200).body(StudySelectAllRes.of(200, "Success", studies));
     }
 
     @PostMapping("/user")
@@ -192,13 +194,15 @@ public class StudyController {
             @ApiResponse(code = 401, message = "해당 스터디 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectStudy(
-            @RequestBody @ApiParam(value="study id", required = true) StudyUserIdReq studyInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectStudy(@RequestBody StudyUserIdReq studyInfo) throws IOException {
 
-        StudyDto study=studyService.selectStudy(studyInfo.getUserId(), studyInfo.getStudyId());
-        if (study==null){
+        Long userId = studyInfo.getUserId();
+        Long studyId = studyInfo.getStudyId();
+        StudyDto study=studyService.selectStudy(userId, studyId);
+        if (study==null) {
             return ResponseEntity.status(200).body(StudySelectRes.of(401, "유효하지 않은 스터디입니다.", null));
         }
+
         return ResponseEntity.status(200).body(StudySelectRes.of(200, "Success", study));
     }
 
@@ -221,7 +225,6 @@ public class StudyController {
     @PostMapping("/join")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 401, message = "해당 스터디에 가입 불가"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> joinStudy(@RequestBody StudyUserIdReq studyUserIdReq) throws IOException {
@@ -230,7 +233,11 @@ public class StudyController {
         Long userId=studyUserIdReq.getUserId();
         int studyJoinCode= studyService.joinUserStudy(userId, studyId, "BEFORE");
         if (studyJoinCode==401){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 스터디에 가입할 수 없습니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
+        } else if (studyJoinCode==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 스터디입니다."));
+        } else if (studyJoinCode==403){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "이미 지원했거나 가입한 스터디입니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -250,9 +257,11 @@ public class StudyController {
 
         int studyApproveCode = studyService.approveUserStudy(hostId, userId, studyId, joinTag);
         if (studyApproveCode==401){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "해당 사용자는 스터디에 가입할 수 없습니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
         } else if (studyApproveCode==402){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "승인 권한이 없습니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "유효하지 않은 스터디입니다."));
+        } else if (studyApproveCode==403){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(403, "승인할 수 없습니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -264,11 +273,13 @@ public class StudyController {
     })
     public ResponseEntity<? extends BaseResponseBody> quitStudy(@RequestBody StudyUserIdReq studyUserIdReq) throws IOException {
         int studyQuitCode=studyService.quitStudy(studyUserIdReq.getUserId(), studyUserIdReq.getStudyId());
-//        if (studyQuitCode==401){
-//            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
-//        } else if (studyQuitCode==402){
-//            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "스터디를 탈퇴할 수 없습니다."));
-//        }
+        if (studyQuitCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "가입하지 않은 스터디입니다."));
+        } else if (studyQuitCode==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "유효하지 않은 스터디입니다."));
+        } else if (studyQuitCode==403){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(403, "호스트는 권한을 넘긴 후 탈퇴하거나 스터디를 삭제하세요."));
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
@@ -279,39 +290,32 @@ public class StudyController {
     })
     public ResponseEntity<? extends BaseResponseBody> joinCancelStudy(@RequestBody StudyUserIdReq studyUserIdReq) throws IOException {
         int studyJoinCancelCode=studyService.joinCancelStudy(studyUserIdReq.getUserId(), studyUserIdReq.getStudyId());
-//        if (studyJoinCancelCode==401){
-//            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
-//        } else if (studyJoinCancelCode==402){
-//            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "스터디 지원 취소를 할 수 없습니다."));
-//        }
+        if (studyJoinCancelCode==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "지원하지 않은 스터디입니다."));
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
-//
-//    @PostMapping("/changehost")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "성공"),
-//            @ApiResponse(code = 401, message = "스터디 호스트 변경 불가"),
-//            @ApiResponse(code = 500, message = "서버 오류")
-//    })
-//    public ResponseEntity<? extends BaseResponseBody> changeHostStudy(@RequestBody StudyChangeHostReq studyChangeHostReq) throws IOException {
-//        Long studyId= studyChangeHostReq.getStudyId();
-//        Long oldHostId=studyChangeHostReq.getOldHostId();
-//        Long newHostId=studyChangeHostReq.getNewHostId();
-//
-//        if (user==null || user.getStudyId()!= studyId || !"OK".equalsIgnoreCase(user.getStudyJoinStatus())){
-//            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "스터디의 호스트를 넘길 수 없습니다."));
-//        }
-//        StudyDto study=studyService.selectByHost(oldHostId);
-//        System.out.println(study);
-//        if (study==null || studyId!=study.getId()){
-//            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "스터디의 호스트를 넘길 수 없습니다."));
-//        }
-//
-//        int updateStudyHost=studyService.updateStudyHost(studyId, newHostId);
-//
-//        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-//
-//    }
+
+    @PostMapping("/changehost")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "스터디 호스트 변경 불가"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> changeHostStudy(@RequestBody StudyChangeHostReq studyChangeHostReq) throws IOException {
+        Long studyId= studyChangeHostReq.getStudyId();
+        Long oldHostId=studyChangeHostReq.getOldHostId();
+        Long newHostId=studyChangeHostReq.getNewHostId();
+
+        int changeHostStudy=studyService.changeHostStudy(studyId, oldHostId, newHostId);
+        if (changeHostStudy==401){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "스터디의 호스트를 넘길 수 없습니다."));
+        } else if (changeHostStudy==402){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "사용자가 스터디에 가입되어 있지 않습니다."));
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+
+    }
 
     @GetMapping
     @ApiResponses({
@@ -392,7 +396,7 @@ public class StudyController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "유효하지 않은 사용자"),
-            @ApiResponse(code = 401, message = "유효하지 않은 타겟"),
+            @ApiResponse(code = 401, message = "유효하지 않은 태그"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> updateStudyLike(@RequestBody UserLikeTagReq userLikeTagReq) throws IOException {
@@ -401,7 +405,7 @@ public class StudyController {
         if (likeCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
         } else if (likeCode==402){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 타겟입니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 태그입니다."));
         } else if (likeCode==201){
             return ResponseEntity.status(200).body(BaseResponseBody.of(201, "좋아요 취소"));
         }

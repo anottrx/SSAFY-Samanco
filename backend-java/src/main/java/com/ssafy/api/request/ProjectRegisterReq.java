@@ -39,17 +39,4 @@ public class ProjectRegisterReq {
     private int totalMobileSize=0;
     private int totalEmbeddedSize=0;
 
-
-//    @ApiModelProperty(name="current frontend size", example="3")
-//    private int currentFrontendSize=0;
-//
-//    @ApiModelProperty(name="current backend size", example="3")
-//    private int currentBackendSize=0;
-//
-//    @ApiModelProperty(name="current mobile size", example="3")
-//    private int currentMobileSize=0;
-//
-//    @ApiModelProperty(name="current embedded size", example="3")
-//    private int currentEmbeddedSize=0;
-
 }

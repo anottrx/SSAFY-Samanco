@@ -12,7 +12,6 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-@ApiModel("ProjectRegisterPstReq")
 public class StudyUpdateReq {
 
     private Long studyId;
