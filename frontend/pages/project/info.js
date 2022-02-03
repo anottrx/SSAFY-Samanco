@@ -34,7 +34,6 @@ function ProjectInfo(){
 
         getProjectByUserId(parseInt(sessionStorage.getItem("userId")))
         .then(res => {
-            console.log(res)
             dispatch(projectActions.setMyProject({project: res.project}))
             dispatch(projectActions.setProjectDetail({detail: res.project}))
         });
@@ -368,6 +367,7 @@ function ProjectInfo(){
                                     <UserCard 
                                     key={user.id} 
                                     user={user}
+                                    from="project"
                                     ></UserCard> : null
                                 )
                             })
@@ -387,7 +387,9 @@ function ProjectInfo(){
                                     key={user.id} 
                                     user={user} 
                                     projectId={clubData.id}
-                                    hostId={clubData.hostId}></UserCard> : null
+                                    hostId={clubData.hostId}
+                                    from="project"
+                                    ></UserCard> : null
                                 )
                             })
                         }
