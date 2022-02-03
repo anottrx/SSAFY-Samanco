@@ -1,4 +1,3 @@
-
 import StackItem from "../Common/Stack/item"
 
 export default function StackList(props) {

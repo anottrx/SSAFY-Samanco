@@ -1,4 +1,3 @@
-import StackTagListData from "../../data/StackTagListData.json"
 import Stack from "../Common/Stack/item"
 import styled from "@emotion/styled"
 import { useEffect, useState } from "react";

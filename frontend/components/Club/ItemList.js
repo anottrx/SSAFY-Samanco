@@ -4,7 +4,6 @@ import styled from "@emotion/styled"
 import { Grid, Skeleton, Card, CardContent, Typography, Pagination, Badge } from '@mui/material';
 import { BadgeUnstyled } from '@mui/base';
 
-import projectJSONData from "../../data/projectData.json"
 import Router from "next/router";
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,7 +14,6 @@ import { getProjectAllAPI, getProjectById } from "../../pages/api/project"
 import { getStudyAllAPI, getStudyById } from "../../pages/api/study"
 
 import StackList from "./StackList"
-import stackData from "../../data/StackData.json"
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -103,7 +101,7 @@ function ItemList(props) {
         } else if (props.from === "study") {
             getStudyAllAPI().then(res => setList({list: res.studies}));
         } else {
-            setList({list: projectJSONData});
+            setList({list: []});
         }
     }, [])
 
@@ -214,8 +212,6 @@ export function Item(props) {
             transform: translate(-15px, 115px);
             transform-origin: 100% 0;
         }
-        // top: 125px;
-        // right: 40px;
     ` 
 
     const EndImage = styled.img`
