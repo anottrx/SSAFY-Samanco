@@ -224,9 +224,12 @@ function ProjectInfo(){
                 <Button onClick={QuitDialogClose}>취소</Button>
                 <Button onClick={() => {
                     QuitDialogClose();
-
-                    if (hostAssign!== null) {
-                        if (hostAssign === "quit") {
+                    // 방장일 때
+                    if (sessionStorage.getItem("userId") == detail.hostId) {
+                        if (hostAssign === null) {
+                            alert("프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.")
+                        }
+                        else if (hostAssign === "quit") {
                             console.log("quit");
                             if (clubData.positions[9].size == 1) {
                                 alert("팀원이 존재하지 않습니다.")
@@ -248,6 +251,19 @@ function ProjectInfo(){
                             })
                             // 프로젝트 삭제
                         }
+                    } else {
+                        // 방장이 아닐 때
+                        quitProject({
+                            userId: sessionStorage.getItem("userId"),
+                            projectId: clubData.id
+                        }).then(res => {
+                            if (res.statusCode === 200) {
+                                alert("프로젝트가 탈퇴 되었습니다.")
+                                Router.push("/project")
+                            } else {
+                                alert(`${res.message}`)
+                            }
+                        })
                     }
                 }} autoFocus>
                     확인

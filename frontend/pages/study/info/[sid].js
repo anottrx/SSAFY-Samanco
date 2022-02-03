@@ -235,7 +235,10 @@ function StudyInfo(){
                 <Button onClick={() => {
                     QuitDialogClose();
 
-                    if (hostAssign!== null) {
+                    if (sessionStorage.getItem("userId") == detail.hostId) {
+                        if (hostAssign === null) {
+                            alert("프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.")
+                        }
                         if (hostAssign === "quit") {
                             console.log("quit");
                             if (userData.length == 1) {
@@ -258,6 +261,19 @@ function StudyInfo(){
                             })
                             // 프로젝트 삭제
                         }
+                    } else {
+                        // 방장이 아닐 때
+                        quitStudy({
+                            userId: sessionStorage.getItem("userId"),
+                            projectId: clubData.id
+                        }).then(res => {
+                            if (res.statusCode === 200) {
+                                alert("스터디가 탈퇴 되었습니다.")
+                                Router.push("/study")
+                            } else {
+                                alert(`${res.message}`)
+                            }
+                        })
                     }
                 }} autoFocus>
                     확인
