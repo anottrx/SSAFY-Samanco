@@ -37,21 +37,25 @@ const StudyDetail = () => {
     const DetailWrapper = styled.div`
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+    `
+
+    const ImageWrapper = styled.div`
+        margin-right: 30px;
+        margin-bottom: 10px;
     `
 
     const ContentWrapper = styled.div`
         display: flex;
         flex-direction: column;
-        padding: 0px 30px;
         flex: 1;
     `
 
     const CusSkeleton = styled(Skeleton)`
-        display: flex;
-        flex: 1;
-        min-width: 200px;
+        min-width: 300px;
         min-height: 200px;
         height: auto;
+        width: 100%;
     `
 
     const CusContainer = styled(Container)`
@@ -71,6 +75,14 @@ const StudyDetail = () => {
         }
     `
     
+    const EndImage = styled.img`
+        width: 80px;
+        height: 80px;
+        float: left;
+        margin-right: auto;
+        transform: translate(20%, 20%);
+    `
+    
     return (
     <Layout>
         <CusContainer maxWidth="md">
@@ -83,7 +95,17 @@ const StudyDetail = () => {
                 }
             </DetailHeader>
             <DetailWrapper maxWidth="sm">
-                <CusSkeleton variant="rectangular" animation={false} />
+                {
+                    detail.collectStatus === "ING"? 
+                    <ImageWrapper>
+                    <CusSkeleton variant="rectangular" animation={false} />
+                    </ImageWrapper>
+                    :
+                    <ImageWrapper>
+                    <EndImage src="/images/apply_end.png"></EndImage>
+                    <CusSkeleton variant="rectangular" animation={false} />
+                    </ImageWrapper>
+                }
                 <StudyInfo detail={detail}></StudyInfo>
             </DetailWrapper>    
             <StudyDetail></StudyDetail>
@@ -226,7 +248,7 @@ const StudyDetail = () => {
 
         const JoinDialogOpen = () => { 
             if (sessionStorage.getItem("userId"))
-            setOpen(true) 
+                setOpen(true) 
             else {
                 alert("로그인이 필요한 작업입니다.")
                 Router.push("/login")
@@ -278,11 +300,13 @@ const StudyDetail = () => {
                         null
                     } 
                     {
-                        detail.studyJoinStatus == null || detail.studyJoinStatus == "CANCEL "?
+                        // 모집중 일때, 지원을 안했거나, 취소한 상태이면 지원하기 버튼 표시
+                        detail.collectStatus === "ING" && detail.studyJoinStatus == null || detail.studyJoinStatus == "CANCEL"?
                         <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button> : null
                     }
                     {
-                        detail.studyJoinStatus == "BEFORE"?
+                        // 지원한 상태이면 지원 취소 표시
+                        detail.collectStatus === "ING" && detail.studyJoinStatus == "BEFORE"?
                         <Button variant="outlined" onClick={JoinCancelDialogOpen}>지원취소</Button> : null
                     }
                 </div>

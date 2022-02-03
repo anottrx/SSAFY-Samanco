@@ -218,6 +218,13 @@ export function Item(props) {
         // right: 40px;
     ` 
 
+    const EndImage = styled.img`
+        width: 80px;
+        height: 80px;
+        float: left;
+        transform: translate(20%, 20%);
+    `
+
     let totalSize = 0, currSize = 0;
     if (from === "project") {
         data.positions.map((curr) => {
@@ -225,6 +232,11 @@ export function Item(props) {
             if (curr.position === "currentSize") currSize = curr.size;
         })
     }
+
+    let leftDay = "";
+    if (data.deadline < 0) leftDay = "+" + (-1 * data.deadline);
+    else if (data.deadline == 0) leftDay = "-DAY";
+    else leftDay = "-"+data.deadline;
 
     return (
         <Container onClick={()=>{
@@ -260,7 +272,7 @@ export function Item(props) {
                 from === "project"?
                 <>
                     <CusCountBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusCountBadge>
-                    <CusDeadlineBadge badgeContent={"D-"+ (data.deadline!=0? data.deadline: "DAY" ) + " | ♥ "+data.likes}></CusDeadlineBadge>
+                    <CusDeadlineBadge badgeContent={"D"+ leftDay + " | ♥ "+data.likes}></CusDeadlineBadge>
                 </>
                 :
                 <CusDeadlineBadge badgeContent={"♥ "+data.likes}></CusDeadlineBadge>
@@ -275,7 +287,13 @@ export function Item(props) {
                     //     backgroundImage: `url("../../../backend-java/${data.file.saveFolder}/${data.file.saveFile}")`
                     // }}></div>
                     // :
+                    data.collectStatus === "ING"?
                     <Skeleton variant="rectangular" height={150} animation={false} />
+                    :
+                    <>
+                    <EndImage src="/images/apply_end.png"></EndImage>
+                    <Skeleton variant="rectangular" height={150} animation={false}/>
+                    </>
                 }
                 
                 <CardContent>
