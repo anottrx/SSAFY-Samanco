@@ -1,5 +1,5 @@
 import Layout from "../../components/layout";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styled from "@emotion/styled";
 
@@ -8,15 +8,34 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { Card, Container, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogTitle, ButtonGroup, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
+import * as boardActions from '../../store/module/board';
 import Router from "next/router";
 import CommentList from "./CommentList"
 
 import SendIcon from '@mui/icons-material/Send';
+import { viewBoardAPI} from "../api/board";
 
 //게시글 상세보기 페이지
 
-const ProjectDetail = () => { 
+const BoardDetail = () => { 
     const detail = useSelector(({ board }) => board.boardDetail);
+    console.log(detail)
+    // const [like, changeLike] = useState(detail.likes);
+    const [like, changeLike] = useState("");
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const url = window.location.href;
+        const parts = url.split('/');
+        console.log(parts)
+        const lastSegment = parts.pop() || parts.pop();
+        viewBoardAPI(lastSegment)
+        .then(res => {
+            dispatch(boardActions.setBoardDetail({detail: res.board}))
+    } );
+    console.log(detail)
+    }, [like]);
 
     const CusContainer = styled(Container)`
         float: left
@@ -42,7 +61,7 @@ const ProjectDetail = () => {
             <DetailHeader>
                 <DetailOperation></DetailOperation>
             </DetailHeader>
-            <ProjectDetail></ProjectDetail>
+            <BoardDetail></BoardDetail>
         </CusContainer>
     </Layout>);
 
@@ -79,7 +98,7 @@ const ProjectDetail = () => {
         )
     }
 
-    function ProjectDetail() {
+    function BoardDetail() {
         const CusCard = styled(Card)`
             margin-top: 10px;
             padding: 10px;
@@ -207,4 +226,4 @@ const ProjectDetail = () => {
 } 
 
 
-export default ProjectDetail;
+export default BoardDetail;

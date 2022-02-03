@@ -9,6 +9,8 @@ import BoardSearch from "./BoardSearch";
 import style from "@emotion/styled";
 import Cookies from "universal-cookie";
 
+import {getBoardListAPI, viewBoardAPI} from "../api/board";
+
 import Datas from "./data/boardData.json"; //임의 데이터
 
 //게시글 목록 페이지
@@ -55,17 +57,31 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function BoardList(props) {
     const dispatch = useDispatch();
 
-    const setDetail = useCallback(
+    let boardData, setDetail, filterData, setList;
+
+    boardData = useSelector(({ board }) => board.boardList);
+    filterData = useSelector(({ board }) => board.boardFilterList);
+    console.log(filterData)
+
+   setDetail = useCallback(
         ({detail}) => {
             dispatch(boardActions.setBoardDetail({detail}))
         },
         [dispatch],
     )
 
+    setList = useCallback(
+        ({list}) => {
+            dispatch(boardActions.setBoardList({list}))
+        },
+        [dispatch],
+    )
+
     const cookies = new Cookies();
     const [isLogin, setIsLogin] = useState(false);
-    let [articles,setArticles] = useState([]);
-    
+    let [articles,setBoardList] = useState([]);
+
+
     useEffect(()=>{
         if (cookies.get("userToken")!='' && sessionStorage.getItem("nickname") != null) {
             setIsLogin(true);
@@ -75,6 +91,32 @@ function BoardList(props) {
         setArticles(articlesArray);
     },[]);
 
+    
+    useLayoutEffect(() => {
+        // 빈 배열이면 배열 요청
+        getBoardListAPI().then((res => {
+            console.log(res.boards); 
+            setList({list: res.boards});
+        }));
+        // if (props.from === "project") {
+        //     getProjectAllAPI().then(res => setList({list: res.projects}));
+        // } else if (props.from === "study") {
+        //     getProjectAllAPI().then(res => setList({list: res.projects}));
+        // }
+    }, [])
+
+    async function viewBoard(e) {
+        let title = e.target.value;
+        console.log(title)
+        viewBoardAPI(title).then((res => {
+            setDetail({detail: res.board});
+            // api 작성
+            Router.push({
+                pathname: `/${title}`,
+                query: { id: data.id }
+            })
+        }));
+    }
 
     const [page, setPage] = useState(1);
     const purPage = useRef(10);
@@ -119,19 +161,32 @@ function BoardList(props) {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
-                        <StyledTableRow key={article.boardId} 
-                        onClick={()=>{
-                            Router.push("/board/"+article.boardId); 
-                            setDetail({detail: article}); 
-                        }}>
-                        <StyledTableCell component="th" scope="row">{article.title}</StyledTableCell>
-                        <StyledTableCell align="right">{article.userId}</StyledTableCell>
-                        <StyledTableCell align="right">{article.startDate}</StyledTableCell>
-                        <StyledTableCell align="right">{article.likes}</StyledTableCell>
-                        <StyledTableCell align="right">{article.hit}</StyledTableCell>
-                        </StyledTableRow>
-                    ))}
+                        {
+                            filterData!=null? 
+                            filterData.slice(purPage.current * (page-1), purPage.current * page).map((data) => (
+                                <StyledTableRow key={data.boardId}>
+                                <StyledTableCell component="th" scope="row" onClick={()=>{
+                                    Router.push("/board/"+data.title); setDetail({detail: data}); }}
+                                >{data.title}</StyledTableCell>
+                                <StyledTableCell align="right">{data.userId}</StyledTableCell>
+                                <StyledTableCell align="right">{data.startDate}</StyledTableCell>
+                                <StyledTableCell align="right">{data.likes}</StyledTableCell>
+                                <StyledTableCell align="right">{data.hit}</StyledTableCell>
+                                </StyledTableRow>
+                            ))
+                        :
+                            boardData.slice(purPage.current * (page-1), purPage.current * page).map((data) => (
+                                <StyledTableRow key={data.boardId}>
+                                <StyledTableCell component="th" scope="row" onClick={()=>{
+                                    Router.push("/board/"+data.title); setDetail({detail: data}); }}
+                                >{data.title}</StyledTableCell>
+                                <StyledTableCell align="right">{data.userId}</StyledTableCell>
+                                <StyledTableCell align="right">{data.startDate}</StyledTableCell>
+                                <StyledTableCell align="right">{data.likes}</StyledTableCell>
+                                <StyledTableCell align="right">{data.hit}</StyledTableCell>
+                                </StyledTableRow>
+                            ))
+                        }
                     </TableBody>
                 </Table>
                 <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />

@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     boardList: [],
     boardDetail: {},
+    boardFilterList: null,
 }; 
 
 const counterSlice = createSlice({ 
@@ -14,9 +15,12 @@ const counterSlice = createSlice({
         }, 
         setBoardDetail: (state, action) => { 
             state.boardDetail = action.payload.detail; 
-        }
+        },
+        setBoardFilterList: (state, action) => {
+            state.boardFilterList = action.payload.list;
+        },
     }, 
 }); 
 
-export const { setBoardList, setBoardDetail } = counterSlice.actions;
+export const { setBoardList, setBoardDetail, setBoardFilterList } = counterSlice.actions;
 export default counterSlice.reducer; 
