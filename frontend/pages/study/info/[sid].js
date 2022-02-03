@@ -192,6 +192,7 @@ function StudyInfo(){
                                 alert(`${res.message}`)
                             )
                             // 페이지 새로고침
+                            forceReload();
                         })
                     }}>확인</Button>
                 </DialogActions>
