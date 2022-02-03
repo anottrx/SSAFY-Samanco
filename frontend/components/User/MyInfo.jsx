@@ -53,6 +53,7 @@ export default function MyInfo() {
     generation: "",
     studentId: "",
     stacks: [],
+    stacks_get: [],
     position: "",
     link: "",
     description: "",
@@ -141,6 +142,7 @@ export default function MyInfo() {
         inputState.link = res.user.link;
         inputState.description = res.user.description;
         inputState.stacks = res.user.stacks;
+        inputState.stacks_get = res.user.stacks;
 
         if (res.user.link != null) {
           setLinks(inputState.link.split(" "));
@@ -279,7 +281,9 @@ export default function MyInfo() {
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (reason && reason == "backdropClick") 
+        return;
     setOpen(false);
   };
   const [loginInfo, setLoginInfo] = useState({
@@ -458,7 +462,6 @@ export default function MyInfo() {
                   type="password"
                   fullWidth
                   variant="standard"
-                  disableBackdropClick
                 />
               </DialogContent>
               <DialogActions>
@@ -480,6 +483,7 @@ export default function MyInfo() {
                     height: "100%",
                     display: "inline-block",
                     mb: 2,
+                    verticalAlign: "top",
                   }}
                 >
                   <Box
@@ -543,9 +547,9 @@ export default function MyInfo() {
                       )}
                     </div>
                   </Box>
-                  <Box
+                  <div
                     className="imgInfo"
-                    sx={{ width: "40%", display: "inline-block" }}
+                    // sx={{ width: "40%", display: "inline-block" }}
                   >
                     {/* <label>이미지</label> */}
                     <ImgUploadBtn
@@ -567,13 +571,19 @@ export default function MyInfo() {
                       encType="multipart/form-data"
                       onChange={onImgChange}
                     ></input>
-                  </Box>
+                  </div>
                 </Box>
               </div>
-              <Box sx={{ mb: 2 }}>
-                <label>생년월일</label>
+              <Box sx={{ mb: 2, verticalAlign: "center" }}>
+                <label style={{ fontSize: "16px", width: "40" }}>
+                  생년월일
+                </label>
                 {onlyView ? (
-                  <input value={inputState.birthday || ""} disabled />
+                  <input
+                    value={inputState.birthday || ""}
+                    disabled
+                    style={{ width: "60%" }}
+                  />
                 ) : (
                   <LocalizationProvider dateAdapter={DateAdapter}>
                     <DatePickerWrapper>
@@ -586,7 +596,7 @@ export default function MyInfo() {
                   </LocalizationProvider>
                 )}
               </Box>
-              <Box sx={{ mb:2 }}>
+              <Box sx={{ mb: 2 }}>
                 <label>전화번호</label>
                 <input
                   id="phone"
@@ -595,7 +605,7 @@ export default function MyInfo() {
                   onChange={handleChange}
                 />
               </Box>
-              <Box sx={{ mb:2 }}>
+              <Box sx={{ mb: 2 }}>
                 <label>분야</label>
                 {onlyView ? (
                   <input
@@ -636,16 +646,16 @@ export default function MyInfo() {
               </Box>
               <div>
                 <label>스택</label>
-                {onlyView && inputState.stacks != null ? (
-                  <StackLevelList items={inputState.stacks} />
+                {onlyView && inputState.stacks_get != null ? (
+                  <StackLevelList items={inputState.stacks_get} />
                 ) : (
                   <StackLevelSelectRegister
-                    values={inputState.stacks}
+                    values={(inputState.stacks, inputState.stacks_get)}
                     changeHandle={changeHandle}
                   />
                 )}
               </div>
-              <Box sx={{ mb:2 }}>
+              <Box sx={{ mb: 2 }}>
                 <label>자기소개</label>
                 <br />
                 <TextField
@@ -682,9 +692,13 @@ export default function MyInfo() {
               </Box>
             </Box>
           </div>
-          <Box sx={{ marginRight: "20%", float: "right" }}>
-            <Button onClick={handleQuitClick}>탈퇴하기</Button>
-          </Box>
+          {finishUpdate ? (
+            <></>
+          ) : (
+            <Box sx={{ marginRight: "20%", float: "right" }}>
+              <Button onClick={handleQuitClick}>탈퇴하기</Button>
+            </Box>
+          )}
         </div>
       ) : (
         <></>
