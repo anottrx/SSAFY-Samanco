@@ -126,8 +126,8 @@ export default function MyInfo() {
         const today = new Date();
         const todayYear = today.getFullYear().toString().slice(2);
         if (
-          res.user.birthday != null &&
-          res.user.birthday.toString().slice(0, 2) != todayYear
+          res.user.birthday != null 
+          // &&  res.user.birthday.toString().slice(0, 2) != todayYear
         ) {
           inputState.birthday = res.user.birthday;
         }
@@ -506,7 +506,7 @@ export default function MyInfo() {
                         {/* <input value={inputState.generation || ""} disabled /> */}
                       </Box>
                       <Box sx={{ width: "30%", display: "inline-block" }}>
-                        <label>{inputState.userClass}반</label>
+                        <label>{inputState.class}반</label>
                         {/* <input
                     id="userClass"
                     value={inputState.userClass || ""}
@@ -580,7 +580,7 @@ export default function MyInfo() {
                 </label>
                 {onlyView ? (
                   <input
-                    value={inputState.birthday || ""}
+                    value={inputState.birthday}
                     disabled
                     style={{ width: "60%" }}
                   />
