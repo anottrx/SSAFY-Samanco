@@ -85,4 +85,9 @@ public class BoardRepositorySupport {
                 .where(qBoard.isDeleted.eq(false), qBoard.title.contains(title)).orderBy(qBoard.id.desc()).fetch();
     }
 
+    public List<Board> selectByTag(String tag) {
+        return jpaQueryFactory.selectFrom(qBoard)
+                .where(qBoard.isDeleted.eq(false), qBoard.tag.eq(tag)).orderBy(qBoard.id.desc()).fetch();
+
+    }
 }

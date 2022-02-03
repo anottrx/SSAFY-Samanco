@@ -181,5 +181,22 @@ public class BoardServiceImpl implements BoardService {
         return boards;
     }
 
+    @Override
+    public List<BoardDto> selectBoardByTag(String tag) {
+        List<Board> results=boardRepositorySupport.selectByTag(tag);
+        if (results==null){
+            return null;
+        }
+        List<BoardDto> boards=new ArrayList<>();
+        for (Board result: results) {
+            BoardDto board=boardEntityToDto(result);
+            Long boardId=board.getBoardId();
+            board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
+            boards.add(board);
+        }
+
+        return boards;
+    }
+
 
 }
