@@ -121,7 +121,7 @@ function ProjectInfo(){
                 <Button variant="outlined" onClick={() => {Router.push("/project/applylist")}}>
                     지원자 목록 조회
                 </Button>
-                : null
+                : <div></div>
             }
             <ButtonGroup variant="outlined">
                 {
@@ -150,13 +150,14 @@ function ProjectInfo(){
                                 console.log(nextHost)
                             }}>
                             {
+                                userData?
                                 userData.map(user => {
                                     return (
                                         user.id!==clubData.hostId?
                                         <FormControlLabel value={user.id+","+user.projectPosition}
                                             control={<Radio />} label={user.nickname} /> : null
                                     )
-                                })
+                                }) : null
                             }
                             
                         </RadioGroup>
