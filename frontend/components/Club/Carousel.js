@@ -21,6 +21,7 @@ const CarouselWrapper = styled.div`
 
     & .slick-slide{
         padding: 10px;
+        max-width: 390px;
     }
 
     & .slick-prev:before, .slick-next:before {
