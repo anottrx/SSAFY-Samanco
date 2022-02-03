@@ -8,10 +8,27 @@ import {
   updateUserAPI,
   updateNicknameAPI,
   deleteUserAPI,
+  loginAPI,
 } from "../../pages/api/user";
-import { TextField, Button, Box } from "@mui/material";
+import DatePicker from "../../components/Common/DatePicker";
+import { LocalizationProvider } from "@mui/lab";
+import DateAdapter from "@mui/lab/AdapterDateFns";
+import {
+  TextField,
+  Button,
+  Box,
+  Select,
+  MenuItem,
+  Autocomplete,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 import styled from "@emotion/styled";
 import StackLevelList from "../Common/Stack/StackLevelList";
+import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 
 export default function MyInfo() {
@@ -26,6 +43,7 @@ export default function MyInfo() {
 
   const [inputState, setInputState] = useState({
     userId: "",
+    password: "",
     name: "",
     email: "",
     phone: "",
@@ -40,6 +58,22 @@ export default function MyInfo() {
     description: "",
     image_id: "",
   });
+
+  const DatePickerWrapper = styled.div`
+    display: flex;
+    & > div {
+      flex: 1;
+      width: 370px;
+      margin: 0px 0px;
+    }
+  `;
+
+  const positionOptions = [
+    { value: "frontend", name: "프론트엔드" },
+    { value: "backend", name: "백엔드" },
+    { value: "mobile", name: "모바일" },
+    { value: "embedded", name: "임베디드" },
+  ];
 
   const [nicknameInfo, setNicknameInfo] = useState({
     nickname: "",
@@ -57,6 +91,16 @@ export default function MyInfo() {
   };
 
   const uploadRef = useRef(null);
+
+  const changeHandle = (value, name) => {
+    if (name == "birthday") {
+      inputState.birthday = value;
+      console.log("생일 " + JSON.stringify(inputState));
+    } else {
+      inputState[name] = value;
+      console.log("스택 " + JSON.stringify(inputState));
+    }
+  };
 
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
@@ -100,6 +144,9 @@ export default function MyInfo() {
 
         if (res.user.link != null) {
           setLinks(inputState.link.split(" "));
+          // links = inputState.link.split(" ");
+          console.log(links);
+          console.log(inputState.link.split(" "));
         }
         // inputState.file = res.user.file;
         setLoading(true);
@@ -147,20 +194,23 @@ export default function MyInfo() {
     });
   };
 
-  const PromptPasswordCheck = (e) => {
-    return (
-      <>
-        <div id="dialog" title="Basic dialog">
-          <input
-            id="password"
-            value={inputState.password}
-            type="password"
-            onChange={handleChange}
-            size="25"
-          />
-        </div>
-      </>
-    );
+  function handleLinksChange(linkArr) {
+    console.log(linkArr);
+    let linkList = "";
+    const size = linkArr.length;
+    for (let i = 0; i < size; i++) {
+      linkList = linkList + " " + linkArr[i];
+    }
+    linkList = linkList.trim();
+    inputState.link = linkList;
+    setLinks(linkList.split(" "));
+  }
+
+  const positionHandleChange = (e) => {
+    console.log(e.target.value);
+    inputState.position = e.target.value;
+    console.log("inputState" + JSON.stringify(inputState));
+    console.log(inputState);
   };
 
   const handleNicknameClick = (e) => {
@@ -178,7 +228,7 @@ export default function MyInfo() {
       ) {
         msg = "해당 닉네임은 사용이 불가능합니다";
         isNormal = false;
-      } else if (nicknameInfo.nickname == inputState.nickname) {
+      } else if (nicknameInfo.nickname == sessionStorage.getItem("nickname")) {
         msg = "현재 닉네임과 동일합니다";
         isNormal = false;
       }
@@ -194,43 +244,6 @@ export default function MyInfo() {
             setCheckPassword(true);
 
             if (window.confirm("닉네임 변경이 가능합니다.")) {
-              //업데이트 API 실행하기
-              const formData = new FormData();
-              console.log("inputState" + JSON.stringify(inputState));
-              console.log(inputState);
-
-              Object.keys(inputState).map((key) => {
-                let value = inputState[key];
-                if (key === "stacks") {
-                  formData.append(key, "[" + JSON.stringify(value) + "]");
-                  // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
-                } else {
-                  formData.append(key, value);
-                  console.log(key + " " + value);
-                }
-              });
-
-              formData.append("file", files);
-
-              for (let key of formData.entries()) {
-                console.log("key", `${key}`);
-              }
-
-              updateUserAPI(formData).then((res) => {
-                console.log(res);
-                console.log(JSON.stringify(res));
-                if (res.statusCode == 200) {
-                  sessionStorage.clear();
-                  sessionStorage.setItem("userId", inputState.userId);
-                  sessionStorage.setItem("email", inputState.email);
-                  sessionStorage.setItem("nickname", inputState.nickname);
-                  setNicknameChange(false);
-                } else {
-                  alert(
-                    "회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode
-                  );
-                }
-              });
             } else {
             }
           } else {
@@ -248,44 +261,132 @@ export default function MyInfo() {
     setOnlyView(false);
     setFinishUpdate(true);
 
-    let isNormal = true;
-    let msg = "";
+    console.log("수정하기 버튼 누름");
 
-    if (!inputState.password) {
-      isNormal = false;
-      msg = "비밀번호를 입력해주세요.";
-    } else if (!pwReg.test(inputState.password)) {
-      isNormal = false;
-      msg = "비밀번호 양식을 확인해주세요.";
-    } else if (inputState.password != inputState.passwordConfirm) {
-      isNormal = false;
-      msg = "비밀번호가 동일하지 않습니다.";
-    } else if (!phoneReg.test(inputState.phone)) {
-      isNormal = false;
-      msg = "전화번호 양식을 확인해주세요.";
-    } else if (!inputState.nickname) {
-      isNormal = false;
-      msg = "닉네임을 입력해주세요.";
-    }
+    // setAuthChange(true);
+    // setOnlyView(false);
+    // setFinishUpdate(true);
+  };
 
-    if (isNormal) {
-      // updateUserAPI(inputState).then((res) => {
-      if (res.statusCode == 200) {
-        setAuthChange(true);
-        setOnlyView(false);
-        setFinishUpdate(true);
-        // } else alert(`${res.message}`);
-        // });
-      } else {
-        alert(msg);
-      }
-    }
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const [loginInfo, setLoginInfo] = useState({
+    email: inputState.email,
+    password: "",
+  });
+  const handlePasswordChange = (e) => {
+    loginInfo.email = inputState.email;
+    loginInfo.password = e.target.value;
   };
 
   const handleUpdateFinishClick = (e) => {
-    setAuthChange(false);
-    setOnlyView(true);
-    setFinishUpdate(false);
+    e.preventDefault();
+    console.log("수정 완료 버튼 누름");
+
+    console.log(inputState.stacks);
+
+    handleClickOpen();
+    console.log(loginInfo);
+    // 비밀번호 확인하기
+  };
+
+  const handleUpdateInfo = (e) => {
+    console.log("업데이트 준비");
+    let isNormal = true;
+    let msg = "";
+
+    // if (!phoneReg.test(inputState.phone)) {
+    //   isNormal = false;
+    //   msg = "전화번호 양식을 확인해주세요.";
+    // }
+
+    if (inputState.phone == "") {
+      inputState.phone = "00000000000";
+    }
+
+    if (isNormal) {
+      inputState.stacks = {
+        HTML: inputState.HTML,
+        CSS: inputState.CSS,
+        JavaScript: inputState.JavaScript,
+        VueJS: inputState.VueJS,
+        React: inputState.React,
+        Python: inputState.Python,
+        Java: inputState.Java,
+        C: inputState.C,
+        SpringBoot: inputState.SpringBoot,
+        MySQL: inputState.MySQL,
+        Git: inputState.Git,
+        AWS: inputState.AWS,
+        Docker: inputState.Docker,
+        Linux: inputState.Linux,
+        Jira: inputState.Jira,
+        Django: inputState.Django,
+        Redis: inputState.Redis,
+      };
+      Object.keys(inputState.stacks).forEach(function (key) {
+        if (inputState.stacks[key] === 0) {
+          delete inputState.stacks[key];
+        }
+      });
+
+      loginAPI(loginInfo).then((res) => {
+        console.log(loginInfo.email + " " + loginInfo.password);
+        if (res.statusCode == 200) {
+          console.log("로그인 성공");
+          inputState.password = loginInfo.password;
+          //업데이트 API 실행하기
+          const formData = new FormData();
+          console.log("inputState" + JSON.stringify(inputState));
+          console.log(inputState);
+
+          Object.keys(inputState).map((key) => {
+            let value = inputState[key];
+            if (key === "stacks") {
+              formData.append(key, "[" + JSON.stringify(value) + "]");
+              // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
+            } else {
+              formData.append(key, value);
+              console.log(key + " " + value);
+            }
+          });
+
+          formData.append("file", files);
+
+          for (let key of formData.entries()) {
+            console.log("key", `${key}`);
+          }
+
+          updateUserAPI(formData).then((res) => {
+            console.log(res);
+            console.log(JSON.stringify(res));
+            if (res.statusCode == 200) {
+              sessionStorage.clear();
+              sessionStorage.setItem("userId", inputState.userId);
+              sessionStorage.setItem("email", inputState.email);
+              sessionStorage.setItem("nickname", inputState.nickname);
+              setNicknameChange(false);
+            } else {
+              alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
+            }
+          });
+
+          handleClose();
+          setAuthChange(false);
+          setOnlyView(true);
+          setFinishUpdate(false);
+
+          //   setAuthChange(true);
+          // setOnlyView(false);
+          // setFinishUpdate(true);
+        }
+      });
+    }
   };
 
   const handleQuitClick = (event) => {
@@ -327,20 +428,48 @@ export default function MyInfo() {
             ) : (
               <button onClick={handleUpdateClick}>수정하기</button>
             )}
-            <Box justifyContent="center" alignItems="center">
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>비밀번호</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  회원정보 변경을 위해 비밀번호를 다시 입력해 주세요
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="password"
+                  // value={loginInfo.password}
+                  onChange={handlePasswordChange}
+                  type="password"
+                  fullWidth
+                  variant="standard"
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>취소</Button>
+                <Button onClick={handleUpdateInfo}>확인</Button>
+              </DialogActions>
+            </Dialog>
+            <Box
+              justifyContent="center"
+              alignItems="center"
+              sx={{ ml: 20, mr: 10 }}
+            >
               <div>
                 <Box className="ssafyImgInfo" sx={{ width: "100%" }}>
                   <Box
                     className="userBasicInfo"
                     sx={{ width: "60%", display: "inline-block" }}
                   >
-                    <Box sx={{ width: "40%" }}>
-                      <label>{inputState.name}님, 환영합니다</label>
+                    <Box sx={{ width: "100%", fontSize: "20px" }}>
+                      <label>
+                        <b>{inputState.name}</b>님, 환영합니다
+                      </label>
                       {/* <input value={inputState.name || ""} disabled /> */}
                     </Box>
                     <Box
                       className="ssafyInfo"
-                      sx={{ width: "60%", display: "inline-block" }}
+                      sx={{ width: "100%", display: "inline-block" }}
                     >
                       <Box sx={{ width: "30%", display: "inline-block" }}>
                         싸피
@@ -361,22 +490,25 @@ export default function MyInfo() {
                         {/* <input value={inputState.studentId || ""} disabled /> */}
                       </Box>
                     </Box>
-                    <Box sx={{ width: "40%" }}>
+                    <Box whiteSpace="nowrap">
                       <label>이메일 주소 : {inputState.email}</label>
                       {/* <input value={inputState.email || ""} disabled /> */}
                     </Box>
-                    <Box sx={{ width: "40%" }}>
-                      <label>닉네임</label>
-                      <input
-                        id="nickname"
-                        value={inputState.nickname || ""}
-                        disabled={nicknameChange ? false : true}
-                        // disabled={onlyView ? true : false}
-                        onChange={(e) => {
-                          handleNicknameChange(e);
-                          handleChange(e);
-                        }}
-                      />
+                    <div sx={{ width: "60%" }}>
+                      <label>
+                        <span>닉네임</span>
+                        <input
+                          id="nickname"
+                          value={inputState.nickname || ""}
+                          disabled={nicknameChange ? false : true}
+                          // disabled={onlyView ? true : false}
+                          sx={{ width: "40%" }}
+                          onChange={(e) => {
+                            handleNicknameChange(e);
+                            handleChange(e);
+                          }}
+                        />
+                      </label>
                       {nicknameChange ? (
                         <button onClick={handleNicknameClick}>
                           중복 확인 완료
@@ -384,7 +516,7 @@ export default function MyInfo() {
                       ) : (
                         <button onClick={handleNicknameClick}>중복 확인</button>
                       )}
-                    </Box>
+                    </div>
                   </Box>
                   <Box
                     className="imgInfo"
@@ -415,7 +547,19 @@ export default function MyInfo() {
               </div>
               <div className="mb-6">
                 <label>생년월일</label>
-                <input value={inputState.birthday || ""} disabled />
+                {onlyView ? (
+                  <input value={inputState.birthday || ""} disabled />
+                ) : (
+                  <LocalizationProvider dateAdapter={DateAdapter}>
+                    <DatePickerWrapper>
+                      <DatePicker
+                        value={inputState.birthday || ""}
+                        label=""
+                        changeHandle={changeHandle}
+                      ></DatePicker>
+                    </DatePickerWrapper>
+                  </LocalizationProvider>
+                )}
               </div>
               <div className="mb-6">
                 <label>전화번호</label>
@@ -428,24 +572,62 @@ export default function MyInfo() {
               </div>
               <div className="mb-6">
                 <label>분야</label>
-                <input
+                {onlyView ? (
+                  <input
+                    id="position"
+                    disabled
+                    value={inputState.position || ""}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <Select
+                    id="position"
+                    onChange={(e) => {
+                      positionHandleChange(e);
+                      handleChange(e);
+                    }}
+                    value={inputState.position || ""}
+                    sx={{ minWidth: 350, height: 35, fontSize: 13 }}
+                  >
+                    {positionOptions.map((u, i) => {
+                      return (
+                        <MenuItem
+                          key={i}
+                          value={u.value}
+                          sx={{ minWidth: 120, fontSize: 14 }}
+                        >
+                          {u.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                )}
+                {/* <input
                   id="position"
                   value={inputState.position || ""}
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
-                />
+                /> */}
               </div>
-              <div className="mb-6">
+              <div>
                 <label>스택</label>
-                <StackLevelList items={inputState.stacks} />
+                {onlyView && inputState.stacks != null ? (
+                  <StackLevelList items={inputState.stacks} />
+                ) : (
+                  <StackLevelSelectRegister
+                    values={inputState.stacks}
+                    changeHandle={changeHandle}
+                  />
+                )}
               </div>
-              <div className="mb-6">
+              <div>
                 <label>자기소개</label>
                 <br />
                 <TextField
                   id="description"
                   placeholder="자기자신에 대해 소개해주세요"
                   // fullWidth
+                  sx={{ width: "80%" }}
                   rows={4}
                   multiline
                   value={inputState.description || ""}
@@ -453,15 +635,25 @@ export default function MyInfo() {
                   onChange={handleChange}
                 />
               </div>
-              <div className="mb-6">
+              <div>
                 <label>링크</label>
-                {/* <input
-                id="link"
-                value={inputState.link || ""}
-                disabled={onlyView ? true : false}
-                onChange={handleChange}
-              /> */}
-                <LinkList items={links} />
+                {onlyView ? (
+                  <LinkList items={links} />
+                ) : (
+                  <Autocomplete
+                    multiple
+                    freeSolo
+                    // options={links}
+                    // getOptionLabel={(option) => option}
+                    value={links || []}
+                    options={links.map((l) => l.value)}
+                    getOptionLabel={(option) => (option ? option : "option")}
+                    renderInput={(params) => <TextField {...params} />}
+                    onChange={(e, option, reason) => {
+                      handleLinksChange(option);
+                    }}
+                  />
+                )}
               </div>
             </Box>
           </div>
