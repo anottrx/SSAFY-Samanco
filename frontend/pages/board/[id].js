@@ -19,7 +19,6 @@ import { getArticleById } from "../api/board";
 
 const BoardDetail = () => { 
     const detail = useSelector(({ board }) => board.boardDetail);
-    console.log(detail)
     // const [like, changeLike] = useState(detail.likes);
     const [like, changeLike] = useState("");
 
@@ -33,7 +32,6 @@ const BoardDetail = () => {
         .then(res => {
             dispatch(boardActions.setBoardDetail({detail: res.board}))
         });
-        console.log(detail)
     }, [like]);
 
     const CusContainer = styled(Container)`

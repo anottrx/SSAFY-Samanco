@@ -1,6 +1,6 @@
-import React, {useState, useRef, useEffect,useCallback, useLayoutEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, ButtonGroup, Button} from '@mui/material';
+import {ButtonGroup, Button, TextField} from '@mui/material';
 
 import commentDatas from "./data/commentData.json";
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,12 +8,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 //댓글 목록 페이지
 function CommentList(props) {
-    let CusTableContainer = styled(TableContainer)`
+    let CommentWrapper = styled.div`
         padding: 10px;
     `
 
     let [comments,setComments] = useState([]);
+
+    let [editStatus, setEditStatus] = useState(false);
+    let [editComment, setEditComment] = useState({});
     
+    const handleCommentChange = (name, value) => {
+        editComment[name] = value;
+        // let newComment = {...editComment, "content": e.target.value}
+        // setEditComment(newComment);
+      };
+
     useEffect(()=>{
         var commentsArray = [];
         commentDatas.map((data)=>{
@@ -36,28 +45,65 @@ function CommentList(props) {
         }
     `
 
+    let CusTextField = styled(TextField)`
+        width: calc(100% - 100px);
+        margin-right: 15px;
+
+    `
+
 
     return (
-        <div>
-            <CusTableContainer>
-                <Table aria-label="customized table">
-                    <TableBody>
-                    {comments.map((comment, index) => (
-                        <CusComment key={index}>
-                            <div>
-                                <span className='user-id'>{comment.userId}</span>
-                                <span className='comment-content'>{comment.content}</span>
-                            </div>
+        <CommentWrapper>
+            {comments.map((data, index) => {
+                return (
+                <CusComment key={index}>
+                    <div style={{width: "100%"}}>
+                        <span className='user-id'>{data.userId}</span>
+                        {
+                            editStatus && editComment.commentId === data.commentId?
+                            <CusTextField size="small"
+                                value={editComment.content} 
+                                onChange={(e) => {
+                                    e.persist();
+                                    console.log(e.target.value);
+                                    handleCommentChange("content", e.target.value)
+                                }}></CusTextField>
+                            :
+                            <span className='comment-content'>{data.content}</span>
+                        }
+                    </div>
+                    
+                    {/* 편집 모드일 때 */}
+                    {
+                        editStatus?
+                         editComment.commentId !== data.commentId?
                             <ButtonGroup variant="outlined">
-                                <Button><EditIcon /></Button>
+                                <Button onClick={() => {
+                                    setEditStatus(true);
+                                    setEditComment(data);
+                                }}><EditIcon /></Button>
                                 <Button color="error"><DeleteIcon /></Button>
                             </ButtonGroup>
-                        </CusComment>
-                    ))}
-                    </TableBody>
-                </Table>
-            </CusTableContainer>
-        </div>
+                            :
+                            <ButtonGroup variant="outlined">
+                                <Button onClick={() => {
+                                    setEditStatus(false);
+                                    setEditComment(null);
+                                }}><EditIcon /></Button>
+                                <Button color="error"><DeleteIcon /></Button>
+                            </ButtonGroup>
+                        :
+                        <ButtonGroup variant="outlined">
+                            <Button onClick={() => {
+                                setEditStatus(true);
+                                setEditComment({...data});
+                            }}><EditIcon /></Button>
+                            <Button color="error"><DeleteIcon /></Button>
+                        </ButtonGroup>
+                    }
+                </CusComment>
+            )})}
+        </CommentWrapper>
     );
 }
 

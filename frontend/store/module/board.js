@@ -4,6 +4,7 @@ const initialState = {
     boardList: [],
     boardDetail: {},
     boardFilterList: null,
+    comment: [],
 }; 
 
 const counterSlice = createSlice({ 
@@ -19,8 +20,11 @@ const counterSlice = createSlice({
         setBoardFilterList: (state, action) => {
             state.boardFilterList = action.payload.list;
         },
+        setComment: (state, action) => {
+            state.comment = action.payload.comment;
+        }
     }, 
 }); 
 
-export const { setBoardList, setBoardDetail, setBoardFilterList } = counterSlice.actions;
+export const { setBoardList, setBoardDetail, setBoardFilterList, setComment } = counterSlice.actions;
 export default counterSlice.reducer; 
