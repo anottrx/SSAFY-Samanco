@@ -10,6 +10,7 @@ import DateAdapter from '@mui/lab/AdapterDateFns';
 import styled from "@emotion/styled";
 
 import { registAPI } from "../api/study";
+import Router from "next/router";
 
 function StudyRegist() {
     const CusPaper = styled(Paper)`
@@ -44,10 +45,9 @@ function StudyRegist() {
         background-size: contain;
     `
 
-    // To Do : 나중에 hostId는 로그인 한 userId로 변경하기!
     const [inputValue, setInputValue] = useState({
         "collectStatus": "ING",
-        "hostId": 1,
+        "hostId": sessionStorage.getItem("userId"),
     });
 
     const [files, setFiles] = useState('');
@@ -133,17 +133,21 @@ function StudyRegist() {
                 <TextField fullWidth id="filled-basic" name="schedule" label="스케쥴" onChange={(e) => changeHandle(e.target.value, "schedule")}
                     value={inputValue.schedule}/>
                 
-                <StackSelect changeHandle={changeHandle} label="스터디 스택"></StackSelect>
+                <StackSelect changeHandle={changeHandle} label="스터디 주제"></StackSelect>
             
 
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
                         if (validateCheck()) {
                             const formData = new FormData();
+                            console.log(inputValue)
 
                             Object.keys(inputValue).map(key => {
                                 let value = inputValue[key];
-                                formData.append(key, JSON.stringify(value));
+                                if (key === 'stacks')
+                                    formData.append(key, JSON.stringify(value));
+                                else
+                                    formData.append(key, value);
                             })
 
                             formData.append("file",files);
@@ -151,15 +155,17 @@ function StudyRegist() {
                             for(var key of formData.entries())
                             {
                                 console.log(`${key}`);
-                            } 
+                            }
+
+                            registAPI(formData).then((res) => {
+                                if (res.statusCode == 200) {
+                                    alert("스터디가 등록되었습니다.")
+                                    Router.push("/study");
+                                } else 
+                                    alert(`${res.message}`);
+                            });
                         }
 
-                        registAPI(formData).then((res) => {
-                            if (res.statusCode == 200) {
-                                alert("스터디가 등록되었습니다.")
-                                Router.push("/study");
-                            }
-                        });
                     }}>등록하기</Button>
                 </div>
             </CusPaper>

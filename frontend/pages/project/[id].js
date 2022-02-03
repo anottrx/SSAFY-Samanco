@@ -13,21 +13,33 @@ import { Card, Container, Skeleton, CardContent, Typography,
     Divider, Button, Dialog, DialogActions, DialogContent, DialogContentText, 
     DialogTitle, ButtonGroup, FormControl, RadioGroup,
     Radio, FormControlLabel } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 
 import * as projectActions from '../../store/module/project';
-import { deleteAPI, updateProjectLike, joinProjectAPI, getProjectById, joinCancelProject } from "../api/project";
+import { deleteAPI, updateProjectLike, joinProjectAPI, 
+    getProjectById, joinCancelProject, getUserAtProject, 
+    changeProjectHost, quitProject } from "../api/project";
 
 import { forceReload } from "../../util/ForceReload";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);
-    const [like, changeLike] = useState(detail.likes);
+    const userData = useSelector(({ project }) => project.userList);
+    const [like, changeLike] = useState(detail.userLike);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
+        getUserAtProject({
+            projectId: detail.id,
+            userId: sessionStorage.getItem("userId")
+        })
+        .then(res => { 
+            dispatch(projectActions.setUserList({list: res.users}))
+        })
+        .catch(err => console.log(err));
+
         getProjectById({
             projectId: detail.id, 
             userId: sessionStorage.getItem("userId") == null? 
@@ -41,21 +53,25 @@ const ProjectDetail = () => {
     const DetailWrapper = styled.div`
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+    `
+
+    const ImageWrapper = styled.div`
+        margin-right: 30px;
+        margin-bottom: 10px;
     `
 
     const ContentWrapper = styled.div`
         display: flex;
         flex-direction: column;
-        padding: 0px 30px;
         flex: 1;
     `
 
     const CusSkeleton = styled(Skeleton)`
-        display: flex;
-        flex: 1;
-        min-width: 200px;
+        min-width: 300px;
         min-height: 200px;
         height: auto;
+        width: 100%;
     `
 
     const CusContainer = styled(Container)`
@@ -75,69 +91,219 @@ const ProjectDetail = () => {
         }
     `
     
+    const EndImage = styled.img`
+        width: 80px;
+        height: 80px;
+        float: left;
+        margin-right: auto;
+        transform: translate(20%, 20%);
+    `
+    
     return (
     <Layout>
         <CusContainer maxWidth="md">
             <br></br>
             <DetailHeader>
                 <h2>{detail.title}</h2>
-                {
-                    sessionStorage.getItem("userId") == detail.hostId?
-                    <DetailOperation detail={detail}></DetailOperation>: null
-                } 
+                <DetailOperation detail={detail}></DetailOperation>
             </DetailHeader>
             <DetailWrapper maxWidth="sm">
-                <CusSkeleton variant="rectangular" animation={false} />
+                {
+                    detail.collectStatus === "ING"? 
+                    <ImageWrapper>
+                    <CusSkeleton variant="rectangular" animation={false} />
+                    </ImageWrapper>
+                    :
+                    <ImageWrapper>
+                    <EndImage src="/images/apply_end.png"></EndImage>
+                    <CusSkeleton variant="rectangular" animation={false} />
+                    </ImageWrapper>
+                }
                 <ProjectInfo detail={detail}></ProjectInfo>
             </DetailWrapper>   
             <ProjectDetail></ProjectDetail>
             </CusContainer>
     </Layout>);
 
-    function DetailOperation({detail}) {
-        const [open, setOpen] = useState(false);
+function DetailOperation({detail}) {
+    const [openQuit, setOpenQuit] = useState(false);
+    const [openUsers, setOpenUsers] = useState(false);
 
-        const deleteDialogOpen = () => { setOpen(true) }
-        const deleteOperation = () => {
-            let data = {id: detail.id, hostId: parseInt(sessionStorage.getItem("userId"))};
-            deleteAPI(data)
-            .then(res => {
-                if (res.statusCode == 200){
-                    console.log("삭제");
-                    Router.push("/project")
-                }
-            })
-            .catch(err => console.log(err))
-            setOpen(false);
+    const QuitDialogOpen = () => { 
+        if (sessionStorage.getItem("userId"))
+            setOpenQuit(true) 
+        else {
+            alert("로그인이 필요한 작업입니다.")
+            Router.push("/login")
         }
-        const deleteDialogClose = () => { setOpen(false) }
+    }
+    const QuitDialogClose = () => { setOpenQuit(false) }
 
+    const UserDialogOpen = () => {setOpenUsers(true)}
+    const UserDialogClose = () => {setOpenUsers(false)}
+    
+    const [hostAssign, setHostAssign] = useState(null);
+    const [nextHost, setNextHost] = useState(null);
 
-        return (
-            <>
-            <ButtonGroup variant="outlined">
+    return (
+        <>
+        <ButtonGroup variant="outlined">
+            {
+                sessionStorage.getItem("userId") == detail.hostId?
                 <Button onClick={() => {
                     Router.push("/project/update");
                 }}>수정</Button>
-                <Button onClick={deleteDialogOpen}>삭제</Button>
-            </ButtonGroup>
-            <Dialog
-                open={open}
-                onClose={deleteDialogClose}
-                >
-                <DialogTitle>
-                    {"삭제 하시겠습니까?"}
-                </DialogTitle>
-                <DialogActions>
-                <Button onClick={deleteDialogClose}>취소</Button>
-                <Button onClick={deleteOperation} autoFocus>
-                    확인
-                </Button>
-                </DialogActions>
-            </Dialog>
-            </>
-        )
-    }
+                : null
+            } 
+            {
+                detail.projectJoinStatus === "OK"? 
+                <Button onClick={QuitDialogOpen}>탈퇴</Button>
+                :
+                null
+            }
+        </ButtonGroup>
+
+        <Dialog
+            open={openUsers}
+            onClose={UserDialogClose}>
+            <DialogTitle>
+                {"방장 권한을 넘길 유저를 선택해주세요."}
+            </DialogTitle>
+            <DialogContent>
+                <FormControl> 
+                    <RadioGroup
+                        name="newHost"
+                        onChange={(e) => {
+                            e.persist();
+                            setNextHost(e.target.value)
+                            console.log(nextHost)
+                        }}>
+                        {
+                            userData? 
+                            userData.map(user => {
+                                return (
+                                    user.id!==detail.hostId?
+                                    <FormControlLabel value={user.id+","+user.projectPosition}
+                                        control={<Radio />} label={user.nickname} /> : null
+                                )
+                            }): null
+                        }
+                        
+                    </RadioGroup>
+                </FormControl>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={UserDialogClose}>취소</Button>
+                <Button onClick={() => {
+                    let [newHostId, newHostPosition] = nextHost.split(",");
+                    changeProjectHost({
+                        projectId: detail.id,
+                        oldHostId: detail.hostId,
+                        newHostId: newHostId,
+                        newHostPosition: newHostPosition
+                    }).then(res => {
+                        if (res.statusCode == 200) {
+                            alert("방장이 변경되었습니다.")
+                            quitProject({
+                                userId: detail.hostId,
+                                projectId: detail.id
+                            });
+                            Router.push("/project");
+                        } else (
+                            alert(`${res.message}`)
+                        )
+                        // 페이지 새로고침
+                    })
+                }}>확인</Button>
+            </DialogActions>
+        </Dialog>
+
+        {/* 탈퇴 다이얼로그 */}
+        <Dialog
+            open={openQuit}
+            onClose={QuitDialogClose}
+            >
+            <DialogTitle>
+                {"프로젝트를 탈퇴 하시겠습니까?"}
+            </DialogTitle>
+            <DialogContent>
+            {
+                // 방장일 경우 방장 넘기기
+                sessionStorage.getItem("userId") == detail.hostId?
+                
+                <DialogContentText>
+                프로젝트를 삭제하거나 방장 권한을 넘길 수 있습니다.<br></br>
+                    <FormControl> 
+                        <RadioGroup
+                            aria-labelledby="demo-controlled-radio-buttons-group"
+                            name="controlled-radio-buttons-group"
+                            value={hostAssign}
+                            onChange={(e) => {setHostAssign(e.target.value)}}
+                        >
+                            <FormControlLabel value="quit"
+                                            control={<Radio />} label="방장 권한 넘기기" />
+                            <FormControlLabel value="delete" 
+                                            control={<Radio />} label="프로젝트 삭제" />
+                        </RadioGroup>
+                    </FormControl>
+
+                </DialogContentText>: null
+            }
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={QuitDialogClose}>취소</Button>
+            <Button onClick={() => {
+                QuitDialogClose();
+                // 방장일 때
+                if (sessionStorage.getItem("userId") == detail.hostId) {
+                    if (hostAssign === null) {
+                        alert("프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.")
+                    }
+                    else if (hostAssign === "quit") {
+                        console.log("quit");
+                        if (detail.positions[9].size == 1) {
+                            alert("팀원이 존재하지 않습니다.")
+                        } else
+                            UserDialogOpen();
+                        // 방장 권한 넘기기
+                    } else if (hostAssign === "delete") {
+                        console.log("delete");
+                        deleteAPI({
+                            id: detail.id,
+                            hostId: sessionStorage.getItem("userId")
+                        }).then(res => {
+                            if (res.statusCode === 200) {
+                                alert("프로젝트가 삭제 되었습니다.");
+                                Router.push("/project")
+                            } else {
+                                alert(`${res.message}`)
+                            }
+                        })
+                        // 프로젝트 삭제
+                    }
+                } else {
+                    // 방장이 아닐 때
+                    quitProject({
+                        userId: sessionStorage.getItem("userId"),
+                        projectId: detail.id
+                    }).then(res => {
+                        if (res.statusCode === 200) {
+                            alert("프로젝트가 탈퇴 되었습니다.")
+                            Router.push("/project")
+                        } else {
+                            alert(`${res.message}`)
+                        }
+                    })
+                }
+            }} autoFocus>
+                확인
+            </Button>
+            </DialogActions>
+        </Dialog>
+        </>
+    )
+}
+
 
     function ProjectInfo(){
         return (
@@ -259,7 +425,6 @@ const ProjectDetail = () => {
                     <Button onClick={() => {
                         changeLike(!like);
                         if (sessionStorage.getItem("userId")) {
-                            // To do: 좋아요 api 호출
                             console.log("좋아요");
                             updateProjectLike({
                                 tag: "PROJECT",
@@ -292,11 +457,13 @@ const ProjectDetail = () => {
                         null
                     } 
                     {
-                        detail.projectJoinStatus == null || detail.projectJoinStatus == "CANCEL "?
+                        // 모집중 일때, 지원을 안했거나, 취소한 상태이면 지원하기 버튼 표시
+                        detail.collectStatus === "ING" && detail.projectJoinStatus == null || detail.projectJoinStatus == "CANCEL"?
                         <Button variant="outlined" onClick={JoinDialogOpen}>지원하기</Button> : null
                     }
                     {
-                        detail.projectJoinStatus == "BEFORE"?
+                        // 지원한 상태이면 지원 취소 표시
+                        detail.collectStatus === "ING" && detail.projectJoinStatus == "BEFORE"?
                         <Button variant="outlined" onClick={JoinCancelDialogOpen}>지원취소</Button> : null
                     }
                 </div>
