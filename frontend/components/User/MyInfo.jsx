@@ -268,6 +268,13 @@ export default function MyInfo() {
     // setFinishUpdate(true);
   };
 
+  const handleResetClick = (e) => {
+    e.preventDefault();
+    setOnlyView(true);
+    setFinishUpdate(false);
+    getUserInfo();
+  };
+
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -423,13 +430,18 @@ export default function MyInfo() {
         <div>
           <div>
             <h1>내정보</h1>
-
-            <Box  sx={{marginRight:"300px", float:"right"}}>
-            {finishUpdate ? (
-              <Button onClick={handleUpdateFinishClick}>수정완료</Button>
-            ) : (
-              <Button onClick={handleUpdateClick}>수정하기</Button>
-            )}
+            <Box
+              className="buttonBox"
+              sx={{ marginRight: "20%", float: "right" }}
+            >
+              {finishUpdate ? (
+                <>
+                  <Button onClick={handleResetClick}>수정취소</Button>
+                  <Button onClick={handleUpdateFinishClick}>수정완료</Button>
+                </>
+              ) : (
+                <Button onClick={handleUpdateClick}>수정하기</Button>
+              )}
             </Box>
             <Dialog open={open} onClose={handleClose}>
               <DialogTitle>비밀번호</DialogTitle>
@@ -446,7 +458,7 @@ export default function MyInfo() {
                   type="password"
                   fullWidth
                   variant="standard"
-                  disableBackdropClick 
+                  disableBackdropClick
                 />
               </DialogContent>
               <DialogActions>
@@ -458,15 +470,23 @@ export default function MyInfo() {
             <Box
               justifyContent="center"
               alignItems="center"
-              sx={{ ml: 20, mr: 10 }}
+              sx={{ ml: 15, mr: 15, mb: 2 }}
             >
               <div>
-                <Box className="ssafyImgInfo" sx={{ width: "100%" }}>
+                <Box
+                  className="ssafyImgInfo"
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    display: "inline-block",
+                    mb: 2,
+                  }}
+                >
                   <Box
                     className="userBasicInfo"
                     sx={{ width: "60%", display: "inline-block" }}
                   >
-                    <Box sx={{ width: "100%", fontSize: "20px" }}>
+                    <Box sx={{ width: "100%", fontSize: "20px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
                       </label>
@@ -474,7 +494,7 @@ export default function MyInfo() {
                     </Box>
                     <Box
                       className="ssafyInfo"
-                      sx={{ width: "100%", display: "inline-block" }}
+                      sx={{ width: "100%", display: "inline-block", mb: 2 }}
                     >
                       <Box sx={{ width: "30%", display: "inline-block" }}>
                         싸피
@@ -495,11 +515,11 @@ export default function MyInfo() {
                         {/* <input value={inputState.studentId || ""} disabled /> */}
                       </Box>
                     </Box>
-                    <Box whiteSpace="nowrap">
+                    <Box whiteSpace="nowrap" sx={{ mb: 2 }}>
                       <label>이메일 주소 : {inputState.email}</label>
                       {/* <input value={inputState.email || ""} disabled /> */}
                     </Box>
-                    <div sx={{ width: "60%" }}>
+                    <div sx={{ width: "60%", mb: 2 }}>
                       <label>
                         <span>닉네임</span>
                         <input
@@ -550,7 +570,7 @@ export default function MyInfo() {
                   </Box>
                 </Box>
               </div>
-              <div className="mb-6">
+              <Box sx={{ mb: 2 }}>
                 <label>생년월일</label>
                 {onlyView ? (
                   <input value={inputState.birthday || ""} disabled />
@@ -565,8 +585,8 @@ export default function MyInfo() {
                     </DatePickerWrapper>
                   </LocalizationProvider>
                 )}
-              </div>
-              <div className="mb-6">
+              </Box>
+              <Box sx={{ mb:2 }}>
                 <label>전화번호</label>
                 <input
                   id="phone"
@@ -574,8 +594,8 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 />
-              </div>
-              <div className="mb-6">
+              </Box>
+              <Box sx={{ mb:2 }}>
                 <label>분야</label>
                 {onlyView ? (
                   <input
@@ -613,7 +633,7 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-              </div>
+              </Box>
               <div>
                 <label>스택</label>
                 {onlyView && inputState.stacks != null ? (
@@ -625,7 +645,7 @@ export default function MyInfo() {
                   />
                 )}
               </div>
-              <div>
+              <Box sx={{ mb:2 }}>
                 <label>자기소개</label>
                 <br />
                 <TextField
@@ -639,8 +659,8 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 />
-              </div>
-              <div>
+              </Box>
+              <Box>
                 <label>링크</label>
                 {onlyView ? (
                   <LinkList items={links} />
@@ -659,10 +679,12 @@ export default function MyInfo() {
                     }}
                   />
                 )}
-              </div>
+              </Box>
             </Box>
           </div>
-          <button onClick={handleQuitClick}>탈퇴하기</button>
+          <Box sx={{ marginRight: "20%", float: "right" }}>
+            <Button onClick={handleQuitClick}>탈퇴하기</Button>
+          </Box>
         </div>
       ) : (
         <></>
