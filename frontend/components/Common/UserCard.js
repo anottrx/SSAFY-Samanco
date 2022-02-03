@@ -20,6 +20,7 @@ export default function UserCard({user, clubId, hostId, from}) {
         min-height: 150px;
         padding: 10px;
         margin-right: 10px;
+        margin-bottom: 10px;
 
         & .card-header{
             display: flex;
@@ -126,14 +127,16 @@ export default function UserCard({user, clubId, hostId, from}) {
                     : <div className="user-content"><LinkIcon />등록된 링크가 없습니다.</div>
                 }
                 {
-                    // To Do: 스터디일 경우 표시 X
                     user.stacks?
                     <StackLevelList items={user.stacks}></StackLevelList>
-                    :<div className="user-content"><LinkIcon />등록된 스택이 없습니다.</div>
+                    :<div className="user-content">등록된 스택이 없습니다.</div>
                 }
-                {/* To Do: 스터디일 경우 표시 X */}
-                {/* <StackItem title={user.projectPosition}></StackItem> */}
-                <div className="user-position">{user.projectPosition}</div>
+                {
+                    from=="project"?
+                    <div className="user-position">{user.projectPosition}</div>
+                    :
+                    null
+                }
             </div>
 
         </CusCard>
