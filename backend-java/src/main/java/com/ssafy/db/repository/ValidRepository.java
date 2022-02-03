@@ -16,6 +16,7 @@ public class ValidRepository {
     QProject qProject=QProject.project;
     QStudy qStudy = QStudy.study;
     QBoard qBoard = QBoard.board;
+    QComment qComment = QComment.comment;
 
     public boolean isUserValid(Long userId){
         User user = jpaQueryFactory.select(qUser).from(qUser)
@@ -95,6 +96,15 @@ public class ValidRepository {
                 .where(qStudy.id.eq(studyId), qStudy.isDeleted.eq(false)).fetchOne();
 
         if (study==null){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isCommentValid(Long commentId) {
+        Comment comment = jpaQueryFactory.selectFrom(qComment)
+                .where(qComment.id.eq(commentId), qComment.isDeleted.eq(false)).fetchOne();
+        if (comment==null){
             return false;
         }
         return true;

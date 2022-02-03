@@ -1,10 +1,12 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.model.CommentDto;
 import com.ssafy.api.model.PositionDto;
 import com.ssafy.api.model.BoardDto;
 import com.ssafy.api.request.BoardRegisterReq;
 import com.ssafy.api.request.BoardUpdateReq;
 import com.ssafy.db.entity.Board;
+import com.ssafy.db.entity.Comment;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.UserLike;
 import com.ssafy.db.repository.*;
@@ -34,7 +36,13 @@ public class BoardServiceImpl implements BoardService {
     UserLikeRepositorySupport userLikeRepositorySupport;
 
 //    @Autowired
-//    UserRepositorySupport userRepositorySupport;  // 사용 못함
+//    CommentRepositorySupport commentRepositorySupport;
+
+    @Autowired
+    CommentService commentService;
+
+//    @Autowired
+//    UserRepositorySupport userRepositorySupport;
 
     @Override
     public Board createBoard(BoardRegisterReq boardRegisterReq) {
@@ -42,8 +50,8 @@ public class BoardServiceImpl implements BoardService {
         board.setUserId(boardRegisterReq.getUserId());
         board.setContent(boardRegisterReq.getContent());
         board.setTitle(boardRegisterReq.getTitle());
-        board.setStartDate(boardRegisterReq.getStartDate());
-        board.setEndDate(boardRegisterReq.getEndDate());
+//        board.setStartDate(boardRegisterReq.getStartDate());
+//        board.setEndDate(boardRegisterReq.getEndDate());
         return boardRepository.save(board);
     }
 
@@ -130,12 +138,22 @@ public class BoardServiceImpl implements BoardService {
         BoardDto boardDto=new BoardDto();
         boardDto.setBoardId(result.getId());
         boardDto.setContent(result.getContent());
-        boardDto.setEndDate(result.getEndDate());
+//        boardDto.setEndDate(result.getEndDate());
         boardDto.setUserId(result.getUserId());
         boardDto.setHit(result.getHit());
-        boardDto.setStartDate(result.getStartDate());
+//        boardDto.setStartDate(result.getStartDate());
         boardDto.setTitle(result.getTitle());
         boardDto.setLikes(likes);
+
+        List<CommentDto> comments = commentService.selectBoardCommentAll(result.getId());
+        boardDto.setComments(comments);
+
+        // 작성자 닉네임
+//        User user = userRepositorySupport.selectUser(result.getUserId());
+//        if (user==null){
+//            return null;
+//        }
+//        boardDto.setNickname(user.getNickname());
 
         return  boardDto;
     }

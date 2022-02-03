@@ -17,6 +17,7 @@ public class BoardRegisterReq {
     private Long userId;
     private String title;
     private String content;
+    private String tag;
     @ApiModelProperty(example="2022-01-19")
     private String startDate;
     @ApiModelProperty(example="2022-01-19")
