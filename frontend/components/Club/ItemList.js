@@ -4,7 +4,6 @@ import styled from "@emotion/styled"
 import { Grid, Skeleton, Card, CardContent, Typography, Pagination, Badge } from '@mui/material';
 import { BadgeUnstyled } from '@mui/base';
 
-import projectJSONData from "../../data/projectData.json"
 import Router from "next/router";
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,9 +11,9 @@ import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
 
 import { getProjectAllAPI, getProjectById } from "../../pages/api/project"
+import { getStudyAllAPI, getStudyById } from "../../pages/api/study"
 
 import StackList from "./StackList"
-import stackData from "../../data/StackData.json"
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -45,6 +44,7 @@ function ItemList(props) {
         )
     } else if (props.from === "study") {
         clubData = useSelector(({ study }) => study.studyList);
+        filterData = useSelector(({ study }) => study.studyFilterList);
         setDetail = useCallback(
             ({detail}) => {
                 dispatch(studyActions.setStudyDetail({detail}))
@@ -73,33 +73,35 @@ function ItemList(props) {
     const lgMatches = useMediaQuery(theme.breakpoints.up('lg'));
     
     let purPage = useRef(1);
-    let allPage = parseInt(clubData.length / purPage.current);
-    if (clubData.length % purPage.current > 0) allPage += 1;
+    let allPage = 1;
+    if (clubData){
+        allPage = parseInt(clubData.length / purPage.current);
+        if (clubData.length % purPage.current > 0) allPage += 1;
 
-    if (lgMatches) {
-        purPage.current = 8;
-    }
-    else if (mdMatches) {
-        purPage.current = 6;
-    } 
-    else if (smMatches) {
-        purPage.current = 4;
-    } 
-    else if (xsMaches) {
-        purPage.current = 2;
+        if (lgMatches) {
+            purPage.current = 8;
+        }
+        else if (mdMatches) {
+            purPage.current = 6;
+        } 
+        else if (smMatches) {
+            purPage.current = 4;
+        } 
+        else if (xsMaches) {
+            purPage.current = 2;
+        }
     }
 
     // 화면에 요소를 그리기 전에 store에 저장된 아이템 리스트가 있는지 확인
     // 없으면 store에 저장
     useLayoutEffect(() => {
         // 빈 배열이면 배열 요청
-        // To Do : 나중에 api로 값 가져오게 수정 - Study API 연동 필요
         if (props.from === "project") {
             getProjectAllAPI().then(res => setList({list: res.projects}));
         } else if (props.from === "study") {
-            getProjectAllAPI().then(res => setList({list: res.projects}));
+            getStudyAllAPI().then(res => setList({list: res.studies}));
         } else {
-            setList({list: projectJSONData});
+            setList({list: []});
         }
     }, [])
 
@@ -124,7 +126,7 @@ function ItemList(props) {
     return (
         <>
         {
-            clubData.length==0?
+            !clubData || clubData.length==0?
             <CusGrid>
                 <CusCard>등록된 데이터가 없습니다.</CusCard>
             </CusGrid>
@@ -210,36 +212,67 @@ export function Item(props) {
             transform: translate(-15px, 115px);
             transform-origin: 100% 0;
         }
-        // top: 125px;
-        // right: 40px;
     ` 
 
+    const EndImage = styled.img`
+        width: 80px;
+        height: 80px;
+        float: left;
+        transform: translate(20%, 20%);
+    `
+
     let totalSize = 0, currSize = 0;
-    data.positions.map((curr) => {
-        if (curr.position === "totalSize") totalSize = curr.size;
-        if (curr.position === "currentSize") currSize = curr.size;
-    })
+    if (from === "project") {
+        data.positions.map((curr) => {
+            if (curr.position === "totalSize") totalSize = curr.size;
+            if (curr.position === "currentSize") currSize = curr.size;
+        })
+    }
+
+    let leftDay = "";
+    if (data.deadline < 0) leftDay = "+" + (-1 * data.deadline);
+    else if (data.deadline == 0) leftDay = "-DAY";
+    else leftDay = "-"+data.deadline;
 
     return (
         <Container onClick={()=>{
-            getProjectById({
-                projectId: data.id, 
-                userId: sessionStorage.getItem("userId") == null? 
-                    0: sessionStorage.getItem("userId")
-            })
-            .then(res => {
-                setDetail({detail: res.project});
-                
-                // api 작성
-                Router.push({
-                    pathname: `/${from}/[id]`,
-                    query: { id: data.id }
+            if (from === "project") {
+                getProjectById({
+                    projectId: data.id, 
+                    userId: sessionStorage.getItem("userId") == null? 
+                        0: sessionStorage.getItem("userId")
                 })
-            })
-            
+                .then(res => {
+                    setDetail({detail: res.project});
+                    Router.push({
+                        pathname: `/${from}/[id]`,
+                        query: { id: data.id }
+                    })
+                })
+            } else if (from === "study") {
+                getStudyById({
+                    studyId: data.id, 
+                    userId: sessionStorage.getItem("userId") == null? 
+                        0: sessionStorage.getItem("userId")
+                })
+                .then(res => {
+                    setDetail({detail: res.study});
+                    Router.push({
+                        pathname: `/${from}/[id]`,
+                        query: { id: data.id }
+                    })
+                })
+            }
         }}>
-            <CusCountBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusCountBadge>
-            <CusDeadlineBadge badgeContent={"D-"+ (data.deadline!=0? data.deadline: "DAY" ) + " | ♥ "+data.likes}></CusDeadlineBadge>
+            {
+                from === "project"?
+                <>
+                    <CusCountBadge badgeContent={currSize+" / "+totalSize} color="primary"></CusCountBadge>
+                    <CusDeadlineBadge badgeContent={"D"+ leftDay + " | ♥ "+data.likes}></CusDeadlineBadge>
+                </>
+                :
+                <CusDeadlineBadge badgeContent={"♥ "+data.likes}></CusDeadlineBadge>
+            }
             {/* <CusLikeBadge badgeContent={"좋아요 "+data.likes)}></CusLikeBadge> */}
 
             <Card>
@@ -250,7 +283,13 @@ export function Item(props) {
                     //     backgroundImage: `url("../../../backend-java/${data.file.saveFolder}/${data.file.saveFile}")`
                     // }}></div>
                     // :
+                    data.collectStatus === "ING"?
                     <Skeleton variant="rectangular" height={150} animation={false} />
+                    :
+                    <>
+                    <EndImage src="/images/apply_end.png"></EndImage>
+                    <Skeleton variant="rectangular" height={150} animation={false}/>
+                    </>
                 }
                 
                 <CardContent>

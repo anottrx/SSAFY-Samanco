@@ -6,10 +6,11 @@ import LinkIcon from '@mui/icons-material/Link';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import { quitProject } from "../../pages/api/project"
+import { quitStudy } from "../../pages/api/study"
 
 import ForceReload from "../../util/ForceReload"
 
-export default function UserCard({user, projectId, hostId}) {
+export default function UserCard({user, clubId, hostId, from}) {
     const CusCard = styled(Card)`
         display: flex;
         flex-direction: column;
@@ -19,6 +20,7 @@ export default function UserCard({user, projectId, hostId}) {
         min-height: 150px;
         padding: 10px;
         margin-right: 10px;
+        margin-bottom: 10px;
 
         & .card-header{
             display: flex;
@@ -69,17 +71,39 @@ export default function UserCard({user, projectId, hostId}) {
                     <Tooltip title="내보내기" placement="top">
                     <IconButton onClick={() => {
                         // 유저 탈퇴시키기
-                        quitProject({
-                            userId: user.id, 
-                            projectId: projectId
-                        }).then(res => {
-                            if (res.data.statusCode == 200) {
-                                alert("해당 유저를 내보냈습니다.")
-                                ForceReload();
-                            } else {
-                                alert(`${res.data.message}`)
-                            }
-                        })
+                        switch (from) {
+                            case "project":
+                                quitProject({
+                                    userId: user.id, 
+                                    clubId: clubId
+                                }).then(res => {
+                                    if (res.data.statusCode == 200) {
+                                        alert("해당 유저를 내보냈습니다.")
+                                        ForceReload();
+                                    } else {
+                                        alert(`${res.data.message}`)
+                                    }
+                                })
+                                break;
+                            case "study":
+                                console.log(user.id, clubId, from)
+                                quitStudy({
+                                    userId: user.id, 
+                                    studyId: clubId
+                                }).then(res => {
+                                    console.log(res)
+                                    if (res.statusCode == 200) {
+                                        alert("해당 유저를 내보냈습니다.")
+                                        ForceReload();
+                                    } else {
+                                        alert(`${res.data.message}`)
+                                    }
+                                })
+                                break;
+                            default:
+                                break;
+                        }
+                        
                     }}>
                         <DeleteIcon />
                     </IconButton>
@@ -105,10 +129,14 @@ export default function UserCard({user, projectId, hostId}) {
                 {
                     user.stacks?
                     <StackLevelList items={user.stacks}></StackLevelList>
-                    :<div className="user-content"><LinkIcon />등록된 스택이 없습니다.</div>
+                    :<div className="user-content">등록된 스택이 없습니다.</div>
                 }
-                {/* <StackItem title={user.projectPosition}></StackItem> */}
-                <div className="user-position">{user.projectPosition}</div>
+                {
+                    from=="project"?
+                    <div className="user-position">{user.projectPosition}</div>
+                    :
+                    null
+                }
             </div>
 
         </CusCard>

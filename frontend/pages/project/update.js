@@ -25,7 +25,6 @@ const position = [
 function projectUpdate() {
     const detail = useSelector(({ project }) => project.projectDetail);
     const url = "../../../backend-java";
-    console.log(detail)
 
     const CusPaper = styled(Paper)`
         width: 100%;
@@ -67,7 +66,6 @@ function projectUpdate() {
     `
 
     const [inputValue, setInputValue] = useState({
-        // To Do: hostPosition 받아오면 그 때 수정~~
         projectId: detail.id,
         hostId: sessionStorage.getItem("userId"),
         startDate: detail.startDate,
@@ -125,7 +123,6 @@ function projectUpdate() {
 
     async function validateCheck() {
         let [check, msg] = [true, ""]
-        console.log("inputValue",inputValue)
         
         if (typeof(inputValue.title)=='undefined')
             inputValue["title"] = detail.title;
