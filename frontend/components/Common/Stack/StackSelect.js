@@ -13,7 +13,9 @@ const stacks = [
     {name:"Python", level: 0},
     {name:"Java", level: 0},
     {name:"C", level: 0},
-    {name:"Spring boot", level: 0},
+    {name:"C++", level: 0},
+    {name:"C#", level: 0},
+    {name:"Spring Boot", level: 0},
     {name:"MySQL", level: 0},
     {name:"Git", level: 0},
     {name:"AWS", level: 0},
@@ -21,6 +23,7 @@ const stacks = [
     {name:"Linux", level: 0},
     {name:"Jira", level: 0},
     {name:"Django", level: 0},
+    {name:"Kotlin", level: 0},
     {name:"Redis", level: 0}
 ]
 
