@@ -315,7 +315,7 @@ export default function MyInfo() {
     console.log("업데이트 준비");
     let isNormal = true;
     let msg = "";
-
+    
     // if (!phoneReg.test(inputState.phone)) {
     //   isNormal = false;
     //   msg = "전화번호 양식을 확인해주세요.";
@@ -346,11 +346,16 @@ export default function MyInfo() {
         Redis: inputState.Redis,
       };
       Object.keys(inputState.stacks).forEach(function (key) {
-        if (inputState.stacks[key] === 0) {
+        if (inputState.stacks[key] == 0 || inputState.stacks[key] == null) {
           delete inputState.stacks[key];
         }
       });
-
+      const stacksArr = [];
+      Object.keys(inputState.stacks).forEach(function (key) {
+        stacksArr.push({"name":key, "grade":inputState.stacks[key]});
+      });
+      inputState.stacks_get = stacksArr
+      
       loginAPI(loginInfo).then((res) => {
         console.log(loginInfo.email + " " + loginInfo.password);
         if (res.statusCode == 200) {
@@ -643,10 +648,10 @@ export default function MyInfo() {
               <div>
                 <label>스택</label>
                 {onlyView && inputState.stacks_get != null ? (
-                  <StackLevelList items={inputState.stacks_get} />
+                  <StackLevelList items={inputState.stacks_get}  />
                 ) : (
                   <StackLevelSelectRegister
-                    values={inputState.stacks}
+                    values={inputState.stacks, inputState.stacks_get}
                     changeHandle={changeHandle}
                   />
                 )}
