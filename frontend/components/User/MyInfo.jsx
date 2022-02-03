@@ -126,7 +126,7 @@ export default function MyInfo() {
         const today = new Date();
         const todayYear = today.getFullYear().toString().slice(2);
         if (
-          res.user.birthday != null 
+          res.user.birthday != null
           // &&  res.user.birthday.toString().slice(0, 2) != todayYear
         ) {
           inputState.birthday = res.user.birthday;
@@ -146,13 +146,11 @@ export default function MyInfo() {
 
         if (res.user.link != null) {
           setLinks(inputState.link.split(" "));
-          // links = inputState.link.split(" ");
           console.log(links);
           console.log(inputState.link.split(" "));
         }
         // inputState.file = res.user.file;
         setLoading(true);
-        // ShowStack(inputState.stacks);
       });
     });
   }
@@ -169,6 +167,14 @@ export default function MyInfo() {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
+  `;
+
+  const ItemWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
   `;
 
   useEffect(() => {
@@ -282,8 +288,7 @@ export default function MyInfo() {
     setOpen(true);
   };
   const handleClose = (event, reason) => {
-    if (reason && reason == "backdropClick") 
-        return;
+    if (reason && reason == "backdropClick") return;
     setOpen(false);
   };
   const [loginInfo, setLoginInfo] = useState({
@@ -471,85 +476,22 @@ export default function MyInfo() {
             </Dialog>
             <br />
             <Box
-              justifyContent="center"
-              alignItems="center"
-              sx={{ ml: 15, mr: 15, mb: 2 }}
+            // justifyContent="center"
+            // alignItems="center"
+            // sx={{mb: 2 }}
             >
               <div>
                 <Box
                   className="ssafyImgInfo"
                   sx={{
-                    width: "100%",
-                    height: "100%",
-                    display: "inline-block",
+                    // display: "inline-block",
                     mb: 2,
-                    verticalAlign: "top",
+                    // verticalAlign: "top",
                   }}
                 >
                   <Box
-                    className="userBasicInfo"
-                    sx={{ width: "60%", display: "inline-block" }}
-                  >
-                    <Box sx={{ width: "100%", fontSize: "20px", mb: 2 }}>
-                      <label>
-                        <b>{inputState.name}</b>님, 환영합니다
-                      </label>
-                      {/* <input value={inputState.name || ""} disabled /> */}
-                    </Box>
-                    <Box
-                      className="ssafyInfo"
-                      sx={{ width: "100%", display: "inline-block", mb: 2 }}
-                    >
-                      <Box sx={{ width: "30%", display: "inline-block" }}>
-                        싸피
-                        <label>{inputState.generation}기</label>
-                        {/* <input value={inputState.generation || ""} disabled /> */}
-                      </Box>
-                      <Box sx={{ width: "30%", display: "inline-block" }}>
-                        <label>{inputState.class}반</label>
-                        {/* <input
-                    id="userClass"
-                    value={inputState.userClass || ""}
-                    disabled={onlyView ? true : false}
-                    onChange={handleChange}
-                  /> */}
-                      </Box>
-                      <Box sx={{ width: "30%", display: "inline-block" }}>
-                        <label>학번 {inputState.studentId}</label>
-                        {/* <input value={inputState.studentId || ""} disabled /> */}
-                      </Box>
-                    </Box>
-                    <Box whiteSpace="nowrap" sx={{ mb: 2 }}>
-                      <label>이메일 주소 : {inputState.email}</label>
-                      {/* <input value={inputState.email || ""} disabled /> */}
-                    </Box>
-                    <div sx={{ width: "60%", mb: 2 }}>
-                      <label>
-                        <span>닉네임</span>
-                        <input
-                          id="nickname"
-                          value={inputState.nickname || ""}
-                          disabled={nicknameChange ? false : true}
-                          // disabled={onlyView ? true : false}
-                          sx={{ width: "40%" }}
-                          onChange={(e) => {
-                            handleNicknameChange(e);
-                            handleChange(e);
-                          }}
-                        />
-                      </label>
-                      {nicknameChange ? (
-                        <button onClick={handleNicknameClick}>
-                          중복 확인 완료
-                        </button>
-                      ) : (
-                        <button onClick={handleNicknameClick}>중복 확인</button>
-                      )}
-                    </div>
-                  </Box>
-                  <div
                     className="imgInfo"
-                    // sx={{ width: "40%", display: "inline-block" }}
+                    sx={{ width: "40%", display: "inline-block" }}
                   >
                     {/* <label>이미지</label> */}
                     <ImgUploadBtn
@@ -571,7 +513,61 @@ export default function MyInfo() {
                       encType="multipart/form-data"
                       onChange={onImgChange}
                     ></input>
-                  </div>
+                  </Box>
+                  <Box
+                    className="userBasicInfo"
+                    sx={{ width: "60%", display: "inline-block" }}
+                  >
+                    <Box sx={{ width: "100%", fontSize: "20px", mb: 2 }}>
+                      <label>
+                        <b>{inputState.name}</b>님, 환영합니다
+                      </label>
+                      {/* <input value={inputState.name || ""} disabled /> */}
+                    </Box>
+                    <Box
+                      className="ssafyInfo"
+                      sx={{ width: "100%", display: "inline-block", mb: 2 }}
+                    >
+                      싸피
+                      <label>{inputState.generation}기</label>
+                      {/* <input value={inputState.generation || ""} disabled /> */}
+                      <label>{inputState.class}반</label>
+                      {/* <input
+                    id="userClass"
+                    value={inputState.userClass || ""}
+                    disabled={onlyView ? true : false}
+                    onChange={handleChange}
+                  /> */}
+                      <label>(학번 {inputState.studentId})</label>
+                    </Box>
+                    <Box whiteSpace="nowrap" sx={{ mb: 2 }}>
+                      <label>이메일 주소 : {inputState.email}</label>
+                      {/* <input value={inputState.email || ""} disabled /> */}
+                    </Box>
+                    <div sx={{ mb: 2 }}>
+                      <label>
+                        <span>닉네임</span>
+                        <input
+                          id="nickname"
+                          value={inputState.nickname || ""}
+                          disabled={nicknameChange ? false : true}
+                          // disabled={onlyView ? true : false}
+                          // sx={{ width: "40%" }}
+                          onChange={(e) => {
+                            handleNicknameChange(e);
+                            handleChange(e);
+                          }}
+                        />
+                      </label>
+                      {nicknameChange ? (
+                        <button onClick={handleNicknameClick}>
+                          중복 확인 완료
+                        </button>
+                      ) : (
+                        <button onClick={handleNicknameClick}>중복 확인</button>
+                      )}
+                    </div>
+                  </Box>
                 </Box>
               </div>
               <Box sx={{ mb: 2, verticalAlign: "center" }}>
@@ -650,7 +646,7 @@ export default function MyInfo() {
                   <StackLevelList items={inputState.stacks_get} />
                 ) : (
                   <StackLevelSelectRegister
-                    values={(inputState.stacks, inputState.stacks_get)}
+                    values={inputState.stacks}
                     changeHandle={changeHandle}
                   />
                 )}
