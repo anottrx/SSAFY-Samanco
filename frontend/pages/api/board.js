@@ -43,10 +43,21 @@ async function updateBoardAPI(formData) {
     .catch((err) => err.response.data);
 }
 
-async function viewBoardAPI(title) {
-  // 글 읽기
+async function getArticleByTitle(title) {
+  // 글 제목으로 검색
   return await api
     .get("/api/board/title/" + title)
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
+async function getArticleById(data) {
+  // 글 아이디로 검색 (boardId)
+  return await api
+    .post("/api/board/view/", {
+      boardId: data.boardId,
+      userId: data.userId
+    })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
@@ -56,5 +67,6 @@ export {
   registBoardAPI,
   deleteBoardAPI,
   updateBoardAPI,
-  viewBoardAPI,
+  getArticleByTitle,
+  getArticleById
 };
