@@ -48,7 +48,7 @@ export default function MyInfo() {
     email: "",
     phone: "",
     nickname: "",
-    userClass: "",
+    class: "",
     birthday: "",
     generation: "",
     studentId: "",
@@ -133,7 +133,7 @@ export default function MyInfo() {
         if (res.user.phone !== "00000000000") {
           inputState.phone = res.user.phone;
         }
-        inputState.userClass = res.user.userClass;
+        inputState.class = res.user.userClass;
         inputState.generation = res.user.generation;
         inputState.studentId = res.user.studentId;
         inputState.position = res.user.position;
@@ -423,11 +423,14 @@ export default function MyInfo() {
         <div>
           <div>
             <h1>내정보</h1>
+
+            <Box  sx={{marginRight:"300px", float:"right"}}>
             {finishUpdate ? (
-              <button onClick={handleUpdateFinishClick}>수정완료</button>
+              <Button onClick={handleUpdateFinishClick}>수정완료</Button>
             ) : (
-              <button onClick={handleUpdateClick}>수정하기</button>
+              <Button onClick={handleUpdateClick}>수정하기</Button>
             )}
+            </Box>
             <Dialog open={open} onClose={handleClose}>
               <DialogTitle>비밀번호</DialogTitle>
               <DialogContent>
@@ -443,6 +446,7 @@ export default function MyInfo() {
                   type="password"
                   fullWidth
                   variant="standard"
+                  disableBackdropClick 
                 />
               </DialogContent>
               <DialogActions>
@@ -450,6 +454,7 @@ export default function MyInfo() {
                 <Button onClick={handleUpdateInfo}>확인</Button>
               </DialogActions>
             </Dialog>
+            <br />
             <Box
               justifyContent="center"
               alignItems="center"
