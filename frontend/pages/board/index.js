@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
 
 import Layout from "../../components/layout";
+import styled from '@emotion/styled';
 
 import BoardList from "./BoardList";
 
@@ -48,7 +49,6 @@ export default function Board() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
 
   return (
     <Layout>

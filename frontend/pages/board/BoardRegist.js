@@ -97,7 +97,6 @@ function BoardRegist() {
 
         reader.onload=()=>{
             fileName = files.name;
-            //console.log(fileName);
             fileEl.innerText  = fileName;
         }
 

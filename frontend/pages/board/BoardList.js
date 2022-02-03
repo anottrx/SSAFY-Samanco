@@ -33,13 +33,16 @@ const CusButton = style(Button)`
 `
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-[`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-},
-[`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-},
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: "#A2C2DC",
+        color: theme.palette.common.black,
+        fontFamily: "Pretendard-Regular",
+        fontSize: 15
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontFamily: "Pretendard-Regular",
+        fontSize: 14,
+    },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -68,12 +71,7 @@ function BoardList(props) {
             setIsLogin(true);
         }
 
-        var articlesArray = [];
-        Datas.map((data)=>{
-            if(data.tag === props.tag){
-                articlesArray.push(data);
-            }
-        })
+        let articlesArray = Datas.filter(data => data.tag === props.tag);
         setArticles(articlesArray);
     },[]);
 
@@ -95,7 +93,7 @@ function BoardList(props) {
     `;
 
     return (
-        <div>
+        <>
             <ItemWrapper>
                 <ProjectActions>
                     <BoardSearch></BoardSearch>
@@ -122,10 +120,12 @@ function BoardList(props) {
                     </TableHead>
                     <TableBody>
                     {articles.slice(purPage.current * (page-1), purPage.current * page).map((article) => (
-                        <StyledTableRow key={article.boardId}>
-                        <StyledTableCell component="th" scope="row" onClick={()=>{
-                            Router.push("/board/"+article.boardId); setDetail({detail: article}); }}
-                        >{article.title}</StyledTableCell>
+                        <StyledTableRow key={article.boardId} 
+                        onClick={()=>{
+                            Router.push("/board/"+article.boardId); 
+                            setDetail({detail: article}); 
+                        }}>
+                        <StyledTableCell component="th" scope="row">{article.title}</StyledTableCell>
                         <StyledTableCell align="right">{article.userId}</StyledTableCell>
                         <StyledTableCell align="right">{article.startDate}</StyledTableCell>
                         <StyledTableCell align="right">{article.likes}</StyledTableCell>
@@ -136,7 +136,7 @@ function BoardList(props) {
                 </Table>
                 <CusPagination count={allPage} color="primary" page={page} onChange={handleChange} />
             </TableContainer>
-        </div>
+        </>
     );
 }
 
