@@ -154,8 +154,8 @@ function BoardList(props) {
                     <TableHead>
                     <TableRow>
                         <StyledTableCell>제목</StyledTableCell>
-                        <StyledTableCell align="right">아이디</StyledTableCell>
-                        <StyledTableCell align="right">날짜</StyledTableCell>
+                        <StyledTableCell align="right">닉네임</StyledTableCell>
+                        <StyledTableCell align="right">작성일</StyledTableCell>
                         <StyledTableCell align="right">좋아요</StyledTableCell>
                         <StyledTableCell align="right">조회수</StyledTableCell>
                     </TableRow>
@@ -180,9 +180,9 @@ function BoardList(props) {
                                                 setDetail({detail: data}); 
                                                 Router.push("/board/"+data.boardId); 
                                             }}
-                                        >{data.title}</StyledTableCell>
+                                        >{`${data.title} (${data.comments.length})`}</StyledTableCell>
                                         <StyledTableCell align="right">{data.nickname}</StyledTableCell>
-                                        <StyledTableCell align="right">{data.createdDate}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.dateOrTime}</StyledTableCell>
                                         <StyledTableCell align="right">{data.likes}</StyledTableCell>
                                         <StyledTableCell align="right">{data.hit}</StyledTableCell>
                                     </StyledTableRow>
@@ -197,10 +197,10 @@ function BoardList(props) {
                                                 setDetail({detail: data}); 
                                                 Router.push("/board/"+data.boardId); 
                                             }}>
-                                            {data.title}
+                                            {`${data.title} (${data.comments? data.comments.length: 0})`}
                                         </StyledTableCell>
-                                        <StyledTableCell align="right">{data.userId}</StyledTableCell>
-                                        <StyledTableCell align="right">{data.startDate}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.nickname}</StyledTableCell>
+                                        <StyledTableCell align="right">{data.dateOrTime}</StyledTableCell>
                                         <StyledTableCell align="right">{data.likes}</StyledTableCell>
                                         <StyledTableCell align="right">{data.hit}</StyledTableCell>
                                     </StyledTableRow>
