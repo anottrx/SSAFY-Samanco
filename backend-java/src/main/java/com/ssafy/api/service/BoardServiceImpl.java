@@ -51,6 +51,7 @@ public class BoardServiceImpl implements BoardService {
         board.setUserId(boardRegisterReq.getUserId());
         board.setContent(boardRegisterReq.getContent());
         board.setTitle(boardRegisterReq.getTitle());
+        board.setTag(boardRegisterReq.getTag());
 //        board.setStartDate(boardRegisterReq.getStartDate());
 //        board.setEndDate(boardRegisterReq.getEndDate());
         return boardRepository.save(board);
@@ -145,6 +146,7 @@ public class BoardServiceImpl implements BoardService {
 //        boardDto.setStartDate(result.getStartDate());
         boardDto.setTitle(result.getTitle());
         boardDto.setLikes(likes);
+        boardDto.setTag(result.getTag());
 
         List<CommentDto> comments = commentService.selectBoardCommentAll(result.getId());
         boardDto.setComments(comments);
