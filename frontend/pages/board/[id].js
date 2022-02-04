@@ -7,8 +7,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { Card, Container, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogTitle, ButtonGroup, TextField } from "@mui/material";
+import { Card, Container, CardContent, Typography, Button, 
+    Dialog, DialogActions, DialogTitle, ButtonGroup, TextField,
+    Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { useState, useEffect } from "react";
 import * as boardActions from '../../store/module/board';
 import Router from "next/router";
@@ -160,6 +164,30 @@ const BoardDetail = () => {
                     <DetailAction detail={detail}></DetailAction>
                 </CardContent>
             </CusCard>
+            {
+                Array.isArray(detail.files) && detail.files.length !== 0?
+                    <CusCard>
+                        <Accordion elevation="0">
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            ><div>첨부 파일 ({`${detail.files.length}`})</div>
+                            </AccordionSummary>
+                        <AccordionDetails>
+                        {
+                        detail.files.map(file => {
+                            return (
+                                <div><AttachFileIcon />{`${file.originFile}`}</div>
+                            )
+                        })
+                        }
+                        </AccordionDetails>
+                        </Accordion>
+                    </CusCard>
+                    :
+                    null
+                }
             <CusCard>
                 <CardContent>
                 <h4>댓글</h4>

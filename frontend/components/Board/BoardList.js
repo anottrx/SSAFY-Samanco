@@ -9,6 +9,8 @@ import SearchBar from "../Common/Search";
 import style from "@emotion/styled";
 import Cookies from "universal-cookie";
 
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+
 import { getArticleByTag } from "../../pages/api/board";
 
 //게시글 목록 페이지
@@ -77,19 +79,14 @@ function BoardList(props) {
 
     const cookies = new Cookies();
     const [isLogin, setIsLogin] = useState(false);
-
+    const [isNotice, setIsNotice] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(()=>{
         if (cookies.get("userToken")!='' && sessionStorage.getItem("nickname") != null) {
             setIsLogin(true);
         }
     },[]);
-
-    useEffect(() => {
-      console.log("filterData",filterData)
-    }, [filterData]);
-    
-
     
     useLayoutEffect(() => {
         // To do: tag 바뀔 때마다 태그로 리스트 불러오기
@@ -100,6 +97,9 @@ function BoardList(props) {
             else
                 setArticles({list: []});
         }));
+
+        if (tag === "notice") setIsNotice(true);
+        if (sessionStorage.getItem("nickname") === "admin") setIsAdmin(true);
     }, [tag])
 
     async function viewBoard(e) {
@@ -134,18 +134,30 @@ function BoardList(props) {
         margin-top: 20px;
     `;
 
+    const FileIcon = style.span`
+        margin: 0px 10px 0px 20px;
+        color: gray;
+    `
+
     return (
         <>
             <ItemWrapper>
                 <ProjectActions>
                     <SearchBar target="board"></SearchBar>
-                    {isLogin? 
-                    (<CusButton variant="outlined" size="medium"
-                        onClick={() => {
-                        Router.push("/board/regist");
-                        }}>
-                        등록하기
-                    </CusButton>):(<></>)}
+                    {
+                        isLogin? 
+                            !isNotice || (isNotice && isAdmin)?
+                            <CusButton variant="outlined" size="medium"
+                                onClick={() => {
+                                Router.push("/board/regist");
+                                }}>
+                                등록하기
+                            </CusButton>
+                            :
+                            null
+                        :
+                        null
+                    }
                     
                 </ProjectActions>
             </ItemWrapper>
@@ -174,13 +186,19 @@ function BoardList(props) {
                                 filterData!==null?
                                 filterData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                                     return(
-                                    <StyledTableRow key={data.boardId}>
-                                        <StyledTableCell component="th" scope="row"
-                                            onClick={()=>{
-                                                setDetail({detail: data}); 
-                                                Router.push("/board/"+data.boardId); 
-                                            }}
-                                        >{`${data.title} (${data.comments.length})`}</StyledTableCell>
+                                    <StyledTableRow key={data.boardId} style={{cursor: "pointer"}}
+                                        onClick={()=>{
+                                            setDetail({detail: data}); 
+                                            Router.push("/board/"+data.boardId); 
+                                        }}>
+                                        <StyledTableCell component="th" scope="row">
+                                        {`${data.title} (${data.comments.length})`}
+                                        {
+                                            Array.isArray(data.files) && data.files.length !== 0?
+                                            <FileIcon><AttachFileIcon />첨부파일</FileIcon>
+                                            : null
+                                        }
+                                        </StyledTableCell>
                                         <StyledTableCell align="right">{data.nickname}</StyledTableCell>
                                         <StyledTableCell align="right">{data.dateOrTime}</StyledTableCell>
                                         <StyledTableCell align="right">{data.likes}</StyledTableCell>
@@ -191,13 +209,18 @@ function BoardList(props) {
                                 :
                                 boardData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                                     return (
-                                    <StyledTableRow key={data.boardId}>
-                                        <StyledTableCell component="th" scope="row" 
-                                            onClick={()=>{
-                                                setDetail({detail: data}); 
-                                                Router.push("/board/"+data.boardId); 
-                                            }}>
+                                    <StyledTableRow key={data.boardId} style={{cursor: "pointer"}}
+                                        onClick={()=>{
+                                            setDetail({detail: data}); 
+                                            Router.push("/board/"+data.boardId); 
+                                        }}>
+                                        <StyledTableCell component="th" scope="row">
                                             {`${data.title} (${data.comments? data.comments.length: 0})`}
+                                            {
+                                                Array.isArray(data.files) && data.files.length !== 0?
+                                                <FileIcon><AttachFileIcon />첨부파일</FileIcon>
+                                                : null
+                                            }
                                         </StyledTableCell>
                                         <StyledTableCell align="right">{data.nickname}</StyledTableCell>
                                         <StyledTableCell align="right">{data.dateOrTime}</StyledTableCell>
