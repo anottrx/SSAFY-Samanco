@@ -225,9 +225,9 @@ export default function RegistInfo() {
           sessionStorage.setItem("userId", inputState.userId);
           sessionStorage.setItem("email", inputState.email);
           sessionStorage.setItem("nickname", inputState.nickname);
-          // alert("회원정보 추가 성공");
-          // window.history.forward();
-          // window.location.replace("/");
+          alert("회원정보 추가 성공");
+          window.history.forward();
+          window.location.replace("/");
         } else {
           alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
         }
