@@ -13,7 +13,9 @@ import Router from "next/router";
 import CommentList from "../../components/Board/CommentList"
 
 import SendIcon from '@mui/icons-material/Send';
-import { getArticleById, deleteBoard } from "../api/board";
+import { getArticleById, deleteBoard, registComment } from "../api/board";
+
+import { forceReload } from "../../util/ForceReload"
 
 //게시글 상세보기 페이지
 
@@ -134,6 +136,10 @@ const BoardDetail = () => {
             & div > p {
                 margin-left: 10px;
             }
+
+            & .dateOrTime{
+                color: gray;
+            }
         `
         return (
             detail?
@@ -144,7 +150,7 @@ const BoardDetail = () => {
                         <h4>{detail.title}</h4>
                         <div>
                             <p>{detail.nickname}</p>
-                            <p>{detail.createdDate}</p>
+                            <p className="dateOrTime">{detail.dateOrTime}</p>
                         </div>
                     </DetailWrapper>
                     <Typography sx={{ fontSize: 15 }}>
@@ -158,7 +164,7 @@ const BoardDetail = () => {
                 <h4>댓글</h4>
                 <CommentRegist/>
                 {
-                    detail?
+                    detail && detail.comments && detail.comments.length!==0 ?
                     <CommentList detail={detail}></CommentList>
                     :
                     <div>등록된 댓글이 없습니다.</div>
@@ -219,6 +225,21 @@ const BoardDetail = () => {
             align-items: center;
         `
 
+        function registRequest() {
+            registComment({
+                boardId: detail.boardId,
+                content: inputComment.content,
+                userId: sessionStorage.getItem("userId")
+            }).then(res => {
+                if (res.statusCode === 200) {
+                    // 현재 페이지 재로딩
+                    forceReload();
+                } else {
+                    alert(`${res.message}`)
+                }
+            })
+        }
+
         return(
             <CommentWrapper>
                 <TextField 
@@ -226,10 +247,15 @@ const BoardDetail = () => {
                     placeholder="댓글을 입력하세요" 
                     variant="outlined" 
                     onChange={(e) => changeHandle(e.target.value, "content")}
+                    onKeyPress= {(e) => {
+                        if (e.key === 'Enter') {
+                            registRequest();
+                        }
+                    }}
                     sx={{ width: "100%"}}/>
                 <Button
                     sx={{ p: '10px 10px'}}
-                    onClick={() => {console.log(inputComment);}}
+                    onClick={registRequest}
                 ><SendIcon sx={{ fontSize: 25 }}/></Button>
             </CommentWrapper>
         )

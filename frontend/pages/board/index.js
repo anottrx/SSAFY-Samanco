@@ -65,19 +65,19 @@ export default function Board() {
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <BoardList tag="notice"/>
+            <BoardList tag="NOTICE"/>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <BoardList tag="free"/>
+            <BoardList tag="FREE"/>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <BoardList tag="qna"/>
+            <BoardList tag="QNA"/>
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <BoardList tag="exam"/>
+            <BoardList tag="EXAM"/>
           </TabPanel>
           <TabPanel value={value} index={4}>
-            <BoardList tag="job"/>
+            <BoardList tag="JOB"/>
           </TabPanel>
       </Box>
     </Layout>
