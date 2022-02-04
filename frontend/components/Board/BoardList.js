@@ -2,7 +2,7 @@ import React, {useState, useRef, useEffect,useCallback, useLayoutEffect} from 'r
 import { useSelector, useDispatch } from 'react-redux';
 
 import { styled } from '@mui/material/styles';
-import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination, Button} from '@mui/material';
+import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination, Button, Chip} from '@mui/material';
 import Router from "next/router";
 import * as boardActions from '../../store/module/board';
 import SearchBar from "../Common/Search";
@@ -10,8 +10,9 @@ import style from "@emotion/styled";
 import Cookies from "universal-cookie";
 
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-
 import { getArticleByTag } from "../../pages/api/board";
+
+import BoardColor from "../../data/BoardColor.json"
 
 //게시글 목록 페이지
 
@@ -79,8 +80,10 @@ function BoardList(props) {
 
     const cookies = new Cookies();
     const [isLogin, setIsLogin] = useState(false);
+    const [isAll, setIsAll] = useState(false);
     const [isNotice, setIsNotice] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [tagInfo, setTagInfo] = useState({});
 
     useEffect(()=>{
         if (cookies.get("userToken")!='' && sessionStorage.getItem("nickname") != null) {
@@ -97,8 +100,10 @@ function BoardList(props) {
             else
                 setArticles({list: []});
         }));
+        setTagInfo(BoardColor[tag])
 
         if (tag === "notice") setIsNotice(true);
+        else if (tag === "all") setIsAll(true);
         if (sessionStorage.getItem("nickname") === "admin") setIsAdmin(true);
     }, [tag])
 
@@ -137,6 +142,11 @@ function BoardList(props) {
     const FileIcon = style.span`
         margin: 0px 10px 0px 20px;
         color: gray;
+    `
+
+    const TagChip = style(Chip)`
+        margin-right: 10px;
+        background-color: #${tagInfo.color}
     `
 
     return (
@@ -192,7 +202,13 @@ function BoardList(props) {
                                             Router.push("/board/"+data.boardId); 
                                         }}>
                                         <StyledTableCell component="th" scope="row">
-                                        {`${data.title} (${data.comments.length})`}
+                                        {
+                                            isAll?
+                                            <TagChip label={tagInfo.label} /> : null
+                                        }
+                                        {
+                                            `${data.title} (${data.comments? data.comments.length: 0})`
+                                        }
                                         {
                                             Array.isArray(data.files) && data.files.length !== 0?
                                             <FileIcon><AttachFileIcon />첨부파일</FileIcon>
