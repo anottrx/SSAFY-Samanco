@@ -10,7 +10,7 @@ import style from "@emotion/styled";
 import Cookies from "universal-cookie";
 
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { getArticleByTag } from "../../pages/api/board";
+import { getArticles, getArticleByTag } from "../../pages/api/board";
 
 import BoardColor from "../../data/BoardColor.json"
 
@@ -83,7 +83,7 @@ function BoardList(props) {
     const [isAll, setIsAll] = useState(false);
     const [isNotice, setIsNotice] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [tagInfo, setTagInfo] = useState({});
+    // const [tagInfo, setTagInfo] = useState({});
 
     useEffect(()=>{
         if (cookies.get("userToken")!='' && sessionStorage.getItem("nickname") != null) {
@@ -94,13 +94,26 @@ function BoardList(props) {
     useLayoutEffect(() => {
         // To do: tag 바뀔 때마다 태그로 리스트 불러오기
         // /api/board/tag/{tag}
-        getArticleByTag(tag).then((res => {
-            if (res.boards)
-                setArticles({list: res.boards});
-            else
-                setArticles({list: []});
-        }));
-        setTagInfo(BoardColor[tag])
+        if (tag === "all") {
+            getArticles()
+            .then((res => {
+                console.log(res)
+                if (res.boards)
+                    setArticles({list: res.boards});
+                else
+                    setArticles({list: []});
+            }));
+        } else {
+            getArticleByTag(tag).then((res => {
+                if (res.boards)
+                    setArticles({list: res.boards});
+                else
+                    setArticles({list: []});
+            }));
+        }
+
+        // setTagInfo(BoardColor[tag])
+        // console.log(tag)
 
         if (tag === "notice") setIsNotice(true);
         else if (tag === "all") setIsAll(true);
@@ -146,7 +159,7 @@ function BoardList(props) {
 
     const TagChip = style(Chip)`
         margin-right: 10px;
-        background-color: #${tagInfo.color}
+        ${({colorinfo}) => colorinfo && `background-color: #${colorinfo}`}
     `
 
     return (
@@ -204,7 +217,7 @@ function BoardList(props) {
                                         <StyledTableCell component="th" scope="row">
                                         {
                                             isAll?
-                                            <TagChip label={tagInfo.label} /> : null
+                                            <TagChip label={BoardColor[data.tag].label} colorinfo={BoardColor[data.tag].color}/> : null
                                         }
                                         {
                                             `${data.title} (${data.comments? data.comments.length: 0})`
