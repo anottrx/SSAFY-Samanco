@@ -1,10 +1,13 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.model.CommentDto;
 import com.ssafy.api.model.PositionDto;
 import com.ssafy.api.model.BoardDto;
 import com.ssafy.api.request.BoardRegisterReq;
 import com.ssafy.api.request.BoardUpdateReq;
+import com.ssafy.common.util.DateUtil;
 import com.ssafy.db.entity.Board;
+import com.ssafy.db.entity.Comment;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.UserLike;
 import com.ssafy.db.repository.*;
@@ -34,7 +37,13 @@ public class BoardServiceImpl implements BoardService {
     UserLikeRepositorySupport userLikeRepositorySupport;
 
 //    @Autowired
-//    UserRepositorySupport userRepositorySupport;  // 사용 못함
+//    CommentRepositorySupport commentRepositorySupport;
+
+    @Autowired
+    CommentService commentService;
+
+//    @Autowired
+//    UserRepositorySupport userRepositorySupport;
 
     @Override
     public Board createBoard(BoardRegisterReq boardRegisterReq) {
@@ -42,8 +51,9 @@ public class BoardServiceImpl implements BoardService {
         board.setUserId(boardRegisterReq.getUserId());
         board.setContent(boardRegisterReq.getContent());
         board.setTitle(boardRegisterReq.getTitle());
-        board.setStartDate(boardRegisterReq.getStartDate());
-        board.setEndDate(boardRegisterReq.getEndDate());
+        board.setTag(boardRegisterReq.getTag());
+//        board.setStartDate(boardRegisterReq.getStartDate());
+//        board.setEndDate(boardRegisterReq.getEndDate());
         return boardRepository.save(board);
     }
 
@@ -130,12 +140,28 @@ public class BoardServiceImpl implements BoardService {
         BoardDto boardDto=new BoardDto();
         boardDto.setBoardId(result.getId());
         boardDto.setContent(result.getContent());
-        boardDto.setEndDate(result.getEndDate());
+//        boardDto.setEndDate(result.getEndDate());
         boardDto.setUserId(result.getUserId());
         boardDto.setHit(result.getHit());
-        boardDto.setStartDate(result.getStartDate());
+//        boardDto.setStartDate(result.getStartDate());
         boardDto.setTitle(result.getTitle());
         boardDto.setLikes(likes);
+        boardDto.setTag(result.getTag());
+
+        List<CommentDto> comments = commentService.selectBoardCommentAll(result.getId());
+        boardDto.setComments(comments);
+
+        // 작성자 닉네임
+        String nickname = valid.selectUserNickname(result.getUserId());
+        if (nickname==null){
+            return null;
+        }
+        boardDto.setNickname(nickname);
+
+        // 작성 시간
+        String createdDate=result.getCreatedDate().toString();
+        boardDto.setDateOrTime(DateUtil.DateOrTime(createdDate));
+        boardDto.setDateAndTime(DateUtil.DateAndTime(createdDate));
 
         return  boardDto;
     }
@@ -177,6 +203,23 @@ public class BoardServiceImpl implements BoardService {
                 return (int) (o2.getLikes()-o1.getLikes());
             }
         });
+
+        return boards;
+    }
+
+    @Override
+    public List<BoardDto> selectBoardByTag(String tag) {
+        List<Board> results=boardRepositorySupport.selectByTag(tag);
+        if (results==null){
+            return null;
+        }
+        List<BoardDto> boards=new ArrayList<>();
+        for (Board result: results) {
+            BoardDto board=boardEntityToDto(result);
+            Long boardId=board.getBoardId();
+            board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
+            boards.add(board);
+        }
 
         return boards;
     }

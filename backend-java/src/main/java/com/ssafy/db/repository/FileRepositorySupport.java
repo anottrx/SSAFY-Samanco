@@ -5,11 +5,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.model.FileDto;
 import com.ssafy.db.entity.Files;
 import com.ssafy.db.entity.QFiles;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,20 @@ public class FileRepositorySupport {
         file.setSaveFile(result.getSaveFile());
         file.setOriginFile(result.getOriginFile());
         file.setSaveFolder(result.getSaveFolder());
+//        String realPath = new File("").getAbsolutePath() + File.separator + "files";
+//        realPath+=File.separator+result.getSaveFolder()+File.separator+result.getSaveFile();
+//        InputStream imageStream=null;
+//        try {
+//            imageStream=new FileInputStream(realPath);
+//            byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+//            file.setImageByteArr(imageByteArray);
+//            imageStream.close();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(file.getImageByteArr());
         return file;
     }
 

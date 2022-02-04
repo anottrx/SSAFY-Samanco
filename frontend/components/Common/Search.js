@@ -5,9 +5,11 @@ import { useState, useEffect, useCallback } from "react";
 import {useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
+import * as boardActions from '../../store/module/board';
 
 import {getProjectBytitle} from "../../pages/api/project"
 import {getStudyBytitle} from "../../pages/api/study"
+import {getArticleByTitle} from "../../pages/api/board"
 
 function SearchBar(props) {
     const [keyword, setKeyword] = useState("");
@@ -40,6 +42,17 @@ function SearchBar(props) {
                 .then(res => {
                     console.log(res.studies);
                     dispatch(studyActions.setStudyFilterList({list: res.studies}));
+                }
+                )
+            }
+        } else if (props.target === "board") {
+            if (!keyword)
+                dispatch(boardActions.setBoardFilterList({list: null}))
+            else {
+                getArticleByTitle(keyword)
+                .then(res => {
+                    console.log(res.boards);
+                    dispatch(boardActions.setBoardFilterList({list: res.boards}));
                 }
                 )
             }

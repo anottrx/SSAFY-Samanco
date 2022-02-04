@@ -14,10 +14,6 @@ public class FileDto {
     private String saveFolder;
     private String saveFile;
     private String originFile;
+//    private byte[] imageByteArr;
 
-    public FileDto(String saveFolder, String saveFile, String originFile) {
-        this.saveFolder = saveFolder;
-        this.saveFile = saveFile;
-        this.originFile = originFile;
-    }
 }

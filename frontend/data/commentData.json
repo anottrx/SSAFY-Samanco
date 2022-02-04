@@ -1,36 +1,43 @@
 [
     {
         "boardId" : 0,
+        "commentId": 0,
         "content" : "공지사항 이용방법이 따로 있나요?",
         "userId" : "12TKvl"
     },
     {
         "boardId" : 1,
+        "commentId": 1,
         "content" : "공지사항 작성 방법이 따로 있나요?",
         "userId" : "skddud123"
     },
     {
         "boardId" : 2,
+        "commentId": 2,
         "content" : "언제부터 이용 가능한가요?",
         "userId" : "12TKvl"
     },
     {
         "boardId" : 2,
+        "commentId": 3,
         "content" : "2월 18일로 알고 있는데 아닌가요?",
         "userId" : "skddud123"
     },
     {
         "boardId" : 2,
+        "commentId": 4,
         "content" : "아하! 그렇구나...",
         "userId" : "12TKvl"
     },
     {
         "boardId" : 2,
+        "commentId": 5,
         "content" : "붕어빵도 주나요???",
         "userId" : "hello627"
     },
     {
         "boardId" : 2,
+        "commentId": 6,
         "content" : "에이...설마요ㅋㅋㅋㅋㅋㅋㅋ",
         "userId" : "byebye32"
     }

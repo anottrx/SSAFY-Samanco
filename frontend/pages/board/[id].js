@@ -1,5 +1,5 @@
 import Layout from "../../components/layout";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import styled from "@emotion/styled";
 
@@ -7,15 +7,34 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { Card, Container, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogTitle, ButtonGroup, TextField } from "@mui/material";
-import SendIcon from '@mui/icons-material/Send';
 import { useState, useEffect } from "react";
+import * as boardActions from '../../store/module/board';
 import Router from "next/router";
-import CommentList from "./CommentList"
+import CommentList from "../../components/Board/CommentList"
+
+import SendIcon from '@mui/icons-material/Send';
+import { getArticleById, deleteBoard, registComment } from "../api/board";
+
+import { forceReload } from "../../util/ForceReload"
 
 //게시글 상세보기 페이지
 
-const ProjectDetail = () => { 
+const BoardDetail = () => { 
     const detail = useSelector(({ board }) => board.boardDetail);
+    // const [like, changeLike] = useState(detail.likes);
+    const [like, changeLike] = useState("");
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        getArticleById({
+            boardId:detail.boardId,
+            userId: sessionStorage.getItem("userId")
+        })
+        .then(res => {
+            dispatch(boardActions.setBoardDetail({detail: res.board}))
+        });
+    }, [like]);
 
     const CusContainer = styled(Container)`
         float: left
@@ -23,7 +42,7 @@ const ProjectDetail = () => {
 
     const DetailHeader = styled.div`
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         margin: 20px 0px; 
         & > h2 {
@@ -41,7 +60,7 @@ const ProjectDetail = () => {
             <DetailHeader>
                 <DetailOperation></DetailOperation>
             </DetailHeader>
-            <ProjectDetail></ProjectDetail>
+            <BoardDetail></BoardDetail>
         </CusContainer>
     </Layout>);
 
@@ -56,7 +75,7 @@ const ProjectDetail = () => {
             <>
             <ButtonGroup variant="outlined">
                 <Button onClick={() => {
-                    Router.push("/board/BoardRegist");
+                    Router.push("/board/update");
                 }}>수정</Button>
                 <Button onClick={JoinDialogOpen}>삭제</Button>
             </ButtonGroup>
@@ -69,7 +88,20 @@ const ProjectDetail = () => {
                 </DialogTitle>
                 <DialogActions>
                 <Button onClick={JoinDialogClose}>취소</Button>
-                <Button onClick={JoinDialogClose} autoFocus>
+                <Button onClick={() => {
+                    JoinDialogClose();
+                    deleteBoard({
+                        boardId: detail.boardId,
+                        userId: sessionStorage.getItem("userId")
+                    }).then(res => {
+                        if (res.statusCode === 200) {
+                            alert("게시물이 삭제되었습니다.")
+                            Router.push("/board")
+                        } else {
+                            alert(`${res.message}`)
+                        }
+                    })
+                }} autoFocus>
                     확인
                 </Button>
                 </DialogActions>
@@ -78,14 +110,23 @@ const ProjectDetail = () => {
         )
     }
 
-    function ProjectDetail() {
+    function BoardDetail() {
         const CusCard = styled(Card)`
             margin-top: 10px;
+            padding: 10px;
+
+            & h4 {
+                font-weight: bolder;
+                padding: 0;
+                margin: 0;
+            }
         `
+        
         const DetailWrapper = styled.div`
             display: flex;
             flex-direction: row;
-            padding: 10px;
+            align-items: baseline;
+
             & > div {
                 display: flex;
                 margin-left: auto;
@@ -95,29 +136,43 @@ const ProjectDetail = () => {
             & div > p {
                 margin-left: 10px;
             }
+
+            & .dateOrTime{
+                color: gray;
+            }
         `
-        //게시글 제목(title),작성자 아이디(userId),작성날짜(startDate),내용(content)
         return (
-            <CusCard sx={{ minWidth: 275 }}>
+            detail?
+            <>
+            <CusCard>
                 <CardContent>
                     <DetailWrapper>
-                        <h1>{detail.title}</h1>
+                        <h4>{detail.title}</h4>
                         <div>
-                            <p>{detail.userId}</p>
-                            <p>{detail.startDate}</p>
+                            <p>{detail.nickname}</p>
+                            <p className="dateOrTime">{detail.dateOrTime}</p>
                         </div>
                     </DetailWrapper>
-                    <Typography sx={{ fontSize: 18 }}>
+                    <Typography sx={{ fontSize: 15 }}>
                         {detail.content}
                     </Typography>
-                    <br />
                     <DetailAction detail={detail}></DetailAction>
-                    <Divider light />
-                    <CommentList detail={detail}></CommentList>
-                    <br />
                 </CardContent>
-                <CommentRegist/>
             </CusCard>
+            <CusCard>
+                <CardContent>
+                <h4>댓글</h4>
+                <CommentRegist/>
+                {
+                    detail && detail.comments && detail.comments.length!==0 ?
+                    <CommentList detail={detail}></CommentList>
+                    :
+                    <div>등록된 댓글이 없습니다.</div>
+                }
+                </CardContent>
+            </CusCard>
+            </>
+            : null
         )
     }
 
@@ -126,10 +181,9 @@ const ProjectDetail = () => {
         let detail = props.detail;
         const ActionWrapper = styled.div`
             display: flex;
-            float: right;
             flex-direction: row;
             justify-content: space-between;
-            padding: 20px;
+            margin-top: 20px;
             & > div, a {
                 display: flex;
                 flex-direction: row;
@@ -167,9 +221,24 @@ const ProjectDetail = () => {
 
         const CommentWrapper = styled.div`
             display: flex;
-            border : 1px dashed gray;
-            margin: 10px 10px 10px 10px;
+            margin: 10px 0px;
+            align-items: center;
         `
+
+        function registRequest() {
+            registComment({
+                boardId: detail.boardId,
+                content: inputComment.content,
+                userId: sessionStorage.getItem("userId")
+            }).then(res => {
+                if (res.statusCode === 200) {
+                    // 현재 페이지 재로딩
+                    forceReload();
+                } else {
+                    alert(`${res.message}`)
+                }
+            })
+        }
 
         return(
             <CommentWrapper>
@@ -178,10 +247,15 @@ const ProjectDetail = () => {
                     placeholder="댓글을 입력하세요" 
                     variant="outlined" 
                     onChange={(e) => changeHandle(e.target.value, "content")}
-                    sx={{ width: "900px"}}/>
+                    onKeyPress= {(e) => {
+                        if (e.key === 'Enter') {
+                            registRequest();
+                        }
+                    }}
+                    sx={{ width: "100%"}}/>
                 <Button
                     sx={{ p: '10px 10px'}}
-                    onClick={() => {console.log(inputComment);}}
+                    onClick={registRequest}
                 ><SendIcon sx={{ fontSize: 25 }}/></Button>
             </CommentWrapper>
         )
@@ -189,4 +263,4 @@ const ProjectDetail = () => {
 } 
 
 
-export default ProjectDetail;
+export default BoardDetail;

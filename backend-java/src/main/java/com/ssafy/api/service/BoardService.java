@@ -24,4 +24,6 @@ public interface BoardService {
     List<BoardDto> selectBoardByTitle(String title);
 
     List<BoardDto> selectBoardLikeOrder();
+
+    List<BoardDto> selectBoardByTag(String tag);
 }

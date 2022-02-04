@@ -10,16 +10,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BoardComment extends BaseEntity{
+public class Comment extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String content;
-
     private Long boardId;
-
     private Long userId;
 
 }

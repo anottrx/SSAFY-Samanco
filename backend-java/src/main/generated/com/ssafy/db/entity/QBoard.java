@@ -29,8 +29,6 @@ public class QBoard extends EntityPathBase<Board> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
-    public final StringPath endDate = createString("endDate");
-
     public final NumberPath<Long> hit = createNumber("hit", Long.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
@@ -45,8 +43,6 @@ public class QBoard extends EntityPathBase<Board> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    public final StringPath startDate = createString("startDate");
 
     public final StringPath tag = createString("tag");
 
