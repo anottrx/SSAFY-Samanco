@@ -9,7 +9,7 @@ import SearchBar from "../Common/Search";
 import style from "@emotion/styled";
 import Cookies from "universal-cookie";
 
-import { getBoardListAll } from "../../pages/api/board";
+import { getArticleByTag } from "../../pages/api/board";
 
 //게시글 목록 페이지
 
@@ -94,7 +94,7 @@ function BoardList(props) {
     useLayoutEffect(() => {
         // To do: tag 바뀔 때마다 태그로 리스트 불러오기
         // /api/board/tag/{tag}
-        getBoardListAll().then((res => {
+        getArticleByTag(tag).then((res => {
             if (res.boards)
                 setArticles({list: res.boards});
             else
@@ -150,7 +150,7 @@ function BoardList(props) {
                 </ProjectActions>
             </ItemWrapper>
             <TableContainer>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <Table aria-label="customized table">
                     <TableHead>
                     <TableRow>
                         <StyledTableCell>제목</StyledTableCell>
