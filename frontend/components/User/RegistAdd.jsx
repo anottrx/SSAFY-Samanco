@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Router from "next/router";
 import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSelectRegister";
 
@@ -16,11 +16,11 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import DatePicker from "../../components/Common/DatePicker";
 import styled from "@emotion/styled";
 import { LocalizationProvider } from "@mui/lab";
-import DateAdapter from "@mui/lab/AdapterDateFns";
 import MenuItem from "@mui/material/MenuItem";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 export default function RegistInfo() {
   const [inputState, setInputState] = useState({
@@ -118,28 +118,35 @@ export default function RegistInfo() {
   //   inputState[id] = value;
   //   // 리렌더링 X
   // };
+  const [infoValue, setInfoValue] = useState({
+    birthday: "",
+    stacks: [],
+  });
   const changeHandle = (value, name) => {
     if (name == "birthday") {
       inputState.birthday = value;
     } else {
       inputState[name] = value;
     }
-    console.log("생일 " + JSON.stringify(inputState));
   };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+    infoValue.stacks = inputState.stacks;
+    console.log(infoValue.birthday);
+
     setInputState((prevState) => ({
       ...prevState,
       [id]: value,
     }));
+    inputState.stacks = infoValue.stacks;
   };
 
   const positionHandleChange = (e) => {
     console.log(e.target.value);
     inputState.position = e.target.value;
-    console.log("inputState" + JSON.stringify(inputState));
-    console.log(inputState);
+    // console.log("inputState" + JSON.stringify(inputState));
+    // console.log(inputState);
   };
 
   const [links, setLinks] = useState([]);
@@ -159,9 +166,23 @@ export default function RegistInfo() {
   const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
   const koreanReg = /[ㄱ-ㅎㅏ-ㅣ가-힇ㆍ ᆢ]/g;
 
+  const [birthdayDate, setBirthdayDate] = useState("");
+
+  const handleBirthdayChange = (value) => {
+    const year = String(value.getFullYear()).slice(2, 4);
+    const month =
+      value.getMonth() + 1 > 9
+        ? value.getMonth() + 1
+        : "0" + (value.getMonth() + 1);
+    const day = value.getDate() > 9 ? value.getDate() : "0" + value.getDate();
+    const birthdayDateInputStyle = year + month + day;
+    setBirthdayDate(value);
+    inputState.birthday = birthdayDateInputStyle;
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("이전" + inputState);
+    // console.log("이전" + inputState);
 
     let isNormal = true;
     let msg = "";
@@ -193,8 +214,8 @@ export default function RegistInfo() {
 
     if (isNormal) {
       const formData = new FormData();
-      console.log("inputState" + JSON.stringify(inputState));
-      console.log(inputState);
+      // console.log("inputState" + JSON.stringify(inputState));
+      // console.log(inputState);
 
       if (inputState.phone == "") {
         inputState.phone = "00000000000";
@@ -230,6 +251,9 @@ export default function RegistInfo() {
           window.location.replace("/");
         } else {
           alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
+          sessionStorage.clear();
+          window.history.forward();
+          window.location.replace("/");
         }
       });
     } else {
@@ -297,15 +321,29 @@ export default function RegistInfo() {
               생년월일
             </Typography>
             <br />
-            <LocalizationProvider dateAdapter={DateAdapter}>
-              <DatePickerWrapper>
-                <DatePicker
-                  label=""
-                  onChange={handleChange}
-                  changeHandle={changeHandle}
-                ></DatePicker>
-              </DatePickerWrapper>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DesktopDatePicker
+                id="birthday"
+                inputFormat="yyyy-MM-dd"
+                mask={"____-__-__"}
+                value={birthdayDate || null}
+                onChange={handleBirthdayChange}
+                renderInput={(params) => (
+                  <TextField {...params} sx={{ width: 370, fontSize: 14 }} />
+                )}
+              />
             </LocalizationProvider>
+            {/* <LocalizationProvider dateAdapter={DateAdapter}>
+              <DatePickerWrapper>
+                <DatePickerUserRegist
+                  id="birthday"
+                  label=""
+                  // value={inputState.birthday}
+                  // onChange={handleChange}
+                  changeHandle={changeHandle}
+                ></DatePickerUserRegist>
+              </DatePickerWrapper>
+            </LocalizationProvider> */}
           </div>
           {/* 분야 */}
           <div className="mb-6">
