@@ -10,7 +10,7 @@ import {
   deleteUserAPI,
   loginAPI,
 } from "../../pages/api/user";
-import DatePicker from "../../components/Common/DatePicker";
+import DatePickerUser from "../../components/Common/DatePickerUser";
 import { LocalizationProvider } from "@mui/lab";
 import DateAdapter from "@mui/lab/AdapterDateFns";
 import {
@@ -78,7 +78,7 @@ export default function MyInfo() {
   ];
 
   const [nicknameInfo, setNicknameInfo] = useState({
-    nickname: "",
+    nickname: sessionStorage.getItem("nickname"),
     id: sessionStorage.getItem("userId"),
   });
 
@@ -97,6 +97,7 @@ export default function MyInfo() {
   const changeHandle = (value, name) => {
     if (name == "birthday") {
       inputState.birthday = value;
+      userBirthday.value = value;
       console.log("생일 " + JSON.stringify(inputState));
     } else {
       inputState[name] = value;
@@ -104,7 +105,11 @@ export default function MyInfo() {
     }
   };
 
-  const [userBirthday, setUserBirthday] = useState("");
+  const [userBirthday, setUserBirthday] = useState({
+    value: "",
+    initDate: "",
+  });
+  const [userBirthdayDate, setUserBirthdayDate] = useState("");
 
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
@@ -138,8 +143,10 @@ export default function MyInfo() {
           year = Number(year) > 25 ? 19 + year : 20 + year;
           let month = inputState.birthday.slice(2, 4);
           let day = inputState.birthday.slice(4, 6);
-          setUserBirthday(year + "-" + month + "-" + day);
-          // inputState.birthday.initDate = userBirthday;
+          setUserBirthdayDate(year + "-" + month + "-" + day);
+          // console.log(userBirthdayDate);
+          userBirthday.initDate = year + "-" + month + "-" + day;
+          userBirthday.value = year + "-" + month + "-" + day;
         }
         if (res.user.phone !== "00000000000") {
           inputState.phone = res.user.phone;
@@ -336,7 +343,7 @@ export default function MyInfo() {
     }
 
     if (isNormal) {
-      inputState.birthday = inputState.initDate;
+      inputState.birthday = userBirthday.value;
 
       inputState.stacks = {
         HTML: inputState.HTML,
@@ -482,16 +489,16 @@ export default function MyInfo() {
   const RowUpWrapper = styled.div`
     display: grid;
     // grid-template-columns: max-content max-content;
-    grid-template-columns: 60px 12fr ;
+    grid-template-columns: 60px 12fl;
     grid-gap: 8px;
     padding: 1px 0px;
   `;
   const RowWrapper = styled.div`
     display: grid;
     // grid-template-columns: max-content max-content;
-    grid-template-columns: 60px 12fr ;
+    grid-template-columns: 60px 12fr;
     grid-gap: 8px;
-    padding: 1px 0px;
+    padding: 2px 0px;
   `;
 
   return (
@@ -502,7 +509,7 @@ export default function MyInfo() {
             <h1>내정보</h1>
             <Box
               className="buttonBox"
-              sx={{ marginRight: "20%", float: "right" }}
+              sx={{ marginRight: "10%", float: "right" }}
             >
               {finishUpdate ? (
                 <>
@@ -583,7 +590,6 @@ export default function MyInfo() {
                     sx={{ width: "60%", display: "inline-block" }}
                   > */}
                   <ContentWrapper>
-
                     <Box sx={{ width: "100%", fontSize: "20px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
@@ -606,17 +612,17 @@ export default function MyInfo() {
                   /> */}
                       <label>(학번 {inputState.studentId})</label>
                     </Box>
-                    <RowUpWrapper >
-                    {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
+                    <RowUpWrapper>
+                      {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
                       <label>
                         이메일
                         {/* {inputState.email} */}
                         <input value={inputState.email || ""} disabled />
                       </label>
-                    {/* </Box> */}
+                      {/* </Box> */}
                     </RowUpWrapper>
                     {/* <div > */}
-                    <RowUpWrapper >
+                    <RowUpWrapper>
                       <label>
                         <span>닉네임</span>
                         <input
@@ -629,22 +635,21 @@ export default function MyInfo() {
                             handleChange(e);
                           }}
                         />
-                         {finishUpdate ? (
-                        nicknameChange ? (
-                          <Button onClick={handleNicknameClick}>
-                            중복 확인 완료
-                          </Button>
+                        {finishUpdate ? (
+                          nicknameChange ? (
+                            <Button onClick={handleNicknameClick} sx={{width:"100px"}}>
+                              중복 확인 완료
+                            </Button>
+                          ) : (
+                            <Button onClick={handleNicknameClick}>
+                              중복 확인
+                            </Button>
+                          )
                         ) : (
-                          <Button onClick={handleNicknameClick}>
-                            중복 확인
-                          </Button>
-                        )
-                      ) : (
-                        <></>
-                      )}
+                          <></>
+                        )}
                       </label>
-                     
-                      </RowUpWrapper>
+                    </RowUpWrapper>
                     {/* </div> */}
                   </ContentWrapper>
                   {/* </Box> */}
@@ -654,12 +659,10 @@ export default function MyInfo() {
               <ContentWrapper2>
                 <RowWrapper>
                   {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
-                  <label >
-                    생일
-                  </label>
+                  <label>생일</label>
                   {onlyView ? (
                     <input
-                      value={userBirthday}
+                      value={userBirthday.value}
                       // value={inputState.birthday}
                       disabled
                       // style={{ width: "60%" }}
@@ -667,11 +670,11 @@ export default function MyInfo() {
                   ) : (
                     <LocalizationProvider dateAdapter={DateAdapter}>
                       <DatePickerWrapper>
-                        <DatePicker
-                          value={inputState.initDate || ""}
+                        <DatePickerUser
+                          value={userBirthday || ""}
                           label=""
                           changeHandle={changeHandle}
-                        ></DatePicker>
+                        ></DatePickerUser>
                       </DatePickerWrapper>
                     </LocalizationProvider>
                   )}
@@ -686,10 +689,10 @@ export default function MyInfo() {
                     disabled={onlyView ? true : false}
                     onChange={handleChange}
                   />
-                  </RowWrapper>
+                </RowWrapper>
                 {/* </Box> */}
                 <RowWrapper>
-                {/* <Box sx={{ mb: 2 }}> */}
+                  {/* <Box sx={{ mb: 2 }}> */}
                   <label>분야</label>
                   {onlyView ? (
                     <input
@@ -727,7 +730,7 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-                {/* </Box> */}
+                  {/* </Box> */}
                 </RowWrapper>
                 <div>
                   <label>스택</label>
@@ -781,7 +784,7 @@ export default function MyInfo() {
           {finishUpdate ? (
             <></>
           ) : (
-            <Box sx={{ marginRight: "20%", float: "right" }}>
+            <Box sx={{ marginRight: "10%", float: "right" }}>
               <Button onClick={handleQuitClick}>탈퇴하기</Button>
             </Box>
           )}
