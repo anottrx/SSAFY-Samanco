@@ -1,6 +1,10 @@
-import Layout from "../../components/layout";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import Router from "next/router";
+import Layout from "../../components/layout";
+import * as boardActions from '../../store/module/board';
 
+import { getArticleById, deleteBoard, registComment, updateArticleLike } from "../api/board";
 import styled from "@emotion/styled";
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -12,13 +16,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { Card, Container, CardContent, Typography, Button, 
     Dialog, DialogActions, DialogTitle, ButtonGroup, TextField,
-    Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
-import { useState, useEffect } from "react";
-import * as boardActions from '../../store/module/board';
-import Router from "next/router";
+    Accordion, AccordionSummary, AccordionDetails, Chip } from "@mui/material";
 import CommentList from "../../components/Board/CommentList"
-
-import { getArticleById, deleteBoard, registComment, updateArticleLike } from "../api/board";
+import BoardColor from "../../data/BoardColor.json"
 
 import { forceReload } from "../../util/ForceReload"
 
@@ -26,6 +26,7 @@ import { forceReload } from "../../util/ForceReload"
 
 const BoardDetail = () => { 
     const detail = useSelector(({ board }) => board.boardDetail);
+    const tag = detail.tag;
     const [like, changeLike] = useState(detail.userLike);
 
     const dispatch = useDispatch();
@@ -47,7 +48,7 @@ const BoardDetail = () => {
 
     const DetailHeader = styled.div`
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         margin: 20px 0px; 
         & > h2 {
@@ -57,12 +58,22 @@ const BoardDetail = () => {
             height: fit-content;
         }
     `
+
+    const CusH2 = styled(Chip)`
+        margin-right: 10px;
+        font-size: 15px;
+        padding: 5px 0px;
+        ${({colorinfo}) => colorinfo && `background-color: #${colorinfo}`}
+    `
     
     return (
     <Layout>
         <CusContainer maxWidth="md">
             <br></br>
             <DetailHeader>
+                <CusH2 
+                    colorinfo={BoardColor[tag].color}
+                    label={BoardColor[tag].label} />
                 {
                     sessionStorage.getItem("userId")?
                     <DetailOperation />
