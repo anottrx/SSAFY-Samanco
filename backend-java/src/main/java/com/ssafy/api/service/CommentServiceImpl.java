@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.model.CommentDto;
 import com.ssafy.api.request.CommentRegisterReq;
 import com.ssafy.api.request.CommentUpdateReq;
+import com.ssafy.common.util.DateUtil;
 import com.ssafy.db.entity.Comment;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.UserLike;
@@ -108,17 +109,22 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto commentEntityToDto(Comment result) {
-//        User user = userRepositorySupport.selectUser(result.getUserId());
-//        if (user==null){
-//            return null;
-//        }
+        String nickname = valid.selectUserNickname(result.getUserId());
+        if (nickname==null){
+            return null;
+        }
 
         CommentDto commentDto=new CommentDto();
         commentDto.setCommentId(result.getId());
         commentDto.setContent(result.getContent());
         commentDto.setUserId(result.getUserId());
         commentDto.setBoardId(result.getBoardId());
-//        commentDto.setNickname(user.getNickname());
+        commentDto.setNickname(nickname);
+
+        // 작성 시간
+        String createdDate=result.getCreatedDate().toString();
+        commentDto.setDateOrTime(DateUtil.DateOrTime(createdDate));
+        commentDto.setDateAndTime(DateUtil.DateAndTime(createdDate));
 
         return  commentDto;
     }

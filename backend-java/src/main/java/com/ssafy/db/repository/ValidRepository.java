@@ -109,4 +109,9 @@ public class ValidRepository {
         }
         return true;
     }
+
+    public String selectUserNickname(Long userId) {
+        return jpaQueryFactory.select(qUser.nickname).from(qUser)
+                .where(qUser.isDeleted.eq(false), qUser.id.eq(userId)).fetchOne();
+    }
 }
