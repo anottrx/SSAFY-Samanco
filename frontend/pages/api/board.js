@@ -1,14 +1,14 @@
-import api, { getAuth, fileUrl } from "./index";
+import api, { fileUrl } from "./index";
 
-async function getBoardListAPI() {
-  // 글 목록 출력
+async function getBoardListAll() {
+  // 글 전체 목록 출력
   return await api
     .get("/api/board")
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
 
-async function registBoardAPI(formData) {
+async function registBoard(formData) {
   // 글 작성
   return await fileUrl
     .post("/api/board", formData, {
@@ -20,18 +20,18 @@ async function registBoardAPI(formData) {
     .catch((err) => err.response.data);
 }
 
-async function deleteBoardAPI(inputData) {
+async function deleteBoard(data) {
   // 글 삭제
   return await api
     .post("/api/board/delete", {
-      boardId: inputData.boardId,
-      userId: inputData.userId,
+      boardId: data.boardId,
+      userId: data.userId,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
 
-async function updateBoardAPI(formData) {
+async function updateBoard(formData) {
   // 글 수정
   return await fileUrl
     .post("/api/board/update", formData, {
@@ -62,11 +62,22 @@ async function getArticleById(data) {
     .catch((err) => err.response.data);
 }
 
+async function getArticleByTag(tag) {
+  // 글 태그로 검색 (tag)
+  return await api
+    .get("/api/board/tag/" + tag)
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
+
+
 export {
-  getBoardListAPI,
-  registBoardAPI,
-  deleteBoardAPI,
-  updateBoardAPI,
+  getBoardListAll,
+  registBoard,
+  deleteBoard,
+  updateBoard,
   getArticleByTitle,
-  getArticleById
+  getArticleById,
+  getArticleByTag
 };
