@@ -50,6 +50,7 @@ export default function MyInfo() {
     nickname: "",
     class: "",
     birthday: "",
+    initDate: "",
     generation: "",
     studentId: "",
     stacks: [],
@@ -132,11 +133,13 @@ export default function MyInfo() {
           // &&  res.user.birthday.toString().slice(0, 2) != todayYear
         ) {
           inputState.birthday = res.user.birthday;
+          inputState.initDate = res.user.birthday;
           let year = inputState.birthday.slice(0, 2);
           year = Number(year) > 25 ? 19 + year : 20 + year;
           let month = inputState.birthday.slice(2, 4);
           let day = inputState.birthday.slice(4, 6);
           setUserBirthday(year + "-" + month + "-" + day);
+          // inputState.birthday.initDate = userBirthday;
         }
         if (res.user.phone !== "00000000000") {
           inputState.phone = res.user.phone;
@@ -333,6 +336,8 @@ export default function MyInfo() {
     }
 
     if (isNormal) {
+      inputState.birthday = inputState.initDate;
+
       inputState.stacks = {
         HTML: inputState.HTML,
         CSS: inputState.CSS,
@@ -456,6 +461,11 @@ export default function MyInfo() {
     min-height: 200px;
     height: auto;
   `;
+  const ContentUpWrapper = styled.div`
+    display: flex;
+    max-width: 800px;
+    flex-direction: column;
+  `;
   const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -467,6 +477,21 @@ export default function MyInfo() {
     flex-direction: column;
     padding: 20px 0px;
     flex: 1;
+    max-width: 800px;
+  `;
+  const RowUpWrapper = styled.div`
+    display: grid;
+    // grid-template-columns: max-content max-content;
+    grid-template-columns: 60px 12fr ;
+    grid-gap: 8px;
+    padding: 1px 0px;
+  `;
+  const RowWrapper = styled.div`
+    display: grid;
+    // grid-template-columns: max-content max-content;
+    grid-template-columns: 60px 12fr ;
+    grid-gap: 8px;
+    padding: 1px 0px;
   `;
 
   return (
@@ -511,7 +536,7 @@ export default function MyInfo() {
               </DialogActions>
             </Dialog>
             <br />
-            <Box
+            <ContentUpWrapper
             // justifyContent="center"
             // alignItems="center"
             // sx={{mb: 2 }}
@@ -558,6 +583,7 @@ export default function MyInfo() {
                     sx={{ width: "60%", display: "inline-block" }}
                   > */}
                   <ContentWrapper>
+
                     <Box sx={{ width: "100%", fontSize: "20px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
@@ -580,71 +606,79 @@ export default function MyInfo() {
                   /> */}
                       <label>(학번 {inputState.studentId})</label>
                     </Box>
-                    <Box whiteSpace="nowrap" sx={{ mb: 1 }}>
+                    <RowUpWrapper >
+                    {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
                       <label>
-                        이메일 주소
+                        이메일
                         {/* {inputState.email} */}
                         <input value={inputState.email || ""} disabled />
                       </label>
-                    </Box>
-                    <div sx={{ mb: 1 }}>
+                    {/* </Box> */}
+                    </RowUpWrapper>
+                    {/* <div > */}
+                    <RowUpWrapper >
                       <label>
-                        <span style={{ width: "70px" }}>닉네임</span>
+                        <span>닉네임</span>
                         <input
                           id="nickname"
                           value={inputState.nickname || ""}
                           disabled={onlyView ? true : false}
-                          style={{ display: "inline-block", width: "240px" }}
+                          // style={{ display: "inline-block", width: "240px" }}
                           onChange={(e) => {
                             handleNicknameChange(e);
                             handleChange(e);
                           }}
                         />
-                      </label>
-                      {finishUpdate ? (
+                         {finishUpdate ? (
                         nicknameChange ? (
-                          <button onClick={handleNicknameClick}>
+                          <Button onClick={handleNicknameClick}>
                             중복 확인 완료
-                          </button>
+                          </Button>
                         ) : (
-                          <button onClick={handleNicknameClick}>
+                          <Button onClick={handleNicknameClick}>
                             중복 확인
-                          </button>
+                          </Button>
                         )
                       ) : (
                         <></>
                       )}
-                    </div>
+                      </label>
+                     
+                      </RowUpWrapper>
+                    {/* </div> */}
                   </ContentWrapper>
                   {/* </Box> */}
                   {/* </Box> */}
                 </DetailWrapper>
               </div>
               <ContentWrapper2>
-                <Box sx={{ mb: 2, verticalAlign: "center" }}>
-                  <label style={{ fontSize: "16px", width: "40" }}>
-                    생년월일
+                <RowWrapper>
+                  {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
+                  <label >
+                    생일
                   </label>
                   {onlyView ? (
                     <input
                       value={userBirthday}
                       // value={inputState.birthday}
                       disabled
-                      style={{ width: "60%" }}
+                      // style={{ width: "60%" }}
                     />
                   ) : (
                     <LocalizationProvider dateAdapter={DateAdapter}>
                       <DatePickerWrapper>
                         <DatePicker
-                          value={inputState.birthday || ""}
+                          value={inputState.initDate || ""}
                           label=""
                           changeHandle={changeHandle}
                         ></DatePicker>
                       </DatePickerWrapper>
                     </LocalizationProvider>
                   )}
-                </Box>
-                <Box sx={{ mb: 2 }}>
+                </RowWrapper>
+                {/* </Box> */}
+                {/* <Box sx={{ mb: 2 }}> */}
+                <RowWrapper>
                   <label>전화번호</label>
                   <input
                     id="phone"
@@ -652,8 +686,10 @@ export default function MyInfo() {
                     disabled={onlyView ? true : false}
                     onChange={handleChange}
                   />
-                </Box>
-                <Box sx={{ mb: 2 }}>
+                  </RowWrapper>
+                {/* </Box> */}
+                <RowWrapper>
+                {/* <Box sx={{ mb: 2 }}> */}
                   <label>분야</label>
                   {onlyView ? (
                     <input
@@ -691,7 +727,8 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-                </Box>
+                {/* </Box> */}
+                </RowWrapper>
                 <div>
                   <label>스택</label>
                   {onlyView && inputState.stacks_get != null ? (
@@ -709,8 +746,8 @@ export default function MyInfo() {
                   <TextField
                     id="description"
                     placeholder="자기자신에 대해 소개해주세요"
-                    // fullWidth
-                    sx={{ width: "80%" }}
+                    fullWidth
+                    // sx={{ width: "80%" }}
                     rows={4}
                     multiline
                     value={inputState.description || ""}
@@ -739,7 +776,7 @@ export default function MyInfo() {
                   )}
                 </Box>
               </ContentWrapper2>
-            </Box>
+            </ContentUpWrapper>
           </div>
           {finishUpdate ? (
             <></>
