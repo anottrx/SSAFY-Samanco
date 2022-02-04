@@ -16,5 +16,6 @@ public class CommentDto {
     private Long boardId;
     private String content;
     private String nickname;
-    private String createdDate;
+    private String dateOrTime;
+    private String dateAndTime;
 }

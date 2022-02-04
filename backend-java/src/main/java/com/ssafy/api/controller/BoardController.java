@@ -55,16 +55,18 @@ public class BoardController {
             @RequestParam("userId") Long userId,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam(required = false, value="startDate") String startDate,
-            @RequestParam(required = false, value="endDate") String endDate,
+            @RequestParam("tag") String tag,
+//            @RequestParam(required = false, value="startDate") String startDate,
+//            @RequestParam(required = false, value="endDate") String endDate,
             @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {
 
         BoardRegisterReq registerInfo=new BoardRegisterReq();
         registerInfo.setTitle(title);
         registerInfo.setUserId(userId);
         registerInfo.setContent(content);
-        registerInfo.setStartDate(startDate);
-        registerInfo.setEndDate(endDate);
+        registerInfo.setTag(tag);
+//        registerInfo.setStartDate(startDate);
+//        registerInfo.setEndDate(endDate);
 
         if (files!=null) {
             System.out.println(files[0].getOriginalFilename());
@@ -91,8 +93,8 @@ public class BoardController {
             @RequestParam("userId") Long userId,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam(required = false, value="startDate") String startDate,
-            @RequestParam(required = false, value="endDate") String endDate,
+//            @RequestParam(required = false, value="startDate") String startDate,
+//            @RequestParam(required = false, value="endDate") String endDate,
             @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {
 
         BoardUpdateReq updateInfo=new BoardUpdateReq();
@@ -100,8 +102,8 @@ public class BoardController {
         updateInfo.setTitle(title);
         updateInfo.setUserId(userId);
         updateInfo.setContent(content);
-        updateInfo.setStartDate(startDate);
-        updateInfo.setEndDate(endDate);
+//        updateInfo.setStartDate(startDate);
+//        updateInfo.setEndDate(endDate);
         // board update
         int boardCode=boardService.updateBoard(updateInfo);
         // board 이미지 update

@@ -5,6 +5,7 @@ import com.ssafy.api.model.PositionDto;
 import com.ssafy.api.model.BoardDto;
 import com.ssafy.api.request.BoardRegisterReq;
 import com.ssafy.api.request.BoardUpdateReq;
+import com.ssafy.common.util.DateUtil;
 import com.ssafy.db.entity.Board;
 import com.ssafy.db.entity.Comment;
 import com.ssafy.db.entity.User;
@@ -149,11 +150,16 @@ public class BoardServiceImpl implements BoardService {
         boardDto.setComments(comments);
 
         // 작성자 닉네임
-//        User user = userRepositorySupport.selectUser(result.getUserId());
-//        if (user==null){
-//            return null;
-//        }
-//        boardDto.setNickname(user.getNickname());
+        String nickname = valid.selectUserNickname(result.getUserId());
+        if (nickname==null){
+            return null;
+        }
+        boardDto.setNickname(nickname);
+
+        // 작성 시간
+        String createdDate=result.getCreatedDate().toString();
+        boardDto.setDateOrTime(DateUtil.DateOrTime(createdDate));
+        boardDto.setDateAndTime(DateUtil.DateAndTime(createdDate));
 
         return  boardDto;
     }
