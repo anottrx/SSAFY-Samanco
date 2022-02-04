@@ -35,56 +35,30 @@ const stack = [
 ];
 
 function StackLevelSelectRegister(props) {
-  // const initValue = Object.values(JSON.stringify(props));
-
-  console.log("props" + props.values);
-  console.log("JSON.stringify(props.values)" + JSON.stringify(props.values));
+  // console.log("props" + props.values);
+  // console.log("JSON.stringify(props.values)" + JSON.stringify(props.values));
   const stackList = JSON.stringify(props.values);
 
   let initValue = JSON.parse(stackList);
-  console.log("initValue" + initValue);
+  // console.log("initValue" + initValue);
 
-  let initArray=[];
+  let initArray = [];
   if (stackList) {
-    console.log(stackList);
-
     Object.keys(initValue).forEach(function (obj) {
       const value = initValue[obj];
       initArray.push({ name: value.name, level: value.grade });
     });
-    // initValue.map((obj) =>
-    // console.log(JSON.stringify.apply(obj))
-    // initArray.push({ name: obj.name, level: obj.grade })
-    // );
-    // Object.keys(stackList).map((data) => {
-    //   // initArray.push(data.name)
-    //   console.log("data" + data);
-    //   // initArray.push({ name: data.name, level: data.grade });
-    // });
   }
-  // if (props.initData) {
-  //   props.initData.map((data) => {
-  //     initArray.push({ name: data.name, level: data.grade });
-  //   });
-  // }
-  console.log("initArray" + JSON.stringify(initArray));
-  // if (props.initData) {
-  //   props.initData.map((data) => {
-  //     if (data.stack.includes("current") && data.size > 0) {
-  //       let name = data.stack.split("current")[1];
-  //       initArray.push({ name: name, level: data.size });
-  //     }
-  //   });
-  // }
+  // console.log("initArray" + JSON.stringify(initArray));
 
   const [stacks, setStacks] = useState(props.values ? initArray : []);
-  console.log("stacks: " + JSON.stringify(stacks))
+  // console.log("stacks: " + JSON.stringify(stacks))
 
   const handleAutocompleteChange = (event) => {
     const name = event.target.innerText;
 
-    console.log("name: " + name)
-    console.log("stacks: " + JSON.stringify(stacks))
+    // console.log("name: " + name)
+    // console.log("stacks: " + JSON.stringify(stacks))
 
     if (!name) return false;
     let isInclude = false;
