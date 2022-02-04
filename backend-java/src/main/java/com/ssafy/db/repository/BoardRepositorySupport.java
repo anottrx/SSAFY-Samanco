@@ -42,13 +42,13 @@ public class BoardRepositorySupport {
         Long boardId=boardUpdateInfo.getBoardId();
         String content=(boardUpdateInfo.getContent());
         String title=(boardUpdateInfo.getTitle());
-        String startDate=(boardUpdateInfo.getStartDate());
-        String endDate=(boardUpdateInfo.getEndDate());
+//        String startDate=(boardUpdateInfo.getStartDate());
+//        String endDate=(boardUpdateInfo.getEndDate());
         jpaQueryFactory.update(qBoard).where(qBoard.id.eq(boardId))
                 .set(qBoard.content, content)
                 .set(qBoard.title, title)
-                .set(qBoard.startDate, startDate)
-                .set(qBoard.endDate, endDate)
+//                .set(qBoard.startDate, startDate)
+//                .set(qBoard.endDate, endDate)
                 .execute();
 
         return 200;
@@ -87,7 +87,7 @@ public class BoardRepositorySupport {
 
     public List<Board> selectByTag(String tag) {
         return jpaQueryFactory.selectFrom(qBoard)
-                .where(qBoard.isDeleted.eq(false), qBoard.tag.eq(tag)).orderBy(qBoard.id.desc()).fetch();
+                .where(qBoard.isDeleted.eq(false), qBoard.tag.equalsIgnoreCase(tag)).orderBy(qBoard.id.desc()).fetch();
 
     }
 }
