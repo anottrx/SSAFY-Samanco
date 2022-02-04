@@ -57,26 +57,30 @@ export default function Board() {
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="공지사항" {...a11yProps(0)} />
-              <Tab label="자유게시판" {...a11yProps(1)} />
-              <Tab label="질문게시판" {...a11yProps(2)} />
-              <Tab label="정보공유" {...a11yProps(3)} />
-              <Tab label="사람구해요" {...a11yProps(4)} />
+              <Tab label="전체 보기" {...a11yProps(0)} />
+              <Tab label="공지사항" {...a11yProps(1)} />
+              <Tab label="자유게시판" {...a11yProps(2)} />
+              <Tab label="질문게시판" {...a11yProps(3)} />
+              <Tab label="정보공유" {...a11yProps(4)} />
+              <Tab label="사람구해요" {...a11yProps(5)} />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <BoardList tag="NOTICE"/>
+            <BoardList tag="ALL"/>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <BoardList tag="FREE"/>
+            <BoardList tag="NOTICE"/>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <BoardList tag="QNA"/>
+            <BoardList tag="FREE"/>
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <BoardList tag="EXAM"/>
+            <BoardList tag="QNA"/>
           </TabPanel>
           <TabPanel value={value} index={4}>
+            <BoardList tag="EXAM"/>
+          </TabPanel>
+          <TabPanel value={value} index={5}>
             <BoardList tag="JOB"/>
           </TabPanel>
       </Box>
