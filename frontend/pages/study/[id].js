@@ -408,8 +408,8 @@ const StudyDetail = () => {
                         <span>{detail.hit}</span>
                     </Button>
                     <Button onClick={() => {
-                        changeLike(!like);
                         if (sessionStorage.getItem("userId")) {
+                            changeLike(!like);
                             updateStudyLike({
                                 tag: "STUDY",
                                 studyId: detail.id, // 스터디 아이디

@@ -430,8 +430,8 @@ function DetailOperation({detail}) {
                         <span>{detail.hit}</span>
                     </Button>
                     <Button onClick={() => {
-                        changeLike(!like);
                         if (sessionStorage.getItem("userId")) {
+                            changeLike(!like);
                             console.log("좋아요");
                             updateProjectLike({
                                 tag: "PROJECT",
