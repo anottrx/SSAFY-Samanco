@@ -10,14 +10,14 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QBoardComment is a Querydsl query type for BoardComment
+ * QComment is a Querydsl query type for Comment
  */
 @Generated("com.querydsl.codegen.EntitySerializer")
-public class QBoardComment extends EntityPathBase<BoardComment> {
+public class QComment extends EntityPathBase<Comment> {
 
-    private static final long serialVersionUID = 2138870107L;
+    private static final long serialVersionUID = 396596317L;
 
-    public static final QBoardComment boardComment = new QBoardComment("boardComment");
+    public static final QComment comment = new QComment("comment");
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
@@ -44,16 +44,16 @@ public class QBoardComment extends EntityPathBase<BoardComment> {
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
-    public QBoardComment(String variable) {
-        super(BoardComment.class, forVariable(variable));
+    public QComment(String variable) {
+        super(Comment.class, forVariable(variable));
     }
 
-    public QBoardComment(Path<? extends BoardComment> path) {
+    public QComment(Path<? extends Comment> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QBoardComment(PathMetadata metadata) {
-        super(BoardComment.class, metadata);
+    public QComment(PathMetadata metadata) {
+        super(Comment.class, metadata);
     }
 
 }
