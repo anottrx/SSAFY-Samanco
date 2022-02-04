@@ -99,11 +99,13 @@ function ApplyAccordion(props) {
                         // 가입 승인
                         let approveData = {
                           userId: data.id,
-                          hostId: sessionStorage.getItem("userId"),
+                          hostId: sessionStorage.getItem("userId") == null? 
+                          0: sessionStorage.getItem("userId"),
                           joinTag: "OK"
                         };
                         let joinData = {
-                          userId: sessionStorage.getItem("userId")
+                          userId: sessionStorage.getItem("userId") == null? 
+                          0: sessionStorage.getItem("userId")
                         }
                         switch (props.from) {
                           case "project":

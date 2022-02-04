@@ -75,7 +75,8 @@ function CommentList({detail}) {
             boardId: detail.boardId,
             commentId: targetComment.commentId,
             content: editComment.content,
-            userId: sessionStorage.getItem("userId")
+            userId: sessionStorage.getItem("userId") == null? 
+            0: sessionStorage.getItem("userId")
         })
         .then(res => {
             if (res.statusCode === 200) {
@@ -131,7 +132,7 @@ function CommentList({detail}) {
                     </div>
                     
                     {
-                        editStatus?
+                        editStatus && data.userId === sessionStorage.getItem("userId")?
                             targetComment.commentId !== data.commentId?
                                 <CommentOperation data={data}/>
                                 :
@@ -188,7 +189,8 @@ function CommentList({detail}) {
                     DeleteDialogClose();
                     deleteComment({
                         commentId: commentId,
-                        userId: sessionStorage.getItem("userId")
+                        userId: sessionStorage.getItem("userId") == null? 
+                        0: sessionStorage.getItem("userId")
                     }).then(res => {
                         if (res.statusCode === 200) {
                             alert("댓글이 삭제되었습니다.")
