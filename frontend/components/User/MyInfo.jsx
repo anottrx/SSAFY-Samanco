@@ -343,7 +343,7 @@ export default function MyInfo() {
     }
 
     if (isNormal) {
-      inputState.birthday = userBirthday.value;
+      // inputState.birthday = userBirthday.value;
 
       inputState.stacks = {
         HTML: inputState.HTML,
@@ -451,10 +451,14 @@ export default function MyInfo() {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+    // inputState.birthday = userBirthday.value;
     setInputState((prevState) => ({
       ...prevState,
       [id]: value,
     }));
+    // inputState.birthday = userBirthday.value;
+    console.log(userBirthday.value);
+    console.log(inputState.birthday);
   };
 
   const DetailWrapper = styled.div`
@@ -662,7 +666,7 @@ export default function MyInfo() {
                   <label>생일</label>
                   {onlyView ? (
                     <input
-                      value={userBirthday.value}
+                      value={userBirthday.value,inputState.birthday}
                       // value={inputState.birthday}
                       disabled
                       // style={{ width: "60%" }}
@@ -673,7 +677,7 @@ export default function MyInfo() {
                         <DatePickerUser
                           value={userBirthday || ""}
                           label=""
-                          changeHandle={changeHandle}
+                          changeHandle={(e)=>{changeHandle(e);}}
                         ></DatePickerUser>
                       </DatePickerWrapper>
                     </LocalizationProvider>
