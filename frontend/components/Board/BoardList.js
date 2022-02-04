@@ -89,11 +89,15 @@ function BoardList(props) {
         if (cookies.get("userToken")!='' && sessionStorage.getItem("nickname") != null) {
             setIsLogin(true);
         }
+        return () => {
+            dispatch(boardActions.setBoardFilterList({list: null}))
+          };
     },[]);
-    
     useLayoutEffect(() => {
         // To do: tag 바뀔 때마다 태그로 리스트 불러오기
         // /api/board/tag/{tag}
+        
+        dispatch(boardActions.setBoardFilterList({list: null}))
         if (tag === "all") {
             getArticles()
             .then((res => {
@@ -206,7 +210,7 @@ function BoardList(props) {
                             :
                             <>
                             {
-                                filterData!==null?
+                                typeof(filterData)!=="undefined" && filterData!==null?
                                 filterData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
                                     return(
                                     <StyledTableRow key={data.boardId} style={{cursor: "pointer"}}

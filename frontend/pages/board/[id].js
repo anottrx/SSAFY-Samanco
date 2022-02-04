@@ -63,7 +63,11 @@ const BoardDetail = () => {
         <CusContainer maxWidth="md">
             <br></br>
             <DetailHeader>
-                <DetailOperation></DetailOperation>
+                {
+                    sessionStorage.getItem("userId")?
+                    <DetailOperation />
+                    : null
+                }
             </DetailHeader>
             <BoardDetail></BoardDetail>
         </CusContainer>
