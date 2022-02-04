@@ -28,8 +28,9 @@ const BoardDetail = () => {
 
     useEffect(() => {
         getArticleById({
-            boardId:detail.boardId,
-            userId: sessionStorage.getItem("userId")
+            boardId: detail.boardId,
+            userId: sessionStorage.getItem("userId") == null? 
+            0: sessionStorage.getItem("userId")
         })
         .then(res => {
             dispatch(boardActions.setBoardDetail({detail: res.board}))

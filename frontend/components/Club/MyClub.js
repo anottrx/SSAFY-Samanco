@@ -53,14 +53,16 @@ function MyClub(props){
         console.log(props.from)
         switch (props.from) {
             case "project":
-                getProjectByUserId(parseInt(sessionStorage.getItem("userId")))
+                getProjectByUserId(sessionStorage.getItem("userId") == null? 
+                0: sessionStorage.getItem("userId"))
                 .then(res => {
                     dispatch(projectActions.setMyProject({project: res.project}))
                     dispatch(projectActions.setProjectDetail({detail: res.project}))
                 });
                 break;
             case "study":
-                getStudyByUserId(parseInt(sessionStorage.getItem("userId")))
+                getStudyByUserId(sessionStorage.getItem("userId") == null? 
+                0: sessionStorage.getItem("userId"))
                 .then(res => {
                     // To Do: 내 스터디 리스트 처리
                     dispatch(studyActions.setMyStudy({study: res.studies}))
