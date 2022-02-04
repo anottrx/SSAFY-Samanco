@@ -49,11 +49,11 @@ const ProjectDetail = () => {
         .then(res => {
             dispatch(projectActions.setProjectDetail({detail: res.project}));
 
-            blob = new Blob([new ArrayBuffer(detail.file.imageByteArr)], { type: "image/png" })
-            imageUrl = URL.createObjectURL(blob);
+            // blob = new Blob([new ArrayBuffer(detail.file.imageByteArr)], { type: "image/png" })
+            // imageUrl = URL.createObjectURL(blob);
 
-            console.log(blob);
-            console.log(detail.file.imageByteArr);
+            // console.log(blob);
+            // console.log(detail.file.imageByteArr);
         });
     }, [like]);
 

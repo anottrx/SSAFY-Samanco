@@ -210,7 +210,8 @@ function BoardUpdate() {
                             .then(res => {
                                 if (res.statusCode === 200) {
                                     alert("게시물이 수정되었습니다.")
-                                    Router.push("board/"+detail.boardId);
+                                    // to do : 경로 수정~
+                                    Router.push("/board/"+detail.boardId);
                                 } else {
                                     alert(`${res.message}`)
                                 }

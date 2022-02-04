@@ -44,7 +44,7 @@ export default function Carousel(props) {
         speed: 500
     });
 
-    if (lgMatches) {
+    if (clubData && lgMatches) {
         if (clubData.length >= 4) {
             settings.slidesToShow = 4;
             settings.slidesToScroll = 4;
@@ -53,7 +53,7 @@ export default function Carousel(props) {
             settings.slidesToScroll = clubData.length;
         }
     }
-    else if (mdMatches) {
+    else if (clubData && mdMatches) {
         if (clubData.length >= 3) {
             settings.slidesToShow = 3;
             settings.slidesToScroll = 3;
@@ -62,7 +62,7 @@ export default function Carousel(props) {
             settings.slidesToScroll = clubData.length;
         }
     } 
-    else if (smMatches) {
+    else if (clubData && smMatches) {
         if (clubData.length >= 2) {
             settings.slidesToShow = 2;
             settings.slidesToScroll = 2;
@@ -71,7 +71,10 @@ export default function Carousel(props) {
             settings.slidesToScroll = clubData.length;
         }
     } 
-    else if (xsMaches) {
+    else if (clubData && xsMaches) {
+        settings.slidesToShow = 1;
+        settings.slidesToScroll = 1;
+    } else {
         settings.slidesToShow = 1;
         settings.slidesToScroll = 1;
     }
@@ -111,17 +114,19 @@ export default function Carousel(props) {
     }, []);
 
     return (
-    <CarouselWrapper>
-        <h2>{props.label}</h2>
-        <Slider {...settings}>
-        {
-            clubData.map((data, index) => {
-                return (
-                    <Item key={index} data={data} setDetail={setDetail} from={props.target}></Item> 
-                )
-            })
-        }
-        </Slider>
-    </CarouselWrapper>
+        clubData? 
+        <CarouselWrapper>
+            <h2>{props.label}</h2>
+            <Slider {...settings}>
+            {
+                clubData.map((data, index) => {
+                    return (
+                        <Item key={index} data={data} setDetail={setDetail} from={props.target}></Item> 
+                    )
+                })
+            }
+            </Slider>
+        </CarouselWrapper>
+        : null
     );
   }
