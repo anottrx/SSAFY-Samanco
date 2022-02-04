@@ -5,6 +5,8 @@ import styled from "@emotion/styled";
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import SendIcon from '@mui/icons-material/Send';
 
 import { Card, Container, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogTitle, ButtonGroup, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
@@ -12,8 +14,7 @@ import * as boardActions from '../../store/module/board';
 import Router from "next/router";
 import CommentList from "../../components/Board/CommentList"
 
-import SendIcon from '@mui/icons-material/Send';
-import { getArticleById, deleteBoard, registComment } from "../api/board";
+import { getArticleById, deleteBoard, registComment, updateArticleLike } from "../api/board";
 
 import { forceReload } from "../../util/ForceReload"
 
@@ -21,8 +22,7 @@ import { forceReload } from "../../util/ForceReload"
 
 const BoardDetail = () => { 
     const detail = useSelector(({ board }) => board.boardDetail);
-    // const [like, changeLike] = useState(detail.likes);
-    const [like, changeLike] = useState("");
+    const [like, changeLike] = useState(detail.userLike);
 
     const dispatch = useDispatch();
 
@@ -204,8 +204,26 @@ const BoardDetail = () => {
                         <VisibilityIcon /> 
                         <span>{detail.hit}</span>
                     </Button>
-                    <Button>
-                        <FavoriteIcon /> 
+                    <Button onClick={() => {
+                        if (sessionStorage.getItem("userId")) {
+                            changeLike(!like);
+                            console.log("좋아요");
+                            updateArticleLike({
+                                tag: "BOARD",
+                                boardId: detail.boardId, 
+                                userId: sessionStorage.getItem("userId")
+                            }).then(res => console.log(res))
+                        } else {
+                            alert("로그인이 필요한 작업입니다.");
+                            Router.push("/login")
+                        }
+                    }} variant={like? "contained":"outlined"}>
+                        {
+                            like?
+                            <FavoriteIcon /> 
+                            :
+                            <FavoriteBorderIcon /> 
+                        }
                         <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
