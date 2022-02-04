@@ -39,11 +39,14 @@ function StackLevelSelectRegister(props) {
   // console.log("JSON.stringify(props.values)" + JSON.stringify(props.values));
   const stackList = JSON.stringify(props.values);
 
-  let initValue = JSON.parse(stackList);
+  let initValue ;
+  if(stackList!=null) {
+    initValue  = JSON.parse(stackList);
+  }
   // console.log("initValue" + initValue);
 
   let initArray = [];
-  if (stackList) {
+  if (stackList && initValue) {
     Object.keys(initValue).forEach(function (obj) {
       const value = initValue[obj];
       initArray.push({ name: value.name, level: value.grade });
