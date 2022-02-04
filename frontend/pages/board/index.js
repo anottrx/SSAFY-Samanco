@@ -5,7 +5,7 @@ import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
 import Layout from "../../components/layout";
 import styled from '@emotion/styled';
 
-import BoardList from "./BoardList";
+import BoardList from "../../components/Board/BoardList";
 
 
 //게시판 탭(공지사항, 자유게시판, 질문게시판, 정보공유, 사람구해요)

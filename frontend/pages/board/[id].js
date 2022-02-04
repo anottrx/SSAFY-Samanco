@@ -10,10 +10,10 @@ import { Card, Container, CardContent, Typography, Divider, Button, Dialog, Dial
 import { useState, useEffect } from "react";
 import * as boardActions from '../../store/module/board';
 import Router from "next/router";
-import CommentList from "./CommentList"
+import CommentList from "../../components/Board/CommentList"
 
 import SendIcon from '@mui/icons-material/Send';
-import { getArticleById } from "../api/board";
+import { getArticleById, deleteBoard } from "../api/board";
 
 //게시글 상세보기 페이지
 
@@ -73,7 +73,7 @@ const BoardDetail = () => {
             <>
             <ButtonGroup variant="outlined">
                 <Button onClick={() => {
-                    Router.push("/board/BoardRegist");
+                    Router.push("/board/update");
                 }}>수정</Button>
                 <Button onClick={JoinDialogOpen}>삭제</Button>
             </ButtonGroup>
@@ -86,7 +86,20 @@ const BoardDetail = () => {
                 </DialogTitle>
                 <DialogActions>
                 <Button onClick={JoinDialogClose}>취소</Button>
-                <Button onClick={JoinDialogClose} autoFocus>
+                <Button onClick={() => {
+                    JoinDialogClose();
+                    deleteBoard({
+                        boardId: detail.boardId,
+                        userId: sessionStorage.getItem("userId")
+                    }).then(res => {
+                        if (res.statusCode === 200) {
+                            alert("게시물이 삭제되었습니다.")
+                            Router.push("/board")
+                        } else {
+                            alert(`${res.message}`)
+                        }
+                    })
+                }} autoFocus>
                     확인
                 </Button>
                 </DialogActions>
@@ -130,8 +143,8 @@ const BoardDetail = () => {
                     <DetailWrapper>
                         <h4>{detail.title}</h4>
                         <div>
-                            <p>{detail.userId}</p>
-                            <p>{detail.startDate}</p>
+                            <p>{detail.nickname}</p>
+                            <p>{detail.createdDate}</p>
                         </div>
                     </DetailWrapper>
                     <Typography sx={{ fontSize: 15 }}>
