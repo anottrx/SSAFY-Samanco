@@ -31,6 +31,85 @@ import StackLevelList from "../Common/Stack/StackLevelList";
 import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 
+const DatePickerWrapper = styled.div`
+  display: flex;
+  & > div {
+    flex: 1;
+    width: 370px;
+    margin: 0px 0px;
+  }
+`;
+const ImgUploadBtn = styled(Button)`
+  padding: 20px;
+  border: 1px dashed grey;
+  min-width: 150px;
+  min-height: 150px;
+  margin: 10px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
+
+const ItemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+`;
+
+const DetailWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+const CusSkeleton = styled.div`
+  // display: flex;
+  flex: 1;
+  min-width: 250px;
+  min-height: 200px;
+  height: auto;
+`;
+const ContentUpWrapper = styled.div`
+  display: flex;
+  max-width: 800px;
+  flex-direction: column;
+`;
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  // padding: 0px 30px;
+  padding: 0px 0px;
+  flex: 1;
+`;
+const ContentWrapper2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0px;
+  flex: 1;
+  max-width: 800px;
+`;
+const ButtonWrapper = styled.div`
+  flex: 1;
+  max-width: 800px;
+`;
+const RowUpWrapper = styled.div`
+  display: grid;
+  // grid-template-columns: max-content max-content;
+  grid-template-columns: 60px 12fl;
+  grid-gap: 8px;
+  padding: 1px 0px;
+`;
+const RowWrapper = styled.div`
+  display: grid;
+  // grid-template-columns: max-content max-content;
+  grid-template-columns: 60px 12fr;
+  grid-gap: 8px;
+  padding: 2px 0px;
+`;
+
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
   const [onlyView, setOnlyView] = useState(true);
@@ -60,15 +139,6 @@ export default function MyInfo() {
     description: "",
     image_id: "",
   });
-
-  const DatePickerWrapper = styled.div`
-    display: flex;
-    & > div {
-      flex: 1;
-      width: 370px;
-      margin: 0px 0px;
-    }
-  `;
 
   const positionOptions = [
     { value: "frontend", name: "프론트엔드" },
@@ -103,6 +173,25 @@ export default function MyInfo() {
       inputState[name] = value;
       console.log("스택 " + JSON.stringify(inputState));
     }
+  };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    // inputState.birthday = userBirthday.value;
+    setInputState((prevState) => ({
+      ...prevState,
+      [id]: value,
+    }));
+    // inputState.birthday = userBirthday.value;
+    // console.log(userBirthday.value);
+    // console.log(inputState.birthday);
+  };
+
+  const [description, setDescription] = useState("");
+  const handleDescriptionChange = (e) => {
+    const descriptionType = e.target;
+    setDescription(e.target.value);
+    // console.log(descriptionType)
   };
 
   const [userBirthday, setUserBirthday] = useState({
@@ -165,34 +254,14 @@ export default function MyInfo() {
           setLinks(inputState.link.split(" "));
           console.log(links);
           console.log(inputState.link.split(" "));
+        } else {
+          setLinks();
         }
         // inputState.file = res.user.file;
         setLoading(true);
       });
     });
   }
-
-  const ImgUploadBtn = styled(Button)`
-    padding: 20px;
-    border: 1px dashed grey;
-    min-width: 150px;
-    min-height: 150px;
-    margin: 10px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: contain;
-  `;
-
-  const ItemWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: left;
-  `;
 
   useEffect(() => {
     getUserInfo();
@@ -268,16 +337,14 @@ export default function MyInfo() {
           if (res.statusCode == 200) {
             setCheckPassword(true);
 
-            if (window.confirm("닉네임 변경이 가능합니다.")) {
-            } else {
-            }
+            alert("닉네임 변경이 가능합니다.");
+            setNicknameChange(true);
           } else {
             alert(`${res.message}`);
           }
         });
       }
     } else {
-      setNicknameChange(true);
     }
   };
 
@@ -338,10 +405,6 @@ export default function MyInfo() {
     //   msg = "전화번호 양식을 확인해주세요.";
     // }
 
-    if (inputState.phone == "") {
-      inputState.phone = "00000000000";
-    }
-
     if (isNormal) {
       // inputState.birthday = userBirthday.value;
 
@@ -382,6 +445,7 @@ export default function MyInfo() {
           inputState.password = loginInfo.password;
           //업데이트 API 실행하기
           const formData = new FormData();
+
           console.log("inputState" + JSON.stringify(inputState));
           console.log(inputState);
 
@@ -390,6 +454,14 @@ export default function MyInfo() {
             if (key === "stacks") {
               formData.append(key, "[" + JSON.stringify(value) + "]");
               // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
+            } else if (key === "phone") {
+              if (inputState.phone == "") {
+                const phoneNull = "00000000000";
+                formData.append(key, phoneNull);
+                // inputState.phone = "00000000000";
+              } else {
+                formData.append(key, inputState.phone);
+              }
             } else {
               formData.append(key, value);
               console.log(key + " " + value);
@@ -449,109 +521,60 @@ export default function MyInfo() {
     }
   };
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    // inputState.birthday = userBirthday.value;
-    setInputState((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
-    // inputState.birthday = userBirthday.value;
-    console.log(userBirthday.value);
-    console.log(inputState.birthday);
-  };
-
-  const DetailWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-  `;
-  const CusSkeleton = styled.div`
-    // display: flex;
-    flex: 1;
-    min-width: 250px;
-    min-height: 200px;
-    height: auto;
-  `;
-  const ContentUpWrapper = styled.div`
-    display: flex;
-    max-width: 800px;
-    flex-direction: column;
-  `;
-  const ContentWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 0px 30px;
-    flex: 1;
-  `;
-  const ContentWrapper2 = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 20px 0px;
-    flex: 1;
-    max-width: 800px;
-  `;
-  const RowUpWrapper = styled.div`
-    display: grid;
-    // grid-template-columns: max-content max-content;
-    grid-template-columns: 60px 12fl;
-    grid-gap: 8px;
-    padding: 1px 0px;
-  `;
-  const RowWrapper = styled.div`
-    display: grid;
-    // grid-template-columns: max-content max-content;
-    grid-template-columns: 60px 12fr;
-    grid-gap: 8px;
-    padding: 2px 0px;
-  `;
-
   return (
     <div>
       {loading ? (
         <div>
           <div>
             <h1>내정보</h1>
-            <Box
-              className="buttonBox"
-              sx={{ marginRight: "10%", float: "right" }}
-            >
-              {finishUpdate ? (
-                <>
-                  <Button onClick={handleResetClick}>수정취소</Button>
-                  <Button onClick={handleUpdateFinishClick}>수정완료</Button>
-                </>
-              ) : (
-                <Button onClick={handleUpdateClick}>수정하기</Button>
-              )}
-            </Box>
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>비밀번호</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  회원정보 변경을 위해 비밀번호를 다시 입력해 주세요
-                </DialogContentText>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="password"
-                  // value={loginInfo.password}
-                  onChange={handlePasswordChange}
-                  type="password"
-                  fullWidth
-                  variant="standard"
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>취소</Button>
-                <Button onClick={handleUpdateInfo}>확인</Button>
-              </DialogActions>
-            </Dialog>
-            <br />
+
             <ContentUpWrapper
             // justifyContent="center"
             // alignItems="center"
             // sx={{mb: 2 }}
             >
+              <ButtonWrapper>
+                {finishUpdate ? (
+                  <>
+                    <Button
+                      sx={{ float: "right" }}
+                      onClick={handleUpdateFinishClick}
+                    >
+                      수정완료
+                    </Button>
+                    <Button sx={{ float: "right" }} onClick={handleResetClick}>
+                      수정취소
+                    </Button>
+                  </>
+                ) : (
+                  <Button sx={{ float: "right" }} onClick={handleUpdateClick}>
+                    수정하기
+                  </Button>
+                )}
+              </ButtonWrapper>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>비밀번호</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    회원정보 변경을 위해 비밀번호를 다시 입력해 주세요
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="password"
+                    // value={loginInfo.password}
+                    onChange={handlePasswordChange}
+                    type="password"
+                    fullWidth
+                    variant="standard"
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>취소</Button>
+                  <Button onClick={handleUpdateInfo}>확인</Button>
+                </DialogActions>
+              </Dialog>
+              <br />
               <div>
                 {/* <Box
                   className="ssafyImgInfo"
@@ -594,7 +617,7 @@ export default function MyInfo() {
                     sx={{ width: "60%", display: "inline-block" }}
                   > */}
                   <ContentWrapper>
-                    <Box sx={{ width: "100%", fontSize: "20px", mb: 2 }}>
+                    <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
                       </label>
@@ -602,12 +625,12 @@ export default function MyInfo() {
                     </Box>
                     <Box
                       className="ssafyInfo"
-                      sx={{ width: "100%", display: "inline-block", mb: 1 }}
+                      sx={{ width: "100%", fontSize: "18px", mb: 1 }}
                     >
-                      싸피
-                      <label>{inputState.generation}기</label>
+                      싸피&nbsp;
+                      <label>{inputState.generation}기&nbsp;</label>
                       {/* <input value={inputState.generation || ""} disabled /> */}
-                      <label>{inputState.class}반</label>
+                      <label>{inputState.class}반&nbsp;</label>
                       {/* <input
                     id="userClass"
                     value={inputState.userClass || ""}
@@ -641,12 +664,15 @@ export default function MyInfo() {
                         />
                         {finishUpdate ? (
                           nicknameChange ? (
-                            <Button onClick={handleNicknameClick} sx={{width:"100px"}}>
-                              중복 확인 완료
+                            <Button onClick={handleNicknameClick}>
+                              중복 확인하기1
                             </Button>
                           ) : (
-                            <Button onClick={handleNicknameClick}>
-                              중복 확인
+                            <Button
+                              onClick={handleNicknameClick}
+                              sx={{ width: "100px" }}
+                            >
+                              중복 확인하기
                             </Button>
                           )
                         ) : (
@@ -666,7 +692,7 @@ export default function MyInfo() {
                   <label>생일</label>
                   {onlyView ? (
                     <input
-                      value={userBirthday.value,inputState.birthday}
+                      value={(userBirthday.value, inputState.birthday)}
                       // value={inputState.birthday}
                       disabled
                       // style={{ width: "60%" }}
@@ -677,7 +703,9 @@ export default function MyInfo() {
                         <DatePickerUser
                           value={userBirthday || ""}
                           label=""
-                          changeHandle={(e)=>{changeHandle(e);}}
+                          changeHandle={(e) => {
+                            changeHandle(e);
+                          }}
                         ></DatePickerUser>
                       </DatePickerWrapper>
                     </LocalizationProvider>
@@ -710,7 +738,7 @@ export default function MyInfo() {
                       id="position"
                       onChange={(e) => {
                         positionHandleChange(e);
-                        handleChange(e);
+                        // handleChange(e);
                       }}
                       value={inputState.position || ""}
                       sx={{ minWidth: 350, height: 35, fontSize: 13 }}
@@ -759,7 +787,10 @@ export default function MyInfo() {
                     multiline
                     value={inputState.description || ""}
                     disabled={onlyView ? true : false}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      // handleDescriptionChange(e);
+                    }}
                   />
                 </Box>
                 <Box>
@@ -772,9 +803,9 @@ export default function MyInfo() {
                       freeSolo
                       // options={links}
                       // getOptionLabel={(option) => option}
-                      value={links || []}
+                      value={links}
                       options={links.map((l) => l.value)}
-                      getOptionLabel={(option) => (option ? option : "option")}
+                      getOptionLabel={(option) => (option ? option : "")}
                       renderInput={(params) => <TextField {...params} />}
                       onChange={(e, option, reason) => {
                         handleLinksChange(option);
@@ -783,15 +814,17 @@ export default function MyInfo() {
                   )}
                 </Box>
               </ContentWrapper2>
+              {finishUpdate ? (
+                <></>
+              ) : (
+                <ButtonWrapper>
+                  <Button sx={{ float: "right" }} onClick={handleQuitClick}>
+                    탈퇴하기
+                  </Button>
+                </ButtonWrapper>
+              )}
             </ContentUpWrapper>
           </div>
-          {finishUpdate ? (
-            <></>
-          ) : (
-            <Box sx={{ marginRight: "10%", float: "right" }}>
-              <Button onClick={handleQuitClick}>탈퇴하기</Button>
-            </Box>
-          )}
         </div>
       ) : (
         <></>
