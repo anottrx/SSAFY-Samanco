@@ -19,11 +19,11 @@ public interface BoardService {
 
     List<BoardDto> selectByUser(Long userId);
     List<BoardDto> selectBoardAll();
+    List<BoardDto> selectBoardAllByTag(String tag);
     BoardDto boardEntityToDto(Board entity);
 
     List<BoardDto> selectBoardByTitle(String title);
-
+    List<BoardDto> selectBoardByTitleTag(String title, String tag);
     List<BoardDto> selectBoardLikeOrder();
-
-    List<BoardDto> selectBoardByTag(String tag);
+    List<BoardDto> selectBoardLikeOrderTag(String tag);
 }

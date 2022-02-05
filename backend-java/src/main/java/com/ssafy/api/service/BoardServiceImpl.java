@@ -133,6 +133,23 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<BoardDto> selectBoardAllByTag(String tag) {
+        List<Board> results = boardRepositorySupport.selectBoardAllByTag(tag);
+        if (results==null){
+            return null;
+        }
+        List<BoardDto> boards=new ArrayList<>();
+        for (Board result: results) {
+            BoardDto board=boardEntityToDto(result);
+            Long boardId=board.getBoardId();
+            board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
+            boards.add(board);
+        }
+
+        return boards;
+    }
+
+    @Override
     public BoardDto boardEntityToDto(Board result) {
         // like
         int likes=userLikeRepositorySupport.countUserLikeByTarget(result.getId(), "board");
@@ -169,7 +186,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardDto> selectBoardByTitle(String title) {
         List<Board> results=boardRepositorySupport.selectByTitle(title);
-        if (results==null){
+        if (results==null || results.size()==0){
             return null;
         }
         List<BoardDto> boards=new ArrayList<>();
@@ -185,9 +202,27 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<BoardDto> selectBoardByTitleTag(String title, String tag) {
+
+        List<Board> results=boardRepositorySupport.selectByTitleTag(title, tag);
+        if (results==null || results.size()==0){
+            return null;
+        }
+        List<BoardDto> boards=new ArrayList<>();
+        for (Board result: results) {
+            BoardDto board=boardEntityToDto(result);
+            Long boardId=board.getBoardId();
+            board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
+            boards.add(board);
+        }
+
+        return boards;
+    }
+
+    @Override
     public List<BoardDto> selectBoardLikeOrder() {
         List<Board> results=boardRepositorySupport.selectBoardAll();
-        if (results==null){
+        if (results==null || results.size()==0){
             return null;
         }
         List<BoardDto> boards=new ArrayList<>();
@@ -208,9 +243,9 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardDto> selectBoardByTag(String tag) {
-        List<Board> results=boardRepositorySupport.selectByTag(tag);
-        if (results==null){
+    public List<BoardDto> selectBoardLikeOrderTag(String tag) {
+        List<Board> results=boardRepositorySupport.selectBoardAllByTag(tag);
+        if (results==null || results.size()==0){
             return null;
         }
         List<BoardDto> boards=new ArrayList<>();
@@ -220,6 +255,12 @@ public class BoardServiceImpl implements BoardService {
             board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
             boards.add(board);
         }
+        Collections.sort(boards, new Comparator<BoardDto>() {
+            @Override
+            public int compare(BoardDto o1, BoardDto o2) {
+                return (int) (o2.getLikes()-o1.getLikes());
+            }
+        });
 
         return boards;
     }
