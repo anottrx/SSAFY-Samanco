@@ -117,7 +117,7 @@ export default function Regist() {
   const nicknameHandleChange = (e) => {
     const value = e.target.value;
     checkNicknameAPI(value).then((res) => {
-      console.log("닉네임이 " +value+"인 사람의 닉네임API 체크 결과" + res)
+      // console.log("닉네임이 " +value+"인 사람의 닉네임API 체크 결과" + res)
       setNicknameCheckRes({ code: res.statusCode, msg: res.message });
     });
   };
@@ -232,7 +232,7 @@ export default function Regist() {
       }
 
       registAPI(formData).then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.statusCode == 200) {
           // 가입 성공 시
           // alert("가입이 되었습니다!");

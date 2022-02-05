@@ -114,7 +114,7 @@ export default function ResetPassword() {
         {/* 비밀번호 */}
         <div className="mb-6">
           <Typography display="inline" sx={{ fontSize: 14 }}>
-            비밀번호
+            새 비밀번호
           </Typography>
           <br />
           <OutlinedInput
@@ -145,7 +145,7 @@ export default function ResetPassword() {
         {/* 비밀번호 확인 */}
         <div className="mb-6">
           <Typography display="inline" sx={{ fontSize: 14 }}>
-            비밀번호 확인
+            새 비밀번호 확인
           </Typography>
           <br />
           <OutlinedInput

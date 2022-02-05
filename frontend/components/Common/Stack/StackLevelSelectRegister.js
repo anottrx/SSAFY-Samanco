@@ -35,27 +35,33 @@ const stack = [
 ];
 
 function StackLevelSelectRegister(props) {
+  // console.log("props" + props.values);
+  // console.log("JSON.stringify(props.values)" + JSON.stringify(props.values));
+  const stackList = JSON.stringify(props.values);
+
+  let initValue ;
+  if(stackList!=null) {
+    initValue  = JSON.parse(stackList);
+  }
+  // console.log("initValue" + initValue);
+
   let initArray = [];
-  if (props.initData) {
-    props.initData.map((data) => {
-      // initArray.push(data.name)
-      initArray.push({ name: name, level: data.size });
+  if (stackList && initValue) {
+    Object.keys(initValue).forEach(function (obj) {
+      const value = initValue[obj];
+      initArray.push({ name: value.name, level: value.grade });
     });
   }
+  // console.log("initArray" + JSON.stringify(initArray));
 
-  // if (props.initData) {
-  //   props.initData.map((data) => {
-  //     if (data.stack.includes("current") && data.size > 0) {
-  //       let name = data.stack.split("current")[1];
-  //       initArray.push({ name: name, level: data.size });
-  //     }
-  //   });
-  // }
-
-  const [stacks, setStacks] = useState(props.initData ? initArray : []);
+  const [stacks, setStacks] = useState(props.values ? initArray : []);
+  // console.log("stacks: " + JSON.stringify(stacks))
 
   const handleAutocompleteChange = (event) => {
     const name = event.target.innerText;
+
+    // console.log("name: " + name)
+    // console.log("stacks: " + JSON.stringify(stacks))
 
     if (!name) return false;
     let isInclude = false;
