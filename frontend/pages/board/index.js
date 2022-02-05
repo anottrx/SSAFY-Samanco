@@ -47,18 +47,13 @@ function a11yProps(index) {
 export default function Board() {
 
   const [value, setValue] = useState(0);
-  const [tagColor, setTagColor] = useState("gray");
+  const [tagColor, setTagColor] = useState("535353");
 
 
   const handleChange = (e, newValue) => {
     setValue(newValue);
     setTagColor(BoardColor[e.target.id].color);
   };
-
-  useEffect(() => {
-    console.log(tagColor)
-  }, [tagColor]);
-  
 
   const CusButton = styled(Button)`
     height: fit-content;
@@ -73,7 +68,11 @@ export default function Board() {
   const CusTabs = styled(Tabs)`
     & .Mui-selected {
       font-weight: bolder;
-      color: #${tagColor};
+      color: #${tagColor}!important; 
+    }
+
+    & .MuiTab-root:hover {
+      font-weight: bolder;
     }
 
     & .MuiTabs-indicator {
