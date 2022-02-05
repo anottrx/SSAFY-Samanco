@@ -674,8 +674,8 @@ export default function MyInfo() {
                   <label>생년월일</label>
                   {onlyView ? (
                     <input
-                      // value={(userBirthday.value)}
-                      value={inputState.birthday}
+                      value={userBirthday.value}
+                      // value={inputState.birthday}
                       disabled
                       // style={{ width: "60%" }}
                     />
