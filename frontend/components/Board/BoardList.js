@@ -98,43 +98,18 @@ function BoardList(props) {
         // /api/board/tag/{tag}
         
         dispatch(boardActions.setBoardFilterList({list: null}))
-        if (tag === "all") {
-            getArticles()
-            .then((res => {
-                console.log(res)
-                if (res.boards)
-                    setArticles({list: res.boards});
-                else
-                    setArticles({list: []});
-            }));
-        } else {
-            getArticleByTag(tag).then((res => {
-                if (res.boards)
-                    setArticles({list: res.boards});
-                else
-                    setArticles({list: []});
-            }));
-        }
-
-        // setTagInfo(BoardColor[tag])
-        // console.log(tag)
+        
+        getArticleByTag(tag).then((res => {
+            if (res.boards)
+                setArticles({list: res.boards});
+            else
+                setArticles({list: []});
+        }));
 
         if (tag === "notice") setIsNotice(true);
         else if (tag === "all") setIsAll(true);
         if (sessionStorage.getItem("nickname") === "admin") setIsAdmin(true);
     }, [tag])
-
-    async function viewBoard(e) {
-        let title = e.target.value;
-        console.log(title)
-        getArticleByTitle(title).then((res => {
-            setDetail({detail: res.board});
-            Router.push({
-                pathname: `/${title}`,
-                query: { id: data.id }
-            })
-        }));
-    }
 
     const [page, setPage] = useState(1);
     const purPage = useRef(10);
@@ -170,7 +145,7 @@ function BoardList(props) {
         <>
             <ItemWrapper>
                 <ProjectActions>
-                    <SearchBar target="board"></SearchBar>
+                    <SearchBar target="board" tag={tag}></SearchBar>
                     {
                         isLogin? 
                             !isNotice || (isNotice && isAdmin)?

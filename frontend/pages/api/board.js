@@ -35,26 +35,22 @@ async function deleteBoard(data) {
   .catch((err) => err.response.data);
 }
 
-async function getArticles() {
-  return await api
-  .get("/api/board/")
-  .then((res) => res.data)
-  .catch((err) => err.response.data);
-}
-
 // 게시물 리스트 태그로 조회 (tag)
 // to do: api 업데이트 되면 경로 변경
 async function getArticleByTag(tag) {
   return await api
-    .get("/api/board/tag/" + tag)
+    .get("/api/board/" + tag)
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
 
 // 게시물 제목으로 조회
-async function getArticleByTitle(title) {
+async function getArticleByTitle(data) {
   return await api
-    .get("/api/board/title/" + title)
+    .post("/api/board/title/", {
+      tag: data.tag,
+      title: data.title
+    })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
@@ -135,13 +131,11 @@ export {
   registBoard,
   updateBoard,
   deleteBoard,
-  getArticles,
   getArticleByTag,
   getArticleByTitle,
   getArticleById,
   updateArticleLike,
   registComment,
   updateComment,
-  deleteComment,
-  // getCommentByBoardId
+  deleteComment
 };

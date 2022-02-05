@@ -49,7 +49,10 @@ function SearchBar(props) {
             if (!keyword)
                 dispatch(boardActions.setBoardFilterList({list: null}))
             else {
-                getArticleByTitle(keyword)
+                getArticleByTitle({
+                    tag: props.tag,
+                    title: keyword
+                })
                 .then(res => {
                     console.log(res.boards);
                     dispatch(boardActions.setBoardFilterList({list: res.boards}));
