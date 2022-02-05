@@ -188,6 +188,8 @@ function StackLevelSelectRegister(props) {
     if (React == 0) props.changeHandle(0, "React");
     if (Python == 0) props.changeHandle(0, "Python");
     if (C == 0) props.changeHandle(0, "C");
+    if (Java == 0) props.changeHandle(0, "Java");
+    if (Angular == 0) props.changeHandle(0, "Angular");
     if (SpringBoot == 0) props.changeHandle(0, "SpringBoot");
     if (MySQL == 0) props.changeHandle(0, "MySQL");
     if (Git == 0) props.changeHandle(0, "Git");

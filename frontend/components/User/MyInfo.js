@@ -32,6 +32,8 @@ import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 import StackLevelDescription from "../Common/Stack/StackLevelDescription";
 
+const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
+
 const DatePickerWrapper = styled.div`
   display: flex;
   & > div {
@@ -398,7 +400,7 @@ export default function MyInfo() {
 
     // if (!phoneReg.test(inputState.phone)) {
     //   isNormal = false;
-    //   msg = "전화번호 양식을 확인해주세요.";
+    //   alert("전화번호 양식을 확인해주세요.")
     // }
 
     if (isNormal) {
@@ -683,6 +685,7 @@ export default function MyInfo() {
                   <label>전화번호</label>
                   <input
                     id="phone"
+                    type="number"
                     value={inputState.phone || ""}
                     disabled={onlyView ? true : false}
                     onChange={handleChange}
