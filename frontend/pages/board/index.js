@@ -6,7 +6,7 @@ import Layout from "../../components/layout";
 import styled from '@emotion/styled';
 
 import BoardList from "../../components/Board/BoardList";
-
+import Router from "next/router";
 
 //게시판 탭(공지사항, 자유게시판, 질문게시판, 정보공유, 사람구해요)
 
@@ -51,9 +51,32 @@ export default function Board() {
     setValue(newValue);
   };
 
+  const CusButton = styled(Button)`
+    height: fit-content;
+    align-self: right;
+  `
+
+  const ButtonWrapper = styled.div`
+    display: flex;
+    justify-content: flex-end;
+  `
+
   return (
     <Layout>
         <h1>Board</h1>
+        {
+            sessionStorage.getItem("userId")?
+            <ButtonWrapper>
+              <CusButton variant="outlined" size="medium"
+                  onClick={() => {
+                  Router.push("/board/regist");
+                  }}>
+                  등록하기
+              </CusButton>
+            </ButtonWrapper>
+            :
+            null
+        }
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
