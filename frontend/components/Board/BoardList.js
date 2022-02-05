@@ -2,7 +2,9 @@ import React, {useState, useRef, useEffect,useCallback, useLayoutEffect} from 'r
 import { useSelector, useDispatch } from 'react-redux';
 
 import { styled } from '@mui/material/styles';
-import {Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Pagination, Button, Chip} from '@mui/material';
+import {Table, TableBody, TableCell, tableCellClasses, TableContainer, 
+    TableHead, TableRow, Pagination, Button, InputLabel,
+    MenuItem, FormControl, Select } from '@mui/material';
 import Router from "next/router";
 import * as boardActions from '../../store/module/board';
 import SearchBar from "../Common/Search";
@@ -10,7 +12,7 @@ import style from "@emotion/styled";
 import Cookies from "universal-cookie";
 
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { getArticles, getArticleByTag } from "../../pages/api/board";
+import { orderArticleByLike, getArticleByTag } from "../../pages/api/board";
 
 import BoardColor from "../../data/BoardColor.json"
 
@@ -22,17 +24,18 @@ const ItemWrapper = style.div`
     justify-content: center;
     align-items: center;
     text-align: left;
+
+    & .MuiSelect-select{
+        padding: 12px 32px 12px 14px;
+    }
 `
+
 const ProjectActions = style.div`
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-`
-
-const CusButton = style(Button)`
-    height: fit-content;
 `
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -83,6 +86,8 @@ function BoardList(props) {
     const [isAll, setIsAll] = useState(false);
     const [isNotice, setIsNotice] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [articleOrder, setArticleOrder] = useState("new");
+
     // const [tagInfo, setTagInfo] = useState({});
 
     useEffect(()=>{
@@ -97,7 +102,7 @@ function BoardList(props) {
         // To do: tag 바뀔 때마다 태그로 리스트 불러오기
         // /api/board/tag/{tag}
         
-        dispatch(boardActions.setBoardFilterList({list: null}))
+        // dispatch(boardActions.setBoardFilterList({list: null}))
         
         getArticleByTag(tag).then((res => {
             if (res.boards)
@@ -111,6 +116,25 @@ function BoardList(props) {
         if (sessionStorage.getItem("nickname") === "admin") setIsAdmin(true);
     }, [tag])
 
+    useEffect(() => {
+      if (articleOrder === "like") {
+        orderArticleByLike().then(res => {
+            if (res.boards)
+                setArticles({list: res.boards});
+            else
+                setArticles({list: []});
+        })
+      } else if (articleOrder === "new") {
+            getArticleByTag(tag).then((res => {
+                if (res.boards)
+                    setArticles({list: res.boards});
+                else
+                    setArticles({list: []});
+            }));
+        }
+    }, [articleOrder]);
+    
+
     const [page, setPage] = useState(1);
     const purPage = useRef(10);
     let allPage = 1;
@@ -123,6 +147,10 @@ function BoardList(props) {
     const handleChange = (index,value) => {
         setPage(value);
     };
+
+    const handleOrderChange = (e) => {
+        setArticleOrder(e.target.value);
+      };
 
     const CusPagination = styled(Pagination)`
         display : flex;
@@ -149,20 +177,20 @@ function BoardList(props) {
                 <ProjectActions>
                     <SearchBar target="board" tag={tag}></SearchBar>
                     {
-                        isLogin? 
-                            !isNotice || (isNotice && isAdmin)?
-                            <CusButton variant="outlined" size="medium"
-                                onClick={() => {
-                                Router.push("/board/regist");
-                                }}>
-                                등록하기
-                            </CusButton>
-                            :
-                            null
-                        :
-                        null
+                        isAll?
+                        <FormControl sx={{ minWidth: 80 }}>
+                            <Select
+                            labelId="articleOrder"
+                            id="articleOrder"
+                            value={articleOrder}
+                            onChange={handleOrderChange}
+                            autoWidth
+                            >
+                            <MenuItem value={"new"}>최신순</MenuItem>
+                            <MenuItem value={"like"}>인기순</MenuItem>
+                            </Select>
+                        </FormControl> : null
                     }
-                    
                 </ProjectActions>
             </ItemWrapper>
             <TableContainer>
@@ -188,64 +216,9 @@ function BoardList(props) {
                             <>
                             {
                                 typeof(filterData)!=="undefined" && filterData!==null?
-                                filterData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
-                                    return(
-                                    <StyledTableRow key={data.boardId} style={{cursor: "pointer"}}
-                                        onClick={()=>{
-                                            setDetail({detail: data}); 
-                                            Router.push("/board/"+data.boardId); 
-                                        }}>
-                                        <StyledTableCell component="th" scope="row">
-                                        {
-                                            isAll?
-                                            <TagSpan colorinfo={BoardColor[data.tag].color}>
-                                                [{BoardColor[data.tag].label}]
-                                            </TagSpan> : null
-                                        }
-                                        {
-                                            `${data.title} (${data.comments? data.comments.length: 0})`
-                                        }
-                                        {
-                                            Array.isArray(data.files) && data.files.length !== 0?
-                                            <FileIcon><AttachFileIcon />첨부파일</FileIcon>
-                                            : null
-                                        }
-                                        </StyledTableCell>
-                                        <StyledTableCell align="right">{data.nickname}</StyledTableCell>
-                                        <StyledTableCell align="right">{data.dateOrTime}</StyledTableCell>
-                                        <StyledTableCell align="right">{data.likes}</StyledTableCell>
-                                        <StyledTableCell align="right">{data.hit}</StyledTableCell>
-                                    </StyledTableRow>
-                                    )
-                                })
+                                <Articles article={filterData}></Articles>
                                 :
-                                boardData.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
-                                    return (
-                                    <StyledTableRow key={data.boardId} style={{cursor: "pointer"}}
-                                        onClick={()=>{
-                                            setDetail({detail: data}); 
-                                            Router.push("/board/"+data.boardId); 
-                                        }}>
-                                        <StyledTableCell component="th" scope="row">
-                                            {
-                                                isAll?
-                                                <TagSpan colorinfo={BoardColor[data.tag].color}>
-                                                    [{BoardColor[data.tag].label}]
-                                                </TagSpan> : null
-                                            }
-                                            {`${data.title} (${data.comments? data.comments.length: 0})`}
-                                            {
-                                                Array.isArray(data.files) && data.files.length !== 0?
-                                                <FileIcon><AttachFileIcon />첨부파일</FileIcon>
-                                                : null
-                                            }
-                                        </StyledTableCell>
-                                        <StyledTableCell align="right">{data.nickname}</StyledTableCell>
-                                        <StyledTableCell align="right">{data.dateOrTime}</StyledTableCell>
-                                        <StyledTableCell align="right">{data.likes}</StyledTableCell>
-                                        <StyledTableCell align="right">{data.hit}</StyledTableCell>
-                                    </StyledTableRow>
-                                )})
+                                <Articles article={boardData}></Articles>
                             }
                             </>
                         }
@@ -255,6 +228,38 @@ function BoardList(props) {
             </TableContainer>
         </>
     );
+
+    function Articles({article}) {
+        return (
+            article.slice(purPage.current * (page-1), purPage.current * page).map((data) => {
+                return (
+                <StyledTableRow key={data.boardId} style={{cursor: "pointer"}}
+                    onClick={()=>{
+                        setDetail({detail: data}); 
+                        Router.push("/board/"+data.boardId); 
+                    }}>
+                    <StyledTableCell component="th" scope="row">
+                        {
+                            isAll?
+                            <TagSpan colorinfo={BoardColor[data.tag].color}>
+                                [{BoardColor[data.tag].label}]
+                            </TagSpan> : null
+                        }
+                        {`${data.title} (${data.comments? data.comments.length: 0})`}
+                        {
+                            Array.isArray(data.files) && data.files.length !== 0?
+                            <FileIcon><AttachFileIcon />첨부파일</FileIcon>
+                            : null
+                        }
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{data.nickname}</StyledTableCell>
+                    <StyledTableCell align="right">{data.dateOrTime}</StyledTableCell>
+                    <StyledTableCell align="right">{data.likes}</StyledTableCell>
+                    <StyledTableCell align="right">{data.hit}</StyledTableCell>
+                </StyledTableRow>
+            )})
+        )
+    }
 }
 
 export default BoardList;

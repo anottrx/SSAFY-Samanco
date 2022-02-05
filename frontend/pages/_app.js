@@ -53,9 +53,9 @@ const styles = {
     color: "white",
     backgroundColor: "#A2C2DC",
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    marginTop: "10px",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: "70px",
     padding: "10px",
   },
 };
@@ -113,6 +113,9 @@ function MyApp({ Component, pageProps }) {
                 <Component {...pageProps} />
               </main>
               <footer style={styles.footer}>
+                {/* <Link href="/developer">
+                  <img src="/images/pojangmacha.png" width={110} ></img>
+                </Link> */}
                 footer
               </footer>
             </div>

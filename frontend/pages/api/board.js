@@ -66,7 +66,6 @@ async function getArticleById(data) {
     .catch((err) => err.response.data);
 }
 
-
 // 게시물 좋아요
 async function updateArticleLike(data) {
   return await api
@@ -75,6 +74,14 @@ async function updateArticleLike(data) {
       tagId: data.boardId,
       userId: data.userId
     })
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
+// 게시물 좋아요 순으로 정렬
+async function orderArticleByLike() {
+  return await api
+    .get("/api/board/like")
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
@@ -135,6 +142,7 @@ export {
   getArticleByTitle,
   getArticleById,
   updateArticleLike,
+  orderArticleByLike,
   registComment,
   updateComment,
   deleteComment
