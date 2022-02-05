@@ -53,15 +53,6 @@ const ImgUploadBtn = styled(Button)`
   background-repeat: no-repeat;
   background-size: contain;
 `;
-
-const ItemWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: left;
-`;
-
 const DetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -445,7 +436,7 @@ export default function MyInfo() {
         if (res.statusCode == 200) {
           console.log("로그인 성공");
           inputState.password = loginInfo.password;
-          //업데이트 API 실행하기
+
           const formData = new FormData();
 
           console.log("inputState" + JSON.stringify(inputState));
@@ -530,11 +521,7 @@ export default function MyInfo() {
           <div>
             <h1>내정보</h1>
 
-            <ContentUpWrapper
-            // justifyContent="center"
-            // alignItems="center"
-            // sx={{mb: 2 }}
-            >
+            <ContentUpWrapper>
               <ButtonWrapper>
                 {finishUpdate ? (
                   <>
@@ -578,21 +565,8 @@ export default function MyInfo() {
               </Dialog>
               <br />
               <div>
-                {/* <Box
-                  className="ssafyImgInfo"
-                  sx={{
-                    // display: "inline-block",
-                    mb: 2,
-                    // verticalAlign: "top",
-                  }}
-                > */}
                 <DetailWrapper maxWidth="sm">
-                  {/* <Box
-                    className="imgInfo"
-                    sx={{ width: "40%", display: "inline-block" }}
-                  > */}
                   <CusSkeleton>
-                    {/* <label>이미지</label> */}
                     <ImgUploadBtn
                       id="img_box"
                       onClick={(event) => {
@@ -613,17 +587,11 @@ export default function MyInfo() {
                       onChange={onImgChange}
                     ></input>
                   </CusSkeleton>
-                  {/* </Box> */}
-                  {/* <Box
-                    className="userBasicInfo"
-                    sx={{ width: "60%", display: "inline-block" }}
-                  > */}
                   <ContentWrapper>
                     <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
                       </label>
-                      {/* <input value={inputState.name || ""} disabled /> */}
                     </Box>
                     <Box
                       className="ssafyInfo"
@@ -631,7 +599,6 @@ export default function MyInfo() {
                     >
                       싸피&nbsp;
                       <label>{inputState.generation}기&nbsp;</label>
-                      {/* <input value={inputState.generation || ""} disabled /> */}
                       <label>{inputState.class}반&nbsp;</label>
                       {/* <input
                     id="userClass"
@@ -650,7 +617,6 @@ export default function MyInfo() {
                       </label>
                       {/* </Box> */}
                     </RowUpWrapper>
-                    {/* <div > */}
                     <RowUpWrapper>
                       <label>
                         <span>닉네임</span>
@@ -682,10 +648,7 @@ export default function MyInfo() {
                         )}
                       </label>
                     </RowUpWrapper>
-                    {/* </div> */}
                   </ContentWrapper>
-                  {/* </Box> */}
-                  {/* </Box> */}
                 </DetailWrapper>
               </div>
               <ContentWrapper2>
