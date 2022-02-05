@@ -222,15 +222,20 @@ public class BoardController {
 //        return ResponseEntity.status(200).body(BoardSelectAllRes.of(200, "Success", boards));
 //    }
 
-    @GetMapping("/like")
+    @GetMapping("/like/{tag}")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "게시글 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectBoardLikeOrder() throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectBoardLikeOrder(@PathVariable("tag") String tag) throws IOException {
 
-        List<BoardDto> boards=boardService.selectBoardLikeOrder();
+        List<BoardDto> boards=null;
+        if ("all".equalsIgnoreCase(tag)){
+            boards=boardService.selectBoardLikeOrder();
+        } else {
+            boards=boardService.selectBoardLikeOrderTag(tag);
+        }
         if (boards==null || boards.size()==0){
             return ResponseEntity.status(200).body(BoardSelectAllRes.of(401, "유효하지 않은 게시글입니다.", null));
         }

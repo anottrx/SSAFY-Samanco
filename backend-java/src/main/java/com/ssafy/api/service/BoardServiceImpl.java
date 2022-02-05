@@ -242,5 +242,28 @@ public class BoardServiceImpl implements BoardService {
         return boards;
     }
 
+    @Override
+    public List<BoardDto> selectBoardLikeOrderTag(String tag) {
+        List<Board> results=boardRepositorySupport.selectBoardAllByTag(tag);
+        if (results==null || results.size()==0){
+            return null;
+        }
+        List<BoardDto> boards=new ArrayList<>();
+        for (Board result: results) {
+            BoardDto board=boardEntityToDto(result);
+            Long boardId=board.getBoardId();
+            board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
+            boards.add(board);
+        }
+        Collections.sort(boards, new Comparator<BoardDto>() {
+            @Override
+            public int compare(BoardDto o1, BoardDto o2) {
+                return (int) (o2.getLikes()-o1.getLikes());
+            }
+        });
+
+        return boards;
+    }
+
 
 }
