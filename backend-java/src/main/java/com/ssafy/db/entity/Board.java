@@ -24,7 +24,7 @@ public class Board extends BaseEntity{
     private String tag;     // QNA, EXAM, JOB, FREE, NOTICE, SCHEDULE
 //    private String startDate;
 //    private String endDate;
-    private Long likes;
+//    private Long likes;
     private Long hit=0l;
 
 }
