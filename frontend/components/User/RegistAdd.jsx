@@ -197,6 +197,8 @@ export default function RegistInfo() {
       Python: inputState.Python,
       Java: inputState.Java,
       C: inputState.C,
+      "C++": inputState.C2,
+      "C#": inputState.C3,
       SpringBoot: inputState.SpringBoot,
       MySQL: inputState.MySQL,
       Git: inputState.Git,
@@ -387,7 +389,7 @@ export default function RegistInfo() {
           {/* 링크 */}
           <div className="mb-6">
             <Typography display="inline" sx={{ fontSize: 14 }}>
-              링크 <i style={{fontSize:"10px"}}>입력 후 엔터를 눌러주세요</i>
+              링크 <i style={{ fontSize: "10px" }}>입력 후 엔터를 눌러주세요</i>
             </Typography>
             <Autocomplete
               multiple

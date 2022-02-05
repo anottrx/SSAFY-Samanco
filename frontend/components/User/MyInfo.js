@@ -429,6 +429,8 @@ export default function MyInfo() {
         Python: inputState.Python,
         Java: inputState.Java,
         C: inputState.C,
+        "C++": inputState.C2,
+        "C#": inputState.C3,
         SpringBoot: inputState.SpringBoot,
         MySQL: inputState.MySQL,
         Git: inputState.Git,
@@ -631,7 +633,7 @@ export default function MyInfo() {
                           onChange={classHandleChange}
                           defaultValue={classOptions[0].value}
                           value={classOptions.value}
-                          sx={{ width: 120, fontSize: 14, height:35 }}
+                          sx={{ width: 120, fontSize: 14, height: 35 }}
                         >
                           {classOptions.map((opt) => {
                             return (
