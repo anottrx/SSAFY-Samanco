@@ -275,11 +275,11 @@ export default function MyInfo() {
 
         if(inputState.image_id==null) {
           if(inputState.generation==7) {
-            setImageDefault("/images/gen7.png")
+            setImageDefault("/images/profile_default_gen7.png")
           } else if(inputState.generation==0) {
-            setImageDefault("/images/gen0.png")
+            setImageDefault("/images/profile_default_gen0.png")
           }else {
-            setImageDefault("/images/gen6.png")
+            setImageDefault("/images/profile_default_gen6.png")
           }
         }
 
