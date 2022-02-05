@@ -179,13 +179,6 @@ export default function MyInfo() {
     // console.log(inputState.birthday);
   };
 
-  const [description, setDescription] = useState("");
-  const handleDescriptionChange = (e) => {
-    const descriptionType = e.target;
-    setDescription(e.target.value);
-    // console.log(descriptionType)
-  };
-
   const [userBirthday, setUserBirthday] = useState({
     value: "",
     initDate: "",
@@ -689,21 +682,36 @@ export default function MyInfo() {
                 </RowWrapper>
                 {/* </Box> */}
                 <RowWrapper>
-                  {/* <Box sx={{ mb: 2 }}> */}
                   <label>분야</label>
                   {onlyView ? (
-                    <input
-                      id="position"
-                      disabled
-                      value={inputState.position || ""}
-                      onChange={handleChange}
-                    />
+                    <>
+                      {/* <label>
+                        {positionOptions.map((u, i) => {
+                          if (u.value == inputState.position) {
+                            return (<label>{u.name}</label>);
+                          }
+                        })}
+                      </label> */}
+                      <input
+                        id="position"
+                        disabled
+                        value={positionOptions
+                          .map((u, i) => {
+                            if (u.value == inputState.position) {
+                              return u.name;
+                            }
+                          })
+                          .join("")}
+                        //  value={inputState.position || ""}
+                        // onChange={handleChange}
+                      />
+                    </>
                   ) : (
                     <Select
                       id="position"
                       onChange={(e) => {
                         positionHandleChange(e);
-                        // handleChange(e);
+                        handleChange(e);
                       }}
                       value={inputState.position || ""}
                       sx={{ minWidth: 350, height: 35, fontSize: 13 }}
@@ -727,7 +735,6 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-                  {/* </Box> */}
                 </RowWrapper>
                 <div>
                   <label>기술 스택</label>
@@ -748,19 +755,17 @@ export default function MyInfo() {
                     id="description"
                     placeholder="자기자신에 대해 소개해주세요"
                     fullWidth
-                    // sx={{ width: "80%" }}
                     rows={4}
                     multiline
                     value={inputState.description || ""}
                     disabled={onlyView ? true : false}
                     onChange={(e) => {
                       handleChange(e);
-                      // handleDescriptionChange(e);
                     }}
                   />
                 </Box>
                 <Box>
-                  <label>링크</label>
+                  <label>링크</label>&nbsp;
                   <i style={{ fontSize: "10px" }}>입력 후 엔터를 눌러주세요</i>
                   {onlyView ? (
                     <LinkList items={links} />
