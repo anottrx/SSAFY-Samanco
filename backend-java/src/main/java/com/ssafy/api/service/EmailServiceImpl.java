@@ -21,7 +21,7 @@ public class EmailServiceImpl implements EmailService{
     private MimeMessage createMessage(String to)throws Exception{
         System.out.println("보내는 대상 : "+ to);
         System.out.println("인증 번호 : "+ePw);
-        MimeMessage  message = emailSender.createMimeMessage();
+        MimeMessage message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
         message.setSubject("싸피사만코 인증번호가 도착했습니다.");//제목

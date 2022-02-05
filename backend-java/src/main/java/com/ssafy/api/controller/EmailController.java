@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/email")
 public class EmailController {
+
     @Autowired
     EmailService service;
 
-    @PostMapping("/mail")
+    @PostMapping("/send")
     @ResponseBody
     public ResponseEntity<? extends BaseResponseBody> emailConfirm(@RequestBody String email) throws Exception {
 //        System.out.println("전달 받은 이메일 : " + email);
@@ -22,7 +23,7 @@ public class EmailController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-    @PostMapping("/verifyCode")
+    @PostMapping("/code")
     @ResponseBody
     public ResponseEntity<? extends BaseResponseBody> verifyCode(@RequestBody String code) {
 //        code = code.substring(1, code.length() - 1);
