@@ -32,6 +32,7 @@ import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
 
+
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
 
 const DatePickerWrapper = styled.div`
@@ -48,6 +49,20 @@ const ImgUploadBtn = styled(Button)`
   min-width: 150px;
   min-height: 150px;
   margin: 10px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
+const ImgDefault = styled.img`
+  // padding: 20px;
+  // border: 1px dashed grey;
+  min-width: 150px;
+  min-height: 150px;
+  max-width: 180px;
+  margin: 0px 0px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,6 +128,7 @@ export default function MyInfo() {
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
+  const [imageDefault, setImageDefault] = useState('');
 
   const [inputState, setInputState] = useState({
     userId: "",
@@ -255,6 +271,17 @@ export default function MyInfo() {
         inputState.description = res.user.description;
         inputState.stacks = res.user.stacks;
         inputState.stacks_get = res.user.stacks;
+        inputState.image_id = res.user.file;
+
+        if(inputState.image_id==null) {
+          if(inputState.generation==7) {
+            setImageDefault("/images/gen7.png")
+          } else if(inputState.generation==0) {
+            setImageDefault("/images/gen0.png")
+          }else {
+            setImageDefault("/images/gen6.png")
+          }
+        }
 
         if (res.user.link != null) {
           setLinks(inputState.link.split(" "));
@@ -592,7 +619,10 @@ export default function MyInfo() {
               <br />
               <div>
                 <DetailWrapper maxWidth="sm">
-                  <CusSkeleton>
+                  {(onlyView && inputState.file==null)? (
+                    <ImgDefault src={imageDefault}></ImgDefault>
+                    //  <ImgDefault src="/images/gen7.png"></ImgDefault>
+                  ):(<CusSkeleton>
                     <ImgUploadBtn
                       id="img_box"
                       onClick={(event) => {
@@ -612,7 +642,7 @@ export default function MyInfo() {
                       encType="multipart/form-data"
                       onChange={onImgChange}
                     ></input>
-                  </CusSkeleton>
+                  </CusSkeleton>)}
                   <ContentWrapper>
                     <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
