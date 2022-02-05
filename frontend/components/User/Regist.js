@@ -4,7 +4,12 @@ import Router from "next/router";
 import CheckEmailCode from "./CheckEmailCode";
 import { useCookies } from "react-cookie";
 
-import { registAPI, loginAPI, checkNicknameAPI,getUserLoginTokenAPI } from "../../pages/api/user";
+import {
+  registAPI,
+  loginAPI,
+  checkNicknameAPI,
+  getUserLoginTokenAPI,
+} from "../../pages/api/user";
 import {
   Box,
   OutlinedInput,
@@ -36,6 +41,7 @@ export default function Regist() {
     class: "JAVA",
     generation: "6",
     studentId: "",
+    code: false,
   });
 
   const generationOptions = [
@@ -94,6 +100,10 @@ export default function Regist() {
 
   const changeHandle = (value, name) => {
     inputState[name] = value;
+    if (value == false) {
+      setAuthFin(false);
+      // setShowEmailCodeCheck(true);
+    }
     // 리렌더링 X
   };
 
@@ -127,11 +137,23 @@ export default function Regist() {
     e.preventDefault();
     const value = inputState.email;
 
+    // else  if(inputState.code==false) {
+    //     setShowEmailCodeCheck(false);
+    //     setAuthFin(false);
+    //   }
+
     if (!inputState.email) {
       alert("이메일을 입력해주세요.");
     } else if (!emailReg.test(inputState.email)) {
       alert("이메일 양식을 확인해주세요.");
     } else {
+
+      if(!inputState.code){
+        setAuthFin(false);
+      }
+      else {
+        
+      }
       //   sendEmailCodeAPI(value).then((res) => {
       setShowEmailCodeCheck(true);
       setAuthFin(true);
@@ -193,6 +215,9 @@ export default function Regist() {
     } else if (!emailReg.test(inputState.email)) {
       isNormal = false;
       msg = "이메일 양식을 확인해주세요.";
+    } else if (!authFin || !showEmailCodeCheck || !inputState.code) {
+      isNormal = false;
+      msg = "이메일 인증을 해주세요.";
     } else if (!inputState.nickname) {
       isNormal = false;
       msg = "닉네임을 입력해주세요.";
@@ -254,7 +279,7 @@ export default function Regist() {
               )
             ) {
               sessionStorage.setItem("password", inputState.password);
-             sessionStorage.setItem("userClass", inputState.class);
+              sessionStorage.setItem("userClass", inputState.class);
               sessionStorage.setItem("studentId", inputState.studentId);
               sessionStorage.setItem("generation", inputState.generation);
               sessionStorage.setItem("name", inputState.name);
@@ -315,7 +340,13 @@ export default function Regist() {
               </InputAdornment>
             }
           />
-          <>{showEmailCodeCheck ? <CheckEmailCode /> : <></>}</>
+          <>
+            {showEmailCodeCheck ? (
+              <CheckEmailCode changeHandle={changeHandle} />
+            ) : (
+              <></>
+            )}
+          </>
           {authFin ? (
             <Button onClick={sendEmailCodeAgainClick}>
               이메일 변경 및 인증 다시 받기

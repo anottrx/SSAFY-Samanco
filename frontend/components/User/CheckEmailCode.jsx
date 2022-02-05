@@ -22,7 +22,7 @@ export default function CheckEmailCode(props) {
     setTimer(value);
     console.log(value + " " + name);
     props.changeHandle(false, "code");
-    alert("시간이 만료되었습니다! 인증코드를 재발급해 주세요")
+    alert("시간이 만료되었습니다! 인증코드를 재발급해 주세요");
     setAuthFin(true);
   };
 
@@ -37,6 +37,8 @@ export default function CheckEmailCode(props) {
       console.log(value);
       //   checkEmailPWAPI(value).then((res) => {
       //     setEmailCodeRes({ code: res.statusCode, msg: res.message });
+      // 인증 실패시
+      // props.changeHandle(false, "code");
       props.changeHandle(true, "code");
       setAuthFin(true);
       //   });
