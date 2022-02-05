@@ -308,21 +308,39 @@ const BoardDetail = () => {
 
         return(
             <CommentWrapper>
-                <TextField 
-                    id="outlined-basic"
-                    placeholder="댓글을 입력하세요" 
-                    variant="outlined" 
-                    onChange={(e) => changeHandle(e.target.value, "content")}
-                    onKeyPress= {(e) => {
-                        if (e.key === 'Enter') {
-                            registRequest();
-                        }
-                    }}
-                    sx={{ width: "100%"}}/>
-                <Button
-                    sx={{ p: '10px 10px'}}
-                    onClick={registRequest}
-                ><SendIcon sx={{ fontSize: 25 }}/></Button>
+                {
+                    sessionStorage.getItem("userId")? 
+                    <>
+                    <TextField 
+                        id="outlined-basic"
+                        placeholder="댓글을 입력하세요" 
+                        variant="outlined" 
+                        onChange={(e) => changeHandle(e.target.value, "content")}
+                        onKeyPress= {(e) => {
+                            if (e.key === 'Enter') {
+                                registRequest();
+                            }
+                        }}
+                        sx={{ width: "100%"}}>
+                    </TextField>
+                    <Button
+                        sx={{ p: '10px 10px'}}
+                        onClick={registRequest}
+                        ><SendIcon sx={{ fontSize: 25 }}/>
+                    </Button>
+                    </>
+                    :
+                    <>
+                    <TextField disabled defaultValue="회원만 댓글을 작성할 수 있습니다." sx={{ width: "100%"}}></TextField>
+                    <Button
+                        disabled
+                        sx={{ p: '10px 10px'}}
+                        ><SendIcon sx={{ fontSize: 25 }}/>
+                    </Button>
+                    </>
+                }
+                
+                
             </CommentWrapper>
         )
     }

@@ -64,19 +64,19 @@ export default function Board() {
   return (
     <Layout>
         <h1>Board</h1>
-        {
-            sessionStorage.getItem("userId")?
-            <ButtonWrapper>
-              <CusButton variant="outlined" size="medium"
-                  onClick={() => {
+        <ButtonWrapper>
+          <CusButton variant="outlined" size="medium"
+              onClick={() => {
+                if (sessionStorage.getItem("userId"))
                   Router.push("/board/regist");
-                  }}>
-                  등록하기
-              </CusButton>
-            </ButtonWrapper>
-            :
-            null
-        }
+                else {
+                  alert("로그인이 필요한 작업입니다.")
+                  Router.push("/login")
+                }
+              }}>
+              등록하기
+          </CusButton>
+        </ButtonWrapper>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
