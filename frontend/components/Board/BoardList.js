@@ -118,20 +118,20 @@ function BoardList(props) {
 
     useEffect(() => {
       if (articleOrder === "like") {
-        orderArticleByLike().then(res => {
+        orderArticleByLike(tag).then(res => {
             if (res.boards)
                 setArticles({list: res.boards});
             else
                 setArticles({list: []});
         })
       } else if (articleOrder === "new") {
-            getArticleByTag(tag).then((res => {
-                if (res.boards)
-                    setArticles({list: res.boards});
-                else
-                    setArticles({list: []});
-            }));
-        }
+        getArticleByTag(tag).then((res => {
+            if (res.boards)
+                setArticles({list: res.boards});
+            else
+                setArticles({list: []});
+        }));
+      }
     }, [articleOrder]);
     
 
@@ -176,8 +176,8 @@ function BoardList(props) {
             <ItemWrapper>
                 <ProjectActions>
                     <SearchBar target="board" tag={tag}></SearchBar>
-                    {
-                        isAll?
+                    {/* {
+                        isAll? */}
                         <FormControl sx={{ minWidth: 80 }}>
                             <Select
                             labelId="articleOrder"
@@ -189,8 +189,9 @@ function BoardList(props) {
                             <MenuItem value={"new"}>최신순</MenuItem>
                             <MenuItem value={"like"}>인기순</MenuItem>
                             </Select>
-                        </FormControl> : null
-                    }
+                        </FormControl> 
+                        {/* : null
+                    } */}
                 </ProjectActions>
             </ItemWrapper>
             <TableContainer>

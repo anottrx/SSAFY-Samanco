@@ -79,9 +79,9 @@ async function updateArticleLike(data) {
 }
 
 // 게시물 좋아요 순으로 정렬
-async function orderArticleByLike() {
+async function orderArticleByLike(tag) {
   return await api
-    .get("/api/board/like")
+    .get("/api/board/like/" + tag)
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
