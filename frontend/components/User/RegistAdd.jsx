@@ -21,6 +21,7 @@ import { LocalizationProvider } from "@mui/lab";
 import MenuItem from "@mui/material/MenuItem";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import StackLevelDescription from "../Common/Stack/StackLevelDescription";
 
 export default function RegistInfo() {
   const [inputState, setInputState] = useState({
@@ -377,7 +378,8 @@ export default function RegistInfo() {
           <div className="mb-6">
             <Typography display="inline" sx={{ fontSize: 14 }}>
               기술 스택
-            </Typography>
+            </Typography>{" "}
+            <StackLevelDescription />
             <StackLevelSelectRegister
               changeHandle={changeHandle}
             ></StackLevelSelectRegister>
@@ -385,9 +387,8 @@ export default function RegistInfo() {
           {/* 링크 */}
           <div className="mb-6">
             <Typography display="inline" sx={{ fontSize: 14 }}>
-              링크
+              링크 <i style={{fontSize:"10px"}}>입력 후 엔터를 눌러주세요</i>
             </Typography>
-            <br />
             <Autocomplete
               multiple
               freeSolo
