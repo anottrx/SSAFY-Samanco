@@ -305,6 +305,12 @@ export default function MyInfo() {
     console.log(inputState);
   };
 
+  const [changeNickname, setChangeNickname] = useState(false);
+  const handleUserNicknameClick = (e) => {
+    alert("닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다");
+    setChangeNickname(true);
+    setNicknameChange(true);
+  };
   const handleNicknameClick = (e) => {
     e.preventDefault();
     // 닉네임 바꿀 수 있는지 확인
@@ -326,17 +332,19 @@ export default function MyInfo() {
       }
       if (!isNormal) {
         alert(msg);
+        setChangeNickname(false);
         setNicknameChange(false);
       }
 
       if (isNormal) {
         updateNicknameAPI(nicknameInfo).then((res) => {
-          console.log("닉네임 변경 가능한지 확인한 결과" + JSON.stringify(res));
+          // console.log("닉네임 변경 가능한지 확인한 결과" + JSON.stringify(res));
           if (res.statusCode == 200) {
             setCheckPassword(true);
 
             alert("닉네임 변경이 가능합니다.");
-            setNicknameChange(true);
+            setNicknameChange(false);
+            setChangeNickname(false);
           } else {
             alert(`${res.message}`);
           }
@@ -626,7 +634,9 @@ export default function MyInfo() {
                         <input
                           id="nickname"
                           value={nicknameInfo.nickname || ""}
-                          disabled={onlyView ? true : false}
+                          disabled={
+                            onlyView ? true : changeNickname ? false : true
+                          }
                           // style={{ display: "inline-block", width: "240px" }}
                           onChange={(e) => {
                             handleNicknameChange(e);
@@ -635,15 +645,18 @@ export default function MyInfo() {
                         />
                         {finishUpdate ? (
                           nicknameChange ? (
-                            <Button onClick={handleNicknameClick}>
-                              중복 확인하기1
-                            </Button>
-                          ) : (
                             <Button
                               onClick={handleNicknameClick}
                               sx={{ width: "100px" }}
                             >
                               중복 확인하기
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={handleUserNicknameClick}
+                              sx={{ width: "100px" }}
+                            >
+                              닉네임 변경하기
                             </Button>
                           )
                         ) : (
