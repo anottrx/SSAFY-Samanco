@@ -174,7 +174,11 @@ const BoardDetail = () => {
                         </div>
                     </DetailWrapper>
                     <Typography sx={{ fontSize: 15 }}>
-                        {detail.content}
+                    {
+                        detail.content.split('\n').map((line, index) => {
+                            return (<span key={index}>{line}<br/></span>)
+                        })
+                    }
                     </Typography>
                     <DetailAction detail={detail}></DetailAction>
                 </CardContent>

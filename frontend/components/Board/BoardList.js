@@ -136,9 +136,11 @@ function BoardList(props) {
         color: gray;
     `
 
-    const TagChip = style(Chip)`
+    const TagSpan = style.span`
         margin-right: 10px;
-        ${({colorinfo}) => colorinfo && `background-color: #${colorinfo}`}
+        padding: 0;
+        font-weight: bolder;
+        ${({colorinfo}) => colorinfo && `color: #${colorinfo}`}
     `
 
     return (
@@ -196,7 +198,9 @@ function BoardList(props) {
                                         <StyledTableCell component="th" scope="row">
                                         {
                                             isAll?
-                                            <TagChip label={BoardColor[data.tag].label} colorinfo={BoardColor[data.tag].color}/> : null
+                                            <TagSpan colorinfo={BoardColor[data.tag].color}>
+                                                [{BoardColor[data.tag].label}]
+                                            </TagSpan> : null
                                         }
                                         {
                                             `${data.title} (${data.comments? data.comments.length: 0})`
@@ -223,6 +227,12 @@ function BoardList(props) {
                                             Router.push("/board/"+data.boardId); 
                                         }}>
                                         <StyledTableCell component="th" scope="row">
+                                            {
+                                                isAll?
+                                                <TagSpan colorinfo={BoardColor[data.tag].color}>
+                                                    [{BoardColor[data.tag].label}]
+                                                </TagSpan> : null
+                                            }
                                             {`${data.title} (${data.comments? data.comments.length: 0})`}
                                             {
                                                 Array.isArray(data.files) && data.files.length !== 0?
