@@ -64,7 +64,7 @@ export default function LostPassword(props) {
     // const value = code;
 
     if (!code) {
-      alert("인증번호를 입력해주세요.");
+      alert("인증코드 입력을 완료해 주세요");
     } else {
       //   console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
@@ -135,7 +135,7 @@ export default function LostPassword(props) {
               sx={{ width: 370, py: 1.2, fontSize: 14 }}
               onClick={sendEmailButton ? sendEmailClick : checkCodeClick}
             >
-              {sendEmailButton ? "이메일 보내기" : "비밀번호 재설정하기"}
+              {sendEmailButton ? "이메일 보내기" : "비밀번호 재설정하러 가기"}
             </Button>
           </>
         )}
