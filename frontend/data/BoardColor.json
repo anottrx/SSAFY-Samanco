@@ -1,4 +1,5 @@
 {
+  "all": { "label": "전체 보기", "color": "000" },
   "notice": { "label": "공지사항", "color": "E77A7E" },
   "free": { "label": "자유게시판", "color": "EEB869" },
   "qna": { "label": "질문게시판", "color": "86D7BC" },
