@@ -162,6 +162,16 @@ export default function MyInfo() {
       userBirthday.value = value;
       console.log("생일 " + JSON.stringify(inputState));
     } else {
+      if (name == null && value.length == 6) {
+        inputState.birthday = value;
+        let yy = inputState.birthday.slice(0, 2);
+        yy = Number(yy) > 25 ? 19 + yy : 20 + yy;
+        let mm = inputState.birthday.slice(2, 4);
+        let dd = inputState.birthday.slice(4, 6);
+        setUserBirthdayDate(yy + "-" + mm + "-" + dd);
+        userBirthday.initDate = yy + "-" + mm + "-" + dd;
+        userBirthday.value = yy + "-" + mm + "-" + dd;
+      }
       inputState[name] = value;
       console.log("스택 " + JSON.stringify(inputState));
     }
@@ -392,8 +402,6 @@ export default function MyInfo() {
     // }
 
     if (isNormal) {
-      // inputState.birthday = userBirthday.value;
-
       inputState.stacks = {
         HTML: inputState.HTML,
         CSS: inputState.CSS,
@@ -427,7 +435,7 @@ export default function MyInfo() {
       loginAPI(loginInfo).then((res) => {
         console.log(loginInfo.email + " " + loginInfo.password);
         if (res.statusCode == 200) {
-          console.log("로그인 성공");
+          // console.log("로그인 성공");
           inputState.password = loginInfo.password;
 
           const formData = new FormData();
@@ -647,11 +655,11 @@ export default function MyInfo() {
               <ContentWrapper2>
                 <RowWrapper>
                   {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
-                  <label>생일</label>
+                  <label>생년월일</label>
                   {onlyView ? (
                     <input
-                      value={(userBirthday.value, inputState.birthday)}
-                      // value={inputState.birthday}
+                      // value={(userBirthday.value)}
+                      value={inputState.birthday}
                       disabled
                       // style={{ width: "60%" }}
                     />
