@@ -33,9 +33,7 @@ async function registAPI(formData) {
 async function sendEmailCodeAPI(email) {
   // 회원가입시 이메일로 인증번호 보내기
   return await api
-    .post("/api/email/send", {
-      email: email,
-    })
+    .post("/api/email/send", email)
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
@@ -43,9 +41,7 @@ async function sendEmailCodeAPI(email) {
 async function checkEmailCodeAPI(code) {
   // 회원가입시 이메일로 받은 인증번호로 인증하기
   return await api
-    .post("/api/email/code", {
-      code: code,
-    })
+    .post("/api/email/code", code)
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }

@@ -155,10 +155,12 @@ export default function Regist() {
       // }
 
       sendEmailCodeAPI(inputState.email).then((res) => {
+        console.log(inputState.email);
         if (res.statusCode == 200) {
-          setShowEmailCodeCheck(true);
-          setAuthFin(true);
+        } else {
         }
+        setShowEmailCodeCheck(true);
+        setAuthFin(true);
       });
     }
   };
