@@ -135,6 +135,7 @@ export default function MyInfo() {
   });
 
   const positionOptions = [
+    { value: "", name: "선택해 주세요" },
     { value: "frontend", name: "프론트엔드" },
     { value: "backend", name: "백엔드" },
     { value: "mobile", name: "모바일" },
@@ -719,13 +720,17 @@ export default function MyInfo() {
                       <input
                         id="position"
                         disabled
-                        value={positionOptions
-                          .map((u, i) => {
-                            if (u.value == inputState.position) {
-                              return u.name;
-                            }
-                          })
-                          .join("")}
+                        value={
+                          inputState.position == ""
+                            ? ""
+                            : positionOptions
+                                .map((u, i) => {
+                                  if (u.value == inputState.position) {
+                                    return u.name;
+                                  }
+                                })
+                                .join("")
+                        }
                         //  value={inputState.position || ""}
                         // onChange={handleChange}
                       />
