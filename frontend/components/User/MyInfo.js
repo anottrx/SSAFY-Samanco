@@ -142,6 +142,13 @@ export default function MyInfo() {
     { value: "embedded", name: "임베디드" },
   ];
 
+  const classOptions = [
+    { value: "JAVA", name: "자바반" },
+    { value: "PYTHON", name: "파이썬반" },
+    { value: "MOBILE", name: "모바일반" },
+    { value: "EMBEDDED", name: "임베디드반" },
+  ];
+
   const [nicknameInfo, setNicknameInfo] = useState({
     nickname: sessionStorage.getItem("nickname"),
     id: sessionStorage.getItem("userId"),
@@ -506,6 +513,11 @@ export default function MyInfo() {
     }
   };
 
+  const classHandleChange = (e) => {
+    // inputState.userClass = e.target.value;
+    inputState.class = e.target.value;
+  };
+
   const handleQuitClick = (event) => {
     const userId = sessionStorage.getItem("userId");
     if (window.confirm("탈퇴하시겠습니까?")) {
@@ -611,13 +623,29 @@ export default function MyInfo() {
                     >
                       싸피&nbsp;
                       <label>{inputState.generation}기&nbsp;</label>
-                      <label>{inputState.class}반&nbsp;</label>
-                      {/* <input
-                    id="userClass"
-                    value={inputState.userClass || ""}
-                    disabled={onlyView ? true : false}
-                    onChange={handleChange}
-                  /> */}
+                      {onlyView ? (
+                        <label>{inputState.class}반&nbsp;</label>
+                      ) : (
+                        <Select
+                          id="class"
+                          onChange={classHandleChange}
+                          defaultValue={classOptions[0].value}
+                          value={classOptions.value}
+                          sx={{ width: 120, fontSize: 14, height:35 }}
+                        >
+                          {classOptions.map((opt) => {
+                            return (
+                              <MenuItem
+                                key={opt.value}
+                                value={opt.value}
+                                sx={{ minWidth: 120, fontSize: 14 }}
+                              >
+                                {opt.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      )}
                       <label>(학번 {inputState.studentId})</label>
                     </Box>
                     <RowUpWrapper>
