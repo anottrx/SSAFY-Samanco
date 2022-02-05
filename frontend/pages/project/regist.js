@@ -183,13 +183,12 @@ function ProjectRegist() {
 
                             formData.append("file",files);
 
-                            for(var key of formData.entries())
-                            {
-                                console.log(`${key}`);
-                            } 
+                            // for(var key of formData.entries())
+                            // {
+                            //     console.log(`${key}`);
+                            // } 
 
                             registAPI(formData).then((res) => {
-                                console.log(res);
                                 if (res.statusCode == 200) {
                                     alert("프로젝트가 등록되었습니다.")
                                     Router.push("/project");

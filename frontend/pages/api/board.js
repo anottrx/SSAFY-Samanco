@@ -35,26 +35,22 @@ async function deleteBoard(data) {
   .catch((err) => err.response.data);
 }
 
-// 게시물 전체 목록 조회
-async function getBoardListAll() {
-  return await api
-  .get("/api/board")
-  .then((res) => res.data)
-  .catch((err) => err.response.data);
-}
-
 // 게시물 리스트 태그로 조회 (tag)
+// to do: api 업데이트 되면 경로 변경
 async function getArticleByTag(tag) {
   return await api
-    .get("/api/board/tag/" + tag)
+    .get("/api/board/" + tag)
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
 
 // 게시물 제목으로 조회
-async function getArticleByTitle(title) {
+async function getArticleByTitle(data) {
   return await api
-    .get("/api/board/title/" + title)
+    .post("/api/board/title/", {
+      tag: data.tag,
+      title: data.title
+    })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
@@ -66,6 +62,26 @@ async function getArticleById(data) {
       boardId: data.boardId,
       userId: data.userId
     })
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
+// 게시물 좋아요
+async function updateArticleLike(data) {
+  return await api
+    .post("/api/board/like", {
+      tag: data.tag,
+      tagId: data.boardId,
+      userId: data.userId
+    })
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
+// 게시물 좋아요 순으로 정렬
+async function orderArticleByLike(tag) {
+  return await api
+    .get("/api/board/like/" + tag)
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
@@ -122,12 +138,12 @@ export {
   registBoard,
   updateBoard,
   deleteBoard,
-  getBoardListAll,
   getArticleByTag,
   getArticleByTitle,
   getArticleById,
+  updateArticleLike,
+  orderArticleByLike,
   registComment,
   updateComment,
-  deleteComment,
-  // getCommentByBoardId
+  deleteComment
 };

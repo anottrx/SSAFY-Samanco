@@ -83,11 +83,6 @@ function BoardRegist() {
         preview();
     });
 
-    useEffect(() => {
-      console.log(inputValue)
-    }, [inputValue]);
-    
-
     const preview = () => {
         setUserId(sessionStorage.getItem("userId"));
         setNickname(sessionStorage.getItem("nickname"));
@@ -195,10 +190,10 @@ function BoardRegist() {
                         })
                         formData.append("file",files);
 
-                        for(var key of formData.entries())
-                        {
-                            console.log(`${key}`);
-                        } 
+                        // for(var key of formData.entries())
+                        // {
+                        //     console.log(`${key}`);
+                        // } 
 
                         registBoard(formData).then(res => {
                             if (res.statusCode === 200) {

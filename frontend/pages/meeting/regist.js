@@ -162,10 +162,10 @@ function Regist() {
 
                             formData.append("file",files);
 
-                            for(var key of formData.entries())
-                            {
-                                console.log(`${key}`);
-                            } 
+                            // for(var key of formData.entries())
+                            // {
+                            //     console.log(`${key}`);
+                            // } 
                         }
 
                         // registAPI(formData).then((res) => {

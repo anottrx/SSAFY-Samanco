@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
 
 import Layout from "../../components/layout";
 import styled from '@emotion/styled';
 
+import BoardColor from "../../data/BoardColor.json"
 import BoardList from "../../components/Board/BoardList";
-
+import Router from "next/router";
 
 //게시판 탭(공지사항, 자유게시판, 질문게시판, 정보공유, 사람구해요)
 
@@ -38,7 +39,7 @@ TabPanel.propTypes = {
 
 function a11yProps(index) {
   return {
-    id: `simple-tab-${index}`,
+    id: `${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
@@ -46,38 +47,83 @@ function a11yProps(index) {
 export default function Board() {
 
   const [value, setValue] = useState(0);
+  const [tagColor, setTagColor] = useState("535353");
 
-  const handleChange = (event, newValue) => {
+
+  const handleChange = (e, newValue) => {
     setValue(newValue);
+    setTagColor(BoardColor[e.target.id].color);
   };
+
+  const CusButton = styled(Button)`
+    height: fit-content;
+    align-self: right;
+  `
+
+  const ButtonWrapper = styled.div`
+    display: flex;
+    justify-content: flex-end;
+  `
+
+  const CusTabs = styled(Tabs)`
+    & .Mui-selected {
+      font-weight: bolder;
+      color: #${tagColor}!important; 
+    }
+
+    & .MuiTab-root:hover {
+      font-weight: bolder;
+    }
+
+    & .MuiTabs-indicator {
+      background-color: #${tagColor};
+    }
+  `
 
   return (
     <Layout>
         <h1>Board</h1>
+        <ButtonWrapper>
+          <CusButton variant="outlined" size="medium"
+              onClick={() => {
+                if (sessionStorage.getItem("userId"))
+                  Router.push("/board/regist");
+                else {
+                  alert("로그인이 필요한 작업입니다.")
+                  Router.push("/login")
+                }
+              }}>
+              등록하기
+          </CusButton>
+        </ButtonWrapper>
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="공지사항" {...a11yProps(0)} />
-              <Tab label="자유게시판" {...a11yProps(1)} />
-              <Tab label="질문게시판" {...a11yProps(2)} />
-              <Tab label="정보공유" {...a11yProps(3)} />
-              <Tab label="사람구해요" {...a11yProps(4)} />
-            </Tabs>
+            <CusTabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label="전체 보기" {...a11yProps("all")} />
+              <Tab label="공지사항" {...a11yProps("notice")} />
+              <Tab label="자유게시판" {...a11yProps("free")} />
+              <Tab label="질문게시판" {...a11yProps("qna")} />
+              <Tab label="정보공유" {...a11yProps("exam")} />
+              <Tab label="사람구해요" {...a11yProps("job")} />
+            </CusTabs>
           </Box>
           <TabPanel value={value} index={0}>
-            <BoardList tag="NOTICE"/>
+            <BoardList tag="all"/>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <BoardList tag="FREE"/>
+            <BoardList tag="notice"/>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <BoardList tag="QNA"/>
+            <BoardList tag="free"/>
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <BoardList tag="EXAM"/>
+            <BoardList tag="qna"/>
           </TabPanel>
           <TabPanel value={value} index={4}>
-            <BoardList tag="JOB"/>
+            <BoardList tag="exam"/>
+          </TabPanel>
+          <TabPanel value={value} index={5}>
+            <BoardList tag="job"/>
           </TabPanel>
       </Box>
     </Layout>

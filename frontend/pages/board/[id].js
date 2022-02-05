@@ -1,19 +1,24 @@
-import Layout from "../../components/layout";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import Router from "next/router";
+import Layout from "../../components/layout";
+import * as boardActions from '../../store/module/board';
 
+import { getArticleById, deleteBoard, registComment, updateArticleLike } from "../api/board";
 import styled from "@emotion/styled";
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
-import { Card, Container, CardContent, Typography, Divider, Button, Dialog, DialogActions, DialogTitle, ButtonGroup, TextField } from "@mui/material";
-import { useState, useEffect } from "react";
-import * as boardActions from '../../store/module/board';
-import Router from "next/router";
-import CommentList from "../../components/Board/CommentList"
-
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
-import { getArticleById, deleteBoard, registComment } from "../api/board";
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import { Card, Container, CardContent, Typography, Button, 
+    Dialog, DialogActions, DialogTitle, ButtonGroup, TextField,
+    Accordion, AccordionSummary, AccordionDetails, Chip } from "@mui/material";
+import CommentList from "../../components/Board/CommentList"
+import BoardColor from "../../data/BoardColor.json"
 
 import { forceReload } from "../../util/ForceReload"
 
@@ -21,8 +26,8 @@ import { forceReload } from "../../util/ForceReload"
 
 const BoardDetail = () => { 
     const detail = useSelector(({ board }) => board.boardDetail);
-    // const [like, changeLike] = useState(detail.likes);
-    const [like, changeLike] = useState("");
+    const tag = detail.tag;
+    const [like, changeLike] = useState(detail.userLike);
 
     const dispatch = useDispatch();
 
@@ -43,7 +48,7 @@ const BoardDetail = () => {
 
     const DetailHeader = styled.div`
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         margin: 20px 0px; 
         & > h2 {
@@ -53,13 +58,27 @@ const BoardDetail = () => {
             height: fit-content;
         }
     `
+
+    const CusH2 = styled(Chip)`
+        margin-right: 10px;
+        font-size: 15px;
+        padding: 5px 0px;
+        ${({colorinfo}) => colorinfo && `background-color: #${colorinfo}`}
+    `
     
     return (
     <Layout>
         <CusContainer maxWidth="md">
             <br></br>
             <DetailHeader>
-                <DetailOperation></DetailOperation>
+                <CusH2 
+                    colorinfo={BoardColor[tag].color}
+                    label={BoardColor[tag].label} />
+                {
+                    sessionStorage.getItem("userId") && sessionStorage.getItem("userId") == detail.userId?
+                    <DetailOperation />
+                    : null
+                }
             </DetailHeader>
             <BoardDetail></BoardDetail>
         </CusContainer>
@@ -155,11 +174,39 @@ const BoardDetail = () => {
                         </div>
                     </DetailWrapper>
                     <Typography sx={{ fontSize: 15 }}>
-                        {detail.content}
+                    {
+                        detail.content.split('\n').map((line, index) => {
+                            return (<span key={index}>{line}<br/></span>)
+                        })
+                    }
                     </Typography>
                     <DetailAction detail={detail}></DetailAction>
                 </CardContent>
             </CusCard>
+            {
+                Array.isArray(detail.files) && detail.files.length !== 0?
+                    <CusCard>
+                        <Accordion elevation="0">
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            ><div>첨부 파일 ({`${detail.files.length}`})</div>
+                            </AccordionSummary>
+                        <AccordionDetails>
+                        {
+                        detail.files.map(file => {
+                            return (
+                                <div><AttachFileIcon />{`${file.originFile}`}</div>
+                            )
+                        })
+                        }
+                        </AccordionDetails>
+                        </Accordion>
+                    </CusCard>
+                    :
+                    null
+                }
             <CusCard>
                 <CardContent>
                 <h4>댓글</h4>
@@ -204,8 +251,25 @@ const BoardDetail = () => {
                         <VisibilityIcon /> 
                         <span>{detail.hit}</span>
                     </Button>
-                    <Button>
-                        <FavoriteIcon /> 
+                    <Button onClick={() => {
+                        if (sessionStorage.getItem("userId")) {
+                            changeLike(!like);
+                            updateArticleLike({
+                                tag: "BOARD",
+                                boardId: detail.boardId, 
+                                userId: sessionStorage.getItem("userId")
+                            }).then(res => {let mute = res})
+                        } else {
+                            alert("로그인이 필요한 작업입니다.");
+                            Router.push("/login")
+                        }
+                    }} variant={like? "contained":"outlined"}>
+                        {
+                            like?
+                            <FavoriteIcon /> 
+                            :
+                            <FavoriteBorderIcon /> 
+                        }
                         <span>{detail.likes}</span>
                     </Button>
                 </ButtonGroup>
@@ -243,21 +307,39 @@ const BoardDetail = () => {
 
         return(
             <CommentWrapper>
-                <TextField 
-                    id="outlined-basic"
-                    placeholder="댓글을 입력하세요" 
-                    variant="outlined" 
-                    onChange={(e) => changeHandle(e.target.value, "content")}
-                    onKeyPress= {(e) => {
-                        if (e.key === 'Enter') {
-                            registRequest();
-                        }
-                    }}
-                    sx={{ width: "100%"}}/>
-                <Button
-                    sx={{ p: '10px 10px'}}
-                    onClick={registRequest}
-                ><SendIcon sx={{ fontSize: 25 }}/></Button>
+                {
+                    sessionStorage.getItem("userId")? 
+                    <>
+                    <TextField 
+                        id="outlined-basic"
+                        placeholder="댓글을 입력하세요" 
+                        variant="outlined" 
+                        onChange={(e) => changeHandle(e.target.value, "content")}
+                        onKeyPress= {(e) => {
+                            if (e.key === 'Enter') {
+                                registRequest();
+                            }
+                        }}
+                        sx={{ width: "100%"}}>
+                    </TextField>
+                    <Button
+                        sx={{ p: '10px 10px'}}
+                        onClick={registRequest}
+                        ><SendIcon sx={{ fontSize: 25 }}/>
+                    </Button>
+                    </>
+                    :
+                    <>
+                    <TextField disabled defaultValue="회원만 댓글을 작성할 수 있습니다." sx={{ width: "100%"}}></TextField>
+                    <Button
+                        disabled
+                        sx={{ p: '10px 10px'}}
+                        ><SendIcon sx={{ fontSize: 25 }}/>
+                    </Button>
+                    </>
+                }
+                
+                
             </CommentWrapper>
         )
     }

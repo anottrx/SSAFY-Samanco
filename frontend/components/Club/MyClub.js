@@ -50,7 +50,6 @@ function MyClub(props){
     }
 
     useLayoutEffect(() => {
-        console.log(props.from)
         switch (props.from) {
             case "project":
                 getProjectByUserId(sessionStorage.getItem("userId") == null? 
@@ -121,15 +120,12 @@ function MyClub(props){
             slidesToScroll: 1
         })
         
-        console.log('clubData', clubData, [clubData].length,  Object.keys(clubData).length)
-
         return (
             Object.keys(clubData).length !== 16? 
                 <CarouselWrapper>
                 <Slider {...settings}>
                 {
                 // 스터디이면
-                // clubData.map(data => console.log(data))
                 Object.keys(clubData).map((key, index) => {
                     let data = clubData[key];
                     return (

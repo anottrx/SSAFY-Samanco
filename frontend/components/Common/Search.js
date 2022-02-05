@@ -22,7 +22,6 @@ function SearchBar(props) {
 
     useEffect(() => {
         if (keyword !== "")
-            console.log(keyword)
         if (props.target === "project") {
             // 프로젝트 페이지를 위한 검색창
             if (!keyword)
@@ -40,7 +39,6 @@ function SearchBar(props) {
             else {
                 getStudyBytitle(keyword)
                 .then(res => {
-                    console.log(res.studies);
                     dispatch(studyActions.setStudyFilterList({list: res.studies}));
                 }
                 )
@@ -49,9 +47,11 @@ function SearchBar(props) {
             if (!keyword)
                 dispatch(boardActions.setBoardFilterList({list: null}))
             else {
-                getArticleByTitle(keyword)
+                getArticleByTitle({
+                    tag: props.tag,
+                    title: keyword
+                })
                 .then(res => {
-                    console.log(res.boards);
                     dispatch(boardActions.setBoardFilterList({list: res.boards}));
                 }
                 )

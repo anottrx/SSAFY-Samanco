@@ -86,12 +86,10 @@ export default function UserCard({user, clubId, hostId, from}) {
                                 })
                                 break;
                             case "study":
-                                console.log(user.id, clubId, from)
                                 quitStudy({
                                     userId: user.id, 
                                     studyId: clubId
                                 }).then(res => {
-                                    console.log(res)
                                     if (res.statusCode == 200) {
                                         alert("해당 유저를 내보냈습니다.")
                                         ForceReload();

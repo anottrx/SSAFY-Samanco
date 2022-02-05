@@ -156,7 +156,6 @@ function StudyInfo(){
                             onChange={(e) => {
                                 e.persist();
                                 setNextHost(e.target.value)
-                                console.log(nextHost)
                             }}>
                             {
                                 userData && userData !== null?
@@ -240,14 +239,12 @@ function StudyInfo(){
                             alert("스터디 삭제 또는 방장 권한 넘기기를 선택해주세요.")
                         }
                         if (hostAssign === "quit") {
-                            console.log("quit");
                             if (userData.length == 1) {
                                 alert("팀원이 존재하지 않습니다.")
                             } else
                                 UserDialogOpen();
                             // 방장 권한 넘기기
                         } else if (hostAssign === "delete") {
-                            console.log("delete");
                             deleteAPI({
                                 id: sid,
                                 hostId: sessionStorage.getItem("userId")
@@ -352,7 +349,6 @@ function StudyInfo(){
         )
 
         function StudyUser({detail}) {
-            console.log(detail)
             const UserWrapper = styled.div`
             display: flex;
             flex-direction: row;

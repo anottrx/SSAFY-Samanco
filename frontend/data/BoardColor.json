@@ -1,0 +1,8 @@
+{
+  "all": { "label": "전체 보기", "color": "535353" },
+  "notice": { "label": "공지사항", "color": "E77A7E" },
+  "free": { "label": "자유게시판", "color": "EEB869" },
+  "qna": { "label": "질문게시판", "color": "86D7BC" },
+  "exam": { "label": "정보공유", "color": "6FC9E7" },
+  "job": { "label": "사람 구해요", "color": "AD7DC9" }
+}
