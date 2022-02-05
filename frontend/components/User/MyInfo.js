@@ -30,7 +30,7 @@ import styled from "@emotion/styled";
 import StackLevelList from "../Common/Stack/StackLevelList";
 import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
-import StackLevelDescription from "../Common/Stack/StackLevelDescription";
+import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
 
@@ -762,7 +762,7 @@ export default function MyInfo() {
                 </RowWrapper>
                 <div>
                   <label>기술 스택</label>
-                  <StackLevelDescription />
+                  <StackLevelInfoDialog />
                   {onlyView && inputState.stacks_get != null ? (
                     <StackLevelList items={inputState.stacks_get} />
                   ) : (

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-function StackLevelDescription() {
+function StackLevelInfoDialog() {
   const [levelOpen, setLevelOpen] = useState(false);
   const handleLevelOpen = () => {
     setLevelOpen(true);
@@ -37,7 +37,7 @@ function StackLevelDescription() {
             <b>중</b> - 시스템 동작 방식을 알고 있으며, 기본적인 기능을 구현할
             수 있음
             <br />
-            <b>상</b> - 중간 규모 또는 그 이상 규모의 프그램 및 시스템을 개발할
+            <b>상</b> - 중간 규모 또는 그 이상 규모의 프로그램 및 시스템을 개발할
             수 있으며, 주요 이슈 트러블 슈팅을 할 수 있을 정도로 내부 구조에
             대해 이해하고 있음
             <br />
@@ -53,4 +53,4 @@ function StackLevelDescription() {
   );
 }
 
-export default StackLevelDescription;
+export default StackLevelInfoDialog;

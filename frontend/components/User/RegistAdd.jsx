@@ -21,7 +21,7 @@ import { LocalizationProvider } from "@mui/lab";
 import MenuItem from "@mui/material/MenuItem";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import StackLevelDescription from "../Common/Stack/StackLevelDescription";
+import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
 
 export default function RegistInfo() {
   const [inputState, setInputState] = useState({
@@ -379,7 +379,7 @@ export default function RegistInfo() {
             <Typography display="inline" sx={{ fontSize: 14 }}>
               기술 스택
             </Typography>{" "}
-            <StackLevelDescription />
+            <StackLevelInfoDialog />
             <StackLevelSelectRegister
               changeHandle={changeHandle}
             ></StackLevelSelectRegister>
