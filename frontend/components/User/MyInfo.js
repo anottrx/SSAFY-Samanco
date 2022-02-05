@@ -30,6 +30,7 @@ import styled from "@emotion/styled";
 import StackLevelList from "../Common/Stack/StackLevelList";
 import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
+import StackLevelDescription from "../Common/Stack/StackLevelDescription";
 
 const DatePickerWrapper = styled.div`
   display: flex;
@@ -212,6 +213,7 @@ export default function MyInfo() {
       inputState.userId = res.userId;
       inputState.email = res.email;
       inputState.nickname = res.nickname;
+      nicknameInfo.nickname = inputState.nickname;
 
       const userId = res.userId;
       getUserInfoAPI(userId).then((res) => {
@@ -654,7 +656,7 @@ export default function MyInfo() {
                         <span>닉네임</span>
                         <input
                           id="nickname"
-                          value={inputState.nickname || ""}
+                          value={nicknameInfo.nickname || ""}
                           disabled={onlyView ? true : false}
                           // style={{ display: "inline-block", width: "240px" }}
                           onChange={(e) => {
@@ -765,7 +767,8 @@ export default function MyInfo() {
                   {/* </Box> */}
                 </RowWrapper>
                 <div>
-                  <label>스택</label>
+                  <label>기술 스택</label>
+                  <StackLevelDescription />
                   {onlyView && inputState.stacks_get != null ? (
                     <StackLevelList items={inputState.stacks_get} />
                   ) : (
@@ -795,6 +798,7 @@ export default function MyInfo() {
                 </Box>
                 <Box>
                   <label>링크</label>
+                  <i style={{ fontSize: "10px" }}>입력 후 엔터를 눌러주세요</i>
                   {onlyView ? (
                     <LinkList items={links} />
                   ) : (
