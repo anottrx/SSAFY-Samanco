@@ -254,12 +254,11 @@ const BoardDetail = () => {
                     <Button onClick={() => {
                         if (sessionStorage.getItem("userId")) {
                             changeLike(!like);
-                            console.log("좋아요");
                             updateArticleLike({
                                 tag: "BOARD",
                                 boardId: detail.boardId, 
                                 userId: sessionStorage.getItem("userId")
-                            }).then(res => console.log(res))
+                            }).then(res => {let mute = res})
                         } else {
                             alert("로그인이 필요한 작업입니다.");
                             Router.push("/login")

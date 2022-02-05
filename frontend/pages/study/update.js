@@ -194,13 +194,12 @@ function studyUpdate() {
 
                             formData.append("file",files);
 
-                            for(var key of formData.entries())
-                            {
-                                console.log(`${key}`);
-                            } 
+                            // for(var key of formData.entries())
+                            // {
+                            //     console.log(`${key}`);
+                            // } 
 
                             updateAPI(formData).then((res) => {
-                                console.log(res)
                                 if (res.statusCode == 200) {
                                     alert("스터디 수정되었습니다.")
                                     Router.push("/study/"+inputValue.studyId);

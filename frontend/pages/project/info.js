@@ -147,7 +147,6 @@ function ProjectInfo(){
                             onChange={(e) => {
                                 e.persist();
                                 setNextHost(e.target.value)
-                                console.log(nextHost)
                             }}>
                             {
                                 userData?
@@ -231,14 +230,12 @@ function ProjectInfo(){
                             alert("프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.")
                         }
                         else if (hostAssign === "quit") {
-                            console.log("quit");
                             if (clubData.positions[9].size == 1) {
                                 alert("팀원이 존재하지 않습니다.")
                             } else
                                 UserDialogOpen();
                             // 방장 권한 넘기기
                         } else if (hostAssign === "delete") {
-                            console.log("delete");
                             deleteAPI({
                                 id: clubData.id,
                                 hostId: sessionStorage.getItem("userId")

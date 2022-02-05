@@ -228,16 +228,14 @@ function projectUpdate() {
                                 else 
                                     formData.append(key, value);
                             })
-
-                            for(var key of formData.entries())
-                            {
-                                console.log(`${key}`);
-                            } 
                             formData.append("file",files);
-
+                
+                            // for(var key of formData.entries())
+                            // {
+                            //     console.log(`${key}`);
+                            // } 
 
                             updateAPI(formData).then((res) => {
-                                console.log(res)
                                 if (res.statusCode == 200) {
                                     alert("프로젝트가 수정되었습니다.")
                                     Router.push("/project/"+inputValue.projectId);

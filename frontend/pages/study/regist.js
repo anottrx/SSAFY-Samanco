@@ -140,7 +140,6 @@ function StudyRegist() {
                     <Button variant="outlined" onClick={() => {
                         if (validateCheck()) {
                             const formData = new FormData();
-                            console.log(inputValue)
 
                             Object.keys(inputValue).map(key => {
                                 let value = inputValue[key];
@@ -152,10 +151,10 @@ function StudyRegist() {
 
                             formData.append("file",files);
 
-                            for(var key of formData.entries())
-                            {
-                                console.log(`${key}`);
-                            }
+                            // for(var key of formData.entries())
+                            // {
+                            //     console.log(`${key}`);
+                            // }
 
                             registAPI(formData).then((res) => {
                                 if (res.statusCode == 200) {

@@ -184,7 +184,6 @@ function DetailOperation({detail}) {
                         onChange={(e) => {
                             e.persist();
                             setNextHost(e.target.value)
-                            console.log(nextHost)
                         }}>
                         {
                             userData? 
@@ -268,14 +267,12 @@ function DetailOperation({detail}) {
                         alert("프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.")
                     }
                     else if (hostAssign === "quit") {
-                        console.log("quit");
                         if (detail.positions[9].size == 1) {
                             alert("팀원이 존재하지 않습니다.")
                         } else
                             UserDialogOpen();
                         // 방장 권한 넘기기
                     } else if (hostAssign === "delete") {
-                        console.log("delete");
                         deleteAPI({
                             id: detail.id,
                             hostId: sessionStorage.getItem("userId")
@@ -432,12 +429,11 @@ function DetailOperation({detail}) {
                     <Button onClick={() => {
                         if (sessionStorage.getItem("userId")) {
                             changeLike(!like);
-                            console.log("좋아요");
                             updateProjectLike({
                                 tag: "PROJECT",
                                 projectId: detail.id, // 프로젝트 아이디
                                 userId: sessionStorage.getItem("userId")
-                            }).then(res => console.log(res))
+                            }).then(res => {let mute = res})
                         } else {
                             alert("로그인이 필요한 작업입니다.");
                             Router.push("/login")
@@ -491,7 +487,6 @@ function DetailOperation({detail}) {
                                     onChange={(e) => {
                                         e.persist();
                                         setSelectPosition(e.target.value)
-                                        console.log(selectPosition)
                                     }}>
                                     {
                                         detail.positions.map((data, index) => {

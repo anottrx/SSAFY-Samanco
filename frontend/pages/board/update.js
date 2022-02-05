@@ -200,10 +200,10 @@ function BoardUpdate() {
                                 formData.append(key, value);
                             })
 
-                            for(var key of formData.entries())
-                            {
-                                console.log(`${key}`);
-                            } 
+                            // for(var key of formData.entries())
+                            // {
+                            //     console.log(`${key}`);
+                            // } 
                             formData.append("file",files);
 
                             updateBoard(formData)
