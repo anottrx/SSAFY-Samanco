@@ -5,7 +5,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { checkEmailPWAPI } from "../../pages/api/user";
+import { checkEmailCodeAPI,checkEmailPWAPI } from "../../pages/api/user";
 import CountdownTimer from "../Common/CountdownTimer";
 
 export default function CheckEmailCode(props) {

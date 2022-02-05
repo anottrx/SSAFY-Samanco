@@ -8,6 +8,7 @@ import {
   registAPI,
   loginAPI,
   checkNicknameAPI,
+  sendEmailCodeAPI,
   getUserLoginTokenAPI,
 } from "../../pages/api/user";
 import {
@@ -147,17 +148,18 @@ export default function Regist() {
     } else if (!emailReg.test(inputState.email)) {
       alert("이메일 양식을 확인해주세요.");
     } else {
+      // if(!inputState.code){
+      //   setAuthFin(false);
+      // }
+      // else {
+      // }
 
-      if(!inputState.code){
-        setAuthFin(false);
-      }
-      else {
-        
-      }
-      //   sendEmailCodeAPI(value).then((res) => {
-      setShowEmailCodeCheck(true);
-      setAuthFin(true);
-      //   });
+      sendEmailCodeAPI(inputState.email).then((res) => {
+        if (res.statusCode == 200) {
+          setShowEmailCodeCheck(true);
+          setAuthFin(true);
+        }
+      });
     }
   };
 
