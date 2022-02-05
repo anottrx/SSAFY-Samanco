@@ -75,7 +75,7 @@ const BoardDetail = () => {
                     colorinfo={BoardColor[tag].color}
                     label={BoardColor[tag].label} />
                 {
-                    sessionStorage.getItem("userId")?
+                    sessionStorage.getItem("userId") && sessionStorage.getItem("userId") == detail.userId?
                     <DetailOperation />
                     : null
                 }

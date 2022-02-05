@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import {getCommentByBoardId, updateComment, deleteComment} from "../../pages/api/board"
+import {updateComment, deleteComment} from "../../pages/api/board"
 import { forceReload } from '../../util/ForceReload';
 
 //댓글 목록 페이지
@@ -133,10 +133,10 @@ function CommentList({detail}) {
                     
                     {
                         editStatus && data.userId === sessionStorage.getItem("userId")?
-                            targetComment.commentId !== data.commentId?
-                                <CommentOperation data={data}/>
-                                :
-                                null
+                            targetComment.commentId === data.commentId?
+                            <CommentOperation data={data}/>
+                            :
+                            null
                         :
                         <CommentOperation data={data}/>
                     }
@@ -152,25 +152,28 @@ function CommentList({detail}) {
         const DeleteDialogClose = () => { setOpen(false) }
 
         return (
-            <>
-            <ButtonGroup variant="outlined">
-                <Button onClick={() => {
-                    setEditStatus(false);
-                    setEditComment({});
-                    setTargetComment({});
+            data.userId == sessionStorage.getItem("userId")?
+                <>
+                <ButtonGroup variant="outlined">
+                    <Button onClick={() => {
+                        setEditStatus(false);
+                        setEditComment({});
+                        setTargetComment({});
 
-                    setEditStatus(true);
-                    setTargetComment(data);
-                }}><EditIcon /></Button>
-                <Button color="error" onClick={() => {
-                    DeleteDialogOpen();
-                }}><DeleteIcon /></Button>
-            </ButtonGroup>
-            <DeleteDialog 
-                open={open} 
-                DeleteDialogClose={DeleteDialogClose}
-                commentId={data.commentId} />
-            </>
+                        setEditStatus(true);
+                        setTargetComment(data);
+                    }}><EditIcon /></Button>
+                    <Button color="error" onClick={() => {
+                        DeleteDialogOpen();
+                    }}><DeleteIcon /></Button>
+                </ButtonGroup>
+                <DeleteDialog 
+                    open={open} 
+                    DeleteDialogClose={DeleteDialogClose}
+                    commentId={data.commentId} />
+                </>
+            :
+            null
         )
     }
 
