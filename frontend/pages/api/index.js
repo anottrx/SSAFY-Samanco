@@ -29,5 +29,15 @@ const fileUrl = axios.create({
     }
 })
 
+const blobUrl = axios.create({
+    baseURL: `http://localhost:8080`,
+    headers: {
+        "Content-Type": `application/json;charset=UTF-8`,
+        "Access-Control-Allow-Origin": "*",
+        "Accept": "application/json",
+        "response-Type": "blob",
+    }
+})
+
 export default url;
-export {getAuth, fileUrl};
+export {getAuth, fileUrl, blobUrl};

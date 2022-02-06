@@ -4,7 +4,7 @@ import Router from "next/router";
 import Layout from "../../components/layout";
 import * as boardActions from '../../store/module/board';
 
-import { getArticleById, deleteBoard, registComment, updateArticleLike } from "../api/board";
+import { getArticleById, deleteBoard, registComment, updateArticleLike, fileDownload } from "../api/board";
 import styled from "@emotion/styled";
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -161,6 +161,19 @@ const BoardDetail = () => {
                 color: gray;
             }
         `
+        function changeToBlob(file){
+            fileDownload(file)
+            .then(res => {
+                const fileURL = window.URL.createObjectURL(new Blob([res]))
+                const fileLink = document.createElement("a")
+                fileLink.href = fileURL
+                fileLink.setAttribute("download", file.originFile)
+                document.body.appendChild(fileLink)
+                fileLink.click()
+                fileLink.remove()
+            })
+        }
+
         return (
             detail?
             <>
@@ -195,9 +208,9 @@ const BoardDetail = () => {
                             </AccordionSummary>
                         <AccordionDetails>
                         {
-                        detail.files.map(file => {
+                        detail.files.map((file, index) => {
                             return (
-                                <div><AttachFileIcon />{`${file.originFile}`}</div>
+                                <div key={index} onClick={()=>{changeToBlob(file)}}><AttachFileIcon />{`${file.originFile}`}</div>
                             )
                         })
                         }

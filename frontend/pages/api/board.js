@@ -1,4 +1,4 @@
-import api, { fileUrl } from "./index";
+import api, { fileUrl, blobUrl } from "./index";
 
 // 게시물 등록
 async function registBoard(formData) {
@@ -122,16 +122,18 @@ async function deleteComment(data) {
     .catch((err) => err.response.data);
 }
 
-// // 게시물 아이디로 댓글 리스트 조회
-// async function getCommentByBoardId(data) {
-//   return await api
-//   .post("/api/comment/view", {
-//     boardId: data.boardId,
-//     userId: data.userId
-//   })
-//   .then((res) => res.data)
-//   .catch((err) => err.response.data);
-// }
+// 파일 다운로드
+async function fileDownload(data) {
+  return await blobUrl
+    .post("/api/board/download", {
+      originFile: data.originFile,
+      saveFile: data.saveFile,
+      saveFolder: data.saveFolder
+    })
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
 
 
 export {
@@ -145,5 +147,6 @@ export {
   orderArticleByLike,
   registComment,
   updateComment,
-  deleteComment
+  deleteComment,
+  fileDownload
 };
