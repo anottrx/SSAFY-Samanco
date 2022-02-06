@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 
-import Layout from "../../components/layout"
+import Layout from "../../components/Layout"
 import DatePicker from "../../components/Common/DatePicker";
 import StackSelect from "../../components/Common/Stack/StackSelect";
 import Counter from "../../components/Common/PositionSelect";

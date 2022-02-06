@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import Layout from "../../../components/layout";
+import Layout from "../../../components/Layout";
 import StackList from "../../../components/Club/StackList"
 import UserCard from "../../../components/Common/UserCard";
 

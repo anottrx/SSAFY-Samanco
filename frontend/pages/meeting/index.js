@@ -1,4 +1,4 @@
-import Layout from "../../components/layout";
+import Layout from "../../components/Layout";
 import SearchBar from "../../components/Common/Search";
 import ItemList from "../../components/Meeting/ItemList";
 

@@ -2,7 +2,7 @@ import AdminList from "../../components/User/AdminList";
 import React, { useEffect } from "react";
 import Router from "next/router";
 import { useCookies } from "react-cookie";
-import Layout from "../../components/layout";
+import Layout from "../../components/Layout";
 
 export default function AdminPage() {
   useEffect(() => {

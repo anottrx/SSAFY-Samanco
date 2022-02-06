@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 
-import Layout from "../../components/layout"
+import Layout from "../../components/Layout"
 import StackSelect from "../../components/Common/Stack/StackSelect";
 
 import { Paper, TextField, Box, Button } from "@mui/material";

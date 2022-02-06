@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from 'react-redux';
 
-import Layout from "../../components/layout"
+import Layout from "../../components/Layout"
 import { Paper, TextField, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import {LocalizationProvider } from '@mui/lab';

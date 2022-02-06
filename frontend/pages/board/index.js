@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {Tabs, Tab, Typography, Box, Button} from '@mui/material';
 
-import Layout from "../../components/layout";
+import Layout from "../../components/Layout";
 import styled from '@emotion/styled';
 
 import BoardColor from "../../data/BoardColor.json"

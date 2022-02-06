@@ -1,4 +1,4 @@
-import Layout from "../../components/layout";
+import Layout from "../../components/Layout";
 import { useSelector, useDispatch } from 'react-redux';
 
 import styled from "@emotion/styled";
