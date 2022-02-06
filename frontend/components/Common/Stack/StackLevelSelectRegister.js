@@ -23,6 +23,8 @@ const stack = [
   { name: "Python", level: 1 },
   { name: "Java", level: 1 },
   { name: "C", level: 1 },
+  { name: "C++", level: 1 },
+  { name: "C#", level: 1 },
   { name: "SpringBoot", level: 1 },
   { name: "MySQL", level: 1 },
   { name: "Git", level: 1 },
@@ -39,9 +41,9 @@ function StackLevelSelectRegister(props) {
   // console.log("JSON.stringify(props.values)" + JSON.stringify(props.values));
   const stackList = JSON.stringify(props.values);
 
-  let initValue ;
-  if(stackList!=null) {
-    initValue  = JSON.parse(stackList);
+  let initValue;
+  if (stackList != null) {
+    initValue = JSON.parse(stackList);
   }
   // console.log("initValue" + initValue);
 
@@ -91,6 +93,8 @@ function StackLevelSelectRegister(props) {
       Python,
       Java,
       C,
+      C2,
+      C3,
       SpringBoot,
       MySQL,
       Git,
@@ -100,7 +104,7 @@ function StackLevelSelectRegister(props) {
       Jira,
       Django,
       Redis,
-    ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     stacks.map((stack) => {
       switch (stack.name) {
         case "HTML":
@@ -139,6 +143,14 @@ function StackLevelSelectRegister(props) {
         case "C":
           C = stack.level;
           props.changeHandle(parseInt(C), "C");
+          break;
+        case "C++":
+          C2 = stack.level;
+          props.changeHandle(parseInt(C2), "C2");
+          break;
+        case "C#":
+          C3 = stack.level;
+          props.changeHandle(parseInt(C3), "C3");
           break;
         case "SpringBoot":
           SpringBoot = stack.level;
@@ -188,6 +200,10 @@ function StackLevelSelectRegister(props) {
     if (React == 0) props.changeHandle(0, "React");
     if (Python == 0) props.changeHandle(0, "Python");
     if (C == 0) props.changeHandle(0, "C");
+    if (C2 == 0) props.changeHandle(0, "C2");
+    if (C3 == 0) props.changeHandle(0, "C3");
+    if (Java == 0) props.changeHandle(0, "Java");
+    if (Angular == 0) props.changeHandle(0, "Angular");
     if (SpringBoot == 0) props.changeHandle(0, "SpringBoot");
     if (MySQL == 0) props.changeHandle(0, "MySQL");
     if (Git == 0) props.changeHandle(0, "Git");

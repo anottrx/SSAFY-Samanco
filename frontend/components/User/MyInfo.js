@@ -30,6 +30,10 @@ import styled from "@emotion/styled";
 import StackLevelList from "../Common/Stack/StackLevelList";
 import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
+import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
+
+
+const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
 
 const DatePickerWrapper = styled.div`
   display: flex;
@@ -52,15 +56,20 @@ const ImgUploadBtn = styled(Button)`
   background-repeat: no-repeat;
   background-size: contain;
 `;
-
-const ItemWrapper = styled.div`
+const ImgDefault = styled.img`
+  // padding: 20px;
+  // border: 1px dashed grey;
+  min-width: 150px;
+  min-height: 150px;
+  max-width: 180px;
+  margin: 0px 0px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: left;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
 `;
-
 const DetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -119,6 +128,7 @@ export default function MyInfo() {
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
+  const [imageDefault, setImageDefault] = useState('');
 
   const [inputState, setInputState] = useState({
     userId: "",
@@ -141,10 +151,18 @@ export default function MyInfo() {
   });
 
   const positionOptions = [
+    { value: "", name: "선택해 주세요" },
     { value: "frontend", name: "프론트엔드" },
     { value: "backend", name: "백엔드" },
     { value: "mobile", name: "모바일" },
     { value: "embedded", name: "임베디드" },
+  ];
+
+  const classOptions = [
+    { value: "JAVA", name: "자바반" },
+    { value: "PYTHON", name: "파이썬반" },
+    { value: "MOBILE", name: "모바일반" },
+    { value: "EMBEDDED", name: "임베디드반" },
   ];
 
   const [nicknameInfo, setNicknameInfo] = useState({
@@ -170,6 +188,16 @@ export default function MyInfo() {
       userBirthday.value = value;
       console.log("생일 " + JSON.stringify(inputState));
     } else {
+      if (name == null && value.length == 6) {
+        inputState.birthday = value;
+        let yy = inputState.birthday.slice(0, 2);
+        yy = Number(yy) > 25 ? 19 + yy : 20 + yy;
+        let mm = inputState.birthday.slice(2, 4);
+        let dd = inputState.birthday.slice(4, 6);
+        setUserBirthdayDate(yy + "-" + mm + "-" + dd);
+        userBirthday.initDate = yy + "-" + mm + "-" + dd;
+        userBirthday.value = yy + "-" + mm + "-" + dd;
+      }
       inputState[name] = value;
       console.log("스택 " + JSON.stringify(inputState));
     }
@@ -185,13 +213,6 @@ export default function MyInfo() {
     // inputState.birthday = userBirthday.value;
     // console.log(userBirthday.value);
     // console.log(inputState.birthday);
-  };
-
-  const [description, setDescription] = useState("");
-  const handleDescriptionChange = (e) => {
-    const descriptionType = e.target;
-    setDescription(e.target.value);
-    // console.log(descriptionType)
   };
 
   const [userBirthday, setUserBirthday] = useState({
@@ -212,6 +233,7 @@ export default function MyInfo() {
       inputState.userId = res.userId;
       inputState.email = res.email;
       inputState.nickname = res.nickname;
+      nicknameInfo.nickname = inputState.nickname;
 
       const userId = res.userId;
       getUserInfoAPI(userId).then((res) => {
@@ -249,6 +271,17 @@ export default function MyInfo() {
         inputState.description = res.user.description;
         inputState.stacks = res.user.stacks;
         inputState.stacks_get = res.user.stacks;
+        inputState.image_id = res.user.file;
+
+        if(inputState.image_id==null) {
+          if(inputState.generation==7) {
+            setImageDefault("/images/profile_default_gen7.png")
+          } else if(inputState.generation==0) {
+            setImageDefault("/images/profile_default_gen0.png")
+          }else {
+            setImageDefault("/images/profile_default_gen6.png")
+          }
+        }
 
         if (res.user.link != null) {
           setLinks(inputState.link.split(" "));
@@ -307,6 +340,12 @@ export default function MyInfo() {
     console.log(inputState);
   };
 
+  const [changeNickname, setChangeNickname] = useState(false);
+  const handleUserNicknameClick = (e) => {
+    alert("닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다");
+    setChangeNickname(true);
+    setNicknameChange(true);
+  };
   const handleNicknameClick = (e) => {
     e.preventDefault();
     // 닉네임 바꿀 수 있는지 확인
@@ -328,17 +367,19 @@ export default function MyInfo() {
       }
       if (!isNormal) {
         alert(msg);
+        setChangeNickname(false);
         setNicknameChange(false);
       }
 
       if (isNormal) {
         updateNicknameAPI(nicknameInfo).then((res) => {
-          console.log("닉네임 변경 가능한지 확인한 결과" + JSON.stringify(res));
+          // console.log("닉네임 변경 가능한지 확인한 결과" + JSON.stringify(res));
           if (res.statusCode == 200) {
             setCheckPassword(true);
 
             alert("닉네임 변경이 가능합니다.");
-            setNicknameChange(true);
+            setNicknameChange(false);
+            setChangeNickname(false);
           } else {
             alert(`${res.message}`);
           }
@@ -402,12 +443,10 @@ export default function MyInfo() {
 
     // if (!phoneReg.test(inputState.phone)) {
     //   isNormal = false;
-    //   msg = "전화번호 양식을 확인해주세요.";
+    //   alert("전화번호 양식을 확인해주세요.")
     // }
 
     if (isNormal) {
-      // inputState.birthday = userBirthday.value;
-
       inputState.stacks = {
         HTML: inputState.HTML,
         CSS: inputState.CSS,
@@ -417,6 +456,8 @@ export default function MyInfo() {
         Python: inputState.Python,
         Java: inputState.Java,
         C: inputState.C,
+        "C++": inputState.C2,
+        "C#": inputState.C3,
         SpringBoot: inputState.SpringBoot,
         MySQL: inputState.MySQL,
         Git: inputState.Git,
@@ -441,9 +482,9 @@ export default function MyInfo() {
       loginAPI(loginInfo).then((res) => {
         console.log(loginInfo.email + " " + loginInfo.password);
         if (res.statusCode == 200) {
-          console.log("로그인 성공");
+          // console.log("로그인 성공");
           inputState.password = loginInfo.password;
-          //업데이트 API 실행하기
+
           const formData = new FormData();
 
           console.log("inputState" + JSON.stringify(inputState));
@@ -501,6 +542,11 @@ export default function MyInfo() {
     }
   };
 
+  const classHandleChange = (e) => {
+    // inputState.userClass = e.target.value;
+    inputState.class = e.target.value;
+  };
+
   const handleQuitClick = (event) => {
     const userId = sessionStorage.getItem("userId");
     if (window.confirm("탈퇴하시겠습니까?")) {
@@ -528,11 +574,7 @@ export default function MyInfo() {
           <div>
             <h1>내정보</h1>
 
-            <ContentUpWrapper
-            // justifyContent="center"
-            // alignItems="center"
-            // sx={{mb: 2 }}
-            >
+            <ContentUpWrapper>
               <ButtonWrapper>
                 {finishUpdate ? (
                   <>
@@ -576,21 +618,11 @@ export default function MyInfo() {
               </Dialog>
               <br />
               <div>
-                {/* <Box
-                  className="ssafyImgInfo"
-                  sx={{
-                    // display: "inline-block",
-                    mb: 2,
-                    // verticalAlign: "top",
-                  }}
-                > */}
                 <DetailWrapper maxWidth="sm">
-                  {/* <Box
-                    className="imgInfo"
-                    sx={{ width: "40%", display: "inline-block" }}
-                  > */}
-                  <CusSkeleton>
-                    {/* <label>이미지</label> */}
+                  {(onlyView && inputState.file==null)? (
+                    <ImgDefault src={imageDefault}></ImgDefault>
+                    //  <ImgDefault src="/images/gen7.png"></ImgDefault>
+                  ):(<CusSkeleton>
                     <ImgUploadBtn
                       id="img_box"
                       onClick={(event) => {
@@ -610,18 +642,12 @@ export default function MyInfo() {
                       encType="multipart/form-data"
                       onChange={onImgChange}
                     ></input>
-                  </CusSkeleton>
-                  {/* </Box> */}
-                  {/* <Box
-                    className="userBasicInfo"
-                    sx={{ width: "60%", display: "inline-block" }}
-                  > */}
+                  </CusSkeleton>)}
                   <ContentWrapper>
                     <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
                       </label>
-                      {/* <input value={inputState.name || ""} disabled /> */}
                     </Box>
                     <Box
                       className="ssafyInfo"
@@ -629,14 +655,29 @@ export default function MyInfo() {
                     >
                       싸피&nbsp;
                       <label>{inputState.generation}기&nbsp;</label>
-                      {/* <input value={inputState.generation || ""} disabled /> */}
-                      <label>{inputState.class}반&nbsp;</label>
-                      {/* <input
-                    id="userClass"
-                    value={inputState.userClass || ""}
-                    disabled={onlyView ? true : false}
-                    onChange={handleChange}
-                  /> */}
+                      {onlyView ? (
+                        <label>{inputState.class}반&nbsp;</label>
+                      ) : (
+                        <Select
+                          id="class"
+                          onChange={classHandleChange}
+                          defaultValue={classOptions[0].value}
+                          value={classOptions.value}
+                          sx={{ width: 120, fontSize: 14, height: 35 }}
+                        >
+                          {classOptions.map((opt) => {
+                            return (
+                              <MenuItem
+                                key={opt.value}
+                                value={opt.value}
+                                sx={{ minWidth: 120, fontSize: 14 }}
+                              >
+                                {opt.name}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      )}
                       <label>(학번 {inputState.studentId})</label>
                     </Box>
                     <RowUpWrapper>
@@ -648,14 +689,15 @@ export default function MyInfo() {
                       </label>
                       {/* </Box> */}
                     </RowUpWrapper>
-                    {/* <div > */}
                     <RowUpWrapper>
                       <label>
                         <span>닉네임</span>
                         <input
                           id="nickname"
-                          value={inputState.nickname || ""}
-                          disabled={onlyView ? true : false}
+                          value={nicknameInfo.nickname || ""}
+                          disabled={
+                            onlyView ? true : changeNickname ? false : true
+                          }
                           // style={{ display: "inline-block", width: "240px" }}
                           onChange={(e) => {
                             handleNicknameChange(e);
@@ -664,15 +706,18 @@ export default function MyInfo() {
                         />
                         {finishUpdate ? (
                           nicknameChange ? (
-                            <Button onClick={handleNicknameClick}>
-                              중복 확인하기1
-                            </Button>
-                          ) : (
                             <Button
                               onClick={handleNicknameClick}
                               sx={{ width: "100px" }}
                             >
                               중복 확인하기
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={handleUserNicknameClick}
+                              sx={{ width: "100px" }}
+                            >
+                              닉네임 변경하기
                             </Button>
                           )
                         ) : (
@@ -680,19 +725,16 @@ export default function MyInfo() {
                         )}
                       </label>
                     </RowUpWrapper>
-                    {/* </div> */}
                   </ContentWrapper>
-                  {/* </Box> */}
-                  {/* </Box> */}
                 </DetailWrapper>
               </div>
               <ContentWrapper2>
                 <RowWrapper>
                   {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
-                  <label>생일</label>
+                  <label>생년월일</label>
                   {onlyView ? (
                     <input
-                      value={(userBirthday.value, inputState.birthday)}
+                      value={userBirthday.value}
                       // value={inputState.birthday}
                       disabled
                       // style={{ width: "60%" }}
@@ -717,6 +759,7 @@ export default function MyInfo() {
                   <label>전화번호</label>
                   <input
                     id="phone"
+                    type="number"
                     value={inputState.phone || ""}
                     disabled={onlyView ? true : false}
                     onChange={handleChange}
@@ -724,21 +767,40 @@ export default function MyInfo() {
                 </RowWrapper>
                 {/* </Box> */}
                 <RowWrapper>
-                  {/* <Box sx={{ mb: 2 }}> */}
                   <label>분야</label>
                   {onlyView ? (
-                    <input
-                      id="position"
-                      disabled
-                      value={inputState.position || ""}
-                      onChange={handleChange}
-                    />
+                    <>
+                      {/* <label>
+                        {positionOptions.map((u, i) => {
+                          if (u.value == inputState.position) {
+                            return (<label>{u.name}</label>);
+                          }
+                        })}
+                      </label> */}
+                      <input
+                        id="position"
+                        disabled
+                        value={
+                          inputState.position == ""
+                            ? ""
+                            : positionOptions
+                                .map((u, i) => {
+                                  if (u.value == inputState.position) {
+                                    return u.name;
+                                  }
+                                })
+                                .join("")
+                        }
+                        //  value={inputState.position || ""}
+                        // onChange={handleChange}
+                      />
+                    </>
                   ) : (
                     <Select
                       id="position"
                       onChange={(e) => {
                         positionHandleChange(e);
-                        // handleChange(e);
+                        handleChange(e);
                       }}
                       value={inputState.position || ""}
                       sx={{ minWidth: 350, height: 35, fontSize: 13 }}
@@ -762,10 +824,10 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-                  {/* </Box> */}
                 </RowWrapper>
                 <div>
-                  <label>스택</label>
+                  <label>기술 스택</label>
+                  <StackLevelInfoDialog />
                   {onlyView && inputState.stacks_get != null ? (
                     <StackLevelList items={inputState.stacks_get} />
                   ) : (
@@ -782,19 +844,18 @@ export default function MyInfo() {
                     id="description"
                     placeholder="자기자신에 대해 소개해주세요"
                     fullWidth
-                    // sx={{ width: "80%" }}
                     rows={4}
                     multiline
                     value={inputState.description || ""}
                     disabled={onlyView ? true : false}
                     onChange={(e) => {
                       handleChange(e);
-                      // handleDescriptionChange(e);
                     }}
                   />
                 </Box>
                 <Box>
-                  <label>링크</label>
+                  <label>링크</label>&nbsp;
+                  <i style={{ fontSize: "10px" }}>입력 후 엔터를 눌러주세요</i>
                   {onlyView ? (
                     <LinkList items={links} />
                   ) : (
