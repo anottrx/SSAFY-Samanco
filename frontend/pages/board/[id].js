@@ -32,12 +32,15 @@ const BoardDetail = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        console.log(like);
+
         getArticleById({
             boardId: detail.boardId,
             userId: sessionStorage.getItem("userId") == null? 
             0: sessionStorage.getItem("userId")
         })
         .then(res => {
+            changeLike(res.board.userLike);
             dispatch(boardActions.setBoardDetail({detail: res.board}))
         });
     }, [like]);

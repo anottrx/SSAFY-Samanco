@@ -12,6 +12,7 @@
 /.next/
 /.cache/
 /out/
+/dist
 
 # production
 /build
