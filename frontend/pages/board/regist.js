@@ -73,7 +73,8 @@ function BoardRegist() {
     }
 
     const onImgChange = (event) => {
-        const file = event.target.files[0];
+        // const file = event.target.files[0];
+        const file = event.target.files;
         setFiles(file);
     }
 
@@ -87,19 +88,20 @@ function BoardRegist() {
         setUserId(sessionStorage.getItem("userId"));
         setNickname(sessionStorage.getItem("nickname"));
 
-        let fileName;
         if (!files) return false;
 
         const fileEl = document.querySelector("#file_box");
-        const reader = new FileReader();
-
-        reader.onload=()=>{
-            fileName = files.name;
-            fileEl.innerText  = fileName;
-        }
-
+        fileEl.innerText = "";
         
-        reader.readAsDataURL(files)
+        for (let i = 0; i < files.length; i++) {
+            const reader = new FileReader();
+            let file = files[i];
+            console.log(file)
+            reader.onload=()=>{
+                fileEl.innerText += `[${(i+1)}] ${file.name}\n`;
+            }
+            reader.readAsDataURL(file)
+        }
     }
 
     function validateCheck() {
@@ -175,7 +177,7 @@ function BoardRegist() {
                 
                 <input ref={uploadRef} type="file"
                     className="imgInput" id="projectImg"
-                    accept="*" name="file"
+                    accept="*" name="file" multiple 
                     onChange={onImgChange}></input>
 
 
@@ -188,12 +190,15 @@ function BoardRegist() {
                                 let value = inputValue[key];
                                 formData.append(key, value);
                             })
-                            formData.append("file",files);
 
-                            // for(var key of formData.entries())
-                            // {
-                            //     console.log(`${key}`);
-                            // } 
+                            for (let i = 0; i < files.length; i++) {
+                                formData.append("file",files[i]);
+                            }
+
+                            for(var key of formData.entries())
+                            {
+                                console.log(`${key}`);
+                            } 
 
                             registBoard(formData).then(res => {
                                 if (res.statusCode === 200) {
