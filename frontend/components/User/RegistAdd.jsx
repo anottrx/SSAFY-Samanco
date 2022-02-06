@@ -90,6 +90,17 @@ export default function RegistInfo() {
   const uploadRef = useRef(null);
 
   useEffect(() => {
+    if (
+      !sessionStorage.getItem("keep") ||
+      sessionStorage.getItem("keep") == null ||
+      sessionStorage.getItem("keep") == ""
+    ) {
+      alert("잘못된 접근입니다");
+      // 페이지 이동
+      window.history.forward();
+      window.location.replace("/");
+    }
+
     inputState.userId = sessionStorage.getItem("userId");
     inputState.nickname = sessionStorage.getItem("nickname");
     inputState.name = sessionStorage.getItem("name");

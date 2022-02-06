@@ -4,7 +4,7 @@ import { TextField } from "@mui/icons-material";
 import StackLevelList from "../Common/Stack/StackLevelList";
 import LinkList from "../Common/LinkList";
 
-export default function UserInfo() {
+export default function UserInfoPage() {
   const [userValue, setUserValue] = useState({
     userId: "",
     nickname: "",
@@ -18,22 +18,22 @@ export default function UserInfo() {
   const [links, setLinks] = useState([]);
 
   async function getUserInfo() {
-    getUserInfoAPI(userValue.userId).then((res) => {
+    getUserInfoAPI(sessionStorage.getItem("userInfo")).then((res) => {
       console.log("res: " + JSON.stringify(res));
       if (res.statusCode == 200) {
       } else {
         // alert(`${res.userId}`);
       }
-
+      userValue.userId = sessionStorage.getItem("userInfo");
       userValue.nickname = res.user.nickname;
       userValue.position = res.user.position;
       userValue.link = res.user.link;
       userValue.description = res.user.description;
       userValue.stacks = res.user.stacks;
-      setLinks(userValue.link.split(" "));
+      // setLinks(userValue.link.split(" "));
       // userValue.image_id = res.user.image_id;
 
-      if (userValue.stacks != "") {
+      if (userValue.nickname != "") {
         setLoading(true);
         console.log(JSON.stringify(userValue.stacks));
         console.log(JSON.stringify(userValue));
@@ -43,7 +43,6 @@ export default function UserInfo() {
   }
 
   useEffect(() => {
-    userValue.userId = 54;
     getUserInfo();
   }, []);
 

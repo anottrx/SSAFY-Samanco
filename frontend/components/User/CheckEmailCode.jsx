@@ -5,7 +5,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { checkEmailCodeAPI,checkEmailPWAPI } from "../../pages/api/user";
+import { checkEmailCodeAPI, checkEmailPWAPI } from "../../pages/api/user";
 import CountdownTimer from "../Common/CountdownTimer";
 
 export default function CheckEmailCode(props) {
@@ -37,10 +37,20 @@ export default function CheckEmailCode(props) {
       console.log(value);
       //   checkEmailPWAPI(value).then((res) => {
       //     setEmailCodeRes({ code: res.statusCode, msg: res.message });
+
+      checkEmailCodeAPI(code).then((res) => {
+        console.log(res)
+        if (res.statusCode == 200) {
+          props.changeHandle(true, "code");
+          setAuthFin(true);
+        } else {
+          props.changeHandle(false, "code");
+        }
+      });
       // 인증 실패시
       // props.changeHandle(false, "code");
-      props.changeHandle(true, "code");
-      setAuthFin(true);
+      // props.changeHandle(true, "code");
+      // setAuthFin(true);
       //   });
     }
   };

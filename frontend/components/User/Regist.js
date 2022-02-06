@@ -62,43 +62,6 @@ export default function Regist() {
     { value: "EMBEDDED", name: "임베디드반" },
   ];
 
-  const positionOptions = [
-    { value: "frontend", name: "프론트엔드" },
-    { value: "backend", name: "백엔드" },
-    { value: "mobile", name: "모바일" },
-    { value: "embedded", name: "임베디드" },
-  ];
-
-  const DatePickerWrapper = styled.div`
-    display: flex;
-    & > div {
-      flex: 1;
-      width: 370px;
-      margin: 0px 0px;
-    }
-  `;
-
-  const ContentWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 0px 30px;
-    flex: 1;
-  `;
-
-  const ImgUploadBtn = styled(Button)`
-    padding: 20px;
-    border: 1px dashed grey;
-    min-width: 150px;
-    min-height: 150px;
-    margin: 10px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: contain;
-  `;
-
   const changeHandle = (value, name) => {
     inputState[name] = value;
     if (value == false) {
@@ -136,7 +99,6 @@ export default function Regist() {
   const sendEmailCodeClick = (e) => {
     // 이메일로 인증번호 보내기 + 인증번호 입력 받을 수 있게 폼 열기
     e.preventDefault();
-    const value = inputState.email;
 
     // else  if(inputState.code==false) {
     //     setShowEmailCodeCheck(false);
@@ -148,17 +110,14 @@ export default function Regist() {
     } else if (!emailReg.test(inputState.email)) {
       alert("이메일 양식을 확인해주세요.");
     } else {
-      // if(!inputState.code){
-      //   setAuthFin(false);
-      // }
-      // else {
-      // }
-
+      // 인증코드 보내기
+      setShowEmailCodeCheck(true);
       sendEmailCodeAPI(inputState.email).then((res) => {
+        console.log(inputState.email);
         if (res.statusCode == 200) {
-          setShowEmailCodeCheck(true);
-          setAuthFin(true);
+        } else {
         }
+        setAuthFin(true);
       });
     }
   };
@@ -280,6 +239,8 @@ export default function Regist() {
                 "가입이 완료되었습니다! 추가 정보를 입력하실 건가요?"
               )
             ) {
+              sessionStorage.setItem("keep", "true");
+
               sessionStorage.setItem("password", inputState.password);
               sessionStorage.setItem("userClass", inputState.class);
               sessionStorage.setItem("studentId", inputState.studentId);
