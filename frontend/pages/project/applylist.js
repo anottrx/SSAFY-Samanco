@@ -1,4 +1,4 @@
-import Layout from "../../components/layout"
+import Layout from "../../components/Layout"
 import ApplyAccordion from "../../components/Club/ApplyAccordion"
 import * as applyActions from '../../store/module/apply';
 

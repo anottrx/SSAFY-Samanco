@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import Layout from "../../components/layout"
+import Layout from "../../components/Layout"
 
 import { Paper, TextField, Button, Checkbox, FormControlLabel } from "@mui/material";
 import styled from "@emotion/styled";

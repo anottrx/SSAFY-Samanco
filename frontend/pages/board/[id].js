@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import Router from "next/router";
-import Layout from "../../components/layout";
+import Layout from "../../components/Layout";
 import * as boardActions from '../../store/module/board';
 
 import { getArticleById, deleteBoard, registComment, updateArticleLike, fileDownload } from "../api/board";

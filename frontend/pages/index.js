@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import Link from "next/link";
 
 import Menu from "./menu";
 
@@ -36,23 +37,29 @@ export default function Home() {
           </div>
 
           <div className={styles.grid}>
-            <a className={styles.card} href="/project">
+            <Link href="/project">
+              <div className={styles.card}>
               <h2>프로젝트, 스터디 &rarr;</h2>
               <img src="/images/main_image1.png"></img>
               <p>원하는 팀원을 모집할 수 있어요</p>
-            </a>
+              </div>
+            </Link>
 
-            <a className={styles.card} href="/meeting">
+            <Link href="/meeting">
+              <div className={styles.card}>
               <h2>미팅룸 &rarr;</h2>
               <img src="/images/main_image2.png"></img>
               <p>화상 회의를 이용해<br />미팅을 진행할 수 있어요</p>
-            </a>
+              </div>
+            </Link>
 
-            <a className={styles.card} href="/board">
+            <Link href="/board">
+              <div className={styles.card}>
               <h2>게시판 &rarr;</h2>
               <img src="/images/main_image3.png"></img>
               <p>시험과 취업 정보를 얻고,<br />익명으로 질문을 할 수 있어요</p>
-            </a>
+              </div>
+            </Link>
           </div>
         </div>
         
