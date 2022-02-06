@@ -74,10 +74,11 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     const userNickname = sessionStorage.getItem("nickname")
     const token = cookies.get("userToken")
-    if (!token && token !='' && userNickname != null && userNickname != 'undefined') {
+    if (token != null && token !='' && userNickname != null && userNickname != 'undefined') {
+      console.log(token)
       setIsLogin(true);
       setNickname(userNickname)
-    } else if(!token && token !='' && userNickname == null) {
+    } else if(token != null && token !='' && userNickname == null) {
       getUserLoginTokenAPI(token).then((res) => {
         sessionStorage.setItem("userId", res.userId);
         sessionStorage.setItem("email", res.email);

@@ -9,7 +9,11 @@ export default function RegistPage() {
   useEffect(() => {
     document.title = "회원가입 | 싸피사만코";
 
-    if (cookies.get("userToken")!='' && sessionStorage.getItem("nickname") != null) {
+    if (
+      cookies.get("userToken") != "" &&
+      !sessionStorage.getItem("nickname") &&
+      sessionStorage.getItem("nickname") != "undefined"
+    ) {
       alert("로그인된 상태입니다");
       Router.push("/");
     }
