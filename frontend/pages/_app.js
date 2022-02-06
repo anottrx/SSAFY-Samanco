@@ -12,6 +12,7 @@ import React, { useState, useEffect } from "react";
 import Router from "next/router";
 import { Button, Menu, MenuItem, Fade } from '@mui/material';
 import Cookies from "universal-cookie";
+import { getUserLoginTokenAPI } from "../pages/api/user";
 
 import styled from "@emotion/styled";
 
@@ -72,9 +73,18 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const userNickname = sessionStorage.getItem("nickname")
-    if (cookies.get("userToken")!='' && userNickname != null) {
+    const token = cookies.get("userToken")
+    if (token !='' && userNickname != null) {
       setIsLogin(true);
       setNickname(userNickname)
+    } else if(token !='' && userNickname == null) {
+      getUserLoginTokenAPI(token).then((res) => {
+        sessionStorage.setItem("userId", res.userId);
+        sessionStorage.setItem("email", res.email);
+        sessionStorage.setItem("nickname", res.nickname);
+        setIsLogin(true);
+        setNickname(userNickname)
+      });
     }
   }, [isLogin, nickname]);
   
