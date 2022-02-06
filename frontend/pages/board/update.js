@@ -106,7 +106,7 @@ function BoardUpdate() {
         reader.readAsDataURL(files)
     }
 
-    async function validateCheck() {
+    function validateCheck() {
         let [check, msg] = [true, ""]
         
         if (typeof(inputValue.title)=='undefined')
@@ -117,8 +117,6 @@ function BoardUpdate() {
             inputValue["content"] = detail.content;
         else if (inputValue.content=="")
             [check, msg] = [false, "게시물 내용을 입력해주세요."]
-        if (typeof(inputValue.content)=='undefined')
-            inputValue["content"] = detail.content;
         
         if (!check)
             alert(msg)

@@ -102,13 +102,13 @@ function BoardRegist() {
         reader.readAsDataURL(files)
     }
 
-    async function validateCheck() {
+    function validateCheck() {
         let [check, msg] = [true, ""]
         if (typeof(inputValue.tag)=='undefined')
             [check, msg] = [false, "태그를 선택해주세요"]
-        else if (typeof(inputValue.title)=='undefined')   
+        if (typeof(inputValue.title)=='undefined')   
             [check, msg] = [false, "게시물 제목을 입력해주세요"]
-        else if (typeof(inputValue.content)=='undefined')   
+        if (typeof(inputValue.content)=='undefined')   
             [check, msg] = [false, "게시물 내용을 입력해주세요."]
         
         if (!check)
@@ -182,29 +182,28 @@ function BoardRegist() {
                 <div className="registBtn">
                     <Button variant="outlined" onClick={() => {
                         if (validateCheck()) {
-                        const formData = new FormData();
+                            const formData = new FormData();
 
-                        Object.keys(inputValue).map(key => {
-                            let value = inputValue[key];
-                            formData.append(key, value);
-                        })
-                        formData.append("file",files);
+                            Object.keys(inputValue).map(key => {
+                                let value = inputValue[key];
+                                formData.append(key, value);
+                            })
+                            formData.append("file",files);
 
-                        // for(var key of formData.entries())
-                        // {
-                        //     console.log(`${key}`);
-                        // } 
+                            // for(var key of formData.entries())
+                            // {
+                            //     console.log(`${key}`);
+                            // } 
 
-                        registBoard(formData).then(res => {
-                            if (res.statusCode === 200) {
-                                alert("게시물이 작성되었습니다.")
-                                Router.push("/board")
-                            } else {
-                                alert(`${res.message}`)
-                            }
-                        })
-                    }
-
+                            registBoard(formData).then(res => {
+                                if (res.statusCode === 200) {
+                                    alert("게시물이 작성되었습니다.")
+                                    Router.push("/board")
+                                } else {
+                                    alert(`${res.message}`)
+                                }
+                            })
+                        } 
                     }}>등록하기</Button>
                 </div>
             </CusPaper>

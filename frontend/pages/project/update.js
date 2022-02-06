@@ -121,7 +121,7 @@ function projectUpdate() {
         inputValue["hostPosition"] = name;
     };
 
-    async function validateCheck() {
+    function validateCheck() {
         let [check, msg] = [true, ""]
         
         if (typeof(inputValue.title)=='undefined')

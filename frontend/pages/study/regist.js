@@ -82,15 +82,17 @@ function StudyRegist() {
         // 리렌더링 X
     }
 
-    async function validateCheck() {
+    function validateCheck() {
         let [check, msg] = [true, ""]
         if (typeof(inputValue.title)=='undefined')
             [check, msg] = [false, "스터디 이름을 입력해주세요."]
-        else if (typeof(inputValue.size)=='undefined' || inputValue.size == 0)   
+        if (typeof(inputValue.description)=='undefined')
+            [check, msg] = [false, "스터디 설명을 입력해주세요."]
+        if (typeof(inputValue.size)=='undefined' || inputValue.size == 0)   
             [check, msg] = [false, "스터디 인원은 한 명 이상이여야 합니다."]
-        else if (typeof(inputValue.schedule)=='undefined' || inputValue.schedule == "")   
+        if (typeof(inputValue.schedule)=='undefined' || inputValue.schedule == "")   
             [check, msg] = [false, "스터디가 진행될 스케쥴을 입력해주세요."]
-        else if (typeof(inputValue.stacks)=='undefined' || inputValue.stacks.length == 0)   
+        if (typeof(inputValue.stacks)=='undefined' || inputValue.stacks.length == 0)   
             [check, msg] = [false, "스터디 주제를 선택해주세요."]
 
         if (!check)

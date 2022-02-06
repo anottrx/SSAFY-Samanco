@@ -89,7 +89,7 @@ function Regist() {
         // 리렌더링 X
     }
 
-    async function validateCheck() {
+    function validateCheck() {
         let [check, msg] = [true, ""]
         if (typeof(inputValue.title)=='undefined')
             [check, msg] = [false, "미팅룸 이름을 입력해주세요."]

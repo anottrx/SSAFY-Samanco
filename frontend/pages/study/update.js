@@ -88,7 +88,7 @@ function studyUpdate() {
         // 리렌더링 X
     }
 
-    async function validateCheck() {
+    function validateCheck() {
         let [check, msg] = [true, ""]
         if (typeof(inputValue.title)=='undefined') 
             inputValue["title"] = detail.title;

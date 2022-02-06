@@ -104,7 +104,7 @@ function ProjectRegist() {
         inputValue["hostPosition"] = name;
     };
 
-    async function validateCheck() {
+    function validateCheck() {
         let [check, msg] = [true, ""]
         if (typeof(inputValue.title)=='undefined')
             [check, msg] = [false, "프로젝트 이름을 입력해주세요."]
