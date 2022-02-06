@@ -1,5 +1,7 @@
 module.exports = {
   reactStrictMode: true,
+  distDir: "dist",
+  trailingSlash: true,
   // swcMinify: true,
   // swcMinify : Rust 컴파일러로 변경 -> 속도 빨라짐
   // experimental: {
