@@ -589,8 +589,7 @@ export default function MyInfo() {
       {loading ? (
         <div>
           <div>
-            <h1>내정보</h1>
-
+            <h1>{inputState.name}님, 환영합니다</h1>
             <ContentUpWrapper>
               <ButtonWrapper>
                 {finishUpdate ? (
@@ -637,11 +636,11 @@ export default function MyInfo() {
               <div>
                 <DetailWrapper maxWidth="sm">
                   <ContentWrapper>
-                    <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
+                    {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
                       </label>
-                    </Box>
+                    </Box> */}
                     <Box
                       className="ssafyInfo"
                       sx={{ width: "100%", fontSize: "18px", mb: 1 }}
