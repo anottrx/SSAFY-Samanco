@@ -1,9 +1,9 @@
-import UserInfo from "../../components/User/UserInfo";
+import UserInfoPage from "../../components/User/UserInfoPage";
 
 export default function UserPage() {
   return (
     <>
-      <UserInfo />
+      <UserInfoPage />
     </>
   );
 }
