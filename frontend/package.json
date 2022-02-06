@@ -2,9 +2,9 @@
   "name": "next.js",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8089",
     "build": "next build && next export",
-    "start": "next start",
+    "start": "next start -p 8089",
     "lint": "next lint"
   },
   "dependencies": {
