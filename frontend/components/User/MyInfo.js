@@ -31,7 +31,7 @@ import StackLevelList from "../Common/Stack/StackLevelList";
 import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
-import { forceReload } from "../../util/ForceReload";
+import forceReload from "../../util/ForceReload";
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
 // const urlReg = [(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*);

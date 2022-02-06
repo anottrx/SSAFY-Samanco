@@ -11,7 +11,7 @@ import { getProjectUserByjoin } from "../../pages/api/project"
 import { getStudyUserByjoin } from "../../pages/api/study"
 import { useDispatch } from 'react-redux';
 
-import { forceReload } from "../../util/ForceReload";
+import forceReload from "../../util/ForceReload";
 
 
 function ApplyAccordion(props) {

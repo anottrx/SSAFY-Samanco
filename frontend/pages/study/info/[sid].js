@@ -16,7 +16,7 @@ import * as studyActions from '../../../store/module/study';
 
 import Router, { useRouter } from "next/router";
 
-import { forceReload } from "../../../util/ForceReload";
+import forceReload from "../../../util/ForceReload";
 
 function StudyInfo(){
     let clubData = useSelector(({ study }) => study.studyDetail);

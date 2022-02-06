@@ -21,7 +21,7 @@ import { deleteAPI, updateProjectLike, joinProjectAPI,
     getProjectById, joinCancelProject, getUserAtProject, 
     changeProjectHost, quitProject } from "../api/project";
 
-import { forceReload } from "../../util/ForceReload";
+import forceReload from "../../util/ForceReload";
 
 const ProjectDetail = () => { 
     const detail = useSelector(({ project }) => project.projectDetail);

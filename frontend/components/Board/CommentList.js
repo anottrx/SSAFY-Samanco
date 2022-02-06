@@ -8,7 +8,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 
 import {updateComment, deleteComment} from "../../pages/api/board"
-import { forceReload } from '../../util/ForceReload';
+import forceReload from '../../util/ForceReload';
 
 //댓글 목록 페이지
 function CommentList({detail}) {

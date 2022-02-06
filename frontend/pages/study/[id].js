@@ -20,7 +20,7 @@ import { deleteAPI, updateStudyLike, joinStudyAPI,
     getStudyById, joinCancelStudy, getUserAtStudy,
     changeStudyHost, quitStudy } from "../api/study";
 
-import { forceReload } from "../../util/ForceReload";
+import forceReload from "../../util/ForceReload";
 
 const StudyDetail = () => { 
     const detail = useSelector(({ study }) => study.studyDetail);

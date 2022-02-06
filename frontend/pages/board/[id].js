@@ -20,7 +20,7 @@ import { Card, Container, CardContent, Typography, Button,
 import CommentList from "../../components/Board/CommentList"
 import BoardColor from "../../data/BoardColor.json"
 
-import { forceReload } from "../../util/ForceReload"
+import forceReload from "../../util/ForceReload"
 
 //게시글 상세보기 페이지
 

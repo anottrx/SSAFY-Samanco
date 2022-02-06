@@ -1,3 +1,4 @@
 import Router from "next/router"
 
-export const forceReload = () => { Router.reload()}
+const forceReload = () => { Router.reload()}
+export default forceReload
