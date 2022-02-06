@@ -263,7 +263,7 @@ const StudyDetail = () => {
                             // 방장 권한 넘기기
                         } else if (hostAssign === "delete") {
                             deleteAPI({
-                                id: sid,
+                                id: detail.id,
                                 hostId: sessionStorage.getItem("userId")
                             }).then(res => {
                                 if (res.statusCode === 200) {
