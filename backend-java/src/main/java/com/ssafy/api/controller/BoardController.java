@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.model.BoardDto;
+import com.ssafy.api.model.FileDto;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
 import com.ssafy.api.response.StackSelectAllRes;
@@ -19,11 +20,21 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static com.ssafy.common.util.JsonUtil.getListMapFromString;
@@ -260,5 +271,46 @@ public class BoardController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(201, "좋아요 취소"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "좋아요"));
+    }
+
+    @PostMapping("/download")
+    public ResponseEntity<Resource> download(@RequestBody FileDto fileDto, HttpServletRequest request){
+//    public ResponseEntity<? extends BaseResponseBody> download(@RequestBody FileDto fileDto, HttpServletRequest request){
+        String realPath = new File("").getAbsolutePath() + File.separator + "files";
+        String filePath = realPath + File.separator + fileDto.getSaveFolder() + File.separator + fileDto.getSaveFile();
+        File target = new File(filePath);
+        System.out.println(target);
+        HttpHeaders header = new HttpHeaders();
+        Resource rs = null;
+        if(target.exists()) {
+            try {
+                String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
+                System.out.println("mimeType : "+mimeType);
+                if(mimeType == null) {
+                    mimeType = "application/download; charset=UTF-8";
+                }
+                rs = new UrlResource(target.toURI());
+                String userAgent = request.getHeader("User-Agent");
+                boolean isIE = userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1;
+                String fileName = null;
+                String originalFile = fileDto.getOriginFile();
+                // IE는 다르게 처리
+                if (isIE) {
+                    fileName = URLEncoder.encode(originalFile, "UTF-8").replaceAll("\\+", "%20");
+                } else {
+                    fileName = new String(originalFile.getBytes("UTF-8"), "ISO-8859-1");
+                }
+//		        fileName=new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
+                header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ fileName +"\"");
+                header.setCacheControl("no-cache");
+                header.setContentType(MediaType.parseMediaType(mimeType));
+                System.out.println("header: "+header);
+                System.out.println("rs: "+rs);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.ok().headers(header).body(rs);
+//		return new ResponseEntity<Resource>(rs, header, HttpStatus.OK);
     }
 }
