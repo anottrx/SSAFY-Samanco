@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const url = axios.create({
-    baseURL: `http://localhost:8080`,
+    baseURL: `http://localhost:8089`,
     headers: {
         "Content-Type": `application/json;charset=UTF-8`,
         "Access-Control-Allow-Origin": "*",
@@ -10,7 +10,7 @@ const url = axios.create({
 });
 
 const getAuth = (token) => axios.create({
-    baseURL: `http://localhost:8080`,
+    baseURL: `http://localhost:8089`,
     headers: {
         "Content-Type": `application/json;charset=UTF-8`,
         "Access-Control-Allow-Origin": "*",
@@ -20,7 +20,7 @@ const getAuth = (token) => axios.create({
 })
 
 const fileUrl = axios.create({
-    baseURL: `http://localhost:8080`,
+    baseURL: `http://localhost:8089`,
     headers: {
         // "Content-Type": `application/json;charset=UTF-8`,
         "Content-Type": `multipart/form-data`,
@@ -30,7 +30,7 @@ const fileUrl = axios.create({
 })
 
 const blobUrl = axios.create({
-    baseURL: `http://localhost:8080`,
+    baseURL: `http://localhost:8089`,
     headers: {
         "Content-Type": `application/json;charset=UTF-8`,
         "Access-Control-Allow-Origin": "*",

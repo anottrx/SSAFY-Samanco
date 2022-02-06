@@ -50,27 +50,27 @@ group 'com.ssafy'
 version '1.0-SNAPSHOT'
 sourceCompatibility = '11'
 
-node {
-    download = true
-    version = '14.17.0'
-    // Set the work directory where node_modules should be located
-    nodeModulesDir = file("${project.projectDir}/../frontend")
-}
-
-configurations {
-    providedRuntime
-}
-
-/*task npmInstall(type: NpmTask, overwrite: true) {
-    args = ['install']
-}*/
-
-task webpack(type: NpmTask, dependsOn: 'npmInstall') {
-    args = ['run','build']
-}
-
-// processResources is a Java task. Run the webpack bundling before this task using the 'build' task in the package.json
-processResources.dependsOn 'webpack'
+//node {
+//    download = true
+//    version = '14.17.0'
+//    // Set the work directory where node_modules should be located
+//    nodeModulesDir = file("${project.projectDir}/../frontend")
+//}
+//
+//configurations {
+//    providedRuntime
+//}
+//
+///*task npmInstall(type: NpmTask, overwrite: true) {
+//    args = ['install']
+//}*/
+//
+//task webpack(type: NpmTask, dependsOn: 'npmInstall') {
+//    args = ['run','build']
+//}
+//
+//// processResources is a Java task. Run the webpack bundling before this task using the 'build' task in the package.json
+//processResources.dependsOn 'webpack'
 
 //set build time and inject value to application.properties
 def buildTime() {
