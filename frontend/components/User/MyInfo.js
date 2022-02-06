@@ -31,9 +31,12 @@ import StackLevelList from "../Common/Stack/StackLevelList";
 import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
-
+import { forceReload } from "../../util/ForceReload";
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
+// const urlReg = [(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*);
+const urlReg =
+  /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
 
 const DatePickerWrapper = styled.div`
   display: flex;
@@ -128,7 +131,7 @@ export default function MyInfo() {
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
-  const [imageDefault, setImageDefault] = useState('');
+  const [imageDefault, setImageDefault] = useState("");
 
   const [inputState, setInputState] = useState({
     userId: "",
@@ -273,13 +276,13 @@ export default function MyInfo() {
         inputState.stacks_get = res.user.stacks;
         inputState.image_id = res.user.file;
 
-        if(inputState.image_id==null) {
-          if(inputState.generation==7) {
-            setImageDefault("/images/profile_default_gen7.png")
-          } else if(inputState.generation==0) {
-            setImageDefault("/images/profile_default_gen0.png")
-          }else {
-            setImageDefault("/images/profile_default_gen6.png")
+        if (inputState.image_id == null) {
+          if (inputState.generation == 7) {
+            setImageDefault("/images/profile_default_gen7.png");
+          } else if (inputState.generation == 0) {
+            setImageDefault("/images/profile_default_gen0.png");
+          } else {
+            setImageDefault("/images/profile_default_gen6.png");
           }
         }
 
@@ -327,6 +330,7 @@ export default function MyInfo() {
     const size = linkArr.length;
     for (let i = 0; i < size; i++) {
       linkList = linkList + " " + linkArr[i];
+      console.log(linkArr[i]);
     }
     linkList = linkList.trim();
     inputState.link = linkList;
@@ -340,9 +344,11 @@ export default function MyInfo() {
     console.log(inputState);
   };
 
+  const [checkedNickname, setCheckedNickname] = useState(true);
   const [changeNickname, setChangeNickname] = useState(false);
   const handleUserNicknameClick = (e) => {
     alert("닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다");
+    setCheckedNickname(false);
     setChangeNickname(true);
     setNicknameChange(true);
   };
@@ -354,12 +360,6 @@ export default function MyInfo() {
       let msg = "";
       if (nicknameInfo.nickname == "") {
         msg = "닉네임을 입력해주세요";
-        isNormal = false;
-      } else if (
-        nicknameInfo.nickname == "admin" ||
-        nicknameInfo.nickname == "관리자"
-      ) {
-        msg = "해당 닉네임은 사용이 불가능합니다";
         isNormal = false;
       } else if (nicknameInfo.nickname == sessionStorage.getItem("nickname")) {
         msg = "현재 닉네임과 동일합니다";
@@ -373,13 +373,12 @@ export default function MyInfo() {
 
       if (isNormal) {
         updateNicknameAPI(nicknameInfo).then((res) => {
-          // console.log("닉네임 변경 가능한지 확인한 결과" + JSON.stringify(res));
           if (res.statusCode == 200) {
             setCheckPassword(true);
-
             alert("닉네임 변경이 가능합니다.");
             setNicknameChange(false);
             setChangeNickname(false);
+            setCheckedNickname(true);
           } else {
             alert(`${res.message}`);
           }
@@ -427,24 +426,41 @@ export default function MyInfo() {
 
   const handleUpdateFinishClick = (e) => {
     e.preventDefault();
-    console.log("수정 완료 버튼 누름");
-
     console.log(inputState.stacks);
 
-    handleClickOpen();
-    console.log(loginInfo);
-    // 비밀번호 확인하기
+    let isNormal = true;
+
+    if (changeNickname) {
+      isNormal = false;
+      alert("닉네임 중복 체크를 완료해 주세요.");
+    } else if (
+      inputState.phone.length > 0 &&
+      !phoneReg.test(inputState.phone)
+    ) {
+      isNormal = false;
+      alert("전화번호 양식을 확인해 주세요.");
+    } else if (links.length >= 1 && !urlReg.test(links)) {
+      // isNormal = false;
+      console.log(links.length);
+      // alert("링크 양식을 확인해 주세요.")
+    }
+
+    if (isNormal) {
+      handleClickOpen();
+      console.log(loginInfo);
+    }
   };
 
   const handleUpdateInfo = (e) => {
-    console.log("업데이트 준비");
     let isNormal = true;
-    let msg = "";
 
-    // if (!phoneReg.test(inputState.phone)) {
-    //   isNormal = false;
-    //   alert("전화번호 양식을 확인해주세요.")
-    // }
+    if (inputState.phone.length > 0 && !phoneReg.test(inputState.phone)) {
+      isNormal = false;
+      alert("전화번호 양식을 확인해 주세요.");
+    } else if (changeNickname) {
+      isNormal = false;
+      alert("닉네임 중복 체크를 완료해 주세요.");
+    }
 
     if (isNormal) {
       inputState.stacks = {
@@ -519,10 +535,11 @@ export default function MyInfo() {
             console.log(res);
             console.log(JSON.stringify(res));
             if (res.statusCode == 200) {
-              sessionStorage.clear();
-              sessionStorage.setItem("userId", inputState.userId);
-              sessionStorage.setItem("email", inputState.email);
-              sessionStorage.setItem("nickname", inputState.nickname);
+              if(sessionStorage.getItem("nickname")!= inputState.nickname) {
+                // 닉네임 변경시 상단바 변경도 필요하기 때문
+                sessionStorage.setItem("nickname", inputState.nickname);
+                forceReload();
+              }
               setNicknameChange(false);
             } else {
               alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
@@ -619,30 +636,6 @@ export default function MyInfo() {
               <br />
               <div>
                 <DetailWrapper maxWidth="sm">
-                  {(onlyView && inputState.file==null)? (
-                    <ImgDefault src={imageDefault}></ImgDefault>
-                    //  <ImgDefault src="/images/gen7.png"></ImgDefault>
-                  ):(<CusSkeleton>
-                    <ImgUploadBtn
-                      id="img_box"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        uploadRef.current.click();
-                      }}
-                    >
-                      Image Upload
-                    </ImgUploadBtn>
-                    <input
-                      ref={uploadRef}
-                      type="file"
-                      className="imgInput"
-                      id="projectImg"
-                      accept="image/*"
-                      name="file"
-                      encType="multipart/form-data"
-                      onChange={onImgChange}
-                    ></input>
-                  </CusSkeleton>)}
                   <ContentWrapper>
                     <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
@@ -726,6 +719,32 @@ export default function MyInfo() {
                       </label>
                     </RowUpWrapper>
                   </ContentWrapper>
+                  {onlyView && inputState.file == null ? (
+                    <ImgDefault src={imageDefault}></ImgDefault>
+                  ) : (
+                    //  <ImgDefault src="/images/gen7.png"></ImgDefault>
+                    <CusSkeleton>
+                      <ImgUploadBtn
+                        id="img_box"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          uploadRef.current.click();
+                        }}
+                      >
+                        Image Upload
+                      </ImgUploadBtn>
+                      <input
+                        ref={uploadRef}
+                        type="file"
+                        className="imgInput"
+                        id="projectImg"
+                        accept="image/*"
+                        name="file"
+                        encType="multipart/form-data"
+                        onChange={onImgChange}
+                      ></input>
+                    </CusSkeleton>
+                  )}
                 </DetailWrapper>
               </div>
               <ContentWrapper2>
@@ -760,6 +779,7 @@ export default function MyInfo() {
                   <input
                     id="phone"
                     type="number"
+                    placeholder="01012345678"
                     value={inputState.phone || ""}
                     disabled={onlyView ? true : false}
                     onChange={handleChange}
@@ -855,23 +875,28 @@ export default function MyInfo() {
                 </Box>
                 <Box>
                   <label>링크</label>&nbsp;
-                  <i style={{ fontSize: "10px" }}>입력 후 엔터를 눌러주세요</i>
                   {onlyView ? (
                     <LinkList items={links} />
                   ) : (
-                    <Autocomplete
-                      multiple
-                      freeSolo
-                      // options={links}
-                      // getOptionLabel={(option) => option}
-                      value={links}
-                      options={links.map((l) => l.value)}
-                      getOptionLabel={(option) => (option ? option : "")}
-                      renderInput={(params) => <TextField {...params} />}
-                      onChange={(e, option, reason) => {
-                        handleLinksChange(option);
-                      }}
-                    />
+                    <>
+                      <span style={{ fontSize: "10px" }}>(최대 2개 가능)</span>
+                      <i style={{ fontSize: "10px" }}>
+                        &nbsp;입력 후 엔터를 눌러주세요
+                      </i>
+                      <Autocomplete
+                        multiple
+                        freeSolo
+                        // options={links}
+                        // getOptionLabel={(option) => option}
+                        value={links}
+                        options={links.map((l) => l.value)}
+                        getOptionLabel={(option) => (option ? option : "")}
+                        renderInput={(params) => <TextField {...params} />}
+                        onChange={(e, option, reason) => {
+                          handleLinksChange(option);
+                        }}
+                      />
+                    </>
                   )}
                 </Box>
               </ContentWrapper2>
