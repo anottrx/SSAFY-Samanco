@@ -39,7 +39,7 @@ export default function AdminList() {
     let setUsers, userData, filterData;
 
     userData = useSelector(({user}) => user.userList);
-    console.log(userData)
+    // console.log(userData)
     filterData = useSelector(({ user }) => user.userFilterList);
 
   //  setDetail = useCallback(
@@ -82,7 +82,7 @@ export default function AdminList() {
     if (userData) {
         allPage = parseInt(userData.length / purPage.current);
         if (userData.length % purPage.current > 0) allPage += 1;
-        console.log(userData)
+        // console.log(userData)
     }
 
     const handleChange = (index,value) => {
@@ -135,7 +135,7 @@ export default function AdminList() {
     );
 
     function Users({userInfo}) {
-      console.log(userInfo)
+    //   console.log(userInfo)
         return (
           userInfo
           .slice(purPage.current * (page-1), purPage.current * page).map((data) => {
