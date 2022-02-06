@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Router from "next/router";
-import Layout from "../../components/layout";
+import Layout from "../../components/Layout";
 import UserInfoPage from "../../components/User/UserInfoPage";
 
 export default function AdminUserInfo() {
