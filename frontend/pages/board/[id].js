@@ -165,24 +165,36 @@ const BoardDetail = () => {
                 color: gray;
             }
         `
+        function base64ToArrayBuffer(base64) {
+            const binaryString = window.atob(base64); // Comment this if not using base64
+            const bytes = new Uint8Array(binaryString.length);
+            return bytes.map((byte, i) => binaryString.charCodeAt(i));
+          }
+
+          function createAndDownloadBlobFile(body, filename) {
+            const blob = new Blob([body]);
+            const fileName = `${filename}`;
+            if (navigator.msSaveBlob) {
+              navigator.msSaveBlob(blob, fileName);
+            } else {
+              const link = document.createElement('a');
+              if (link.download !== undefined) {
+                const url = window.URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', fileName);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }
+            }
+          }
+
         function changeToBlob(file){
             fileDownload(file)
             .then(res => {
-                console.log(res)
-                // console.log(new Blob([res], { type: res.headers['content-type'] }))
-                
-                // let fileURL = URL.createObjectURL(new Blob([{res}], { type: res.headers['content-type'] }))
-                // let fileURL = window.URL.createObjectURL(res.data)
-                let fileURL=res.data
-                // const fileURL = window.URL.createObjectURL(new Blob([res]))
-                let fileLink = document.createElement("a")
-                fileLink.href = fileURL
-                fileLink.setAttribute("download", file.originFile)
-                document.body.appendChild(fileLink)
-                fileLink.click()
-                fileLink.remove()
-                console.log(fileURL)
-                console.log(fileLink)
+                const arrayBuffer = base64ToArrayBuffer(res.data);
+                createAndDownloadBlobFile(arrayBuffer, file.originFile);
             })
         }
 
@@ -223,8 +235,12 @@ const BoardDetail = () => {
                         detail.files.map((file, index) => {
                             let path=file.saveFolder+"&"+file.saveFile;
                             return (
-                                <div key={index} onClick={()=>{changeToBlob(file)}}><AttachFileIcon />{`${file.originFile}`}</div>
-                                // <div key={index}><img src="http://localhost:3000/download/{path}"/></div>
+                                <div key={index} 
+                                    onClick={() => {changeToBlob(file)}}><AttachFileIcon />
+                                {`${file.originFile}`}
+                                </div>
+
+                                // <div key={index} onClick={()=>{changeToBlob(file)}}><AttachFileIcon />{`${file.originFile}`}</div>
                             )
                         })
                         }

@@ -70,14 +70,20 @@ function MyApp({ Component, pageProps }) {
   let [nickname, setNickname] = useState(null);
 
   const cookies = new Cookies();
+  
+  useEffect(() => {    
+    const HOST= process.env.NEXT_PUBLIC_ENV_HOST
+    const PORT = process.env.NEXT_PUBLIC_ENV_PORT
 
-  useEffect(() => {
+    console.log("[HOST]:", HOST, "| [PORT]:", PORT);
+
     const userNickname = sessionStorage.getItem("nickname")
     const token = cookies.get("userToken")
-    if (token !='' && userNickname != null) {
+    if (token != null && token !='' && userNickname != null && userNickname != 'undefined') {
+      console.log(token)
       setIsLogin(true);
       setNickname(userNickname)
-    } else if(token !='' && userNickname == null) {
+    } else if(token != null && token !='' && userNickname == null) {
       getUserLoginTokenAPI(token).then((res) => {
         sessionStorage.setItem("userId", res.userId);
         sessionStorage.setItem("email", res.email);
