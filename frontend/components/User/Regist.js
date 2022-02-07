@@ -339,7 +339,7 @@ export default function Regist() {
           nicknameCheckRes &&
           nicknameCheckRes.code == 200 ? (
             <div className="" role="alert">
-              <span className="font-medium">{nicknameCheckRes.msg}</span>
+              <span className="font-medium">멋진 닉네임이네요~^^</span>
             </div>
           ) : null}
           {/* 2. 사용 불가능 */}
@@ -372,7 +372,7 @@ export default function Regist() {
           {/* 1. 비밀번호 사용 가능 */}
           {inputState.password != "" && pwCheckRes && pwCheckRes.code == 200 ? (
             <div className="" role="alert">
-              <span className="font-medium">{pwCheckRes.msg}</span>
+              <span className="font-medium">최고의 비밀번호에요~^^</span>
             </div>
           ) : null}
           {/* 2. 사용 불가능 */}
