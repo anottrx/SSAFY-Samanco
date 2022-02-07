@@ -17,6 +17,7 @@ public class Files extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String path;
     private String saveFolder;
     private String saveFile;
     private String originFile;

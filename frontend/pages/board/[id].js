@@ -232,6 +232,7 @@ const BoardDetail = () => {
                         <AccordionDetails>
                         {
                         detail.files.map((file, index) => {
+                            let path=file.saveFolder+"&"+file.saveFile;
                             return (
                                 <div key={index} 
                                     onClick={() => {changeToBlob(file)}}><AttachFileIcon />
