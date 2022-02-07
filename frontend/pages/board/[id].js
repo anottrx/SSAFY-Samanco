@@ -233,11 +233,10 @@ const BoardDetail = () => {
                         {
                         detail.files.map((file, index) => {
                             return (
-                                <a key={index} 
-                                    onClick={() => {changeToBlob(file)}}
-                                id="downloadTag" ><AttachFileIcon />
+                                <div key={index} 
+                                    onClick={() => {changeToBlob(file)}}><AttachFileIcon />
                                 {`${file.originFile}`}
-                                </a>
+                                </div>
 
                                 // <div key={index} onClick={()=>{changeToBlob(file)}}><AttachFileIcon />{`${file.originFile}`}</div>
                             )
