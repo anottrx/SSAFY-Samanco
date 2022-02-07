@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -278,21 +279,21 @@ public class BoardController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "좋아요"));
     }
 
-    @PostMapping("/download")
+//    @PostMapping("/download")
 //    public ResponseEntity<Resource> download(@RequestBody FileDto fileDto, HttpServletRequest request){
-//    public ResponseEntity<? extends BaseResponseBody> download(@RequestBody FileDto fileDto, HttpServletRequest request){
-    public File getImageWithMediaType(@RequestBody FileDto fileDto, HttpServletRequest request) throws IOException {
-//        System.out.println(request);
+////    public ResponseEntity<? extends BaseResponseBody> download(@RequestBody FileDto fileDto, HttpServletRequest request){
+////    public File getImageWithMediaType(@RequestBody FileDto fileDto, HttpServletRequest request) throws IOException {
+////        System.out.println(request);
 //        String realPath = new File("").getAbsolutePath() + File.separator + "files";
-        String realPath = servletContext.getRealPath("/upload") + File.separator;
-        String filePath = realPath + File.separator + fileDto.getSaveFolder() + File.separator + fileDto.getSaveFile();
-        File target = new File(filePath);
-        return target;
-//        System.out.println(target.toString());
-//            InputStream in = getClass().getResourceAsStream(target.toString());
-//        System.out.println(in);
-//            return IOUtils.toByteArray(in);
-        }
+////        String realPath = servletContext.getRealPath("/upload") + File.separator;
+//        String filePath = realPath + File.separator + fileDto.getSaveFolder() + File.separator + fileDto.getSaveFile();
+//        File target = new File(filePath);
+////        return target;
+////        System.out.println(target.toString());
+////            InputStream in = getClass().getResourceAsStream(target.toString());
+////        System.out.println(in);
+////            return IOUtils.toByteArray(in);
+////        }
 //        HttpHeaders header = new HttpHeaders();
 //        Resource rs = null;
 //        if(target.exists()) {
@@ -324,20 +325,91 @@ public class BoardController {
 //            }
 //        }
 //        return ResponseEntity.ok().headers(header).body(rs);
-//		return new ResponseEntity<Resource>(rs, header, HttpStatus.OK);
+////		return new ResponseEntity<Resource>(rs, header, HttpStatus.OK);
 //    }
 
     @GetMapping("/download/{path}")
-    public File getImageWithMediaType(@PathVariable("path") String path) throws IOException {
-//        System.out.println(request);
-//        String realPath = new File("").getAbsolutePath() + File.separator + "files";
-
+    public byte[] getImageWithMediaType(@PathVariable("path") String path) throws IOException {
+        String realPath = new File("").getAbsolutePath() + File.separator + "files";
         String[] paths=path.split("&");
-        String realPath = servletContext.getRealPath("/upload") + File.separator;
         String filePath = realPath + File.separator + paths[0] + File.separator + paths[1];
         File target = new File(filePath);
         System.out.println("target: "+target);
-        return target;
-    }
 
+        byte[] fileByte = FileUtils.readFileToByteArray(target);
+        return fileByte;
+    }
+//        Resource rs = new UrlResource(target.toURI());
+//        if(target.exists()) {
+//            try {
+////                String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
+////                System.out.println("mimeType : "+mimeType);
+////                if(mimeType == null) {
+////                    mimeType = "application/download; charset=UTF-8";
+////                }
+//                rs = new UrlResource(target.toURI());
+////                String userAgent = request.getHeader("User-Agent");
+////                boolean isIE = userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1;
+////                String fileName = null;
+////                String originalFile = fileDto.getOriginFile();
+////                // IE는 다르게 처리
+////                if (isIE) {
+////                    fileName = URLEncoder.encode(originalFile, "UTF-8").replaceAll("\\+", "%20");
+////                } else {
+////                    fileName = new String(originalFile.getBytes("UTF-8"), "ISO-8859-1");
+////                }
+////		        fileName=new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
+////                header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ fileName +"\"");
+////                header.setCacheControl("no-cache");
+////                header.setContentType(MediaType.parseMediaType(mimeType));
+////                System.out.println("header: "+header);
+//                System.out.println("rs: "+rs);
+//            } catch(Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return rs;
+//    }
+
+    @PostMapping("/download")
+    public ResponseEntity<Resource> download(@RequestBody FileDto fileDto, HttpServletRequest request) {
+        String realPath = new File("").getAbsolutePath() + File.separator + "files";
+        String filePath = realPath + File.separator + fileDto.getSaveFolder() + File.separator + fileDto.getSaveFile();
+
+        File target = new File(filePath);
+        System.out.println(target);
+        HttpHeaders header = new HttpHeaders();
+        Resource rs = null;
+        if (target.exists()) {
+            try {
+                String mimeType = Files.probeContentType(Paths.get(target.getAbsolutePath()));
+                System.out.println("mimeType : " + mimeType);
+                if (mimeType == null) {
+                    mimeType = "application/download; charset=UTF-8";
+                }
+                rs = new UrlResource(target.toURI());
+                String userAgent = request.getHeader("User-Agent");
+                boolean isIE = userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1;
+                String fileName = null;
+//				String originalFile = (String) param.get("ofile");
+                String originalFile = fileDto.getOriginFile();
+                // IE는 다르게 처리
+                if (isIE) {
+                    fileName = URLEncoder.encode(originalFile, "UTF-8").replaceAll("\\+", "%20");
+                } else {
+                    fileName = new String(originalFile.getBytes("UTF-8"), "ISO-8859-1");
+                }
+                header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+                header.setCacheControl("no-cache");
+                header.setContentType(MediaType.parseMediaType(mimeType));
+                System.out.println("header: " + header);
+                System.out.println("rs: " + rs);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return ResponseEntity.ok()
+                .headers(header)
+                .body(rs);
+    }
 }

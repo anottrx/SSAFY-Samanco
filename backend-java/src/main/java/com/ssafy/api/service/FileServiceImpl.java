@@ -32,8 +32,8 @@ public class FileServiceImpl implements FileService{
 
             // 프로젝트 디렉터리 내의 저장을 위한 절대 경로 설정
             // 경로 구분자 File.separator 사용
-            String realPath = servletContext.getRealPath("/upload");
-//            String realPath = new File("").getAbsolutePath() + File.separator + "files";  // 두번?
+//            String realPath = servletContext.getRealPath("/upload");
+            String realPath = new File("").getAbsolutePath() + File.separator + "files";  // 두번?
             File fileFolder = new File(realPath);
             if(!fileFolder.exists()) {
                 fileFolder.mkdirs();
