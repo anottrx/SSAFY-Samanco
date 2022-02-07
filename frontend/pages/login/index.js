@@ -11,7 +11,7 @@ export default function LoginPage() {
 
     if (
       cookies.get("userToken") != "" &&
-      !sessionStorage.getItem("nickname") &&
+      sessionStorage.getItem("nickname") != null &&
       sessionStorage.getItem("nickname") != "undefined"
     ) {
       alert("로그인된 상태입니다");
