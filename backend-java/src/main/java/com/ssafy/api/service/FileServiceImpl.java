@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -22,13 +23,17 @@ public class FileServiceImpl implements FileService{
     @Autowired
     FileRepositorySupport fileRepositorySupport;
 
+    @Autowired
+    private ServletContext servletContext;
+
     @Override
     public void saveFile(MultipartFile[] files, Long tagId, String tag) throws IOException {
         if(files!=null&&!files[0].isEmpty()) {
 
             // 프로젝트 디렉터리 내의 저장을 위한 절대 경로 설정
             // 경로 구분자 File.separator 사용
-            String realPath = new File("").getAbsolutePath() + File.separator + "files";  // 두번?
+            String realPath = servletContext.getRealPath("/upload");
+//            String realPath = new File("").getAbsolutePath() + File.separator + "files";  // 두번?
             File fileFolder = new File(realPath);
             if(!fileFolder.exists()) {
                 fileFolder.mkdirs();

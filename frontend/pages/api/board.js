@@ -125,12 +125,8 @@ async function deleteComment(data) {
 // 파일 다운로드
 async function fileDownload(data) {
   return await blobUrl
-    .post("/api/board/download", {
-      originFile: data.originFile,
-      saveFile: data.saveFile,
-      saveFolder: data.saveFolder
-    })
-    .then((res) => res.data)
+    .post("/api/board/download", data)
+    .then((res) => res)
     .catch((err) => err.response.data);
 }
 

@@ -21,6 +21,7 @@ import CommentList from "../../components/Board/CommentList"
 import BoardColor from "../../data/BoardColor.json"
 
 import forceReload from "../../util/ForceReload"
+import Blob from 'cross-blob';
 
 //게시글 상세보기 페이지
 
@@ -167,13 +168,21 @@ const BoardDetail = () => {
         function changeToBlob(file){
             fileDownload(file)
             .then(res => {
-                const fileURL = window.URL.createObjectURL(new Blob([res]))
-                const fileLink = document.createElement("a")
+                console.log(res)
+                // console.log(new Blob([res], { type: res.headers['content-type'] }))
+                
+                // let fileURL = window.URL.createObjectURL(new Blob([res], { type: res.headers['content-type'] }))
+                // let fileURL = window.URL.createObjectURL(res.data)
+                let fileURL=res.data
+                // const fileURL = window.URL.createObjectURL(new Blob([res]))
+                let fileLink = document.createElement("a")
                 fileLink.href = fileURL
                 fileLink.setAttribute("download", file.originFile)
                 document.body.appendChild(fileLink)
                 fileLink.click()
                 fileLink.remove()
+                console.log(fileURL)
+                console.log(fileLink)
             })
         }
 
