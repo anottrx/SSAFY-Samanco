@@ -171,7 +171,7 @@ const BoardDetail = () => {
                 console.log(res)
                 // console.log(new Blob([res], { type: res.headers['content-type'] }))
                 
-                // let fileURL = window.URL.createObjectURL(new Blob([res], { type: res.headers['content-type'] }))
+                // let fileURL = URL.createObjectURL(new Blob([{res}], { type: res.headers['content-type'] }))
                 // let fileURL = window.URL.createObjectURL(res.data)
                 let fileURL=res.data
                 // const fileURL = window.URL.createObjectURL(new Blob([res]))
@@ -221,8 +221,10 @@ const BoardDetail = () => {
                         <AccordionDetails>
                         {
                         detail.files.map((file, index) => {
+                            let path=file.saveFolder+"&"+file.saveFile;
                             return (
                                 <div key={index} onClick={()=>{changeToBlob(file)}}><AttachFileIcon />{`${file.originFile}`}</div>
+                                // <div key={index}><img src="http://localhost:3000/download/{path}"/></div>
                             )
                         })
                         }
