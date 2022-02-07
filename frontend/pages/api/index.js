@@ -37,9 +37,6 @@ const fileUrl = axios.create({
 const blobUrl = axios.create({
     baseURL: BASE_URL,
     headers: {
-        "Content-Type": `application/json;charset=UTF-8`,
-        "Access-Control-Allow-Origin": "*",
-        "Accept": "application/json",
         "response-Type": "blob",
     }
 })
