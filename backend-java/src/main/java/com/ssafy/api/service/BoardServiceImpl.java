@@ -124,6 +124,9 @@ public class BoardServiceImpl implements BoardService {
         List<BoardDto> boards=new ArrayList<>();
         for (Board result: results) {
             BoardDto board=boardEntityToDto(result);
+            if (board==null){
+                continue;
+            }
             Long boardId=board.getBoardId();
             board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
             boards.add(board);

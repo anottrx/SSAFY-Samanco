@@ -82,7 +82,6 @@ public class ProjectServiceImpl implements ProjectService {
         }
         ProjectDto project=projectEntityToDto(result);
         Long projectId=project.getId();
-//        projectRepositorySupport.setCurrentSize(project);
         project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
         project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
 
@@ -130,6 +129,9 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectDto> projects=new ArrayList<>();
         for (Project result: results) {
             ProjectDto project=projectEntityToDto(result);
+            if (project==null){
+                continue;
+            }
             Long projectId=project.getId();
             project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
             project.setFile(fileRepositorySupport.selectFile(projectId, "project"));

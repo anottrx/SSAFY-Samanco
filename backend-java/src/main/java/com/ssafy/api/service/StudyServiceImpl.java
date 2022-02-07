@@ -95,6 +95,9 @@ public class StudyServiceImpl implements StudyService {
         List<StudyDto> studies=new ArrayList<>();
         for (Study result: results) {
             StudyDto study=studyEntityToDto(result);
+            if (study==null){
+                continue;
+            }
             Long studyId=study.getId();
             study.setStacks(stackRepositorySupport.selectStack(studyId, "study"));
             study.setFile(fileRepositorySupport.selectFile(studyId, "study"));
