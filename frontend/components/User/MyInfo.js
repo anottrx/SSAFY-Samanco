@@ -243,6 +243,11 @@ export default function MyInfo() {
         setUserBirthdayDate(yy + "-" + mm + "-" + dd);
         userBirthday.initDate = yy + "-" + mm + "-" + dd;
         userBirthday.value = yy + "-" + mm + "-" + dd;
+        if (yy == 22 && mm == "02") {
+          inputState.birthday = "";
+          userBirthday.initDate = "";
+          userBirthday.value = "";
+        }
       }
       inputState[name] = value;
       console.log("스택 " + JSON.stringify(inputState));
@@ -302,6 +307,10 @@ export default function MyInfo() {
             // console.log(userBirthdayDate);
             userBirthday.initDate = year + "-" + month + "-" + day;
             userBirthday.value = year + "-" + month + "-" + day;
+            if (year == "22" && month == "02") {
+              userBirthday.value = "";
+              inputState.birthday = '';
+            }
           }
           if (res.user.phone !== "00000000000") {
             inputState.phone = res.user.phone;
@@ -801,7 +810,11 @@ export default function MyInfo() {
                         <label>생년월일</label>
                         {onlyView ? (
                           <input
-                            value={userBirthday.value}
+                            value={
+                              (userBirthday.value.length == 10 && (userBirthday.value.slice(2,4)!='22'))
+                                ? userBirthday.value
+                                : ''
+                            }
                             // value={inputState.birthday}
                             disabled
                             // style={{ width: "60%" }}
