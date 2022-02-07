@@ -70,7 +70,7 @@ function MyApp({ Component, pageProps }) {
   let [nickname, setNickname] = useState(null);
 
   const cookies = new Cookies();
-
+  
   useEffect(() => {
     const userNickname = sessionStorage.getItem("nickname")
     const token = cookies.get("userToken")
