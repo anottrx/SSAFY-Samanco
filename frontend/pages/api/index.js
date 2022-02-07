@@ -13,9 +13,10 @@ const getAuth = (token) => axios.create({
     baseURL: `http://localhost:8089`,
     headers: {
         "Content-Type": `application/json;charset=UTF-8`,
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": `http://localhost:3000`,
         "Accept": "application/json",
         "Authorization": "Bearer "+token,
+        'Access-Control-Allow-Credentials':"true"
     }
 })
 
