@@ -71,7 +71,12 @@ function MyApp({ Component, pageProps }) {
 
   const cookies = new Cookies();
   
-  useEffect(() => {
+  useEffect(() => {    
+    const HOST= process.env.NEXT_PUBLIC_ENV_HOST
+    const PORT = process.env.NEXT_PUBLIC_ENV_PORT
+
+    console.log("[HOST]:", HOST, "| [PORT]:", PORT);
+
     const userNickname = sessionStorage.getItem("nickname")
     const token = cookies.get("userToken")
     if (token != null && token !='' && userNickname != null && userNickname != 'undefined') {
