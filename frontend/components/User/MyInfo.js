@@ -24,7 +24,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions,
+  DialogActions,Card,CardContent,Divider
 } from "@mui/material";
 import styled from "@emotion/styled";
 import StackLevelList from "../Common/Stack/StackLevelList";
@@ -32,6 +32,7 @@ import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
 import forceReload from "../../util/ForceReload";
+import MyInfoLayout from "./MenuLayout";
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
 // const urlReg = [(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*);
@@ -46,6 +47,16 @@ const DatePickerWrapper = styled.div`
     margin: 0px 0px;
   }
 `;
+const CusCard = styled(Card)`
+            margin-top: 10px;
+            padding: 10px;
+
+            & h4 {
+                font-weight: bolder;
+                padding: 0;
+                margin: 0;
+            }
+        `
 const ImgUploadBtn = styled(Button)`
   padding: 20px;
   border: 1px dashed grey;
@@ -110,7 +121,7 @@ const ButtonWrapper = styled.div`
 const RowUpWrapper = styled.div`
   display: grid;
   // grid-template-columns: max-content max-content;
-  grid-template-columns: 60px 12fl;
+  grid-template-columns: 60px 12fr;
   grid-gap: 8px;
   padding: 1px 0px;
 `;
@@ -119,7 +130,7 @@ const RowWrapper = styled.div`
   // grid-template-columns: max-content max-content;
   grid-template-columns: 60px 12fr;
   grid-gap: 8px;
-  padding: 2px 0px;
+  padding: 1px 0px;
 `;
 
 export default function MyInfo() {
@@ -586,9 +597,10 @@ export default function MyInfo() {
 
   return (
     <div>
+    <CusCard>
       {loading ? (
         <div>
-          <div>
+          <CardContent>
             <h1>{inputState.name}님, 환영합니다</h1>
             <ContentUpWrapper>
               <ButtonWrapper>
@@ -632,10 +644,12 @@ export default function MyInfo() {
                   <Button onClick={handleUpdateInfo}>확인</Button>
                 </DialogActions>
               </Dialog>
+              {/* <br /> */}
+              <Divider light />
               <br />
               <div>
                 <DetailWrapper maxWidth="sm">
-                  <ContentWrapper>
+                  <CardContent>
                     {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
@@ -676,14 +690,14 @@ export default function MyInfo() {
                       {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
                       <label>
                         이메일
+                      </label>
                         {/* {inputState.email} */}
                         <input value={inputState.email || ""} disabled />
-                      </label>
                       {/* </Box> */}
                     </RowUpWrapper>
                     <RowUpWrapper>
-                      <label>
-                        <span>닉네임</span>
+                      {/* <label> */}
+                        <label>닉네임</label>
                         <input
                           id="nickname"
                           value={nicknameInfo.nickname || ""}
@@ -715,39 +729,9 @@ export default function MyInfo() {
                         ) : (
                           <></>
                         )}
-                      </label>
+                      {/* </label> */}
                     </RowUpWrapper>
-                  </ContentWrapper>
-                  {onlyView && inputState.file == null ? (
-                    <ImgDefault src={imageDefault}></ImgDefault>
-                  ) : (
-                    //  <ImgDefault src="/images/gen7.png"></ImgDefault>
-                    <CusSkeleton>
-                      <ImgUploadBtn
-                        id="img_box"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          uploadRef.current.click();
-                        }}
-                      >
-                        Image Upload
-                      </ImgUploadBtn>
-                      <input
-                        ref={uploadRef}
-                        type="file"
-                        className="imgInput"
-                        id="projectImg"
-                        accept="image/*"
-                        name="file"
-                        encType="multipart/form-data"
-                        onChange={onImgChange}
-                      ></input>
-                    </CusSkeleton>
-                  )}
-                </DetailWrapper>
-              </div>
-              <ContentWrapper2>
-                <RowWrapper>
+                    <RowWrapper>
                   {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
                   <label>생년월일</label>
                   {onlyView ? (
@@ -778,7 +762,7 @@ export default function MyInfo() {
                   <input
                     id="phone"
                     type="number"
-                    placeholder="01012345678"
+                    placeholder={onlyView ? "" : "01012345678"}
                     value={inputState.phone || ""}
                     disabled={onlyView ? true : false}
                     onChange={handleChange}
@@ -844,7 +828,38 @@ export default function MyInfo() {
                   onChange={handleChange}
                 /> */}
                 </RowWrapper>
-                <div>
+                  </CardContent>
+                  {onlyView && inputState.file == null ? (
+                    <ImgDefault src={imageDefault}></ImgDefault>
+                  ) : (
+                    //  <ImgDefault src="/images/gen7.png"></ImgDefault>
+                    <CusSkeleton>
+                      <ImgUploadBtn
+                        id="img_box"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          uploadRef.current.click();
+                        }}
+                      >
+                        Image Upload
+                      </ImgUploadBtn>
+                      <input
+                        ref={uploadRef}
+                        type="file"
+                        className="imgInput"
+                        id="projectImg"
+                        accept="image/*"
+                        name="file"
+                        encType="multipart/form-data"
+                        onChange={onImgChange}
+                      ></input>
+                    </CusSkeleton>
+                  )}
+                </DetailWrapper>
+              </div>
+              <ContentWrapper2>
+                
+                <CardContent>
                   <label>기술 스택</label>
                   <StackLevelInfoDialog />
                   {onlyView && inputState.stacks_get != null ? (
@@ -855,8 +870,8 @@ export default function MyInfo() {
                       changeHandle={changeHandle}
                     />
                   )}
-                </div>
-                <Box sx={{ mb: 2 }}>
+                </CardContent>
+                <CardContent>
                   <label>자기소개</label>
                   <br />
                   <TextField
@@ -871,8 +886,8 @@ export default function MyInfo() {
                       handleChange(e);
                     }}
                   />
-                </Box>
-                <Box>
+                </CardContent>
+                <CardContent>
                   <label>링크</label>&nbsp;
                   {onlyView ? (
                     <LinkList items={links} />
@@ -897,7 +912,7 @@ export default function MyInfo() {
                       />
                     </>
                   )}
-                </Box>
+                </CardContent>
               </ContentWrapper2>
               {finishUpdate ? (
                 <></>
@@ -909,11 +924,12 @@ export default function MyInfo() {
                 </ButtonWrapper>
               )}
             </ContentUpWrapper>
-          </div>
+          </CardContent>
         </div>
       ) : (
         <></>
       )}
+    </CusCard>
     </div>
   );
 }
