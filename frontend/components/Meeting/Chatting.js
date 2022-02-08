@@ -22,7 +22,9 @@ const ChattingWrapper = styled.div`
   overflow-y: scroll;
 
   .messages {
-    padding: 5px;
+    padding: 10px 5px;
+    overflow-y: scroll;
+    height: 100%;
   }
 
   & .otherMessageWrapper {
@@ -57,25 +59,22 @@ const MyChattingWrapper = styled.div`
     `;
 
 function Chatting() {
-  let index = [0, 0, 0, 0, 0, 0];
+  let index = [0, 0, 0, 0, 0, 0, 0, 0];
   const scrollEl = useRef(null);
 
   const scrollToBottom = () => {
-    scrollEl.current
-      ? scrollEl.current.scrollIntoView({
-          // behavior: 'smooth',
-          block: 'end',
-          inline: 'nearest',
-        })
-      : null;
+    scrollEl.current?.scrollIntoView({
+      // behavior: 'smooth',
+      block: 'end',
+      inline: 'end',
+    });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, []);
+  });
 
   const [chatHistory, setChatHistory] = useState([]);
-
   const [chatText, setChatText] = useState('');
   const [chat, setChat] = useState({
     text: '',
@@ -130,10 +129,7 @@ function Chatting() {
               value={chatText}
               onChange={(e) => setChatText(e.target.value)}
             ></TextField>
-            <Button
-              id="submitButton"
-              type="submit"
-            >
+            <Button id="submitButton" type="submit">
               입력
             </Button>
           </form>
