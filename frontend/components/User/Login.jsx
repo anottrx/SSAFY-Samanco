@@ -77,23 +77,24 @@ export default function Login() {
           case 200: // 로그인 성공
             // alert(`로그인 성공: ${res.accessToken}`);
             setCookie("userToken", res.accessToken); // 쿠키 설정
+            if (res.accessToken != null && res.accessToken != "") {
+              const token = res.accessToken;
+              getUserLoginTokenAPI(token).then((res1) => {
+                console.log(res1);
+                // alert();
+                sessionStorage.setItem("userId", res1.userId);
+                sessionStorage.setItem("email", inputState.email);
+                sessionStorage.setItem("nickname", res1.nickname);
 
+                window.history.forward();
+                window.location.replace("/");
+              });
+            }
             if (rememberId) {
               setCookie("userEmail", inputState.email);
             } else {
               setCookie("userEmail", "");
             }
-            const token = res.accessToken;
-            getUserLoginTokenAPI(token).then((res1) => {
-              console.log(res1);
-              // alert();
-              sessionStorage.setItem("userId", res1.userId);
-              sessionStorage.setItem("email", inputState.email);
-              sessionStorage.setItem("nickname", res1.nickname);
-            });
-            // Router.push("/");
-            window.history.forward();
-            window.location.replace("/");
             break;
           case 401: // 비밀번호 틀림
             alert("비밀번호를 확인해주세요.");
