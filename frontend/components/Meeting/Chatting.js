@@ -46,11 +46,13 @@ function Chatting() {
   const scrollEl = useRef(null);
 
   const scrollToBottom = () => {
-    scrollEl.current?.scrollIntoView({
-      // behavior: 'smooth',
-      block: 'end',
-      inline: 'nearest',
-    });
+    scrollEl.current
+      ? scrollEl.scrollIntoView({
+          // behavior: 'smooth',
+          block: 'end',
+          inline: 'nearest',
+        })
+      : null;
   };
 
   useEffect(() => {
