@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { getUserLoginTokenAPI, loginAPI } from '../../pages/api/user';
-import Link from 'next/link';
 import { useCookies } from 'react-cookie';
 import FormControl, { useFormControl } from '@mui/material/FormControl';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Box,
   OutlinedInput,
-  Typography,
   InputAdornment,
   IconButton,
   Button,
@@ -119,14 +117,11 @@ export default function Login() {
         noValidate
         autoComplete="off"
         display="flex"
-        justifyContent="center"
         alignItems="center"
-        minHeight="70vh"
         onSubmit={handleSubmit}
         sx={{ flexDirection: 'column' }}
       >
         <h1>로그인</h1>
-        <br />
         <FormControl sx={{ width: 300 }}>
           <OutlinedInput
             id="email"
@@ -174,30 +169,6 @@ export default function Login() {
         >
           로그인
         </Button>
-        <div sx={{ flexDirection: 'row' }}>
-          <Typography
-            variant="h6"
-            display="inline"
-            gutterBottom
-            sx={{ width: 300, fontSize: 13.5, mr: 2 }}
-          >
-            <span className="site-nav-item">
-              <Link href="/user/password">비밀번호 재설정</Link>
-            </span>
-          </Typography>
-          <span> </span>
-          <Typography
-            variant="h6"
-            display="inline"
-            gutterBottom
-            sx={{ width: 300, fontSize: 13.5, mr: 2 }}
-          >
-            <span className="site-nav-item">
-              <Link href="/regist">회원가입</Link>
-            </span>
-          </Typography>
-        </div>
-        <br />
       </Box>
     </div>
   );
