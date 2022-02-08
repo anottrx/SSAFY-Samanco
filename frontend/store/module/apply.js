@@ -1,18 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit'; 
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    applyList: [],
-}; 
+  applyList: [],
+};
 
-const counterSlice = createSlice({ 
-    name: 'apply', 
-    initialState, 
-    reducers: { 
-        setApplyList: (state, action) => { 
-            state.applyList = action.payload.list; 
-        }, 
-    }, 
-}); 
+const counterSlice = createSlice({
+  name: "apply",
+  initialState,
+  reducers: {
+    setApplyList: (state, action) => {
+      state.applyList = action.payload.list;
+    },
+  },
+});
 
 export const { setApplyList } = counterSlice.actions;
-export default counterSlice.reducer; 
+export default counterSlice.reducer;

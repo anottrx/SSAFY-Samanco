@@ -6,35 +6,35 @@ import {
   ButtonGroup,
   Rating,
   Box,
-} from "@mui/material";
-import { useState, useEffect } from "react";
-import styled from "@emotion/styled";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
+} from '@mui/material';
+import { useState, useEffect } from 'react';
+import styled from '@emotion/styled';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const stack = [
-  { name: "HTML", level: 1 },
-  { name: "CSS", level: 1 },
-  { name: "JavaScript", level: 1 },
-  { name: "VueJS", level: 1 },
-  { name: "React", level: 1 },
-  { name: "Angular", level: 1 },
-  { name: "Python", level: 1 },
-  { name: "Java", level: 1 },
-  { name: "C", level: 1 },
-  { name: "C++", level: 1 },
-  { name: "C#", level: 1 },
-  { name: "SpringBoot", level: 1 },
-  { name: "MySQL", level: 1 },
-  { name: "Git", level: 1 },
-  { name: "AWS", level: 1 },
-  { name: "Docker", level: 1 },
-  { name: "Linux", level: 1 },
-  { name: "Jira", level: 1 },
-  { name: "Django", level: 1 },
-  { name: "Redis", level: 1 },
-  { name: "Kotlin", level: 1 },
+  { name: 'HTML', level: 1 },
+  { name: 'CSS', level: 1 },
+  { name: 'JavaScript', level: 1 },
+  { name: 'VueJS', level: 1 },
+  { name: 'React', level: 1 },
+  { name: 'Angular', level: 1 },
+  { name: 'Python', level: 1 },
+  { name: 'Java', level: 1 },
+  { name: 'C', level: 1 },
+  { name: 'C++', level: 1 },
+  { name: 'C#', level: 1 },
+  { name: 'SpringBoot', level: 1 },
+  { name: 'MySQL', level: 1 },
+  { name: 'Git', level: 1 },
+  { name: 'AWS', level: 1 },
+  { name: 'Docker', level: 1 },
+  { name: 'Linux', level: 1 },
+  { name: 'Jira', level: 1 },
+  { name: 'Django', level: 1 },
+  { name: 'Redis', level: 1 },
+  { name: 'Kotlin', level: 1 },
 ];
 
 function StackLevelSelectRegister(props) {
@@ -109,117 +109,117 @@ function StackLevelSelectRegister(props) {
     ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     stacks.map((stack) => {
       switch (stack.name) {
-        case "HTML":
+        case 'HTML':
           HTML = stack.level;
-          props.changeHandle(parseInt(HTML), "HTML");
+          props.changeHandle(parseInt(HTML), 'HTML');
           // setStackStack([...stackStack, { HTML:stack.level  }]);
           break;
-        case "CSS":
+        case 'CSS':
           CSS = stack.level;
-          props.changeHandle(parseInt(CSS), "CSS");
+          props.changeHandle(parseInt(CSS), 'CSS');
           break;
-        case "JavaScript":
+        case 'JavaScript':
           JavaScript = stack.level;
-          props.changeHandle(parseInt(JavaScript), "JavaScript");
+          props.changeHandle(parseInt(JavaScript), 'JavaScript');
           break;
-        case "VueJS":
+        case 'VueJS':
           VueJS = stack.level;
-          props.changeHandle(parseInt(VueJS), "VueJS");
+          props.changeHandle(parseInt(VueJS), 'VueJS');
           break;
-        case "React":
+        case 'React':
           React = stack.level;
-          props.changeHandle(parseInt(React), "React");
+          props.changeHandle(parseInt(React), 'React');
           break;
-        case "Angular":
+        case 'Angular':
           Angular = stack.level;
-          props.changeHandle(parseInt(Angular), "Angular");
+          props.changeHandle(parseInt(Angular), 'Angular');
           break;
-        case "Python":
+        case 'Python':
           Python = stack.level;
-          props.changeHandle(parseInt(Python), "Python");
+          props.changeHandle(parseInt(Python), 'Python');
           break;
-        case "Java":
+        case 'Java':
           Java = stack.level;
-          props.changeHandle(parseInt(Java), "Java");
+          props.changeHandle(parseInt(Java), 'Java');
           break;
-        case "C":
+        case 'C':
           C = stack.level;
-          props.changeHandle(parseInt(C), "C");
+          props.changeHandle(parseInt(C), 'C');
           break;
-        case "C++":
+        case 'C++':
           C2 = stack.level;
-          props.changeHandle(parseInt(C2), "C2");
+          props.changeHandle(parseInt(C2), 'C2');
           break;
-        case "C#":
+        case 'C#':
           C3 = stack.level;
-          props.changeHandle(parseInt(C3), "C3");
+          props.changeHandle(parseInt(C3), 'C3');
           break;
-        case "SpringBoot":
+        case 'SpringBoot':
           SpringBoot = stack.level;
-          props.changeHandle(parseInt(SpringBoot), "SpringBoot");
+          props.changeHandle(parseInt(SpringBoot), 'SpringBoot');
           break;
-        case "MySQL":
+        case 'MySQL':
           MySQL = stack.level;
-          props.changeHandle(parseInt(MySQL), "MySQL");
+          props.changeHandle(parseInt(MySQL), 'MySQL');
           break;
-        case "Git":
+        case 'Git':
           Git = stack.level;
-          props.changeHandle(parseInt(Git), "Git");
+          props.changeHandle(parseInt(Git), 'Git');
           break;
-        case "AWS":
+        case 'AWS':
           AWS = stack.level;
-          props.changeHandle(parseInt(AWS), "AWS");
+          props.changeHandle(parseInt(AWS), 'AWS');
           break;
-        case "Docker":
+        case 'Docker':
           Docker = stack.level;
-          props.changeHandle(parseInt(Docker), "Docker");
+          props.changeHandle(parseInt(Docker), 'Docker');
           break;
-        case "Linux":
+        case 'Linux':
           Linux = stack.level;
-          props.changeHandle(parseInt(Linux), "Linux");
+          props.changeHandle(parseInt(Linux), 'Linux');
           break;
-        case "Jira":
+        case 'Jira':
           Jira = stack.level;
-          props.changeHandle(parseInt(Jira), "Jira");
+          props.changeHandle(parseInt(Jira), 'Jira');
           break;
-        case "Django":
+        case 'Django':
           Django = stack.level;
-          props.changeHandle(parseInt(Django), "Django");
+          props.changeHandle(parseInt(Django), 'Django');
           break;
-        case "Redis":
+        case 'Redis':
           Redis = stack.level;
-          props.changeHandle(parseInt(Redis), "Redis");
+          props.changeHandle(parseInt(Redis), 'Redis');
           break;
-        case "Kotlin":
+        case 'Kotlin':
           Kotlin = stack.level;
-          props.changeHandle(parseInt(Kotlin), "Kotlin");
+          props.changeHandle(parseInt(Kotlin), 'Kotlin');
           break;
         default:
           break;
       }
     });
 
-    if (HTML == 0) props.changeHandle(0, "HTML");
-    if (CSS == 0) props.changeHandle(0, "CSS");
-    if (JavaScript == 0) props.changeHandle(0, "JavaScript");
-    if (VueJS == 0) props.changeHandle(0, "VueJS");
-    if (React == 0) props.changeHandle(0, "React");
-    if (Python == 0) props.changeHandle(0, "Python");
-    if (C == 0) props.changeHandle(0, "C");
-    if (C2 == 0) props.changeHandle(0, "C2");
-    if (C3 == 0) props.changeHandle(0, "C3");
-    if (Java == 0) props.changeHandle(0, "Java");
-    if (Angular == 0) props.changeHandle(0, "Angular");
-    if (SpringBoot == 0) props.changeHandle(0, "SpringBoot");
-    if (MySQL == 0) props.changeHandle(0, "MySQL");
-    if (Git == 0) props.changeHandle(0, "Git");
-    if (AWS == 0) props.changeHandle(0, "AWS");
-    if (Docker == 0) props.changeHandle(0, "Docker");
-    if (Linux == 0) props.changeHandle(0, "Linux");
-    if (Jira == 0) props.changeHandle(0, "Jira");
-    if (Django == 0) props.changeHandle(0, "Django");
-    if (Redis == 0) props.changeHandle(0, "Redis");
-    if (Kotlin == 0) props.changeHandle(0, "Kotlin");
+    if (HTML == 0) props.changeHandle(0, 'HTML');
+    if (CSS == 0) props.changeHandle(0, 'CSS');
+    if (JavaScript == 0) props.changeHandle(0, 'JavaScript');
+    if (VueJS == 0) props.changeHandle(0, 'VueJS');
+    if (React == 0) props.changeHandle(0, 'React');
+    if (Python == 0) props.changeHandle(0, 'Python');
+    if (C == 0) props.changeHandle(0, 'C');
+    if (C2 == 0) props.changeHandle(0, 'C2');
+    if (C3 == 0) props.changeHandle(0, 'C3');
+    if (Java == 0) props.changeHandle(0, 'Java');
+    if (Angular == 0) props.changeHandle(0, 'Angular');
+    if (SpringBoot == 0) props.changeHandle(0, 'SpringBoot');
+    if (MySQL == 0) props.changeHandle(0, 'MySQL');
+    if (Git == 0) props.changeHandle(0, 'Git');
+    if (AWS == 0) props.changeHandle(0, 'AWS');
+    if (Docker == 0) props.changeHandle(0, 'Docker');
+    if (Linux == 0) props.changeHandle(0, 'Linux');
+    if (Jira == 0) props.changeHandle(0, 'Jira');
+    if (Django == 0) props.changeHandle(0, 'Django');
+    if (Redis == 0) props.changeHandle(0, 'Redis');
+    if (Kotlin == 0) props.changeHandle(0, 'Kotlin');
 
     // if (!CSS) props.changeHandle(0, "CSSLevel");
     // if (!JavaScript) props.changeHandle(0, "JavaScriptLevel");

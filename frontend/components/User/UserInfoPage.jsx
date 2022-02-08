@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import Router from "next/router";
-import Cookies from "universal-cookie";
-import { useCookies } from "react-cookie";
+import React, { useState, useEffect, useRef } from 'react';
+import Router from 'next/router';
+import Cookies from 'universal-cookie';
+import { useCookies } from 'react-cookie';
 import {
   getUserLoginTokenAPI,
   getUserInfoAPI,
@@ -9,10 +9,10 @@ import {
   updateNicknameAPI,
   deleteUserAPI,
   loginAPI,
-} from "../../pages/api/user";
-import DatePickerUser from "../../components/Common/DatePickerUser";
-import { LocalizationProvider } from "@mui/lab";
-import DateAdapter from "@mui/lab/AdapterDateFns";
+} from '../../pages/api/user';
+import DatePickerUser from '../../components/Common/DatePickerUser';
+import { LocalizationProvider } from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDateFns';
 import {
   TextField,
   Button,
@@ -31,14 +31,14 @@ import {
   Divider,
   InputAdornment,
   Container,
-} from "@mui/material";
-import styled from "@emotion/styled";
-import StackLevelListInfo from "../Common/Stack/StackLevelListInfo";
-import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
-import LinkList from "../Common/LinkList";
-import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
-import forceReload from "../../util/ForceReload";
-import MyInfoLayout from "./MenuLayout";
+} from '@mui/material';
+import styled from '@emotion/styled';
+import StackLevelListInfo from '../Common/Stack/StackLevelListInfo';
+import StackLevelSelectRegister from '../Common/Stack/StackLevelSelectRegister';
+import LinkList from '../Common/LinkList';
+import StackLevelInfoDialog from '../Common/Stack/StackLevelInfoDialog';
+import forceReload from '../../util/ForceReload';
+import MyInfoLayout from './MenuLayout';
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
 // const urlReg = [(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*);
@@ -174,52 +174,52 @@ export default function UserInfoPage() {
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
-  const [imageDefault, setImageDefault] = useState("");
+  const [imageDefault, setImageDefault] = useState('');
 
   const [inputState, setInputState] = useState({
-    userId: "",
-    password: "",
-    name: "",
-    email: "",
-    phone: "",
-    nickname: "",
-    class: "",
-    birthday: "",
-    initDate: "",
-    generation: "",
-    studentId: "",
+    userId: '',
+    password: '',
+    name: '',
+    email: '',
+    phone: '',
+    nickname: '',
+    class: '',
+    birthday: '',
+    initDate: '',
+    generation: '',
+    studentId: '',
     stacks: [],
     stacks_get: [],
-    position: "",
-    link: "",
-    description: "",
-    image_id: "",
+    position: '',
+    link: '',
+    description: '',
+    image_id: '',
   });
 
   const positionOptions = [
-    { value: "", name: "선택해 주세요" },
-    { value: "frontend", name: "프론트엔드" },
-    { value: "backend", name: "백엔드" },
-    { value: "mobile", name: "모바일" },
-    { value: "embedded", name: "임베디드" },
+    { value: '', name: '선택해 주세요' },
+    { value: 'frontend', name: '프론트엔드' },
+    { value: 'backend', name: '백엔드' },
+    { value: 'mobile', name: '모바일' },
+    { value: 'embedded', name: '임베디드' },
   ];
 
   const classOptions = [
-    { value: "JAVA", name: "자바반" },
-    { value: "PYTHON", name: "파이썬반" },
-    { value: "MOBILE", name: "모바일반" },
-    { value: "EMBEDDED", name: "임베디드반" },
+    { value: 'JAVA', name: '자바반' },
+    { value: 'PYTHON', name: '파이썬반' },
+    { value: 'MOBILE', name: '모바일반' },
+    { value: 'EMBEDDED', name: '임베디드반' },
   ];
 
   const [nicknameInfo, setNicknameInfo] = useState({
-    nickname: "",
-    id: sessionStorage.getItem("userInfo"),
+    nickname: '',
+    id: sessionStorage.getItem('userInfo'),
   });
 
   const cookies = new Cookies();
-  const [cookie, setCookie] = useCookies(["userToken"]);
+  const [cookie, setCookie] = useCookies(['userToken']);
 
-  const [files, setFiles] = useState("");
+  const [files, setFiles] = useState('');
 
   const onImgChange = (event) => {
     const file = event.target.files[0];
@@ -229,10 +229,10 @@ export default function UserInfoPage() {
   const uploadRef = useRef(null);
 
   const changeHandle = (value, name) => {
-    if (name == "birthday") {
+    if (name == 'birthday') {
       inputState.birthday = value;
       userBirthday.value = value;
-      console.log("생일 " + JSON.stringify(inputState));
+      console.log('생일 ' + JSON.stringify(inputState));
     } else {
       if (name == null && value.length == 6) {
         inputState.birthday = value;
@@ -240,12 +240,12 @@ export default function UserInfoPage() {
         yy = Number(yy) > 25 ? 19 + yy : 20 + yy;
         let mm = inputState.birthday.slice(2, 4);
         let dd = inputState.birthday.slice(4, 6);
-        setUserBirthdayDate(yy + "-" + mm + "-" + dd);
-        userBirthday.initDate = yy + "-" + mm + "-" + dd;
-        userBirthday.value = yy + "-" + mm + "-" + dd;
+        setUserBirthdayDate(yy + '-' + mm + '-' + dd);
+        userBirthday.initDate = yy + '-' + mm + '-' + dd;
+        userBirthday.value = yy + '-' + mm + '-' + dd;
       }
       inputState[name] = value;
-      console.log("스택 " + JSON.stringify(inputState));
+      console.log('스택 ' + JSON.stringify(inputState));
     }
   };
 
@@ -262,16 +262,16 @@ export default function UserInfoPage() {
   };
 
   const [userBirthday, setUserBirthday] = useState({
-    value: "",
-    initDate: "",
+    value: '',
+    initDate: '',
   });
-  const [userBirthdayDate, setUserBirthdayDate] = useState("");
+  const [userBirthdayDate, setUserBirthdayDate] = useState('');
 
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
-    getUserInfoAPI(sessionStorage.getItem("userInfo")).then((res) => {
+    getUserInfoAPI(sessionStorage.getItem('userInfo')).then((res) => {
       if (res.statusCode == 200) {
-        console.log("사용자 정보 보기 결과: " + JSON.stringify(res));
+        console.log('사용자 정보 보기 결과: ' + JSON.stringify(res));
         inputState.email = res.user.email;
         inputState.nickname = res.user.nickname;
         nicknameInfo.nickname = res.user.nickname;
@@ -288,12 +288,12 @@ export default function UserInfoPage() {
           year = Number(year) > 25 ? 19 + year : 20 + year;
           let month = inputState.birthday.slice(2, 4);
           let day = inputState.birthday.slice(4, 6);
-          setUserBirthdayDate(year + "-" + month + "-" + day);
+          setUserBirthdayDate(year + '-' + month + '-' + day);
           // console.log(userBirthdayDate);
-          userBirthday.initDate = year + "-" + month + "-" + day;
-          userBirthday.value = year + "-" + month + "-" + day;
+          userBirthday.initDate = year + '-' + month + '-' + day;
+          userBirthday.value = year + '-' + month + '-' + day;
         }
-        if (res.user.phone !== "00000000000") {
+        if (res.user.phone !== '00000000000') {
           inputState.phone = res.user.phone;
         }
         inputState.class = res.user.userClass;
@@ -309,18 +309,18 @@ export default function UserInfoPage() {
 
         if (inputState.image_id == null) {
           if (inputState.generation == 7) {
-            setImageDefault("/images/profile_default_gen7.png");
+            setImageDefault('/images/profile_default_gen7.png');
           } else if (inputState.generation == 0) {
-            setImageDefault("/images/profile_default_gen0.png");
+            setImageDefault('/images/profile_default_gen0.png');
           } else {
-            setImageDefault("/images/profile_default_gen6.png");
+            setImageDefault('/images/profile_default_gen6.png');
           }
         }
 
         if (res.user.link != null) {
-          setLinks(inputState.link.split(" "));
+          setLinks(inputState.link.split(' '));
           console.log(links);
-          console.log(inputState.link.split(" "));
+          console.log(inputState.link.split(' '));
         } else {
           setLinks();
         }
@@ -339,47 +339,47 @@ export default function UserInfoPage() {
   const preview = () => {
     if (!files) return false;
 
-    const imgEl = document.querySelector("#img_box");
+    const imgEl = document.querySelector('#img_box');
     const reader = new FileReader();
 
     reader.onload = () =>
       (imgEl.style.backgroundImage = `url(${reader.result})`);
 
-    imgEl.innerText = "";
+    imgEl.innerText = '';
     reader.readAsDataURL(files);
   };
 
   const handleNicknameChange = (e) => {
     setNicknameInfo({
       nickname: e.target.value,
-      id: sessionStorage.getItem("userInfo"),
+      id: sessionStorage.getItem('userInfo'),
     });
   };
 
   function handleLinksChange(linkArr) {
     console.log(linkArr);
-    let linkList = "";
+    let linkList = '';
     const size = linkArr.length;
     for (let i = 0; i < size; i++) {
-      linkList = linkList + " " + linkArr[i];
+      linkList = linkList + ' ' + linkArr[i];
       console.log(linkArr[i]);
     }
     linkList = linkList.trim();
     inputState.link = linkList;
-    setLinks(linkList.split(" "));
+    setLinks(linkList.split(' '));
   }
 
   const positionHandleChange = (e) => {
     console.log(e.target.value);
     inputState.position = e.target.value;
-    console.log("inputState" + JSON.stringify(inputState));
+    console.log('inputState' + JSON.stringify(inputState));
     console.log(inputState);
   };
 
   const [checkedNickname, setCheckedNickname] = useState(true);
   const [changeNickname, setChangeNickname] = useState(false);
   const handleUserNicknameClick = (e) => {
-    alert("닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다");
+    alert('닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다');
     setCheckedNickname(false);
     setChangeNickname(true);
     setNicknameChange(true);
@@ -389,9 +389,9 @@ export default function UserInfoPage() {
     // 닉네임 바꿀 수 있는지 확인
     if (nicknameChange) {
       let isNormal = true;
-      let msg = "";
-      if (nicknameInfo.nickname == "") {
-        msg = "닉네임을 입력해주세요";
+      let msg = '';
+      if (nicknameInfo.nickname == '') {
+        msg = '닉네임을 입력해주세요';
         isNormal = false;
       }
       // else if (nicknameInfo.nickname == sessionStorage.getItem("nickname")) {
@@ -408,7 +408,7 @@ export default function UserInfoPage() {
         updateNicknameAPI(nicknameInfo).then((res) => {
           if (res.statusCode == 200) {
             setCheckPassword(true);
-            alert("닉네임 변경이 가능합니다.");
+            alert('닉네임 변경이 가능합니다.');
             setNicknameChange(false);
             setChangeNickname(false);
             setCheckedNickname(true);
@@ -444,12 +444,12 @@ export default function UserInfoPage() {
     setOpen(true);
   };
   const handleClose = (event, reason) => {
-    if (reason && reason == "backdropClick") return;
+    if (reason && reason == 'backdropClick') return;
     setOpen(false);
   };
   const [loginInfo, setLoginInfo] = useState({
     email: inputState.email,
-    password: "",
+    password: '',
   });
   const handlePasswordChange = (e) => {
     loginInfo.email = inputState.email;
@@ -464,13 +464,13 @@ export default function UserInfoPage() {
 
     if (changeNickname) {
       isNormal = false;
-      alert("닉네임 중복 체크를 완료해 주세요.");
+      alert('닉네임 중복 체크를 완료해 주세요.');
     } else if (
       inputState.phone.length > 0 &&
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert("전화번호 양식을 확인해 주세요.");
+      alert('전화번호 양식을 확인해 주세요.');
     } else if (links.length >= 1 && !urlReg.test(links)) {
       // isNormal = false;
       console.log(links.length);
@@ -488,10 +488,10 @@ export default function UserInfoPage() {
 
     if (inputState.phone.length > 0 && !phoneReg.test(inputState.phone)) {
       isNormal = false;
-      alert("전화번호 양식을 확인해 주세요.");
+      alert('전화번호 양식을 확인해 주세요.');
     } else if (changeNickname) {
       isNormal = false;
-      alert("닉네임 중복 체크를 완료해 주세요.");
+      alert('닉네임 중복 체크를 완료해 주세요.');
     }
 
     if (isNormal) {
@@ -504,8 +504,8 @@ export default function UserInfoPage() {
         Python: inputState.Python,
         Java: inputState.Java,
         C: inputState.C,
-        "C++": inputState.C2,
-        "C#": inputState.C3,
+        'C++': inputState.C2,
+        'C#': inputState.C3,
         SpringBoot: inputState.SpringBoot,
         MySQL: inputState.MySQL,
         Git: inputState.Git,
@@ -528,7 +528,7 @@ export default function UserInfoPage() {
       });
       inputState.stacks_get = stacksArr;
 
-      if (loginInfo.password == "admin") {
+      if (loginInfo.password == 'admin') {
         // loginAPI(loginInfo).then((res) => {
         // console.log(loginInfo.email + " " + loginInfo.password);
         // if (res.statusCode == 200) {
@@ -537,17 +537,17 @@ export default function UserInfoPage() {
 
         const formData = new FormData();
 
-        console.log("inputState" + JSON.stringify(inputState));
+        console.log('inputState' + JSON.stringify(inputState));
         console.log(inputState);
 
         Object.keys(inputState).map((key) => {
           let value = inputState[key];
-          if (key === "stacks") {
-            formData.append(key, "[" + JSON.stringify(value) + "]");
+          if (key === 'stacks') {
+            formData.append(key, '[' + JSON.stringify(value) + ']');
             // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
-          } else if (key === "phone") {
-            if (inputState.phone == "") {
-              const phoneNull = "00000000000";
+          } else if (key === 'phone') {
+            if (inputState.phone == '') {
+              const phoneNull = '00000000000';
               formData.append(key, phoneNull);
               // inputState.phone = "00000000000";
             } else {
@@ -555,14 +555,14 @@ export default function UserInfoPage() {
             }
           } else {
             formData.append(key, value);
-            console.log(key + " " + value);
+            console.log(key + ' ' + value);
           }
         });
 
-        formData.append("file", files);
+        formData.append('file', files);
 
         for (let key of formData.entries()) {
-          console.log("key", `${key}`);
+          console.log('key', `${key}`);
         }
 
         updateUserAPI(formData).then((res) => {
@@ -576,7 +576,7 @@ export default function UserInfoPage() {
             // }
             // setNicknameChange(false);
           } else {
-            alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
+            alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
           }
         });
 
@@ -599,23 +599,25 @@ export default function UserInfoPage() {
   };
 
   const handleQuitClick = (event) => {
-    const userId = sessionStorage.getItem("userInfo");
-    if (window.confirm("탈퇴하시겠습니까? 확인 버튼을 누르면 즉시 탈퇴됩니다")) {
+    const userId = sessionStorage.getItem('userInfo');
+    if (
+      window.confirm('탈퇴하시겠습니까? 확인 버튼을 누르면 즉시 탈퇴됩니다')
+    ) {
       deleteUserAPI(userId).then((res) => {
         if (res.statusCode == 200) {
           // 탈퇴 성공 시
-          alert("탈퇴시켰습니다");
+          alert('탈퇴시켰습니다');
           // sessionStorage.clear();
-          sessionStorage.setItem("userInfo", "");
+          sessionStorage.setItem('userInfo', '');
           // cookies.set("userToken", "");
           // cookies.set("userEmail", "");
           // 페이지 이동
           window.history.forward();
-          document.location.href = "/";
+          document.location.href = '/';
         } else alert(`${res.message}`);
       });
     } else {
-      alert("취소했습니다");
+      alert('취소했습니다');
     }
   };
 
@@ -681,7 +683,7 @@ export default function UserInfoPage() {
                 <Divider light sx={{ marginTop: 1.5, marginBottom: 1 }} />
                 <div>
                   <DetailWrapper maxWidth="sm">
-                    <CardContent sx={{ width: "60%", marginRight: 5 }}>
+                    <CardContent sx={{ width: '60%', marginRight: 5 }}>
                       {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
@@ -689,7 +691,7 @@ export default function UserInfoPage() {
                     </Box> */}
                       <Box
                         className="ssafyInfo"
-                        sx={{ width: "100%", fontSize: "18px", mb: 1 }}
+                        sx={{ width: '100%', fontSize: '18px', mb: 1 }}
                       >
                         싸피&nbsp;
                         <label>{inputState.generation}기&nbsp;</label>
@@ -722,7 +724,7 @@ export default function UserInfoPage() {
                         {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
                         <label>이메일</label>
                         {/* {inputState.email} */}
-                        <input value={inputState.email || ""} disabled />
+                        <input value={inputState.email || ''} disabled />
                         {/* </Box> */}
                       </RowUpWrapper>
                       <RowUpWrapper>
@@ -732,7 +734,7 @@ export default function UserInfoPage() {
                           <>
                             <input
                               id="nickname"
-                              value={nicknameInfo.nickname || ""}
+                              value={nicknameInfo.nickname || ''}
                               disabled={
                                 onlyView ? true : changeNickname ? false : true
                               }
@@ -747,7 +749,7 @@ export default function UserInfoPage() {
                           <>
                             <OutlinedInput
                               id="nickname"
-                              value={nicknameInfo.nickname || ""}
+                              value={nicknameInfo.nickname || ''}
                               disabled={
                                 onlyView ? true : changeNickname ? false : true
                               }
@@ -764,7 +766,7 @@ export default function UserInfoPage() {
                                       <Button
                                         variant="outlined"
                                         onClick={handleNicknameClick}
-                                        sx={{ width: "100px" }}
+                                        sx={{ width: '100px' }}
                                       >
                                         중복 확인하기
                                       </Button>
@@ -772,7 +774,7 @@ export default function UserInfoPage() {
                                       <Button
                                         variant="outlined"
                                         onClick={handleUserNicknameClick}
-                                        sx={{ width: "100px" }}
+                                        sx={{ width: '100px' }}
                                       >
                                         닉네임 변경하기
                                       </Button>
@@ -802,7 +804,7 @@ export default function UserInfoPage() {
                           <LocalizationProvider dateAdapter={DateAdapter}>
                             <DatePickerWrapper>
                               <DatePickerUser
-                                value={userBirthday || ""}
+                                value={userBirthday || ''}
                                 label=""
                                 changeHandle={(e) => {
                                   changeHandle(e);
@@ -819,8 +821,8 @@ export default function UserInfoPage() {
                         <input
                           id="phone"
                           type="number"
-                          placeholder={onlyView ? "" : "01012345678"}
-                          value={inputState.phone || ""}
+                          placeholder={onlyView ? '' : '01012345678'}
+                          value={inputState.phone || ''}
                           disabled={onlyView ? true : false}
                           onChange={handleChange}
                         />
@@ -841,15 +843,15 @@ export default function UserInfoPage() {
                               id="position"
                               disabled
                               value={
-                                inputState.position == ""
-                                  ? ""
+                                inputState.position == ''
+                                  ? ''
                                   : positionOptions
                                       .map((u, i) => {
                                         if (u.value == inputState.position) {
                                           return u.name;
                                         }
                                       })
-                                      .join("")
+                                      .join('')
                               }
                               //  value={inputState.position || ""}
                               // onChange={handleChange}
@@ -862,7 +864,7 @@ export default function UserInfoPage() {
                               positionHandleChange(e);
                               handleChange(e);
                             }}
-                            value={inputState.position || ""}
+                            value={inputState.position || ''}
                             sx={{ minWidth: 350, height: 35, fontSize: 13 }}
                           >
                             {positionOptions.map((u, i) => {
@@ -936,7 +938,7 @@ export default function UserInfoPage() {
                       fullWidth
                       rows={4}
                       multiline
-                      value={inputState.description || ""}
+                      value={inputState.description || ''}
                       disabled={onlyView ? true : false}
                       onChange={(e) => {
                         handleChange(e);
@@ -949,10 +951,10 @@ export default function UserInfoPage() {
                       <LinkList items={links} />
                     ) : (
                       <>
-                        <span style={{ fontSize: "10px" }}>
+                        <span style={{ fontSize: '10px' }}>
                           (최대 2개 가능)
                         </span>
-                        <i style={{ fontSize: "10px" }}>
+                        <i style={{ fontSize: '10px' }}>
                           &nbsp;입력 후 엔터를 눌러주세요
                         </i>
                         <Autocomplete
@@ -962,7 +964,7 @@ export default function UserInfoPage() {
                           // getOptionLabel={(option) => option}
                           value={links}
                           options={links.map((l) => l.value)}
-                          getOptionLabel={(option) => (option ? option : "")}
+                          getOptionLabel={(option) => (option ? option : '')}
                           renderInput={(params) => <TextField {...params} />}
                           onChange={(e, option, reason) => {
                             handleLinksChange(option);
@@ -979,7 +981,7 @@ export default function UserInfoPage() {
                     <Button
                       variant="outlined"
                       color="error"
-                      sx={{ float: "right" }}
+                      sx={{ float: 'right' }}
                       onClick={handleQuitClick}
                     >
                       탈퇴시키기

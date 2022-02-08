@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import Router from "next/router";
-import StackLevelSelectRegister from "../../components/Common/Stack/StackLevelSelectRegister";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Router from 'next/router';
+import StackLevelSelectRegister from '../../components/Common/Stack/StackLevelSelectRegister';
 
 import {
   getUserLoginTokenAPI,
   getUserInfoAPI,
   updateUserAPI,
-} from "../../pages/api/user";
+} from '../../pages/api/user';
 import {
   TextField,
   Box,
@@ -15,38 +15,38 @@ import {
   Autocomplete,
   Select,
   Typography,
-} from "@mui/material";
-import styled from "@emotion/styled";
-import { LocalizationProvider } from "@mui/lab";
-import MenuItem from "@mui/material/MenuItem";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
+} from '@mui/material';
+import styled from '@emotion/styled';
+import { LocalizationProvider } from '@mui/lab';
+import MenuItem from '@mui/material/MenuItem';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import StackLevelInfoDialog from '../Common/Stack/StackLevelInfoDialog';
 
 export default function RegistInfo() {
   const [inputState, setInputState] = useState({
-    phone: "",
-    birthday: "",
+    phone: '',
+    birthday: '',
     stacks: [],
-    position: "",
-    link: "",
-    description: "",
-    image_id: "",
+    position: '',
+    link: '',
+    description: '',
+    image_id: '',
     // 이미 입력된 값들
-    email: "",
-    userId: "",
-    nickname: "",
-    name: "",
-    class: "",
-    generation: "",
-    studentId: "",
+    email: '',
+    userId: '',
+    nickname: '',
+    name: '',
+    class: '',
+    generation: '',
+    studentId: '',
   });
 
   const positionOptions = [
-    { value: "frontend", name: "프론트엔드" },
-    { value: "backend", name: "백엔드" },
-    { value: "mobile", name: "모바일" },
-    { value: "embedded", name: "임베디드" },
+    { value: 'frontend', name: '프론트엔드' },
+    { value: 'backend', name: '백엔드' },
+    { value: 'mobile', name: '모바일' },
+    { value: 'embedded', name: '임베디드' },
   ];
 
   const DatePickerWrapper = styled.div`
@@ -79,7 +79,7 @@ export default function RegistInfo() {
     background-size: contain;
   `;
 
-  const [files, setFiles] = useState("");
+  const [files, setFiles] = useState('');
 
   const onImgChange = (event) => {
     const file = event.target.files[0];
@@ -90,25 +90,25 @@ export default function RegistInfo() {
 
   useEffect(() => {
     if (
-      !sessionStorage.getItem("keep") ||
-      sessionStorage.getItem("keep") == null ||
-      sessionStorage.getItem("keep") == ""
+      !sessionStorage.getItem('keep') ||
+      sessionStorage.getItem('keep') == null ||
+      sessionStorage.getItem('keep') == ''
     ) {
-      alert("잘못된 접근입니다");
+      alert('잘못된 접근입니다');
       sessionStorage.clear();
       // 페이지 이동
       window.history.forward();
-      window.location.replace("/");
+      window.location.replace('/');
     }
 
-    inputState.email = sessionStorage.getItem("userId");
-    inputState.userId = sessionStorage.getItem("userId");
-    inputState.nickname = sessionStorage.getItem("nickname");
-    inputState.name = sessionStorage.getItem("name");
-    inputState.class = sessionStorage.getItem("userClass");
-    inputState.generation = sessionStorage.getItem("generation");
-    inputState.studentId = sessionStorage.getItem("studentId");
-    inputState.password = sessionStorage.getItem("password");
+    inputState.email = sessionStorage.getItem('userId');
+    inputState.userId = sessionStorage.getItem('userId');
+    inputState.nickname = sessionStorage.getItem('nickname');
+    inputState.name = sessionStorage.getItem('name');
+    inputState.class = sessionStorage.getItem('userClass');
+    inputState.generation = sessionStorage.getItem('generation');
+    inputState.studentId = sessionStorage.getItem('studentId');
+    inputState.password = sessionStorage.getItem('password');
 
     preview();
   });
@@ -116,13 +116,13 @@ export default function RegistInfo() {
   const preview = () => {
     if (!files) return false;
 
-    const imgEl = document.querySelector("#img_box");
+    const imgEl = document.querySelector('#img_box');
     const reader = new FileReader();
 
     reader.onload = () =>
       (imgEl.style.backgroundImage = `url(${reader.result})`);
 
-    imgEl.innerText = "";
+    imgEl.innerText = '';
     reader.readAsDataURL(files);
   };
 
@@ -132,11 +132,11 @@ export default function RegistInfo() {
   //   // 리렌더링 X
   // };
   const [infoValue, setInfoValue] = useState({
-    birthday: "",
+    birthday: '',
     stacks: [],
   });
   const changeHandle = (value, name) => {
-    if (name == "birthday") {
+    if (name == 'birthday') {
       inputState.birthday = value;
     } else {
       inputState[name] = value;
@@ -164,10 +164,10 @@ export default function RegistInfo() {
 
   const [links, setLinks] = useState([]);
   function handleLinksChange(linkArr) {
-    let linkList = "";
+    let linkList = '';
     const size = linkArr.length;
     for (let i = 0; i < size; i++) {
-      linkList = linkList + " " + linkArr[i];
+      linkList = linkList + ' ' + linkArr[i];
     }
     linkList = linkList.trim();
     inputState.link = linkList;
@@ -181,15 +181,15 @@ export default function RegistInfo() {
   const urlReg =
     /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
 
-  const [birthdayDate, setBirthdayDate] = useState("");
+  const [birthdayDate, setBirthdayDate] = useState('');
 
   const handleBirthdayChange = (value) => {
     const year = String(value.getFullYear()).slice(2, 4);
     const month =
       value.getMonth() + 1 > 9
         ? value.getMonth() + 1
-        : "0" + (value.getMonth() + 1);
-    const day = value.getDate() > 9 ? value.getDate() : "0" + value.getDate();
+        : '0' + (value.getMonth() + 1);
+    const day = value.getDate() > 9 ? value.getDate() : '0' + value.getDate();
     const birthdayDateInputStyle = year + month + day;
     setBirthdayDate(value);
     inputState.birthday = birthdayDateInputStyle;
@@ -200,7 +200,7 @@ export default function RegistInfo() {
     // console.log("이전" + inputState);
 
     let isNormal = true;
-    let msg = "";
+    let msg = '';
 
     if (
       inputState.phone != null &&
@@ -208,7 +208,7 @@ export default function RegistInfo() {
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert("전화번호 양식을 확인해 주세요.");
+      alert('전화번호 양식을 확인해 주세요.');
     } else if (
       inputState.link != null &&
       inputState.link.length >= 1 &&
@@ -216,7 +216,7 @@ export default function RegistInfo() {
     ) {
       isNormal = false;
       // console.log(links.length);
-      alert("링크 양식을 확인해 주세요.");
+      alert('링크 양식을 확인해 주세요.');
     }
 
     inputState.stacks = {
@@ -228,8 +228,8 @@ export default function RegistInfo() {
       Python: inputState.Python,
       Java: inputState.Java,
       C: inputState.C,
-      "C++": inputState.C2,
-      "C#": inputState.C3,
+      'C++': inputState.C2,
+      'C#': inputState.C3,
       SpringBoot: inputState.SpringBoot,
       MySQL: inputState.MySQL,
       Git: inputState.Git,
@@ -258,11 +258,11 @@ export default function RegistInfo() {
 
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
-        if (key === "stacks") {
-          formData.append(key, "[" + JSON.stringify(value) + "]");
+        if (key === 'stacks') {
+          formData.append(key, '[' + JSON.stringify(value) + ']');
           // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
-        } else if (key === "phone") {
-          if (inputState.phone == null || inputState.phone == "") {
+        } else if (key === 'phone') {
+          if (inputState.phone == null || inputState.phone == '') {
           } else {
             formData.append(key, inputState.phone);
           }
@@ -272,10 +272,10 @@ export default function RegistInfo() {
         }
       });
 
-      formData.append("file", files);
+      formData.append('file', files);
 
       for (let key of formData.entries()) {
-        console.log("key", `${key}`);
+        console.log('key', `${key}`);
       }
 
       updateUserAPI(formData).then((res) => {
@@ -283,17 +283,17 @@ export default function RegistInfo() {
         console.log(JSON.stringify(res));
         if (res.statusCode == 200) {
           sessionStorage.clear();
-          sessionStorage.setItem("userId", inputState.userId);
-          sessionStorage.setItem("email", inputState.email);
-          sessionStorage.setItem("nickname", inputState.nickname);
-          alert("회원정보 추가 성공");
+          sessionStorage.setItem('userId', inputState.userId);
+          sessionStorage.setItem('email', inputState.email);
+          sessionStorage.setItem('nickname', inputState.nickname);
+          alert('회원정보 추가 성공');
           window.history.forward();
-          window.location.replace("/");
+          window.location.replace('/');
         } else {
-          alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
+          alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
           sessionStorage.clear();
           window.history.forward();
-          window.location.replace("/");
+          window.location.replace('/');
         }
       });
     } else {
@@ -309,7 +309,7 @@ export default function RegistInfo() {
         autoComplete="off"
         display="flex"
         justifyContent="center"
-        sx={{ flexDirection: "column" }}
+        sx={{ flexDirection: 'column' }}
         alignItems="center"
         minHeight="70vh"
         onSubmit={handleSubmit}
@@ -348,7 +348,7 @@ export default function RegistInfo() {
               type="number"
               id="phone"
               placeholder="01012345678"
-              value={inputState.phone || ""}
+              value={inputState.phone || ''}
               onChange={(e) => {
                 handleChange(e);
               }}
@@ -365,7 +365,7 @@ export default function RegistInfo() {
               <DesktopDatePicker
                 id="birthday"
                 inputFormat="yyyy-MM-dd"
-                mask={"____-__-__"}
+                mask={'____-__-__'}
                 value={birthdayDate || null}
                 onChange={handleBirthdayChange}
                 renderInput={(params) => (
@@ -397,7 +397,7 @@ export default function RegistInfo() {
                 positionHandleChange(e);
                 handleChange(e);
               }}
-              value={inputState.position || ""}
+              value={inputState.position || ''}
               sx={{ minWidth: 370, fontSize: 14 }}
             >
               {positionOptions.map((u, i) => {
@@ -417,7 +417,7 @@ export default function RegistInfo() {
           <div className="mb-6">
             <Typography display="inline" sx={{ fontSize: 14 }}>
               기술 스택
-            </Typography>{" "}
+            </Typography>{' '}
             <StackLevelInfoDialog />
             <StackLevelSelectRegister
               changeHandle={changeHandle}
@@ -431,7 +431,7 @@ export default function RegistInfo() {
             </Typography>
             <TextField
               id="link"
-              value={inputState.link || ""}
+              value={inputState.link || ''}
               onChange={handleChange}
               fullWidth
             />
@@ -459,7 +459,7 @@ export default function RegistInfo() {
               fullWidth
               rows={4}
               multiline
-              value={inputState.description || ""}
+              value={inputState.description || ''}
               onChange={handleChange}
               sx={{ width: 370, fontSize: 14 }}
             />

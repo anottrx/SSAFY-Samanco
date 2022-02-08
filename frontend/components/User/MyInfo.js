@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import Router from "next/router";
-import Cookies from "universal-cookie";
-import { useCookies } from "react-cookie";
+import React, { useState, useEffect, useRef } from 'react';
+import Router from 'next/router';
+import Cookies from 'universal-cookie';
+import { useCookies } from 'react-cookie';
 import {
   getUserLoginTokenAPI,
   getUserInfoAPI,
@@ -9,10 +9,10 @@ import {
   updateNicknameAPI,
   deleteUserAPI,
   loginAPI,
-} from "../../pages/api/user";
-import DatePickerUser from "../../components/Common/DatePickerUser";
-import { LocalizationProvider } from "@mui/lab";
-import DateAdapter from "@mui/lab/AdapterDateFns";
+} from '../../pages/api/user';
+import DatePickerUser from '../../components/Common/DatePickerUser';
+import { LocalizationProvider } from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDateFns';
 import {
   TextField,
   Button,
@@ -31,14 +31,14 @@ import {
   Divider,
   InputAdornment,
   Container,
-} from "@mui/material";
-import styled from "@emotion/styled";
-import StackLevelListInfo from "../Common/Stack/StackLevelListInfo";
-import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
-import LinkList from "../Common/LinkList";
-import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
-import forceReload from "../../util/ForceReload";
-import MyInfoLayout from "./MenuLayout";
+} from '@mui/material';
+import styled from '@emotion/styled';
+import StackLevelListInfo from '../Common/Stack/StackLevelListInfo';
+import StackLevelSelectRegister from '../Common/Stack/StackLevelSelectRegister';
+import LinkList from '../Common/LinkList';
+import StackLevelInfoDialog from '../Common/Stack/StackLevelInfoDialog';
+import forceReload from '../../util/ForceReload';
+import MyInfoLayout from './MenuLayout';
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
 // const urlReg = [(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*);
@@ -171,52 +171,52 @@ export default function MyInfo() {
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
-  const [imageDefault, setImageDefault] = useState("");
+  const [imageDefault, setImageDefault] = useState('');
 
   const [inputState, setInputState] = useState({
-    userId: "",
-    password: "",
-    name: "",
-    email: "",
-    phone: "",
-    nickname: "",
-    class: "",
-    birthday: "",
-    initDate: "",
-    generation: "",
-    studentId: "",
+    userId: '',
+    password: '',
+    name: '',
+    email: '',
+    phone: '',
+    nickname: '',
+    class: '',
+    birthday: '',
+    initDate: '',
+    generation: '',
+    studentId: '',
     stacks: [],
     stacks_get: [],
-    position: "",
-    link: "",
-    description: "",
-    image_id: "",
+    position: '',
+    link: '',
+    description: '',
+    image_id: '',
   });
 
   const positionOptions = [
-    { value: "", name: "선택해 주세요" },
-    { value: "frontend", name: "프론트엔드" },
-    { value: "backend", name: "백엔드" },
-    { value: "mobile", name: "모바일" },
-    { value: "embedded", name: "임베디드" },
+    { value: '', name: '선택해 주세요' },
+    { value: 'frontend', name: '프론트엔드' },
+    { value: 'backend', name: '백엔드' },
+    { value: 'mobile', name: '모바일' },
+    { value: 'embedded', name: '임베디드' },
   ];
 
   const classOptions = [
-    { value: "JAVA", name: "자바반" },
-    { value: "PYTHON", name: "파이썬반" },
-    { value: "MOBILE", name: "모바일반" },
-    { value: "EMBEDDED", name: "임베디드반" },
+    { value: 'JAVA', name: '자바반' },
+    { value: 'PYTHON', name: '파이썬반' },
+    { value: 'MOBILE', name: '모바일반' },
+    { value: 'EMBEDDED', name: '임베디드반' },
   ];
 
   const [nicknameInfo, setNicknameInfo] = useState({
-    nickname: sessionStorage.getItem("nickname"),
-    id: sessionStorage.getItem("userId"),
+    nickname: sessionStorage.getItem('nickname'),
+    id: sessionStorage.getItem('userId'),
   });
 
   const cookies = new Cookies();
-  const [cookie, setCookie] = useCookies(["userToken"]);
+  const [cookie, setCookie] = useCookies(['userToken']);
 
-  const [files, setFiles] = useState("");
+  const [files, setFiles] = useState('');
 
   const onImgChange = (event) => {
     const file = event.target.files[0];
@@ -226,10 +226,10 @@ export default function MyInfo() {
   const uploadRef = useRef(null);
 
   const changeHandle = (value, name) => {
-    if (name == "birthday") {
+    if (name == 'birthday') {
       inputState.birthday = value;
       userBirthday.value = value;
-      console.log("생일 " + JSON.stringify(inputState));
+      console.log('생일 ' + JSON.stringify(inputState));
     } else {
       if (name == null && value.length == 6) {
         inputState.birthday = value;
@@ -237,17 +237,17 @@ export default function MyInfo() {
         yy = Number(yy) > 25 ? 19 + yy : 20 + yy;
         let mm = inputState.birthday.slice(2, 4);
         let dd = inputState.birthday.slice(4, 6);
-        setUserBirthdayDate(yy + "-" + mm + "-" + dd);
-        userBirthday.initDate = yy + "-" + mm + "-" + dd;
-        userBirthday.value = yy + "-" + mm + "-" + dd;
-        if (yy == 22 && mm == "02") {
-          inputState.birthday = "";
-          userBirthday.initDate = "";
-          userBirthday.value = "";
+        setUserBirthdayDate(yy + '-' + mm + '-' + dd);
+        userBirthday.initDate = yy + '-' + mm + '-' + dd;
+        userBirthday.value = yy + '-' + mm + '-' + dd;
+        if (yy == 22 && mm == '02') {
+          inputState.birthday = '';
+          userBirthday.initDate = '';
+          userBirthday.value = '';
         }
       }
       inputState[name] = value;
-      console.log("스택 " + JSON.stringify(inputState));
+      console.log('스택 ' + JSON.stringify(inputState));
     }
   };
 
@@ -264,10 +264,10 @@ export default function MyInfo() {
   };
 
   const [userBirthday, setUserBirthday] = useState({
-    value: "",
-    initDate: "",
+    value: '',
+    initDate: '',
   });
-  const [userBirthdayDate, setUserBirthdayDate] = useState("");
+  const [userBirthdayDate, setUserBirthdayDate] = useState('');
 
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
@@ -277,7 +277,7 @@ export default function MyInfo() {
       if (res.statusCode == 200) {
       } else {
       }
-      console.log("getUserLoginTokenAPI 관련 결과" + JSON.stringify(res));
+      console.log('getUserLoginTokenAPI 관련 결과' + JSON.stringify(res));
       inputState.userId = res.userId;
       inputState.email = res.email;
       inputState.nickname = res.nickname;
@@ -286,7 +286,7 @@ export default function MyInfo() {
       const userId = res.userId;
       getUserInfoAPI(userId).then((res) => {
         if (res.statusCode == 200) {
-          console.log("내 정보 보기 결과: " + JSON.stringify(res));
+          console.log('내 정보 보기 결과: ' + JSON.stringify(res));
           inputState.name = res.user.name;
           const today = new Date();
           const todayYear = today.getFullYear().toString().slice(2);
@@ -300,16 +300,16 @@ export default function MyInfo() {
             year = Number(year) > 25 ? 19 + year : 20 + year;
             let month = inputState.birthday.slice(2, 4);
             let day = inputState.birthday.slice(4, 6);
-            setUserBirthdayDate(year + "-" + month + "-" + day);
+            setUserBirthdayDate(year + '-' + month + '-' + day);
             // console.log(userBirthdayDate);
-            userBirthday.initDate = year + "-" + month + "-" + day;
-            userBirthday.value = year + "-" + month + "-" + day;
-            if (year == "22" && month == "02") {
-              userBirthday.value = "";
-              inputState.birthday = "";
+            userBirthday.initDate = year + '-' + month + '-' + day;
+            userBirthday.value = year + '-' + month + '-' + day;
+            if (year == '22' && month == '02') {
+              userBirthday.value = '';
+              inputState.birthday = '';
             }
           }
-          if (res.user.phone !== "00000000000") {
+          if (res.user.phone !== '00000000000') {
             inputState.phone = res.user.phone;
           }
           inputState.class = res.user.userClass;
@@ -325,11 +325,11 @@ export default function MyInfo() {
 
           if (inputState.image_id == null) {
             if (inputState.generation == 7) {
-              setImageDefault("/images/profile_default_gen7.png");
+              setImageDefault('/images/profile_default_gen7.png');
             } else if (inputState.generation == 0) {
-              setImageDefault("/images/profile_default_gen0.png");
+              setImageDefault('/images/profile_default_gen0.png');
             } else {
-              setImageDefault("/images/profile_default_gen6.png");
+              setImageDefault('/images/profile_default_gen6.png');
             }
           }
 
@@ -356,47 +356,47 @@ export default function MyInfo() {
   const preview = () => {
     if (!files) return false;
 
-    const imgEl = document.querySelector("#img_box");
+    const imgEl = document.querySelector('#img_box');
     const reader = new FileReader();
 
     reader.onload = () =>
       (imgEl.style.backgroundImage = `url(${reader.result})`);
 
-    imgEl.innerText = "";
+    imgEl.innerText = '';
     reader.readAsDataURL(files);
   };
 
   const handleNicknameChange = (e) => {
     setNicknameInfo({
       nickname: e.target.value,
-      id: sessionStorage.getItem("userId"),
+      id: sessionStorage.getItem('userId'),
     });
   };
 
   function handleLinksChange(linkArr) {
     console.log(linkArr);
-    let linkList = "";
+    let linkList = '';
     const size = linkArr.length;
     for (let i = 0; i < size; i++) {
-      linkList = linkList + " " + linkArr[i];
+      linkList = linkList + ' ' + linkArr[i];
       console.log(linkArr[i]);
     }
     linkList = linkList.trim();
     inputState.link = linkList;
-    setLinks(linkList.split(" "));
+    setLinks(linkList.split(' '));
   }
 
   const positionHandleChange = (e) => {
     console.log(e.target.value);
     inputState.position = e.target.value;
-    console.log("inputState" + JSON.stringify(inputState));
+    console.log('inputState' + JSON.stringify(inputState));
     console.log(inputState);
   };
 
   const [checkedNickname, setCheckedNickname] = useState(true);
   const [changeNickname, setChangeNickname] = useState(false);
   const handleUserNicknameClick = (e) => {
-    alert("닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다");
+    alert('닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다');
     setCheckedNickname(false);
     setChangeNickname(true);
     setNicknameChange(true);
@@ -406,12 +406,12 @@ export default function MyInfo() {
     // 닉네임 바꿀 수 있는지 확인
     if (nicknameChange) {
       let isNormal = true;
-      let msg = "";
-      if (nicknameInfo.nickname == "") {
-        msg = "닉네임을 입력해주세요";
+      let msg = '';
+      if (nicknameInfo.nickname == '') {
+        msg = '닉네임을 입력해주세요';
         isNormal = false;
-      } else if (nicknameInfo.nickname == sessionStorage.getItem("nickname")) {
-        msg = "현재 닉네임과 동일합니다";
+      } else if (nicknameInfo.nickname == sessionStorage.getItem('nickname')) {
+        msg = '현재 닉네임과 동일합니다';
         isNormal = false;
       }
       if (!isNormal) {
@@ -424,7 +424,7 @@ export default function MyInfo() {
         updateNicknameAPI(nicknameInfo).then((res) => {
           if (res.statusCode == 200) {
             setCheckPassword(true);
-            alert("멋진 닉네임이네요~^^ 변경 가능합니다");
+            alert('멋진 닉네임이네요~^^ 변경 가능합니다');
             setNicknameChange(false);
             setChangeNickname(false);
             setCheckedNickname(true);
@@ -460,12 +460,12 @@ export default function MyInfo() {
     setOpen(true);
   };
   const handleClose = (event, reason) => {
-    if (reason && reason == "backdropClick") return;
+    if (reason && reason == 'backdropClick') return;
     setOpen(false);
   };
   const [loginInfo, setLoginInfo] = useState({
     email: inputState.email,
-    password: "",
+    password: '',
   });
   const handlePasswordChange = (e) => {
     loginInfo.email = inputState.email;
@@ -480,14 +480,14 @@ export default function MyInfo() {
 
     if (changeNickname) {
       isNormal = false;
-      alert("닉네임 중복 체크를 완료해 주세요.");
+      alert('닉네임 중복 체크를 완료해 주세요.');
     } else if (
       inputState.phone != null &&
       inputState.phone.length > 0 &&
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert("전화번호 양식을 확인해 주세요.");
+      alert('전화번호 양식을 확인해 주세요.');
     } else if (
       inputState.link != null &&
       inputState.link.length >= 1 &&
@@ -495,7 +495,7 @@ export default function MyInfo() {
     ) {
       isNormal = false;
       // console.log(links.length);
-      alert("링크 양식을 확인해 주세요.");
+      alert('링크 양식을 확인해 주세요.');
     }
 
     if (isNormal) {
@@ -513,10 +513,10 @@ export default function MyInfo() {
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert("전화번호 양식을 확인해 주세요.");
+      alert('전화번호 양식을 확인해 주세요.');
     } else if (changeNickname) {
       isNormal = false;
-      alert("닉네임 중복 체크를 완료해 주세요.");
+      alert('닉네임 중복 체크를 완료해 주세요.');
     }
 
     if (isNormal) {
@@ -529,8 +529,8 @@ export default function MyInfo() {
         Python: inputState.Python,
         Java: inputState.Java,
         C: inputState.C,
-        "C++": inputState.C2,
-        "C#": inputState.C3,
+        'C++': inputState.C2,
+        'C#': inputState.C3,
         SpringBoot: inputState.SpringBoot,
         MySQL: inputState.MySQL,
         Git: inputState.Git,
@@ -554,58 +554,58 @@ export default function MyInfo() {
       inputState.stacks_get = stacksArr;
 
       loginAPI(loginInfo).then((res) => {
-        console.log(loginInfo.email + " " + loginInfo.password);
+        console.log(loginInfo.email + ' ' + loginInfo.password);
         if (res.statusCode == 200) {
           // console.log("로그인 성공");
           inputState.password = loginInfo.password;
 
           const formData = new FormData();
 
-          console.log("inputState" + JSON.stringify(inputState));
+          console.log('inputState' + JSON.stringify(inputState));
           console.log(inputState);
 
           Object.keys(inputState).map((key) => {
             let value = inputState[key];
-            if (key === "stacks") {
-              formData.append(key, "[" + JSON.stringify(value) + "]");
+            if (key === 'stacks') {
+              formData.append(key, '[' + JSON.stringify(value) + ']');
               // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
-            } else if (key === "birthday") {
+            } else if (key === 'birthday') {
               if (
-                inputState.birthday.slice(0, 2) == "22" &&
-                inputState.birthday.slice(2, 4) == "02"
+                inputState.birthday.slice(0, 2) == '22' &&
+                inputState.birthday.slice(2, 4) == '02'
               ) {
               } else {
                 formData.append(key, inputState.birthday);
               }
-            } else if (key === "phone") {
-              if (inputState.phone == null || inputState.phone == "") {
+            } else if (key === 'phone') {
+              if (inputState.phone == null || inputState.phone == '') {
               } else {
                 formData.append(key, inputState.phone);
               }
             } else {
               formData.append(key, value);
-              console.log(key + " " + value);
+              console.log(key + ' ' + value);
             }
           });
 
-          formData.append("file", files);
+          formData.append('file', files);
 
           for (let key of formData.entries()) {
-            console.log("key", `${key}`);
+            console.log('key', `${key}`);
           }
 
           updateUserAPI(formData).then((res) => {
             console.log(res);
             console.log(JSON.stringify(res));
             if (res.statusCode == 200) {
-              if (sessionStorage.getItem("nickname") != inputState.nickname) {
+              if (sessionStorage.getItem('nickname') != inputState.nickname) {
                 // 닉네임 변경시 상단바 변경도 필요하기 때문
-                sessionStorage.setItem("nickname", inputState.nickname);
+                sessionStorage.setItem('nickname', inputState.nickname);
                 forceReload();
               }
               setNicknameChange(false);
             } else {
-              alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
+              alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
             }
           });
 
@@ -628,22 +628,22 @@ export default function MyInfo() {
   };
 
   const handleQuitClick = (event) => {
-    const userId = sessionStorage.getItem("userId");
-    if (window.confirm("탈퇴하시겠습니까?")) {
+    const userId = sessionStorage.getItem('userId');
+    if (window.confirm('탈퇴하시겠습니까?')) {
       deleteUserAPI(userId).then((res) => {
         if (res.statusCode == 200) {
           // 탈퇴 성공 시
-          alert("다음에는 오프라인에서 함께 코딩해요!");
+          alert('다음에는 오프라인에서 함께 코딩해요!');
           sessionStorage.clear();
-          cookies.set("userToken", "");
-          cookies.set("userEmail", "");
+          cookies.set('userToken', '');
+          cookies.set('userEmail', '');
           // 페이지 이동
           window.history.forward();
-          document.location.href = "/";
+          document.location.href = '/';
         } else alert(`${res.message}`);
       });
     } else {
-      alert("좋아요! 싸피사만코와 오래오래 코딩해요!");
+      alert('좋아요! 싸피사만코와 오래오래 코딩해요!');
     }
   };
 
@@ -660,7 +660,7 @@ export default function MyInfo() {
                     <>
                       <Button
                         variant="outlined"
-                        sx={{ float: "right" }}
+                        sx={{ float: 'right' }}
                         onClick={handleUpdateFinishClick}
                       >
                         수정완료
@@ -668,7 +668,7 @@ export default function MyInfo() {
                       <Button
                         variant="outlined"
                         color="error"
-                        sx={{ float: "right", marginRight: 1 }}
+                        sx={{ float: 'right', marginRight: 1 }}
                         onClick={handleResetClick}
                       >
                         수정취소
@@ -677,7 +677,7 @@ export default function MyInfo() {
                   ) : (
                     <Button
                       variant="outlined"
-                      sx={{ float: "right" }}
+                      sx={{ float: 'right' }}
                       onClick={handleUpdateClick}
                     >
                       수정하기
@@ -710,7 +710,7 @@ export default function MyInfo() {
                 <Divider light sx={{ marginTop: 1.5, marginBottom: 1 }} />
                 <div>
                   <DetailWrapper maxWidth="sm">
-                    <CardContent sx={{ width: "60%", marginRight: 5 }}>
+                    <CardContent sx={{ width: '60%', marginRight: 5 }}>
                       {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
@@ -718,7 +718,7 @@ export default function MyInfo() {
                     </Box> */}
                       <Box
                         className="ssafyInfo"
-                        sx={{ width: "100%", fontSize: "18px", mb: 1 }}
+                        sx={{ width: '100%', fontSize: '18px', mb: 1 }}
                       >
                         싸피&nbsp;
                         <label>{inputState.generation}기&nbsp;</label>
@@ -760,7 +760,7 @@ export default function MyInfo() {
                             inputProps={{
                               style: {
                                 height: 35,
-                                padding: "0 14px",
+                                padding: '0 14px',
                               },
                             }}
                           />
@@ -775,7 +775,7 @@ export default function MyInfo() {
                           <>
                             <input
                               id="nickname"
-                              value={nicknameInfo.nickname || ""}
+                              value={nicknameInfo.nickname || ''}
                               disabled={
                                 onlyView ? true : changeNickname ? false : true
                               }
@@ -790,7 +790,7 @@ export default function MyInfo() {
                           <>
                             <OutlinedInput
                               id="nickname"
-                              value={nicknameInfo.nickname || ""}
+                              value={nicknameInfo.nickname || ''}
                               disabled={
                                 onlyView ? true : changeNickname ? false : true
                               }
@@ -807,7 +807,7 @@ export default function MyInfo() {
                                       <Button
                                         variant="outlined"
                                         onClick={handleNicknameClick}
-                                        sx={{ width: "100px" }}
+                                        sx={{ width: '100px' }}
                                       >
                                         중복 확인하기
                                       </Button>
@@ -815,7 +815,7 @@ export default function MyInfo() {
                                       <Button
                                         variant="outlined"
                                         onClick={handleUserNicknameClick}
-                                        sx={{ width: "100px" }}
+                                        sx={{ width: '100px' }}
                                       >
                                         닉네임 변경하기
                                       </Button>
@@ -838,9 +838,9 @@ export default function MyInfo() {
                           <input
                             value={
                               userBirthday.value.length == 10 &&
-                              userBirthday.value.slice(2, 4) != "22"
+                              userBirthday.value.slice(2, 4) != '22'
                                 ? userBirthday.value
-                                : ""
+                                : ''
                             }
                             // value={inputState.birthday}
                             disabled
@@ -850,7 +850,7 @@ export default function MyInfo() {
                           <LocalizationProvider dateAdapter={DateAdapter}>
                             <DatePickerWrapper>
                               <DatePickerUser
-                                value={userBirthday || ""}
+                                value={userBirthday || ''}
                                 label=""
                                 changeHandle={(e) => {
                                   changeHandle(e);
@@ -868,20 +868,20 @@ export default function MyInfo() {
                           <input
                             id="phone"
                             type="number"
-                            value={inputState.phone || ""}
+                            value={inputState.phone || ''}
                             disabled
                           />
                         ) : (
                           <TextField
                             id="phone"
                             type="number"
-                            placeholder={onlyView ? "" : "01012345678"}
-                            value={inputState.phone || ""}
+                            placeholder={onlyView ? '' : '01012345678'}
+                            value={inputState.phone || ''}
                             onChange={handleChange}
                             inputProps={{
                               style: {
                                 height: 35,
-                                padding: "0 14px",
+                                padding: '0 14px',
                               },
                             }}
                           />
@@ -903,15 +903,15 @@ export default function MyInfo() {
                               id="position"
                               disabled
                               value={
-                                inputState.position == ""
-                                  ? ""
+                                inputState.position == ''
+                                  ? ''
                                   : positionOptions
                                       .map((u, i) => {
                                         if (u.value == inputState.position) {
                                           return u.name;
                                         }
                                       })
-                                      .join("")
+                                      .join('')
                               }
                               //  value={inputState.position || ""}
                               // onChange={handleChange}
@@ -924,7 +924,7 @@ export default function MyInfo() {
                               positionHandleChange(e);
                               handleChange(e);
                             }}
-                            value={inputState.position || ""}
+                            value={inputState.position || ''}
                             sx={{ minWidth: 350, height: 35, fontSize: 13 }}
                           >
                             {positionOptions.map((u, i) => {
@@ -998,7 +998,7 @@ export default function MyInfo() {
                       fullWidth
                       rows={4}
                       multiline
-                      value={inputState.description || ""}
+                      value={inputState.description || ''}
                       disabled={onlyView ? true : false}
                       onChange={(e) => {
                         handleChange(e);
@@ -1015,7 +1015,7 @@ export default function MyInfo() {
                     ) : (
                       <TextField
                         id="link"
-                        value={inputState.link || ""}
+                        value={inputState.link || ''}
                         onChange={handleChange}
                         fullWidth
                       />
@@ -1054,7 +1054,7 @@ export default function MyInfo() {
                     <Button
                       variant="outlined"
                       color="error"
-                      sx={{ float: "right" }}
+                      sx={{ float: 'right' }}
                       onClick={handleQuitClick}
                     >
                       탈퇴하기

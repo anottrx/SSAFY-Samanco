@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { getUserLoginTokenAPI, loginAPI } from "../../pages/api/user";
-import Link from "next/link";
-import { useCookies } from "react-cookie";
-import FormControl, { useFormControl } from "@mui/material/FormControl";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import React, { useState, useEffect } from 'react';
+import { getUserLoginTokenAPI, loginAPI } from '../../pages/api/user';
+import Link from 'next/link';
+import { useCookies } from 'react-cookie';
+import FormControl, { useFormControl } from '@mui/material/FormControl';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Box,
   OutlinedInput,
@@ -14,16 +14,16 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
-} from "@mui/material";
+} from '@mui/material';
 
 export default function Login() {
   const [inputState, setInputState] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
     showPassword: false,
   });
 
-  const [cookies, setCookie] = useCookies(["userToken", "userEmail"]);
+  const [cookies, setCookie] = useCookies(['userToken', 'userEmail']);
   const [rememberId, setRememberId] = useState(false);
 
   const handleChange = (e) => {
@@ -35,7 +35,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (cookies.userEmail !== "") {
+    if (cookies.userEmail !== '') {
       setInputState({
         email: cookies.userEmail,
       });
@@ -60,14 +60,14 @@ export default function Login() {
     event.preventDefault();
 
     let isNormal = true;
-    let msg = "";
+    let msg = '';
 
     if (!inputState.email) {
       isNormal = false;
-      msg = "이메일을 입력해주세요.";
+      msg = '이메일을 입력해주세요.';
     } else if (!inputState.password) {
       isNormal = false;
-      msg = "비밀번호를 입력해주세요.";
+      msg = '비밀번호를 입력해주세요.';
     }
 
     if (isNormal) {
@@ -76,31 +76,31 @@ export default function Login() {
         switch (res.statusCode) {
           case 200: // 로그인 성공
             // alert(`로그인 성공: ${res.accessToken}`);
-            setCookie("userToken", res.accessToken); // 쿠키 설정
-            if (res.accessToken != null && res.accessToken != "") {
+            setCookie('userToken', res.accessToken); // 쿠키 설정
+            if (res.accessToken != null && res.accessToken != '') {
               const token = res.accessToken;
               getUserLoginTokenAPI(token).then((res1) => {
                 console.log(res1);
                 // alert();
-                sessionStorage.setItem("userId", res1.userId);
-                sessionStorage.setItem("email", inputState.email);
-                sessionStorage.setItem("nickname", res1.nickname);
+                sessionStorage.setItem('userId', res1.userId);
+                sessionStorage.setItem('email', inputState.email);
+                sessionStorage.setItem('nickname', res1.nickname);
 
                 window.history.forward();
-                window.location.replace("/");
+                window.location.replace('/');
               });
             }
             if (rememberId) {
-              setCookie("userEmail", inputState.email);
+              setCookie('userEmail', inputState.email);
             } else {
-              setCookie("userEmail", "");
+              setCookie('userEmail', '');
             }
             break;
           case 401: // 비밀번호 틀림
-            alert("비밀번호를 확인해주세요.");
+            alert('비밀번호를 확인해주세요.');
             break;
           case 404: // 유저 정보 X
-            alert("회원 정보가 존재하지 않습니다.");
+            alert('회원 정보가 존재하지 않습니다.');
             break;
           default:
             alert(
@@ -125,7 +125,7 @@ export default function Login() {
         alignItems="center"
         minHeight="70vh"
         onSubmit={handleSubmit}
-        sx={{ flexDirection: "column" }}
+        sx={{ flexDirection: 'column' }}
       >
         <h1>로그인</h1>
         <br />
@@ -133,7 +133,7 @@ export default function Login() {
           <OutlinedInput
             id="email"
             placeholder="이메일"
-            value={inputState.email || ""}
+            value={inputState.email || ''}
             onChange={handleChange}
             sx={{ fontSize: 14 }}
           />
@@ -142,8 +142,8 @@ export default function Login() {
           <OutlinedInput
             id="password"
             placeholder="비밀번호"
-            type={inputState.showPassword ? "text" : "password"}
-            value={inputState.password || ""}
+            type={inputState.showPassword ? 'text' : 'password'}
+            value={inputState.password || ''}
             onChange={handleChange}
             sx={{ fontSize: 14 }}
             endAdornment={
@@ -176,7 +176,7 @@ export default function Login() {
         >
           로그인
         </Button>
-        <div sx={{ flexDirection: "row" }}>
+        <div sx={{ flexDirection: 'row' }}>
           <Typography
             variant="h6"
             display="inline"

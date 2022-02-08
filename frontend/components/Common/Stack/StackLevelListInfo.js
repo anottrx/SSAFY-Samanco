@@ -1,36 +1,34 @@
-import StackItem from "./item"
+import StackItem from './item';
 import Rating from '@mui/material/Rating';
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 
-function StackLevelListInfo({items}) {
-    const StackWrapper = styled.div`
-        margin: 10px 0px;
-    `
+function StackLevelListInfo({ items }) {
+  const StackWrapper = styled.div`
+    margin: 10px 0px;
+  `;
 
-    const ItemWrapper = styled.span`
-        display: inline-block;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        align-items: center;
-        & .star{
-            margin: 0px 10px 0px 0px;
-        }
-    `
-    
-    return (
-        <StackWrapper>
-        {
-            items.map((item, index) => {
-                return (
-                    <ItemWrapper key={index}>
-                        <StackItem title={item.name}></StackItem>
-                        <Rating className="star" value={item.grade} max={3} readOnly/>
-                    </ItemWrapper>
-                )
-            })
-        }
-        </StackWrapper>
-    )
+  const ItemWrapper = styled.span`
+    display: inline-block;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    & .star {
+      margin: 0px 10px 0px 0px;
+    }
+  `;
+
+  return (
+    <StackWrapper>
+      {items.map((item, index) => {
+        return (
+          <ItemWrapper key={index}>
+            <StackItem title={item.name}></StackItem>
+            <Rating className="star" value={item.grade} max={3} readOnly />
+          </ItemWrapper>
+        );
+      })}
+    </StackWrapper>
+  );
 }
 
 export default StackLevelListInfo;
