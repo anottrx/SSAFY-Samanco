@@ -112,7 +112,7 @@ export default function Carousel(props) {
     }
   }, []);
 
-  return clubData ? (
+  return clubData && clubData.length > 0 ? (
     <CarouselWrapper>
       <h2>{props.label}</h2>
       <Slider {...settings}>
