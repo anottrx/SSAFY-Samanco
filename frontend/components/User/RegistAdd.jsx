@@ -35,7 +35,6 @@ export default function RegistInfo() {
     // 이미 입력된 값들
     email: "",
     userId: "",
-    email: "",
     nickname: "",
     name: "",
     class: "",
@@ -96,11 +95,13 @@ export default function RegistInfo() {
       sessionStorage.getItem("keep") == ""
     ) {
       alert("잘못된 접근입니다");
+      sessionStorage.clear();
       // 페이지 이동
       window.history.forward();
       window.location.replace("/");
     }
 
+    inputState.email = sessionStorage.getItem("userId");
     inputState.userId = sessionStorage.getItem("userId");
     inputState.nickname = sessionStorage.getItem("nickname");
     inputState.name = sessionStorage.getItem("name");
@@ -177,6 +178,8 @@ export default function RegistInfo() {
 
   const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
   const koreanReg = /[ㄱ-ㅎㅏ-ㅣ가-힇ㆍ ᆢ]/g;
+  const urlReg =
+    /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
 
   const [birthdayDate, setBirthdayDate] = useState("");
 
@@ -199,6 +202,23 @@ export default function RegistInfo() {
     let isNormal = true;
     let msg = "";
 
+    if (
+      inputState.phone != null &&
+      inputState.phone.length > 0 &&
+      !phoneReg.test(inputState.phone)
+    ) {
+      isNormal = false;
+      alert("전화번호 양식을 확인해 주세요.");
+    } else if (
+      inputState.link != null &&
+      inputState.link.length >= 1 &&
+      !urlReg.test(inputState.link)
+    ) {
+      isNormal = false;
+      // console.log(links.length);
+      alert("링크 양식을 확인해 주세요.");
+    }
+
     inputState.stacks = {
       HTML: inputState.HTML,
       CSS: inputState.CSS,
@@ -219,6 +239,7 @@ export default function RegistInfo() {
       Jira: inputState.Jira,
       Django: inputState.Django,
       Redis: inputState.Redis,
+      Kotlin: inputState.Kotlin,
     };
     Object.keys(inputState.stacks).forEach(function (key) {
       if (inputState.stacks[key] === 0) {
@@ -231,15 +252,20 @@ export default function RegistInfo() {
       // console.log("inputState" + JSON.stringify(inputState));
       // console.log(inputState);
 
-      if (inputState.phone == "") {
-        inputState.phone = "00000000000";
-      }
+      // if (inputState.phone == "") {
+      //   inputState.phone = "00000000000";
+      // }
 
       Object.keys(inputState).map((key) => {
         let value = inputState[key];
         if (key === "stacks") {
           formData.append(key, "[" + JSON.stringify(value) + "]");
           // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
+        } else if (key === "phone") {
+          if (inputState.phone == null || inputState.phone == "") {
+          } else {
+            formData.append(key, inputState.phone);
+          }
         } else {
           formData.append(key, value);
           // console.log(key + " " + value);
@@ -400,9 +426,16 @@ export default function RegistInfo() {
           {/* 링크 */}
           <div className="mb-6">
             <Typography display="inline" sx={{ fontSize: 14 }}>
-              링크 <i style={{ fontSize: "10px" }}>입력 후 엔터를 눌러주세요</i>
+              링크
+              {/* <i style={{ fontSize: "10px" }}>입력 후 엔터를 눌러주세요</i> */}
             </Typography>
-            <Autocomplete
+            <TextField
+              id="link"
+              value={inputState.link || ""}
+              onChange={handleChange}
+              fullWidth
+            />
+            {/* <Autocomplete
               multiple
               freeSolo
               // options={links}
@@ -412,7 +445,7 @@ export default function RegistInfo() {
               onChange={(e, option, reason) => {
                 handleLinksChange(option);
               }}
-            />
+            /> */}
           </div>
           {/* 자기소개 */}
           <div className="mb-6">
