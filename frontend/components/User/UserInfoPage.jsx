@@ -33,7 +33,7 @@ import {
   Container,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import StackLevelList from "../Common/Stack/StackLevelList";
+import StackLevelListInfo from "../Common/Stack/StackLevelListInfo";
 import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
@@ -57,7 +57,7 @@ const CusCard = styled(Card)`
   // margin-top: 10px;
   padding: 10px;
 
-  display: flex;
+  // display: flex;
   margin: 10px 0px;
   align-items: center;
 
@@ -108,8 +108,8 @@ const DetailWrapper = styled.div`
 
   & > div {
     // display: flex;
-    margin-left: auto;
-    float: right;
+    // margin-left: auto;
+    // float: right;
   }
 
   & div > p {
@@ -155,14 +155,14 @@ const RowUpWrapper = styled.div`
   // grid-template-columns: max-content max-content;
   grid-template-columns: 60px 12fr;
   grid-gap: 8px;
-  padding: 1px 0px;
+  padding: 2px 0px;
 `;
 const RowWrapper = styled.div`
   display: grid;
   // grid-template-columns: max-content max-content;
   grid-template-columns: 60px 12fr;
   grid-gap: 8px;
-  padding: 1px 0px;
+  padding: 2px 0px;
 `;
 
 export default function UserInfoPage() {
@@ -515,6 +515,7 @@ export default function UserInfoPage() {
         Jira: inputState.Jira,
         Django: inputState.Django,
         Redis: inputState.Redis,
+        Kotlin: inputState.Kotlin,
       };
       Object.keys(inputState.stacks).forEach(function (key) {
         if (inputState.stacks[key] == 0 || inputState.stacks[key] == null) {
@@ -599,11 +600,11 @@ export default function UserInfoPage() {
 
   const handleQuitClick = (event) => {
     const userId = sessionStorage.getItem("userInfo");
-    if (window.confirm("탈퇴하시겠습니까?")) {
+    if (window.confirm("탈퇴하시겠습니까? 확인 버튼을 누르면 즉시 탈퇴됩니다")) {
       deleteUserAPI(userId).then((res) => {
         if (res.statusCode == 200) {
           // 탈퇴 성공 시
-          alert("탈퇴되었습니다");
+          alert("탈퇴시켰습니다");
           // sessionStorage.clear();
           sessionStorage.setItem("userInfo", "");
           // cookies.set("userToken", "");
@@ -680,7 +681,7 @@ export default function UserInfoPage() {
                 <Divider light sx={{ marginTop: 1.5, marginBottom: 1 }} />
                 <div>
                   <DetailWrapper maxWidth="sm">
-                    <CardContent>
+                    <CardContent sx={{ width: "60%", marginRight: 5 }}>
                       {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
@@ -918,7 +919,7 @@ export default function UserInfoPage() {
                     <label>기술 스택</label>
                     <StackLevelInfoDialog />
                     {onlyView && inputState.stacks_get != null ? (
-                      <StackLevelList items={inputState.stacks_get} />
+                      <StackLevelListInfo items={inputState.stacks_get} />
                     ) : (
                       <StackLevelSelectRegister
                         values={(inputState.stacks, inputState.stacks_get)}

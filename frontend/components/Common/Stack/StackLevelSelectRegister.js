@@ -34,6 +34,7 @@ const stack = [
   { name: "Jira", level: 1 },
   { name: "Django", level: 1 },
   { name: "Redis", level: 1 },
+  { name: "Kotlin", level: 1 },
 ];
 
 function StackLevelSelectRegister(props) {
@@ -104,7 +105,8 @@ function StackLevelSelectRegister(props) {
       Jira,
       Django,
       Redis,
-    ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      Kotlin,
+    ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     stacks.map((stack) => {
       switch (stack.name) {
         case "HTML":
@@ -188,6 +190,10 @@ function StackLevelSelectRegister(props) {
           Redis = stack.level;
           props.changeHandle(parseInt(Redis), "Redis");
           break;
+        case "Kotlin":
+          Kotlin = stack.level;
+          props.changeHandle(parseInt(Kotlin), "Kotlin");
+          break;
         default:
           break;
       }
@@ -213,6 +219,7 @@ function StackLevelSelectRegister(props) {
     if (Jira == 0) props.changeHandle(0, "Jira");
     if (Django == 0) props.changeHandle(0, "Django");
     if (Redis == 0) props.changeHandle(0, "Redis");
+    if (Kotlin == 0) props.changeHandle(0, "Kotlin");
 
     // if (!CSS) props.changeHandle(0, "CSSLevel");
     // if (!JavaScript) props.changeHandle(0, "JavaScriptLevel");
