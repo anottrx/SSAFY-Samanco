@@ -21,6 +21,7 @@ import {
   DialogActions,
   DialogContent,
   TextField,
+  Tooltip,
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
@@ -44,6 +45,8 @@ import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 
 // import { OpenVidu } from 'openvidu-browser';
 import UserVideo from './UserVideo';
+
+var _ = require('lodash');
 
 function ItemList() {
   //-------------- redux dispatch로 값 저장, selector로 불러오기
@@ -234,7 +237,7 @@ export function Item(props) {
 
 function JoinDialog(props) {
   let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
-  const [publisher, setPublisher] = useState(undefined);
+  const [publisher, setPublisher] = useState(null);
 
   // userStatus : 카메라, 오디오 설정 -> 배열 안에 값이 있으면 ON 상태, 없으면 OFF 상태
   const [userStatus, setUserStatus] = useState(['camera', 'audio']);
@@ -249,32 +252,51 @@ function JoinDialog(props) {
     border: 1px solid gray;
   `;
 
+  let openViduModule, OV, devices, videoDevices;
+
   useEffect(() => {
-    console.log(userStatus);
+    if (publisher) {
+      let newPublisher = _.cloneDeep(publisher);
+      newPublisher.properties = {
+        ...publisher.properties,
+        publishAudio: userStatus.includes('audio'),
+        publishVideo: userStatus.includes('camera'),
+      };
+
+      console.log(
+        'new [audio]:',
+        newPublisher.properties.publishAudio +
+          ' / [video]:' +
+          newPublisher.properties.publishVideo
+      );
+      setPublisher(newPublisher);
+    }
   }, [userStatus]);
+
+  let commonSetting = {
+    audioSource: undefined, // 오디오 출처 : 디폴트값 - 마이크
+    resolution: '320x240', // 비디오 사이즈
+    frameRate: 30, // 비디오 프레임
+    insertMode: 'APPEND', // 비디오가 'video-container' 타겟 요소에 어떻게 삽입될 지 결정
+    mirror: false, // 비디오 좌우반전할지 말지 (true: 반전)
+  };
 
   useEffect(() => {
     (async function init() {
       // eslint-disable-next-line
-      let openViduModule = await import('openvidu-browser');
-      let OV = new openViduModule.OpenVidu();
-      let devices = await OV.getDevices();
-      let videoDevices = devices.filter(
-        (device) => device.kind == 'videoinput'
-      );
-      console.log(videoDevices[0].deviceId);
+      console.log('---------------------init');
+      openViduModule = await import('openvidu-browser');
+      OV = new openViduModule.OpenVidu();
+      devices = await OV.getDevices();
+      videoDevices = devices.filter((device) => device.kind == 'videoinput');
 
       if (videoDevices.length > 0) {
         setPublisher(
           OV.initPublisher(undefined, {
-            audioSource: undefined, // 오디오 출처 : 디폴트값 - 마이크
+            ...commonSetting,
             videoSource: videoDevices[0].deviceId, // 비디오 출처 : 디폴트값 - 웹캠
             publishAudio: true, // 방에 들어갔을 때 오디오를 mute할지, 그렇지 않을지 결정 (true: ON)
             publishVideo: true, // 방에 들어갔을 때 비디오를 킬 지, 끌 지 결정 (true: ON)
-            resolution: '320x240', // 비디오 사이즈
-            frameRate: 30, // 비디오 프레임
-            insertMode: 'APPEND', // 비디오가 'video-container' 타겟 요소에 어떻게 삽입될 지 결정
-            mirror: false, // 비디오 좌우반전할지 말지 (true: 반전)
           })
         );
       }
@@ -286,7 +308,7 @@ function JoinDialog(props) {
       <DialogTitle>{`[${room.title}]\n방에 입장하시겠습니까?`}</DialogTitle>
       <DialogContent>
         <div id="video-container" className="col-md-6">
-          {publisher !== undefined ? (
+          {userStatus.includes('camera') && publisher !== undefined ? (
             <div className="stream-container col-md-6 col-xs-6">
               <UserVideo
                 streamManager={publisher}
@@ -296,7 +318,7 @@ function JoinDialog(props) {
           ) : (
             <>
               <NoVideo />
-              <span>{sessionStorage.getItem('nickname')}</span>
+              <p>{sessionStorage.getItem('nickname')}</p>
             </>
           )}
         </div>
@@ -306,7 +328,6 @@ function JoinDialog(props) {
           aria-label="user status formatting"
           style={{ marginTop: '10px' }}
         >
-          {/* VideocamIcon VideocamOffOutlinedIcon MicIcon MicOffOutlinedIcon */}
           <ToggleButton value="camera" aria-label="camera">
             {userStatus.includes('camera') ? (
               <VideocamIcon />
@@ -325,29 +346,39 @@ function JoinDialog(props) {
       </DialogContent>
       <DialogActions>
         <Button onClick={joinDialogClose}>취소</Button>
-        <Button
-          onClick={
-            // 비밀방인지 여부 확인
-            room.isPrivate
-              ? () => {
-                  joinDialogClose();
-                  pwDialogOpen();
-                }
-              : () => {
-                  // Router.push("/meeting/"+room.no);
-                  setDetail({ datail: room });
-                  joinDialogClose();
-                  //   window.open(
-                  //     '/meeting/' + room.no,
-                  //     '_blank',
-                  //     'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
-                  //   );
-                }
-          }
-          autoFocus
-        >
-          확인
-        </Button>
+        {userStatus.length > 0 ? (
+          <Button
+            onClick={
+              // 비밀방인지 여부 확인
+              room.isPrivate
+                ? () => {
+                    joinDialogClose();
+                    pwDialogOpen();
+                  }
+                : () => {
+                    console.log(JSON.stringify(publisher.properties));
+                    // Router.push("/meeting/"+room.no);
+                    setDetail({ datail: room });
+                    joinDialogClose();
+                    //   window.open(
+                    //     '/meeting/' + room.no,
+                    //     '_blank',
+                    //     'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
+                    //   );
+                  }
+            }
+            autoFocus
+          >
+            확인
+          </Button>
+        ) : (
+          <Tooltip
+            title="방에 입장하기 위해선 마이크나 카메라를 켜야해요."
+            placement="top"
+          >
+            <Button>앗</Button>
+          </Tooltip>
+        )}
       </DialogActions>
     </Dialog>
   );
