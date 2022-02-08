@@ -327,6 +327,7 @@ export default function UserInfoPage() {
         // inputState.file = res.user.file;
         setLoading(true);
       } else {
+        //
       }
     });
   }
@@ -418,6 +419,7 @@ export default function UserInfoPage() {
         });
       }
     } else {
+      //
     }
   };
 

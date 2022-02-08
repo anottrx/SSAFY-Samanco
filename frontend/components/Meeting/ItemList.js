@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback, useLayoutEffect } from "react";
+import { useState, useRef, useCallback, useLayoutEffect } from 'react';
 
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 import {
   Grid,
   Skeleton,
@@ -15,20 +15,20 @@ import {
   DialogActions,
   DialogContent,
   TextField,
-} from "@mui/material";
+} from '@mui/material';
 
-import meetingJSONData from "../../data/meetingData.json";
-import Router from "next/router";
+import meetingJSONData from '../../data/meetingData.json';
+import Router from 'next/router';
 
-import { useSelector, useDispatch } from "react-redux";
-import * as meetingActions from "../../store/module/meeting";
+import { useSelector, useDispatch } from 'react-redux';
+import * as meetingActions from '../../store/module/meeting';
 
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
-import PersonIcon from "@mui/icons-material/Person";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import LockIcon from "@mui/icons-material/Lock";
+import PersonIcon from '@mui/icons-material/Person';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LockIcon from '@mui/icons-material/Lock';
 
 function ItemList() {
   //-------------- redux dispatch로 값 저장, selector로 불러오기
@@ -56,10 +56,10 @@ function ItemList() {
   // 미디어 쿼리에 따라 화면에 보여지는 그리드 수 변경
   const theme = useTheme();
 
-  const xsMaches = useMediaQuery(theme.breakpoints.up("xs"));
-  const smMatches = useMediaQuery(theme.breakpoints.up("sm"));
-  const mdMatches = useMediaQuery(theme.breakpoints.up("md"));
-  const lgMatches = useMediaQuery(theme.breakpoints.up("lg"));
+  const xsMaches = useMediaQuery(theme.breakpoints.up('xs'));
+  const smMatches = useMediaQuery(theme.breakpoints.up('sm'));
+  const mdMatches = useMediaQuery(theme.breakpoints.up('md'));
+  const lgMatches = useMediaQuery(theme.breakpoints.up('lg'));
 
   let purPage = useRef(1);
   let allPage = parseInt(meetingData.length / purPage.current);
@@ -204,9 +204,9 @@ export function Item(props) {
           >
             {data.isPrivate ? <LockIcon /> : null} {data.title}
           </Typography>
-          <div>{data.isPrivate ? "-" : data.host}</div>
+          <div>{data.isPrivate ? '-' : data.host}</div>
           <div>
-            <AccessTimeIcon style={{ marginRight: "5px" }} />
+            <AccessTimeIcon style={{ marginRight: '5px' }} />
             {data.startTime}분 / {data.timeLimit}분
           </div>
         </CardContent>
@@ -234,9 +234,9 @@ function JoinDialog(props) {
                   // Router.push("/meeting/"+room.no);
                   joinDialogClose();
                   window.open(
-                    "/meeting/" + room.no,
-                    "_blank",
-                    "toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800"
+                    '/meeting/' + room.no,
+                    '_blank',
+                    'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
                   );
                 }
           }
@@ -251,7 +251,7 @@ function JoinDialog(props) {
 
 function PwDialog(props) {
   let { open, pwDialogClose, room } = props;
-  let [pw, setPw] = useState("");
+  let [pw, setPw] = useState('');
   const pwChangeHandle = (e) => {
     setPw(e.target.value);
   };
@@ -267,18 +267,18 @@ function PwDialog(props) {
           onClick={
             // 일치하면 입장
             // To Do : 나중에 방 비밀번호로 변경
-            pw === "1234"
+            pw === '1234'
               ? () => {
                   // Router.push("/meeting/"+room.no);
                   pwDialogClose();
                   window.open(
-                    "/meeting/" + room.no,
-                    "_blank",
-                    "toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800"
+                    '/meeting/' + room.no,
+                    '_blank',
+                    'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
                   );
                 }
               : () => {
-                  alert("비밀번호를 확인해주세요.");
+                  alert('비밀번호를 확인해주세요.');
                 }
           }
           autoFocus

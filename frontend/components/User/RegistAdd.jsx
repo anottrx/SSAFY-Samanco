@@ -263,6 +263,7 @@ export default function RegistInfo() {
           // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
         } else if (key === 'phone') {
           if (inputState.phone == null || inputState.phone == '') {
+            //
           } else {
             formData.append(key, inputState.phone);
           }

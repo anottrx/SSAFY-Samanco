@@ -275,7 +275,9 @@ export default function MyInfo() {
 
     getUserLoginTokenAPI(token).then((res) => {
       if (res.statusCode == 200) {
+        //
       } else {
+        //
       }
       console.log('getUserLoginTokenAPI 관련 결과' + JSON.stringify(res));
       inputState.userId = res.userId;
@@ -343,6 +345,7 @@ export default function MyInfo() {
           // inputState.file = res.user.file;
           setLoading(true);
         } else {
+          //
         }
       });
     });
@@ -434,6 +437,7 @@ export default function MyInfo() {
         });
       }
     } else {
+      //
     }
   };
 
@@ -574,11 +578,13 @@ export default function MyInfo() {
                 inputState.birthday.slice(0, 2) == '22' &&
                 inputState.birthday.slice(2, 4) == '02'
               ) {
+                //
               } else {
                 formData.append(key, inputState.birthday);
               }
             } else if (key === 'phone') {
               if (inputState.phone == null || inputState.phone == '') {
+                //
               } else {
                 formData.append(key, inputState.phone);
               }

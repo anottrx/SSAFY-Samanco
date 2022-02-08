@@ -309,7 +309,7 @@ const StudyDetail = () => {
                   // 방장이 아닐 때
                   quitStudy({
                     userId: sessionStorage.getItem('userId'),
-                    studyId: clubData.id,
+                    studyId: detail.id,
                   }).then((res) => {
                     if (res.statusCode === 200) {
                       alert('스터디가 탈퇴 되었습니다.');

@@ -20,6 +20,7 @@ import styled from '@emotion/styled';
 import { getProjectUserByjoin } from '../../pages/api/project';
 import { getStudyUserByjoin } from '../../pages/api/study';
 import { useDispatch } from 'react-redux';
+import * as applyActions from '../../store/module/apply';
 
 import forceReload from '../../util/ForceReload';
 
