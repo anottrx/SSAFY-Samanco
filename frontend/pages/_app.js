@@ -13,6 +13,7 @@ import Router from 'next/router';
 import { Button, Menu, MenuItem, Fade } from '@mui/material';
 import Cookies from 'universal-cookie';
 import { getUserLoginTokenAPI } from '../pages/api/user';
+import Layout from '../components/Layout';
 
 import styled from '@emotion/styled';
 
@@ -108,7 +109,14 @@ function MyApp({ Component, pageProps }) {
 
   return (
     // PersistGate : state를 조회한 후 리덕스에 저장할 때까지 웹 어플리케이션의 UI가 렌더링되는 것을 지연시킴
-    <PersistGate persistor={persistor} loading={<div>loading...</div>}>
+    <PersistGate
+      persistor={persistor}
+      loading={
+        <Layout>
+          <div>loading...</div>
+        </Layout>
+      }
+    >
       {(pageProps && pageProps.pathname) === '/meeting/[id]' ? (
         <React.Fragment>
           <Head>
