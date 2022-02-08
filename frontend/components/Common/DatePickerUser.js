@@ -61,6 +61,12 @@ export default function DatePickerUser(props) {
         mask="____/__/__"
         onChange={(e) => props.handleDateChange(e, props.label)}
         renderInput={(params) => <TextField {...params} />}
+        inputProps={{
+          style: {
+            height: 35,
+            padding: "0 14px",
+          },
+        }}
       />
     );
   }

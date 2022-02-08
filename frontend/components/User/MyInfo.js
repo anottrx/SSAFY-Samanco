@@ -33,7 +33,7 @@ import {
   Container,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import StackLevelList from "../Common/Stack/StackLevelList";
+import StackLevelListInfo from "../Common/Stack/StackLevelListInfo";
 import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
 import LinkList from "../Common/LinkList";
 import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
@@ -57,7 +57,7 @@ const CusCard = styled(Card)`
   // margin-top: 10px;
   padding: 10px;
 
-  display: flex;
+  // display: flex;
   margin: 10px 0px;
   align-items: center;
 
@@ -105,17 +105,14 @@ const DetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
   // align-items: baseline;
-
   & > div {
     // display: flex;
-    margin-left: auto;
-    float: right;
+    // margin-left: auto;
+    // float: right;
   }
-
   & div > p {
     margin-left: 10px;
   }
-
   & .dateOrTime {
     color: gray;
   }
@@ -155,14 +152,14 @@ const RowUpWrapper = styled.div`
   // grid-template-columns: max-content max-content;
   grid-template-columns: 60px 12fr;
   grid-gap: 8px;
-  padding: 1px 0px;
+  padding: 2px 0px;
 `;
 const RowWrapper = styled.div`
   display: grid;
   // grid-template-columns: max-content max-content;
   grid-template-columns: 60px 12fr;
   grid-gap: 8px;
-  padding: 1px 0px;
+  padding: 2px 0px;
 `;
 
 export default function MyInfo() {
@@ -309,7 +306,7 @@ export default function MyInfo() {
             userBirthday.value = year + "-" + month + "-" + day;
             if (year == "22" && month == "02") {
               userBirthday.value = "";
-              inputState.birthday = '';
+              inputState.birthday = "";
             }
           }
           if (res.user.phone !== "00000000000") {
@@ -336,13 +333,13 @@ export default function MyInfo() {
             }
           }
 
-          if (res.user.link != null) {
-            setLinks(inputState.link.split(" "));
-            console.log(links);
-            console.log(inputState.link.split(" "));
-          } else {
-            setLinks();
-          }
+          // if (res.user.link != null) {
+          //   setLinks(inputState.link.split(" "));
+          //   console.log(links);
+          //   console.log(inputState.link.split(" "));
+          // } else {
+          //   setLinks();
+          // }
           // inputState.file = res.user.file;
           setLoading(true);
         } else {
@@ -427,7 +424,7 @@ export default function MyInfo() {
         updateNicknameAPI(nicknameInfo).then((res) => {
           if (res.statusCode == 200) {
             setCheckPassword(true);
-            alert("닉네임 변경이 가능합니다.");
+            alert("멋진 닉네임이네요~^^ 변경 가능합니다");
             setNicknameChange(false);
             setChangeNickname(false);
             setCheckedNickname(true);
@@ -485,15 +482,20 @@ export default function MyInfo() {
       isNormal = false;
       alert("닉네임 중복 체크를 완료해 주세요.");
     } else if (
+      inputState.phone != null &&
       inputState.phone.length > 0 &&
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
       alert("전화번호 양식을 확인해 주세요.");
-    } else if (links.length >= 1 && !urlReg.test(links)) {
-      // isNormal = false;
-      console.log(links.length);
-      // alert("링크 양식을 확인해 주세요.")
+    } else if (
+      inputState.link != null &&
+      inputState.link.length >= 1 &&
+      !urlReg.test(inputState.link)
+    ) {
+      isNormal = false;
+      // console.log(links.length);
+      alert("링크 양식을 확인해 주세요.");
     }
 
     if (isNormal) {
@@ -505,7 +507,11 @@ export default function MyInfo() {
   const handleUpdateInfo = (e) => {
     let isNormal = true;
 
-    if (inputState.phone.length > 0 && !phoneReg.test(inputState.phone)) {
+    if (
+      inputState.phone != null &&
+      inputState.phone.length > 0 &&
+      !phoneReg.test(inputState.phone)
+    ) {
       isNormal = false;
       alert("전화번호 양식을 확인해 주세요.");
     } else if (changeNickname) {
@@ -534,6 +540,7 @@ export default function MyInfo() {
         Jira: inputState.Jira,
         Django: inputState.Django,
         Redis: inputState.Redis,
+        Kotlin: inputState.Kotlin,
       };
       Object.keys(inputState.stacks).forEach(function (key) {
         if (inputState.stacks[key] == 0 || inputState.stacks[key] == null) {
@@ -562,11 +569,16 @@ export default function MyInfo() {
             if (key === "stacks") {
               formData.append(key, "[" + JSON.stringify(value) + "]");
               // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
+            } else if (key === "birthday") {
+              if (
+                inputState.birthday.slice(0, 2) == "22" &&
+                inputState.birthday.slice(2, 4) == "02"
+              ) {
+              } else {
+                formData.append(key, inputState.birthday);
+              }
             } else if (key === "phone") {
-              if (inputState.phone == "") {
-                const phoneNull = "00000000000";
-                formData.append(key, phoneNull);
-                // inputState.phone = "00000000000";
+              if (inputState.phone == null || inputState.phone == "") {
               } else {
                 formData.append(key, inputState.phone);
               }
@@ -698,7 +710,7 @@ export default function MyInfo() {
                 <Divider light sx={{ marginTop: 1.5, marginBottom: 1 }} />
                 <div>
                   <DetailWrapper maxWidth="sm">
-                    <CardContent>
+                    <CardContent sx={{ width: "60%", marginRight: 5 }}>
                       {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
@@ -739,9 +751,23 @@ export default function MyInfo() {
                         {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
                         <label>이메일</label>
                         {/* {inputState.email} */}
-                        <input value={inputState.email || ""} disabled />
+                        {onlyView ? (
+                          <input value={inputState.email} disabled />
+                        ) : (
+                          <TextField
+                            value={inputState.email}
+                            disabled
+                            inputProps={{
+                              style: {
+                                height: 35,
+                                padding: "0 14px",
+                              },
+                            }}
+                          />
+                        )}
                         {/* </Box> */}
                       </RowUpWrapper>
+
                       <RowUpWrapper>
                         {/* <label> */}
                         <label>닉네임</label>
@@ -811,9 +837,10 @@ export default function MyInfo() {
                         {onlyView ? (
                           <input
                             value={
-                              (userBirthday.value.length == 10 && (userBirthday.value.slice(2,4)!='22'))
+                              userBirthday.value.length == 10 &&
+                              userBirthday.value.slice(2, 4) != "22"
                                 ? userBirthday.value
-                                : ''
+                                : ""
                             }
                             // value={inputState.birthday}
                             disabled
@@ -837,14 +864,28 @@ export default function MyInfo() {
                       {/* <Box sx={{ mb: 2 }}> */}
                       <RowWrapper>
                         <label>전화번호</label>
-                        <input
-                          id="phone"
-                          type="number"
-                          placeholder={onlyView ? "" : "01012345678"}
-                          value={inputState.phone || ""}
-                          disabled={onlyView ? true : false}
-                          onChange={handleChange}
-                        />
+                        {onlyView ? (
+                          <input
+                            id="phone"
+                            type="number"
+                            value={inputState.phone || ""}
+                            disabled
+                          />
+                        ) : (
+                          <TextField
+                            id="phone"
+                            type="number"
+                            placeholder={onlyView ? "" : "01012345678"}
+                            value={inputState.phone || ""}
+                            onChange={handleChange}
+                            inputProps={{
+                              style: {
+                                height: 35,
+                                padding: "0 14px",
+                              },
+                            }}
+                          />
+                        )}
                       </RowWrapper>
                       {/* </Box> */}
                       <RowWrapper>
@@ -940,7 +981,7 @@ export default function MyInfo() {
                     <label>기술 스택</label>
                     <StackLevelInfoDialog />
                     {onlyView && inputState.stacks_get != null ? (
-                      <StackLevelList items={inputState.stacks_get} />
+                      <StackLevelListInfo items={inputState.stacks_get} />
                     ) : (
                       <StackLevelSelectRegister
                         values={(inputState.stacks, inputState.stacks_get)}
@@ -965,8 +1006,21 @@ export default function MyInfo() {
                     />
                   </CardContent>
                   <CardContent>
-                    <label>링크</label>&nbsp;
+                    <label>링크</label>
+                    <br />
                     {onlyView ? (
+                      <a href={inputState.link} target="_blank">
+                        {inputState.link}
+                      </a>
+                    ) : (
+                      <TextField
+                        id="link"
+                        value={inputState.link || ""}
+                        onChange={handleChange}
+                        fullWidth
+                      />
+                    )}
+                    {/* {onlyView ? (
                       <LinkList items={links} />
                     ) : (
                       <>
@@ -981,16 +1035,16 @@ export default function MyInfo() {
                           freeSolo
                           // options={links}
                           // getOptionLabel={(option) => option}
-                          value={links}
-                          options={links.map((l) => l.value)}
-                          getOptionLabel={(option) => (option ? option : "")}
+                          // value={links}
+                          // options={links.map((l) => l.value)}
+                          // getOptionLabel={(option) => (option ? option : "")}
                           renderInput={(params) => <TextField {...params} />}
                           onChange={(e, option, reason) => {
                             handleLinksChange(option);
                           }}
                         />
                       </>
-                    )}
+                    )} */}
                   </CardContent>
                 </ContentWrapper2>
                 {finishUpdate ? (
