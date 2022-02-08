@@ -130,7 +130,7 @@ function MyClub(props) {
             Object.keys(clubData).map((key, index) => {
               let data = clubData[key];
               return (
-                <CusCard>
+                <CusCard key={index}>
                   <CusCardContent>
                     <div className="img-wrapper"></div>
                     <ProjectInfo>

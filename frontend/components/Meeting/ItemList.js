@@ -1,4 +1,10 @@
-import { useState, useRef, useCallback, useLayoutEffect } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useLayoutEffect,
+} from 'react';
 
 import styled from '@emotion/styled';
 import {
@@ -29,6 +35,9 @@ import { useTheme } from '@mui/material/styles';
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockIcon from '@mui/icons-material/Lock';
+
+// import { OpenVidu } from 'openvidu-browser';
+import UserVideo from './UserVideo';
 
 function ItemList() {
   //-------------- redux dispatch로 값 저장, selector로 불러오기
@@ -148,11 +157,13 @@ function ItemList() {
         joinDialogClose={joinDialogClose}
         room={room}
         pwDialogOpen={pwDialogOpen}
+        setDetail={setDetail}
       ></JoinDialog>
       <PwDialog
         open={openPw}
         pwDialogClose={pwDialogClose}
         room={room}
+        setDetail={setDetail}
       ></PwDialog>
       <CusPagination
         count={allPage}
@@ -216,10 +227,51 @@ export function Item(props) {
 }
 
 function JoinDialog(props) {
-  let { open, joinDialogClose, room, pwDialogOpen } = props;
+  let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
+  const [publisher, setPublisher] = useState(undefined);
+
+  useEffect(() => {
+    (async function init() {
+      let openViduModule = await import('openvidu-browser');
+      let OV = new openViduModule.OpenVidu();
+      let devices = await OV.getDevices();
+      let videoDevices = devices.filter(
+        (device) => device.kind == 'videoinput'
+      );
+      console.log(videoDevices[0].deviceId);
+
+      if (videoDevices.length > 0) {
+        setPublisher(
+          OV.initPublisher(undefined, {
+            audioSource: undefined, // 오디오 출처 : 디폴트값 - 마이크
+            videoSource: videoDevices[0].deviceId, // 비디오 출처 : 디폴트값 - 웹캠
+            publishAudio: true, // 방에 들어갔을 때 오디오를 mute할지, 그렇지 않을지 결정 (true: ON)
+            publishVideo: true, // 방에 들어갔을 때 비디오를 킬 지, 끌 지 결정 (true: ON)
+            resolution: '320x240', // 비디오 사이즈
+            frameRate: 30, // 비디오 프레임
+            insertMode: 'APPEND', // 비디오가 'video-container' 타겟 요소에 어떻게 삽입될 지 결정
+            mirror: false, // 비디오 좌우반전할지 말지 (true: 반전)
+          })
+        );
+      }
+    })();
+  }, []);
+
   return (
     <Dialog open={open} onClose={joinDialogClose}>
       <DialogTitle>{`[${room.title}]\n방에 입장하시겠습니까?`}</DialogTitle>
+      <DialogContent>
+        <div id="video-container" className="col-md-6">
+          {publisher !== undefined ? (
+            <div className="stream-container col-md-6 col-xs-6">
+              <UserVideo
+                streamManager={publisher}
+                name={sessionStorage.getItem('nickname')}
+              />
+            </div>
+          ) : null}
+        </div>
+      </DialogContent>
       <DialogActions>
         <Button onClick={joinDialogClose}>취소</Button>
         <Button
@@ -232,12 +284,13 @@ function JoinDialog(props) {
                 }
               : () => {
                   // Router.push("/meeting/"+room.no);
+                  setDetail({ datail: room });
                   joinDialogClose();
-                  window.open(
-                    '/meeting/' + room.no,
-                    '_blank',
-                    'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
-                  );
+                  //   window.open(
+                  //     '/meeting/' + room.no,
+                  //     '_blank',
+                  //     'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
+                  //   );
                 }
           }
           autoFocus
@@ -250,7 +303,7 @@ function JoinDialog(props) {
 }
 
 function PwDialog(props) {
-  let { open, pwDialogClose, room } = props;
+  let { open, pwDialogClose, room, setDetail } = props;
   let [pw, setPw] = useState('');
   const pwChangeHandle = (e) => {
     setPw(e.target.value);
@@ -271,11 +324,12 @@ function PwDialog(props) {
               ? () => {
                   // Router.push("/meeting/"+room.no);
                   pwDialogClose();
-                  window.open(
-                    '/meeting/' + room.no,
-                    '_blank',
-                    'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
-                  );
+                  setDetail({ datail: room });
+                  //   window.open(
+                  //     '/meeting/' + room.no,
+                  //     '_blank',
+                  //     'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
+                  //   );
                 }
               : () => {
                   alert('비밀번호를 확인해주세요.');
