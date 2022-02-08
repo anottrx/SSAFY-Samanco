@@ -9,8 +9,10 @@ import {
   OutlinedInput,
   Button,
   Typography,
-  MenuItem,
+  MenuItem,IconButton
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import styled from "@emotion/styled";
 import session from "redux-persist/lib/storage/session";
 
@@ -22,6 +24,8 @@ export default function ResetPassword() {
     email: "",
     password: "",
     passwordConfirm: "",
+    showPassword: false,
+    showPasswordConfirm: false,
   });
 
   const handleChange = (e) => {
@@ -48,10 +52,22 @@ export default function ResetPassword() {
     const value = e.target.value;
     setPwSameRes(inputState.password == value ? true : false);
   };
-
   const pwSameOtherCheck = (e) => {
     const value = e.target.value;
     setPwSameRes(inputState.passwordConfirm == value ? true : false);
+  };
+
+  const handleClickShowPassword = () => {
+    setInputState({
+      ...inputState,
+      showPassword: !inputState.showPassword,
+    });
+  };
+  const handleClickShowPasswordConfirm = () => {
+    setInputState({
+      ...inputState,
+      showPasswordConfirm: !inputState.showPasswordConfirm,
+    });
   };
 
   const pwReg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*\W).{8,16}$/;
@@ -128,6 +144,19 @@ export default function ResetPassword() {
               pwSameOtherCheck(e);
             }}
             sx={{ width: 370, fontSize: 14 }}
+            type={inputState.showPassword ? "text" : "password"}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                  sx={{ mr: -0.5 }}
+                >
+                  {inputState.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
           />
           {/* 1. 비밀번호 사용 가능 */}
           {inputState.password != "" && pwCheckRes && pwCheckRes.code == 200 ? (
@@ -158,6 +187,23 @@ export default function ResetPassword() {
               pwHandleChange(e);
             }}
             sx={{ width: 370, fontSize: 14 }}
+            type={inputState.showPasswordConfirm ? "text" : "password"}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPasswordConfirm}
+                  edge="end"
+                  sx={{ mr: -0.5 }}
+                >
+                  {inputState.showPasswordConfirm ? (
+                    <VisibilityOff />
+                  ) : (
+                    <Visibility />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            }
           />
           {/* 비밀번호 동일 체크 */}
           {inputState.passwordConfirm == "" || pwSameRes ? null : (

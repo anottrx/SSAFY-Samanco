@@ -11,6 +11,7 @@ import {
   sendEmailCodeAPI,
   getUserLoginTokenAPI,
 } from "../../pages/api/user";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   OutlinedInput,
@@ -18,6 +19,7 @@ import {
   Select,
   Typography,
   MenuItem,
+  IconButton,
 } from "@mui/material";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import styled from "@emotion/styled";
@@ -43,6 +45,8 @@ export default function Regist() {
     generation: "6",
     studentId: "",
     code: false,
+    showPassword: false,
+    showPasswordConfirm: false,
   });
 
   const generationOptions = [
@@ -93,6 +97,19 @@ export default function Regist() {
     checkNicknameAPI(value).then((res) => {
       // console.log("닉네임이 " +value+"인 사람의 닉네임API 체크 결과" + res)
       setNicknameCheckRes({ code: res.statusCode, msg: res.message });
+    });
+  };
+
+  const handleClickShowPassword = () => {
+    setInputState({
+      ...inputState,
+      showPassword: !inputState.showPassword,
+    });
+  };
+  const handleClickShowPasswordConfirm = () => {
+    setInputState({
+      ...inputState,
+      showPasswordConfirm: !inputState.showPasswordConfirm,
     });
   };
 
@@ -368,6 +385,19 @@ export default function Regist() {
               pwSameOtherCheck(e);
             }}
             sx={{ width: 370, fontSize: 14 }}
+            type={inputState.showPassword ? "text" : "password"}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                  sx={{ mr: -0.5 }}
+                >
+                  {inputState.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
           />
           {/* 1. 비밀번호 사용 가능 */}
           {inputState.password != "" && pwCheckRes && pwCheckRes.code == 200 ? (
@@ -398,6 +428,23 @@ export default function Regist() {
               pwHandleChange(e);
             }}
             sx={{ width: 370, fontSize: 14 }}
+            type={inputState.showPasswordConfirm ? "text" : "password"}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPasswordConfirm}
+                  edge="end"
+                  sx={{ mr: -0.5 }}
+                >
+                  {inputState.showPasswordConfirm ? (
+                    <VisibilityOff />
+                  ) : (
+                    <Visibility />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            }
           />
           {/* 비밀번호 동일 체크 */}
           {inputState.passwordConfirm == "" || pwSameRes ? null : (
