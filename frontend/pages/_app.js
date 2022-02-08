@@ -4,7 +4,6 @@ import { wrapper, persistedReducer } from '../store';
 import { createStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
-import Image from 'next/image';
 
 // import { Container } from "next/app";
 import Head from 'next/head';
@@ -61,6 +60,13 @@ const styles = {
     padding: '10px',
   },
 };
+const ImgMacha = styled.img`
+  max-width: 80px;
+  max-height: 25px;
+`;
+const ImgLogo = styled.img`
+  max-height: 30px;
+`;
 
 function MyApp({ Component, pageProps }) {
   const store = createStore(persistedReducer);
@@ -86,7 +92,7 @@ function MyApp({ Component, pageProps }) {
       userNickname != null &&
       userNickname != 'undefined'
     ) {
-      console.log(token);
+      // console.log(token);
       setIsLogin(true);
       setNickname(userNickname);
     } else if (token != null && token != '' && userNickname == null) {
@@ -135,12 +141,7 @@ function MyApp({ Component, pageProps }) {
                   <img src="/images/pojangmacha.png" width={110} ></img>
                 </Link> */}
               <a href="https://obvious-spade-e4e.notion.site/2-e9c8cb53c7ad41bc97ce50af77b34a69">
-                <Image
-                  src="/images/pojangmacha.png"
-                  width={80}
-                  height={25}
-                  quality={100}
-                ></Image>
+                <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
               </a>
               {/* footer */}
             </footer>
@@ -213,8 +214,9 @@ function MyApp({ Component, pageProps }) {
 
     return (
       <div style={styles.headerLink}>
-        <Link href="/">
-          <img src="/images/main-logo-black.png" height="30px"></img>
+        <Link href="/" passHref>
+          {/* <img src="/images/main-logo-black.png" height="30px"></img> */}
+          <ImgLogo src="/images/main-logo-black.png" />
         </Link>
         <div>
           {props.isLogin ? (
