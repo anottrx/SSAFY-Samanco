@@ -45,7 +45,7 @@ const styles = {
     marginRight: '10px',
     color: 'black',
     fontSize: '14px',
-    padding: '0px',
+    padding: '5px',
   },
   main: {
     flex: 1,
@@ -202,7 +202,6 @@ function MyApp({ Component, pageProps }) {
           </MenuItem>
           <MenuItem
             onClick={(e) => {
-              console.log('누름');
               alert('로그아웃 되었습니다.');
               sessionStorage.clear();
               cookies.set('userToken', '');
@@ -242,7 +241,7 @@ function MyApp({ Component, pageProps }) {
             </>
           ) : (
             <>
-              <span className="site-nav-item" style={styles.link}>
+              <span className="site-nav-item" style={styles.link} >
                 <Link href="/login">로그인</Link>
               </span>
               <span className="site-nav-item" style={styles.link}>
