@@ -21,6 +21,8 @@ import {
   DialogActions,
   DialogContent,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 
 import meetingJSONData from '../../data/meetingData.json';
@@ -35,6 +37,10 @@ import { useTheme } from '@mui/material/styles';
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockIcon from '@mui/icons-material/Lock';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 
 // import { OpenVidu } from 'openvidu-browser';
 import UserVideo from './UserVideo';
@@ -230,8 +236,26 @@ function JoinDialog(props) {
   let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
   const [publisher, setPublisher] = useState(undefined);
 
+  // userStatus : 카메라, 오디오 설정 -> 배열 안에 값이 있으면 ON 상태, 없으면 OFF 상태
+  const [userStatus, setUserStatus] = useState(['camera', 'audio']);
+  const handleUserStatus = (e, newValue) => {
+    setUserStatus(newValue);
+  };
+
+  const NoVideo = styled.div`
+    width: 320px;
+    height: 240px;
+    background-color: #f9f9f9;
+    border: 1px solid gray;
+  `;
+
+  useEffect(() => {
+    console.log(userStatus);
+  }, [userStatus]);
+
   useEffect(() => {
     (async function init() {
+      // eslint-disable-next-line
       let openViduModule = await import('openvidu-browser');
       let OV = new openViduModule.OpenVidu();
       let devices = await OV.getDevices();
@@ -269,8 +293,35 @@ function JoinDialog(props) {
                 name={sessionStorage.getItem('nickname')}
               />
             </div>
-          ) : null}
+          ) : (
+            <>
+              <NoVideo />
+              <span>{sessionStorage.getItem('nickname')}</span>
+            </>
+          )}
         </div>
+        <ToggleButtonGroup
+          value={userStatus}
+          onChange={handleUserStatus}
+          aria-label="user status formatting"
+          style={{ marginTop: '10px' }}
+        >
+          {/* VideocamIcon VideocamOffOutlinedIcon MicIcon MicOffOutlinedIcon */}
+          <ToggleButton value="camera" aria-label="camera">
+            {userStatus.includes('camera') ? (
+              <VideocamIcon />
+            ) : (
+              <VideocamOffOutlinedIcon />
+            )}
+          </ToggleButton>
+          <ToggleButton value="audio" aria-label="audio">
+            {userStatus.includes('audio') ? (
+              <MicIcon />
+            ) : (
+              <MicOffOutlinedIcon />
+            )}
+          </ToggleButton>
+        </ToggleButtonGroup>
       </DialogContent>
       <DialogActions>
         <Button onClick={joinDialogClose}>취소</Button>
