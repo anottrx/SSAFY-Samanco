@@ -356,15 +356,17 @@ function JoinDialog(props) {
                     pwDialogOpen();
                   }
                 : () => {
+                    // 세션 연결
+                    // joinSession();
                     console.log(JSON.stringify(publisher.properties));
                     // Router.push("/meeting/"+room.no);
                     setDetail({ datail: room });
                     joinDialogClose();
-                    //   window.open(
-                    //     '/meeting/' + room.no,
-                    //     '_blank',
-                    //     'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
-                    //   );
+                    window.open(
+                      '/meeting/' + room.no,
+                      '_blank',
+                      'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
+                    );
                   }
             }
             autoFocus
@@ -405,13 +407,15 @@ function PwDialog(props) {
             pw === '1234'
               ? () => {
                   // Router.push("/meeting/"+room.no);
+                  // 세션 연결
+                  // joinSession();
                   pwDialogClose();
                   setDetail({ datail: room });
-                  //   window.open(
-                  //     '/meeting/' + room.no,
-                  //     '_blank',
-                  //     'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
-                  //   );
+                  window.open(
+                    '/meeting/' + room.no,
+                    '_blank',
+                    'toolbar=no,scrollbars=no,resizable=yes,width=1000,height=800'
+                  );
                 }
               : () => {
                   alert('비밀번호를 확인해주세요.');
@@ -424,6 +428,57 @@ function PwDialog(props) {
       </DialogActions>
     </Dialog>
   );
+}
+
+/*
+[전제] 미팅방마다 세션 정보가 저장되어 있음
+-> 입장 버튼 클릭 시 joinSession 실행
+*/
+
+function deleteSubscriber() {
+  // 참여자에서 현재 유저 지우는 함수
+}
+
+async function joinSession() {
+  // 1. Openvidu 객체 생성
+  let openViduModule = await import('openvidu-browser');
+  let OV = new openViduModule.OpenVidu();
+  // 2. 세션 초기화
+  let session = OV.initSession();
+
+  () => {
+    var mySession = session;
+
+    // // 어떤 새로운 스트림이 도착하면
+    mySession.on('streamCreated', (e) => {
+      var subscriber = mySession.subscribe(e.stream, undefined);
+
+      var subscribers = this.state.subscribers;
+      subscribers.push(subscriber); // 기존 참여자들에 새로 들어온 유저 추가
+
+      // Update the state with the new subscribers
+      this.setState({
+        subscribers: subscribers,
+      });
+    });
+  };
+
+  // 3. 방에서 생기는 이벤트들 액션으로 정의
+  // -> 이건 id.js에 정의하는 게 나을 듯
+  // 액션 1. 사용자가 들어올 때
+  // 액션 2. 사용자가 나갈 때
+  // 액션 3. 예외 발생할 때
+  // 4. 사용자가 방에 들어오면 유저마다 토큰 반환
+  // 세션 객체에 connect 메소드 호출
+
+  // 해당 세션에 접속중인 유저 정보 ->
+  //  var subscriber = mySession.subscribe(event.stream, undefined);
+}
+
+function leaveSession() {
+  // 세션 객체에 disconnect 메소드 호출
+  // OpenVidu 객체 초기화
+  // session, 방에 참여하고 있는 유저 정보, 현재 유저 정보 초기화
 }
 
 export default ItemList;

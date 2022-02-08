@@ -7,12 +7,6 @@ function OpenViduVideoComponent({ streamManager }) {
     if (streamManager && !!videoRef) {
       streamManager.addVideoElement(videoRef.current);
     }
-
-    // return () => {
-    //   if (streamManager && !!videoRef) {
-    //     streamManager.addVideoElement(videoRef.current);
-    //   }
-    // };
   }, []);
 
   return <video autoPlay={true} ref={videoRef} />;

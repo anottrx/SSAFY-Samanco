@@ -13,10 +13,11 @@ function Chatting() {
     flex-direction: column;
     padding: 10px;
     justify-content: space-between;
-    overflow-y: scroll;
 
     .messages {
-      padding: 5px;
+      padding: 10px 5px;
+      overflow-y: scroll;
+      height: 100%;
     }
 
     & .otherMessageWrapper {
@@ -42,22 +43,20 @@ function Chatting() {
     }
   `;
 
-  let index = [0, 0, 0, 0, 0, 0];
+  let index = [0, 0, 0, 0, 0, 0, 0, 0];
   const scrollEl = useRef(null);
 
   const scrollToBottom = () => {
-    scrollEl.current
-      ? scrollEl.scrollIntoView({
-          // behavior: 'smooth',
-          block: 'end',
-          inline: 'nearest',
-        })
-      : null;
+    scrollEl.current?.scrollIntoView({
+      // behavior: 'smooth',
+      block: 'end',
+      inline: 'end',
+    });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, []);
+  });
 
   return (
     <ChattingWrapper>

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import User from '../../components/Meeting/User';
+import Users from '../../components/Meeting/User';
 import RoomInfo from '../../components/Meeting/RoomInfo';
 import Chatting from '../../components/Meeting/Chatting';
 import { Card, Divider } from '@mui/material';
@@ -26,7 +26,7 @@ function meetingDetail() {
       <RoomInfo></RoomInfo>
       <Divider />
       <RoomContent>
-        <User></User>
+        <Users></Users>
         <Chatting></Chatting>
       </RoomContent>
     </RoomWrapper>
