@@ -64,6 +64,9 @@ const ImgMacha = styled.img`
   max-width: 80px;
   max-height: 25px;
 `;
+const ImgLogo = styled.img`
+  max-height: 30px;
+`;
 
 function MyApp({ Component, pageProps }) {
   const store = createStore(persistedReducer);
@@ -89,7 +92,7 @@ function MyApp({ Component, pageProps }) {
       userNickname != null &&
       userNickname != 'undefined'
     ) {
-      console.log(token);
+      // console.log(token);
       setIsLogin(true);
       setNickname(userNickname);
     } else if (token != null && token != '' && userNickname == null) {
@@ -211,8 +214,9 @@ function MyApp({ Component, pageProps }) {
 
     return (
       <div style={styles.headerLink}>
-        <Link href="/">
-          <img src="/images/main-logo-black.png" height="30px"></img>
+        <Link href="/" passHref>
+          {/* <img src="/images/main-logo-black.png" height="30px"></img> */}
+          <ImgLogo src="/images/main-logo-black.png" />
         </Link>
         <div>
           {props.isLogin ? (
