@@ -4,6 +4,7 @@ import { wrapper, persistedReducer } from "../store";
 import { createStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
+import Image from 'next/image'
 
 // import { Container } from "next/app";
 import Head from "next/head";
@@ -132,7 +133,10 @@ function MyApp({ Component, pageProps }) {
                 {/* <Link href="/developer">
                   <img src="/images/pojangmacha.png" width={110} ></img>
                 </Link> */}
-                footer
+                <a href="https://obvious-spade-e4e.notion.site/2-e9c8cb53c7ad41bc97ce50af77b34a69">
+                  <Image src="/images/pojangmacha.png" width={80} height={25} quality={100}></Image>
+                </a>
+                {/* footer */}
               </footer>
             </div>
           </React.Fragment>
