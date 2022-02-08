@@ -70,25 +70,23 @@ export default function Login() {
       msg = '비밀번호를 입력해주세요.';
     }
 
-    if (isNormal) {
-      // 유효성 검사 통과 시 login API 요청
+    if (isNormal) { // 유효성 검사 통과 시 login API 요청
       loginAPI(inputState).then((res) => {
         switch (res.statusCode) {
           case 200: // 로그인 성공
-            // alert(`로그인 성공: ${res.accessToken}`);
             setCookie('userToken', res.accessToken); // 쿠키 설정
+            // alert(cookies.userToken)
             if (res.accessToken != null && res.accessToken != '') {
-              const token = res.accessToken;
-              getUserLoginTokenAPI(token).then((res1) => {
-                console.log(res1);
-                // alert();
+              getUserLoginTokenAPI(res.accessToken).then((res1) => {
+                // alert(JSON.stringify(res1));
                 sessionStorage.setItem('userId', res1.userId);
                 sessionStorage.setItem('email', inputState.email);
                 sessionStorage.setItem('nickname', res1.nickname);
-
-                window.history.forward();
-                window.location.replace('/');
-              });
+                if(sessionStorage.getItem('nickname')==res1.nickname) {
+                  window.history.forward();
+                  window.location.replace('/');
+                }
+              })
             }
             if (rememberId) {
               setCookie('userEmail', inputState.email);
