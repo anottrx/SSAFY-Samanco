@@ -180,13 +180,22 @@ function MyApp({ Component, pageProps }) {
     `;
 
     const UserMenu = () => (
-      <div>
-        <Menu
+      <>
+        <Menu 
           id="fade-menu"
           MenuListProps={{
             'aria-labelledby': 'fade-button',
           }}
           anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          sx={{marginTop: '8px'}}
           open={open}
           onClose={handleClose}
           TransitionComponent={Fade}
@@ -221,7 +230,7 @@ function MyApp({ Component, pageProps }) {
             </span>
           </MenuItem>
         </Menu>
-      </div>
+      </>
     );
 
     return (
