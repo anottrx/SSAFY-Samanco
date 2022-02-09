@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 
 export default function CountdownTimer(props) {
   const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(10);
+  const [minutes, setMinutes] = useState(3);
 
   useEffect(() => {
     const countdown = setInterval(() => {
