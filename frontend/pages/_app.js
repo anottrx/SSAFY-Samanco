@@ -12,6 +12,7 @@ import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import { Button, Menu, MenuItem, Fade } from '@mui/material';
 import Cookies from 'universal-cookie';
+import { useCookies } from 'react-cookie';
 import { getUserLoginTokenAPI } from '../pages/api/user';
 import Layout from '../components/Layout';
 
@@ -205,7 +206,10 @@ function MyApp({ Component, pageProps }) {
             onClick={(e) => {
               alert('로그아웃 되었습니다.');
               sessionStorage.clear();
-              cookies.set('userToken', '');
+              cookies.set('userToken', '', -1);
+              cookies.remove("userToken", {path: "/myinfo"}) 
+              cookies.remove("userToken", {path: "/"}) 
+              cookies.remove('userToken');
               setIsLogin(false);
               setUserId(null);
               window.location.replace('/');

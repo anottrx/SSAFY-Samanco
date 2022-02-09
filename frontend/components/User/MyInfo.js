@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Router from 'next/router';
 import Cookies from 'universal-cookie';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import {
   getUserLoginTokenAPI,
   getUserInfoAPI,
@@ -273,21 +273,28 @@ export default function MyInfo() {
     // 사용자 정보 가져오는 함수
     // const token = cookie.userToken;
     const token = cookies.get('userToken')
+    cookies.remove("userToken", {path: "/myinfo"})  
+    // cookies.remove("userToken", {path: "/"}) 
 
-    getUserLoginTokenAPI(token).then((res) => {
-      if (res.statusCode == 200) {
-        //
-      } else {
-        //
-      }
-      console.log('getUserLoginTokenAPI 관련 결과' + JSON.stringify(res));
-      inputState.userId = res.userId;
-      inputState.email = res.email;
-      inputState.nickname = res.nickname;
-      nicknameInfo.nickname = inputState.nickname;
+    // getUserLoginTokenAPI(token).then((res) => {
+    //   if (res.statusCode == 200) {
+    //     //
+    //   } else {
+    //     // 
+    //   }
+    //   console.log('getUserLoginTokenAPI 관련 결과' + JSON.stringify(res));
+    //   inputState.userId = res.userId;
+    //   inputState.email = res.email;
+    //   inputState.nickname = res.nickname;
+    //   nicknameInfo.nickname = inputState.nickname;
 
-      const userId = res.userId;
-      getUserInfoAPI(userId).then((res) => {
+    //   const userId = res.userId;
+
+      inputState.userId = sessionStorage.getItem("userId");
+      inputState.nickname = sessionStorage.getItem("nickname");
+      inputState.email = sessionStorage.getItem("email");
+
+      getUserInfoAPI(inputState.userId).then((res) => {
         if (res.statusCode == 200) {
           console.log('내 정보 보기 결과: ' + JSON.stringify(res));
           inputState.name = res.user.name;
@@ -349,7 +356,7 @@ export default function MyInfo() {
           //
         }
       });
-    });
+    // });
   }
 
   useEffect(() => {
