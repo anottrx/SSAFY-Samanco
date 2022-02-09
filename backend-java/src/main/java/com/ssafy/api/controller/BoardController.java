@@ -4,10 +4,7 @@ import com.ssafy.api.model.BoardDto;
 import com.ssafy.api.model.FileDto;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
-import com.ssafy.api.response.StackSelectAllRes;
-import com.ssafy.api.response.BoardSelectAllRes;
-import com.ssafy.api.response.BoardSelectRes;
-import com.ssafy.api.response.UserSelectAllRes;
+import com.ssafy.api.response.*;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
 import com.ssafy.api.service.BoardService;
@@ -297,19 +294,19 @@ public class BoardController {
     }
 
     @GetMapping("/download/{path}")
-    public String getImageWithMediaType(@PathVariable("path") String path) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> getImageWithMediaType(@PathVariable("path") String path) throws IOException {
         String realPath = new File("").getAbsolutePath() + File.separator + "files";
         String[] paths=path.split("&");
         String filePath = realPath + File.separator + paths[0] + File.separator + paths[1];
         File target = new File(filePath);
         System.out.println("target: "+target);
         if (target==null){
-
+            return ResponseEntity.status(200).body(FileStringRes.of(401, "해당 파일을 다운로드할 수 없습니다.", null));
         }
         byte[] fileByte = FileUtils.readFileToByteArray(target);
         String fileString = new String(Base64.encodeBase64(fileByte));
 
-        return fileString;
+        return ResponseEntity.status(200).body(FileStringRes.of(200, "success", fileString));
     }
 
 }
