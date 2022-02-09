@@ -44,15 +44,15 @@ import forceReload from '../../util/ForceReload';
 //게시글 상세보기 페이지
 
 const BoardDetail = () => {
+  // const detail = useSelector(({ board }) => board.boardDetail);
   const detail = useSelector(({ board }) => board.boardDetail);
   const tag = detail.tag;
+  const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log(like);
-
+  function fetchData() {
     getArticleById({
       boardId: detail.boardId,
       userId:
@@ -63,7 +63,18 @@ const BoardDetail = () => {
       changeLike(res.board.userLike);
       dispatch(boardActions.setBoardDetail({ detail: res.board }));
     });
-  }, [like]);
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [like, reloadCondition]);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      fetchData();
+      setReloadCondition(false);
+    }
+  }, [reloadCondition]);
 
   const CusContainer = styled(Container)`
     float: left;
@@ -282,7 +293,10 @@ const BoardDetail = () => {
             <h4>댓글</h4>
             <CommentRegist />
             {detail && detail.comments && detail.comments.length !== 0 ? (
-              <CommentList detail={detail}></CommentList>
+              <CommentList
+                detail={detail}
+                setReloadCondition={setReloadCondition}
+              ></CommentList>
             ) : (
               <div>등록된 댓글이 없습니다.</div>
             )}
@@ -366,7 +380,7 @@ const BoardDetail = () => {
       }).then((res) => {
         if (res.statusCode === 200) {
           // 현재 페이지 재로딩
-          forceReload();
+          setReloadCondition(true);
         } else {
           alert(`${res.message}`);
         }

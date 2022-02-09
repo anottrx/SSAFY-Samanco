@@ -16,9 +16,10 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import { updateComment, deleteComment } from '../../pages/api/board';
 import forceReload from '../../util/ForceReload';
+import Router from 'next/router';
 
 //댓글 목록 페이지
-function CommentList({ detail }) {
+function CommentList({ detail, setReloadCondition }) {
   let CommentWrapper = styled.div`
     padding: 10px;
   `;
@@ -89,7 +90,8 @@ function CommentList({ detail }) {
     }).then((res) => {
       if (res.statusCode === 200) {
         alert('댓글이 수정되었습니다.');
-        forceReload();
+        Router.replace('/board/' + detail.boardId);
+        setReloadCondition(true);
       } else {
         alert(`${res.message}`);
       }
@@ -222,7 +224,7 @@ function CommentList({ detail }) {
               }).then((res) => {
                 if (res.statusCode === 200) {
                   alert('댓글이 삭제되었습니다.');
-                  forceReload();
+                  setReloadCondition(true);
                 } else {
                   alert(`${res.message}`);
                 }
