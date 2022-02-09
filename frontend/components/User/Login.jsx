@@ -73,7 +73,7 @@ export default function Login() {
         switch (res.statusCode) {
           case 200: // 로그인 성공
             setCookie('userToken', res.accessToken); // 쿠키 설정
-            // alert(cookies.userToken)
+            // alert(res.accessToken)
             if (res.accessToken != null && res.accessToken != '') {
               getUserLoginTokenAPI(res.accessToken).then((res1) => {
                 // alert(JSON.stringify(res1));

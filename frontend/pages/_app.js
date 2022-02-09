@@ -96,15 +96,16 @@ function MyApp({ Component, pageProps }) {
       // console.log(token);
       setIsLogin(true);
       setNickname(userNickname);
-    } else if (token != null && token != '' && userNickname == null) {
-      getUserLoginTokenAPI(token).then((res) => {
-        sessionStorage.setItem('userId', res.userId);
-        sessionStorage.setItem('email', res.email);
-        sessionStorage.setItem('nickname', res.nickname);
-        setIsLogin(true);
-        setNickname(userNickname);
-      });
-    }
+    } 
+    // else if (token != null && token != '' && userNickname == null) {
+    //   getUserLoginTokenAPI(token).then((res) => {
+    //     sessionStorage.setItem('userId', res.userId);
+    //     sessionStorage.setItem('email', res.email);
+    //     sessionStorage.setItem('nickname', res.nickname);
+    //     setIsLogin(true);
+    //     setNickname(userNickname);
+    //   });
+    // }
   }, [isLogin, nickname]);
 
   return (
