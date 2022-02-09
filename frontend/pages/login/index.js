@@ -20,6 +20,7 @@ export default function LoginPage() {
     document.title = '로그인 | 싸피사만코';
 
     if (
+      cookies.get('userToken') != null &&
       cookies.get('userToken') != '' &&
       sessionStorage.getItem('nickname') != null &&
       sessionStorage.getItem('nickname') != 'undefined'

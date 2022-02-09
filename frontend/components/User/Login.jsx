@@ -80,16 +80,16 @@ export default function Login() {
                 sessionStorage.setItem('userId', res1.userId);
                 sessionStorage.setItem('email', inputState.email);
                 sessionStorage.setItem('nickname', res1.nickname);
+                if (rememberId) {
+                  setCookie('userEmail', inputState.email);
+                } else {
+                  setCookie('userEmail', '');
+                }
                 if(sessionStorage.getItem('nickname')==res1.nickname) {
                   window.history.forward();
                   window.location.replace('/');
                 }
               })
-            }
-            if (rememberId) {
-              setCookie('userEmail', inputState.email);
-            } else {
-              setCookie('userEmail', '');
             }
             break;
           case 401: // 비밀번호 틀림
