@@ -378,7 +378,12 @@ function JoinDialog(props) {
                 : () => {
                     setPublisherStatus({ status: publisher });
                     Router.push('/meeting/' + room.no);
-                    setDetail({ detail: room });
+                    setDetail({
+                      detail: {
+                        ...room,
+                        nickname: sessionStorage.getItem('nickname'),
+                      },
+                    });
                     joinDialogClose();
                   }
             }
@@ -422,7 +427,12 @@ function PwDialog(props) {
                   Router.push('/meeting/' + room.no);
                   setPublisherStatus({ status: publisher });
                   pwDialogClose();
-                  setDetail({ detail: room });
+                  setDetail({
+                    detail: {
+                      ...room,
+                      nickname: sessionStorage.getItem('nickname'),
+                    },
+                  });
                 }
               : () => {
                   alert('비밀번호를 확인해주세요.');

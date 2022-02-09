@@ -566,20 +566,24 @@ const ProjectDetail = () => {
               <Button
                 onClick={() => {
                   JoinDialogClose();
-                  joinProjectAPI({
-                    position: selectPosition,
-                    projectId: detail.id,
-                    userId: sessionStorage.getItem('userId'),
-                  })
-                    .then((res) => {
-                      if (res.statusCode === 200) {
-                        alert('프로젝트 지원 신청이 되었습니다.');
-                      } else {
-                        alert(`${res.message}`);
-                      }
+                  if (selectPosition) {
+                    joinProjectAPI({
+                      position: selectPosition,
+                      projectId: detail.id,
+                      userId: sessionStorage.getItem('userId'),
                     })
-                    .catch((err) => console.log(err));
-                  setReloadCondition(true);
+                      .then((res) => {
+                        if (res.statusCode === 200) {
+                          alert('프로젝트 지원 신청이 되었습니다.');
+                        } else {
+                          alert(`${res.message}`);
+                        }
+                      })
+                      .catch((err) => console.log(err));
+                    setReloadCondition(true);
+                  } else {
+                    alert('포지션을 선택해주세요.');
+                  }
                 }}
                 autoFocus
               >

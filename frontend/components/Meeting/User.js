@@ -1,12 +1,27 @@
+import { useState, useEffect } from 'react';
 import { Skeleton, Grid, Card, Fab, Box } from '@mui/material';
 import styled from '@emotion/styled';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import MicIcon from '@mui/icons-material/Mic';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import UserVideo from './UserVideo';
 
-function User() {
-  const VideoWrapper = styled(Skeleton)`
+function User({ publisher, subscribers, nickname }) {
+  let [users, setUsers] = useState([publisher, ...subscribers]);
+  useEffect(() => {
+    // if (subscribers !== undefined) {
+    //   let newArray = [publisher].concat(subscribers);
+    //   setUsers(newArray);
+    // }
+
+    return () => {
+      setUsers([]);
+    };
+  }, []);
+
+  const VideoWrapper = styled.div`
     min-width: 200px;
+    height: 350px;
   `;
 
   const GridWrapper = styled(Grid)`
@@ -23,31 +38,35 @@ function User() {
 
     & .MuiGrid-root {
       height: 250px;
-      transform: translate(0px, -70px);
+      transform: translate(0px, 0px);
       padding: 0px 5px;
     }
   `;
 
-  // 미팅룸 최대 인원은 6명으로? -> 얘기해보기
-  let userList = [0, 0, 0];
-
   return (
     <GridWrapper>
       <CusGrid container>
-        {userList.length > 4
-          ? userList.map((user, index) => {
+        {users.length > 4
+          ? users.map((user, index) => {
               return (
                 <Grid item xs={12} sm={4} md={4} key={index}>
-                  <VideoWrapper height={350}></VideoWrapper>
-                  <UserName></UserName>
+                  <VideoWrapper id="video-container">
+                    <UserVideo streamManager={user}></UserVideo>
+                  </VideoWrapper>
+                  {/* <VideoWrapper height={350}></VideoWrapper> */}
+                  <UserName nickname={nickname}></UserName>
                 </Grid>
               );
             })
-          : userList.map((user, index) => {
+          : users.map((user, index) => {
+              console.log('--------------user', user);
               return (
                 <Grid item xs={12} sm={10} md={6} key={index}>
-                  <VideoWrapper height={350}></VideoWrapper>
-                  <UserName></UserName>
+                  <VideoWrapper>
+                    <UserVideo streamManager={user}></UserVideo>
+                  </VideoWrapper>
+                  {/* <VideoWrapper height={350}></VideoWrapper> */}
+                  <UserName nickname={nickname}></UserName>
                 </Grid>
               );
             })}
@@ -57,12 +76,15 @@ function User() {
   );
 }
 
-function UserName() {
+function UserName({ nickname }) {
   const NameWrapper = styled.div`
-    transform: translate(10px, -90px);
+    transform: translate(10px, -160px);
+    background-color: white;
+    width: fit-content;
+    padding: 5px;
   `;
 
-  return <NameWrapper>닉네임</NameWrapper>;
+  return <NameWrapper>{nickname}</NameWrapper>;
 }
 
 function Operation() {
