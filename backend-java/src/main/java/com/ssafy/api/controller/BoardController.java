@@ -183,6 +183,21 @@ public class BoardController {
         return ResponseEntity.status(200).body(BoardSelectRes.of(200, "Success", board));
     }
 
+//    @GetMapping("/{boardId}")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "성공"),
+//            @ApiResponse(code = 401, message = "게시글 없음"),
+//            @ApiResponse(code = 500, message = "서버 오류")
+//    })
+//    public ResponseEntity<? extends BaseResponseBody> selectBoard(@PathVariable("boardId") Long boardId) throws IOException {
+//
+//        BoardDto board=boardService.selectBoard(0l, boardId);
+//        if (board==null){
+//            return ResponseEntity.status(200).body(BoardSelectRes.of(401, "유효하지 않은 게시글입니다.", null));
+//        }
+//        return ResponseEntity.status(200).body(BoardSelectRes.of(200, "Success", board));
+//    }
+
     @PostMapping("/title")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -288,7 +303,9 @@ public class BoardController {
         String filePath = realPath + File.separator + paths[0] + File.separator + paths[1];
         File target = new File(filePath);
         System.out.println("target: "+target);
+        if (target==null){
 
+        }
         byte[] fileByte = FileUtils.readFileToByteArray(target);
         String fileString = new String(Base64.encodeBase64(fileByte));
 

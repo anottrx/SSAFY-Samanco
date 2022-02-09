@@ -248,6 +248,29 @@ public class ProjectController{
         return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
     }
 
+//    @GetMapping("/view")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "성공"),
+//            @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
+//            @ApiResponse(code = 500, message = "서버 오류")
+//    })
+//    public ResponseEntity<? extends BaseResponseBody> selectProject(
+//            @RequestBody @ApiParam(value="project id", required = true) ProjectUserIdReq projectInfo) throws IOException {
+//
+//        Long projectId= projectInfo.getProjectId();
+//        Long userId = projectInfo.getUserId();
+//
+//        ProjectDto project=projectService.selectProject(userId, projectId);
+//        UserDto user=userService.selectUser(userId);
+//        if (project==null){
+//            return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
+//        }
+//        if (user!=null && projectId==user.getProjectId()) {
+//            project.setProjectJoinStatus(user.getProjectJoinStatus());
+//        }
+//        return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
+//    }
+
     @GetMapping("/title/{title}")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
