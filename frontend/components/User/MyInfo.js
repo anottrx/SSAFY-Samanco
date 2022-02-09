@@ -845,7 +845,7 @@ export default function MyInfo() {
 
                         {/* </label> */}
                       </RowUpWrapper>
-                      <RowWrapper>
+                      <RowUpWrapper>
                         {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
                         <label>생년월일</label>
                         {onlyView ? (
@@ -873,7 +873,7 @@ export default function MyInfo() {
                             </DatePickerWrapper>
                           </LocalizationProvider>
                         )}
-                      </RowWrapper>
+                      </RowUpWrapper>
                       {/* </Box> */}
                       {/* <Box sx={{ mb: 2 }}> */}
                       <RowWrapper>
@@ -902,7 +902,7 @@ export default function MyInfo() {
                         )}
                       </RowWrapper>
                       {/* </Box> */}
-                      <RowWrapper>
+                      <RowUpWrapper>
                         <label>분야</label>
                         {onlyView ? (
                           <>
@@ -939,7 +939,7 @@ export default function MyInfo() {
                               handleChange(e);
                             }}
                             value={inputState.position || ''}
-                            sx={{ minWidth: 350, height: 35, fontSize: 13 }}
+                            sx={{ height: 35, fontSize: 13 }}
                           >
                             {positionOptions.map((u, i) => {
                               return (
@@ -960,7 +960,7 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-                      </RowWrapper>
+                      </RowUpWrapper>
                     </CardContent>
                     {onlyView && inputState.file == null ? (
                       <ImgDefault src={imageDefault}></ImgDefault>
