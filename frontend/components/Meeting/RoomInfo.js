@@ -13,7 +13,7 @@ import {
 
 import Router from 'next/router';
 
-function RoomInfo() {
+function RoomInfo({ detail, exitClick }) {
   const InfoWrapper = styled.div`
     display: flex;
     flex-direction: row;
@@ -47,20 +47,24 @@ function RoomInfo() {
   return (
     <InfoWrapper>
       <div className="names">
-        <span className="roomTitle">방 제목</span>
-        <span className="hostName">방장 이름</span>
+        <span className="roomTitle">{detail.title}</span>
+        <span className="hostName">방장 : {detail.host}</span>
       </div>
       <Stack>
         <div>
           <AccessTimeIcon />
-          10분 / 50분
+          {detail.startTime}분 / {detail.timeLimit}분
         </div>
         <Button onClick={exitDialogOpen}>
           <ExitToAppIcon />
           나가기
         </Button>
       </Stack>
-      <ExitDialog open={open} exitDialogClose={exitDialogClose}></ExitDialog>
+      <ExitDialog
+        open={open}
+        exitDialogClose={exitDialogClose}
+        exitClick={exitClick}
+      ></ExitDialog>
     </InfoWrapper>
   );
 }
@@ -74,8 +78,7 @@ function ExitDialog(props) {
         <Button onClick={exitDialogClose}>취소</Button>
         <Button
           onClick={() => {
-            // Router.push("/meeting")
-            window.close();
+            props.exitClick();
           }}
           autoFocus
         >

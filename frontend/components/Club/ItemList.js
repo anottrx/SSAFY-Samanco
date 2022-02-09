@@ -24,8 +24,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
 
-import { getProjectAllAPI, getProjectById } from '../../pages/api/project';
-import { getStudyAllAPI, getStudyById } from '../../pages/api/study';
+import {
+  getProjectAllAPI,
+  getProjectById,
+  projectImageDownload,
+} from '../../pages/api/project';
+import {
+  getStudyAllAPI,
+  getStudyById,
+  studyImageDownload,
+} from '../../pages/api/study';
 
 import StackList from './StackList';
 
@@ -189,6 +197,7 @@ function ItemList(props) {
 
 export function Item(props) {
   let { data, setDetail, from } = props;
+  let [imageUrl, setImageUrl] = useState(undefined);
 
   const Container = styled.div`
     display: flex;
@@ -247,6 +256,9 @@ export function Item(props) {
     height: 80px;
     float: left;
     transform: translate(20%, 20%);
+    // margin-right: auto;
+    // transform: translate(-90%, 10%);
+    position: absolute;
   `;
 
   let totalSize = 0,
@@ -262,6 +274,58 @@ export function Item(props) {
   if (data.deadline < 0) leftDay = '+' + -1 * data.deadline;
   else if (data.deadline == 0) leftDay = '-DAY';
   else leftDay = '-' + data.deadline;
+
+  function base64ToArrayBuffer(base64) {
+    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(binaryString.length);
+    return bytes.map((byte, i) => binaryString.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const blob = new Blob([body]);
+    const fileName = `${filename}`;
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      // const imageEl = document.getElementById('imageEl');
+      // if (imageEl) {
+      const url = window.URL.createObjectURL(blob);
+      setImageUrl(url);
+      // imageEl.style.backgroundImage = `url(${url})`;
+      // imageEl.style.width = '100%';
+      // imageEl.style.height = '200px';
+      // imageEl.setAttribute('src', url);
+      // }
+    }
+  }
+
+  function getImageUrl(file) {
+    if (from === 'project') {
+      projectImageDownload(file).then((res) => {
+        if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+          const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+          createAndDownloadBlobFile(arrayBuffer, file.originFile);
+        } else {
+          // console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+        }
+      });
+    } else {
+      studyImageDownload(file).then((res) => {
+        if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+          const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+          createAndDownloadBlobFile(arrayBuffer, file.originFile);
+        } else {
+          // console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+        }
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (data.file) {
+      getImageUrl(data.file);
+    }
+  }, []);
 
   return (
     <Container
@@ -313,21 +377,28 @@ export function Item(props) {
       {/* <CusLikeBadge badgeContent={"좋아요 "+data.likes)}></CusLikeBadge> */}
 
       <Card>
+        {data.collectStatus !== 'ING' ? (
+          <EndImage src="/images/apply_end.png"></EndImage>
+        ) : null}
         {
-          // data.file?
-          // <div style={{
-          //     height: "150px",
-          //     backgroundImage: `url("../../../backend-java/${data.file.saveFolder}/${data.file.saveFile}")`
-          // }}></div>
-          // :
-          data.collectStatus === 'ING' ? (
-            <Skeleton variant="rectangular" height={150} animation={false} />
+          data.file ? (
+            <img
+              src={imageUrl}
+              height={150}
+              style={{ objectFit: 'contain', width: '100%' }}
+            ></img>
           ) : (
-            <>
-              <EndImage src="/images/apply_end.png"></EndImage>
-              <Skeleton variant="rectangular" height={150} animation={false} />
-            </>
+            <Skeleton variant="rectangular" height={150} animation={false} />
           )
+
+          // data.collectStatus === 'ING' ? (
+          //   <Skeleton variant="rectangular" height={150} animation={false} />
+          // ) : (
+          //   <>
+          //     <EndImage src="/images/apply_end.png"></EndImage>
+          //     <Skeleton variant="rectangular" height={150} animation={false} />
+          //   </>
+          // )
         }
 
         <CardContent>

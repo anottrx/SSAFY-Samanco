@@ -30,7 +30,11 @@ import style from '@emotion/styled';
 import Cookies from 'universal-cookie';
 
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import { orderArticleByLike, getArticleByTag } from '../../pages/api/board';
+import {
+  getArticleById,
+  orderArticleByLike,
+  getArticleByTag,
+} from '../../pages/api/board';
 
 import BoardColor from '../../data/BoardColor.json';
 
@@ -254,8 +258,17 @@ function BoardList(props) {
             key={data.boardId}
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              setDetail({ detail: data });
-              Router.push('/board/' + data.boardId);
+              getArticleById({
+                boardId: data.boardId,
+                userId:
+                  sessionStorage.getItem('userId') == null
+                    ? 0
+                    : sessionStorage.getItem('userId'),
+                addHit: '1',
+              }).then((res) => {
+                if (res.statusCode == 200) setDetail({ detail: res.board });
+                Router.push('/board/' + data.boardId);
+              }); // 조회수 증가
             }}
           >
             <StyledTableCell component="th" scope="row">

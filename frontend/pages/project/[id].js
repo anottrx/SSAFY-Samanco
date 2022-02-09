@@ -28,7 +28,7 @@ import {
   Radio,
   FormControlLabel,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Router from 'next/router';
 
 import * as projectActions from '../../store/module/project';
@@ -41,6 +41,7 @@ import {
   getUserAtProject,
   changeProjectHost,
   quitProject,
+  projectImageDownload,
 } from '../api/project';
 
 const ProjectDetail = () => {
@@ -48,9 +49,46 @@ const ProjectDetail = () => {
   const userData = useSelector(({ project }) => project.userList);
   const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
-  let imageUrl;
+  let [imageUrl, setImageUrl] = useState(undefined);
 
   const dispatch = useDispatch();
+
+  function base64ToArrayBuffer(base64) {
+    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(binaryString.length);
+    return bytes.map((byte, i) => binaryString.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const blob = new Blob([body]);
+    const fileName = `${filename}`;
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      // const imageEl = document.getElementById('imageEl');
+      // if (imageEl) {
+      const url = window.URL.createObjectURL(blob);
+      setImageUrl(url);
+      //   // imageEl.style.backgroundImage = `url(${url})`;
+      //   // imageEl.style.width = '100%';
+      //   // imageEl.style.height = '200px';
+      //   imageEl.setAttribute('src', url);
+      // }
+    }
+  }
+
+  function changeToBlob(file) {
+    projectImageDownload(file).then((res) => {
+      console.log(res);
+      if (res.data.statusCode === 200 && res.data.fileString) {
+        console.log(res.data);
+        const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+        createAndDownloadBlobFile(arrayBuffer, file.originFile);
+      } else {
+        console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+      }
+    });
+  }
 
   function fetchData() {
     getUserAtProject({
@@ -78,6 +116,10 @@ const ProjectDetail = () => {
   }, [like]);
 
   useEffect(() => {
+    if (detail && detail.file) changeToBlob(detail.file);
+  }, [detail]);
+
+  useEffect(() => {
     if (reloadCondition) {
       fetchData();
       setReloadCondition(false);
@@ -93,6 +135,10 @@ const ProjectDetail = () => {
   const ImageWrapper = styled.div`
     margin-right: 30px;
     margin-bottom: 10px;
+    min-width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   `;
 
   const ContentWrapper = styled.div`
@@ -126,11 +172,11 @@ const ProjectDetail = () => {
   `;
 
   const EndImage = styled.img`
-    width: 80px;
-    height: 80px;
-    float: left;
-    margin-right: auto;
-    transform: translate(20%, 20%);
+    width: 100px;
+    height: 100px;
+    // margin-right: auto;
+    // transform: translate(-90%, 10%);
+    position: fixed;
   `;
 
   return (
@@ -144,13 +190,20 @@ const ProjectDetail = () => {
         <DetailWrapper maxWidth="sm">
           {detail.collectStatus === 'ING' ? (
             <ImageWrapper>
-              <img src={imageUrl} width={200} height={200}></img>
-              {/* <CusSkeleton variant="rectangular" animation={false} /> */}
+              {imageUrl ? (
+                <img src={imageUrl} height={200}></img>
+              ) : (
+                <CusSkeleton variant="rectangular" animation={false} />
+              )}
             </ImageWrapper>
           ) : (
             <ImageWrapper>
               <EndImage src="/images/apply_end.png"></EndImage>
-              <CusSkeleton variant="rectangular" animation={false} />
+              {imageUrl ? (
+                <img src={imageUrl} height={200}></img>
+              ) : (
+                <CusSkeleton variant="rectangular" animation={false} />
+              )}
             </ImageWrapper>
           )}
           <ProjectInfo detail={detail}></ProjectInfo>
@@ -566,20 +619,24 @@ const ProjectDetail = () => {
               <Button
                 onClick={() => {
                   JoinDialogClose();
-                  joinProjectAPI({
-                    position: selectPosition,
-                    projectId: detail.id,
-                    userId: sessionStorage.getItem('userId'),
-                  })
-                    .then((res) => {
-                      if (res.statusCode === 200) {
-                        alert('프로젝트 지원 신청이 되었습니다.');
-                      } else {
-                        alert(`${res.message}`);
-                      }
+                  if (selectPosition) {
+                    joinProjectAPI({
+                      position: selectPosition,
+                      projectId: detail.id,
+                      userId: sessionStorage.getItem('userId'),
                     })
-                    .catch((err) => console.log(err));
-                  setReloadCondition(true);
+                      .then((res) => {
+                        if (res.statusCode === 200) {
+                          alert('프로젝트 지원 신청이 되었습니다.');
+                        } else {
+                          alert(`${res.message}`);
+                        }
+                      })
+                      .catch((err) => console.log(err));
+                    setReloadCondition(true);
+                  } else {
+                    alert('포지션을 선택해주세요.');
+                  }
                 }}
                 autoFocus
               >

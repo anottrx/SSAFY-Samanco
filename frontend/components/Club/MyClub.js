@@ -6,9 +6,12 @@ import styled from '@emotion/styled';
 import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
 import { useSelector, useDispatch } from 'react-redux';
-import { getProjectByUserId } from '../../pages/api/project';
-import { getStudyByUserId } from '../../pages/api/study';
-import { useLayoutEffect, useState } from 'react';
+import {
+  getProjectByUserId,
+  projectImageDownload,
+} from '../../pages/api/project';
+import { getStudyByUserId, studyImageDownload } from '../../pages/api/study';
+import { useLayoutEffect, useState, useEffect } from 'react';
 
 import StackList from '../Club/StackList';
 import Router from 'next/router';
@@ -122,6 +125,58 @@ function MyClub(props) {
       slidesToScroll: 1,
     });
 
+    let [imageUrl, setImageUrl] = useState(undefined);
+
+    function base64ToArrayBuffer(base64) {
+      const binaryString = window.atob(base64); // Comment this if not using base64
+      const bytes = new Uint8Array(binaryString.length);
+      return bytes.map((byte, i) => binaryString.charCodeAt(i));
+    }
+
+    function createAndDownloadBlobFile(body, filename) {
+      const blob = new Blob([body]);
+      const fileName = `${filename}`;
+      if (navigator.msSaveBlob) {
+        navigator.msSaveBlob(blob, fileName);
+      } else {
+        const url = window.URL.createObjectURL(blob);
+        setImageUrl(url);
+      }
+    }
+
+    function getImageUrl(file) {
+      if (props.from === 'project') {
+        projectImageDownload(file).then((res) => {
+          console.log(res);
+          if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+            console.log(res.data);
+            const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+            createAndDownloadBlobFile(arrayBuffer, file.originFile);
+          } else {
+            // console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+          }
+        });
+      } else {
+        studyImageDownload(file).then((res) => {
+          console.log(res);
+          if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+            console.log(res.data);
+            const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+            createAndDownloadBlobFile(arrayBuffer, file.originFile);
+          } else {
+            // console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+          }
+        });
+      }
+    }
+
+    useEffect(() => {
+      if (Object.keys(clubData).length == 16 && clubData.file) {
+        // 프로젝트일 때
+        getImageUrl(clubData.file);
+      }
+    }, []);
+
     return Object.keys(clubData).length !== 16 ? (
       <CarouselWrapper>
         <Slider {...settings}>
@@ -132,7 +187,8 @@ function MyClub(props) {
               return (
                 <CusCard key={index}>
                   <CusCardContent>
-                    <div className="img-wrapper"></div>
+                    <CardImages data={data}></CardImages>
+
                     <ProjectInfo>
                       <div className="title">{data.title}</div>
                       {props.from === 'project' ? (
@@ -188,7 +244,15 @@ function MyClub(props) {
       // 프로젝트이면
       <CusCard>
         <CusCardContent>
-          <div className="img-wrapper"></div>
+          {clubData.file ? (
+            <img
+              src={imageUrl}
+              height={150}
+              style={{ objectFit: 'contain' }}
+            ></img>
+          ) : (
+            <div className="img-wrapper"></div>
+          )}
           <ProjectInfo>
             <div className="title">{clubData.title}</div>
             {props.from === 'project' ? (
@@ -232,6 +296,48 @@ function MyClub(props) {
       </CusCard>
     );
   }
+}
+
+function CardImages({ data }) {
+  const [imageUrl, setImageUrl] = useState();
+  function base64ToArrayBuffer(base64) {
+    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(binaryString.length);
+    return bytes.map((byte, i) => binaryString.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const blob = new Blob([body]);
+    const fileName = `${filename}`;
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      const url = window.URL.createObjectURL(blob);
+      setImageUrl(url);
+    }
+  }
+
+  function getImageUrl(file) {
+    studyImageDownload(file).then((res) => {
+      console.log(res);
+      if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+        const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+        createAndDownloadBlobFile(arrayBuffer, file.originFile);
+      }
+    });
+  }
+
+  useEffect(() => {
+    if (data.file) {
+      getImageUrl(data.file);
+    }
+  }, []);
+
+  return data.file ? (
+    <img src={imageUrl} height={150} style={{ objectFit: 'contain' }}></img>
+  ) : (
+    <div className="img-wrapper"></div>
+  );
 }
 
 export default MyClub;

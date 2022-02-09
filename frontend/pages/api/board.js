@@ -59,6 +59,7 @@ async function getArticleByTitle(data) {
 async function getArticleById(data) {
   return await api
     .post('/api/board/view/', {
+      addHit: data.addHit,
       boardId: data.boardId,
       userId: data.userId,
     })

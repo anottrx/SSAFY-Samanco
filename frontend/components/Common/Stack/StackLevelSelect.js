@@ -27,7 +27,7 @@ function StackLevelSelect() {
   const [stackName, setStackName] = useState([]);
   const handleAutocompleteChange = (event) => {
     const name = event.target.innerText;
-    setStackName([...stackName, { name: name, level: 1 }]);
+    setStackName([{ name: name, level: 1 }, ...stackName]);
     console.log(stackName);
   };
 
