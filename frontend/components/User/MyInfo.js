@@ -229,7 +229,7 @@ export default function MyInfo() {
     if (name == 'birthday') {
       inputState.birthday = value;
       userBirthday.value = value;
-      console.log('생일 ' + JSON.stringify(inputState));
+      // console.log('생일 ' + JSON.stringify(inputState));
     } else {
       if (name == null && value.length == 6) {
         inputState.birthday = value;
@@ -247,7 +247,7 @@ export default function MyInfo() {
         }
       }
       inputState[name] = value;
-      console.log('스택 ' + JSON.stringify(inputState));
+      // console.log('스택 ' + JSON.stringify(inputState));
     }
   };
 
@@ -385,12 +385,12 @@ export default function MyInfo() {
   };
 
   function handleLinksChange(linkArr) {
-    console.log(linkArr);
+    // console.log(linkArr);
     let linkList = '';
     const size = linkArr.length;
     for (let i = 0; i < size; i++) {
       linkList = linkList + ' ' + linkArr[i];
-      console.log(linkArr[i]);
+      // console.log(linkArr[i]);
     }
     linkList = linkList.trim();
     inputState.link = linkList;
