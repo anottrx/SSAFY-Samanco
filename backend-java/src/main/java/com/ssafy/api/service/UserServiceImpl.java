@@ -267,6 +267,7 @@ public class UserServiceImpl implements UserService {
 			return 402;
 		}
 
+		userLikeRepositorySupport.minusTagHit(tagId, tag);
 		UserLike result=userLikeRepositorySupport.userLike(userId, tagId, tag);
 		if (result==null){
 			UserLike userLike=new UserLike();
@@ -279,6 +280,7 @@ public class UserServiceImpl implements UserService {
 			userLikeRepositorySupport.deleteUserLike(userId, tagId, tag);
 			return 201;
 		}
+
 	}
 
 	@Override
