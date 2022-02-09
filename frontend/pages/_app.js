@@ -68,6 +68,7 @@ const ImgMacha = styled.img`
 `;
 const ImgLogo = styled.img`
   max-height: 30px;
+  cursor: pointer;
 `;
 
 function MyApp({ Component, pageProps }) {
