@@ -60,7 +60,7 @@ public class BoardRepositorySupport {
     }
 
     @Transactional
-    public Board selectBoard(Long boardId) {
+    public Board selectBoard(Long boardId, int addHit) {
         Board result = jpaQueryFactory.selectFrom(qBoard)
                 .where(qBoard.id.eq(boardId), qBoard.isDeleted.eq(false)).fetchOne();
         if (result==null){
@@ -68,7 +68,7 @@ public class BoardRepositorySupport {
         }
         // 조회수 증가
         jpaQueryFactory.update(qBoard).where(qBoard.id.eq(boardId))
-                .set(qBoard.hit, qBoard.hit.add(1))
+                .set(qBoard.hit, qBoard.hit.add(addHit))
                 .execute();
 
         return result;

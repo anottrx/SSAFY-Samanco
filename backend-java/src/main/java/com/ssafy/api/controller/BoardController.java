@@ -4,10 +4,7 @@ import com.ssafy.api.model.BoardDto;
 import com.ssafy.api.model.FileDto;
 import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.*;
-import com.ssafy.api.response.StackSelectAllRes;
-import com.ssafy.api.response.BoardSelectAllRes;
-import com.ssafy.api.response.BoardSelectRes;
-import com.ssafy.api.response.UserSelectAllRes;
+import com.ssafy.api.response.*;
 import com.ssafy.api.service.FileService;
 import com.ssafy.api.service.StackService;
 import com.ssafy.api.service.BoardService;
@@ -174,14 +171,29 @@ public class BoardController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectBoard(
-            @RequestBody @ApiParam(value="board id", required = true) BoardUserIdReq boardInfo) throws IOException {
+            @RequestBody @ApiParam(value="board id", required = true) BoardUserIdHitReq boardInfo) throws IOException {
 
-        BoardDto board=boardService.selectBoard(boardInfo.getUserId(), boardInfo.getBoardId());
+        BoardDto board=boardService.selectBoard(boardInfo.getUserId(), boardInfo.getBoardId(), boardInfo.getAddHit());
         if (board==null){
             return ResponseEntity.status(200).body(BoardSelectRes.of(401, "유효하지 않은 게시글입니다.", null));
         }
         return ResponseEntity.status(200).body(BoardSelectRes.of(200, "Success", board));
     }
+
+//    @GetMapping("/{boardId}")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "성공"),
+//            @ApiResponse(code = 401, message = "게시글 없음"),
+//            @ApiResponse(code = 500, message = "서버 오류")
+//    })
+//    public ResponseEntity<? extends BaseResponseBody> selectBoard(@PathVariable("boardId") Long boardId) throws IOException {
+//
+//        BoardDto board=boardService.selectBoard(0l, boardId);
+//        if (board==null){
+//            return ResponseEntity.status(200).body(BoardSelectRes.of(401, "유효하지 않은 게시글입니다.", null));
+//        }
+//        return ResponseEntity.status(200).body(BoardSelectRes.of(200, "Success", board));
+//    }
 
     @PostMapping("/title")
     @ApiResponses({
@@ -282,17 +294,19 @@ public class BoardController {
     }
 
     @GetMapping("/download/{path}")
-    public String getImageWithMediaType(@PathVariable("path") String path) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> getImageWithMediaType(@PathVariable("path") String path) throws IOException {
         String realPath = new File("").getAbsolutePath() + File.separator + "files";
         String[] paths=path.split("&");
         String filePath = realPath + File.separator + paths[0] + File.separator + paths[1];
         File target = new File(filePath);
         System.out.println("target: "+target);
-
+        if (target==null){
+            return ResponseEntity.status(200).body(FileStringRes.of(401, "해당 파일을 다운로드할 수 없습니다.", null));
+        }
         byte[] fileByte = FileUtils.readFileToByteArray(target);
         String fileString = new String(Base64.encodeBase64(fileByte));
 
-        return fileString;
+        return ResponseEntity.status(200).body(FileStringRes.of(200, "success", fileString));
     }
 
 }

@@ -15,7 +15,7 @@ public interface BoardService {
 
     int deleteBoard(Long userId, Long boardId);
 
-    BoardDto selectBoard(Long userId, Long boardId);
+    BoardDto selectBoard(Long userId, Long boardId, int addHit);
 
     List<BoardDto> selectByUser(Long userId);
     List<BoardDto> selectBoardAll();

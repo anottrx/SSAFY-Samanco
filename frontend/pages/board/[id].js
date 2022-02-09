@@ -225,7 +225,8 @@ const BoardDetail = () => {
 
     function changeToBlob(file) {
       fileDownload(file).then((res) => {
-        const arrayBuffer = base64ToArrayBuffer(res.data);
+          console.log(res);
+        const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
         createAndDownloadBlobFile(arrayBuffer, file.originFile);
       });
     }

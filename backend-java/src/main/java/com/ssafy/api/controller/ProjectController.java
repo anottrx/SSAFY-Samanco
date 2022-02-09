@@ -231,11 +231,11 @@ public class ProjectController{
             @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectProject(
-            @RequestBody @ApiParam(value="project id", required = true) ProjectUserIdReq projectInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectProject(@RequestBody ProjectUserIdReq projectInfo) throws IOException {
 
         Long projectId= projectInfo.getProjectId();
         Long userId = projectInfo.getUserId();
+//        int addHit = projectInfo.getAddHit();
 
         ProjectDto project=projectService.selectProject(userId, projectId);
         UserDto user=userService.selectUser(userId);
