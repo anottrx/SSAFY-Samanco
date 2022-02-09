@@ -131,6 +131,16 @@ async function fileDownload(data) {
     .catch((err) => err.response.data);
 }
 
+// 게시물 유저 아이디로 조회
+async function getArticleByUserId(userId) {
+  return await api
+    .post('/api/board/user', {
+      userId: userId,
+    })
+    .then((res) => res.data)
+    .catch((err) => err.response.data);
+}
+
 export {
   registBoard,
   updateBoard,
@@ -144,4 +154,5 @@ export {
   updateComment,
   deleteComment,
   fileDownload,
+  getArticleByUserId
 };

@@ -225,6 +225,17 @@ function MyApp({ Component, pageProps }) {
           </MenuItem>
           <MenuItem
             onClick={(e) => {
+              e.preventDefault();
+              Router.push('/myinfo/board');
+              handleClose();
+            }}
+          >
+            <span className="site-nav-item" style={styles.link}>
+              내 게시글
+            </span>
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
               alert('로그아웃 되었습니다.');
               sessionStorage.clear();
               cookies.set('userToken', '', -1);

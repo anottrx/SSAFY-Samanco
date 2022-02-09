@@ -15,6 +15,11 @@ const MyInfoMenu = () => {
       name: '/myinfo/club',
     },
     {
+      path: '/myinfo/board',
+      label: '내 게시글',
+      name: '/myinfo/board',
+    },
+    {
       path: '/myinfo/password',
       label: '비밀번호 재설정',
       name: '/myinfo/password',
