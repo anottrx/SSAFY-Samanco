@@ -1,5 +1,4 @@
-import { ta } from 'date-fns/locale';
-import api, { fileUrl } from './index';
+import api, { fileUrl, blobUrl } from './index';
 
 // 프로젝트 등록
 async function registAPI(formData) {
@@ -191,6 +190,14 @@ async function projectStackList() {
     .catch((err) => err.response.data);
 }
 
+// 파일 다운로드
+async function projectImageDownload(data) {
+  return await blobUrl
+    .get('/api/project/download/' + data.saveFolder + '&' + data.saveFile)
+    .then((res) => res)
+    .catch((err) => err.response.data);
+}
+
 export {
   registAPI,
   updateAPI,
@@ -210,4 +217,5 @@ export {
   projectStackList,
   changeProjectHost,
   joinCancelProject,
+  projectImageDownload,
 };

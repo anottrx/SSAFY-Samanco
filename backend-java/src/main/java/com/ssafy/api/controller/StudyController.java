@@ -14,12 +14,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -410,5 +413,21 @@ public class StudyController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(201, "좋아요 취소"));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "좋아요"));
+    }
+
+    @GetMapping("/download/{path}")
+    public ResponseEntity<? extends BaseResponseBody> getImageWithMediaType(@PathVariable("path") String path) throws IOException {
+        String realPath = new File("").getAbsolutePath() + File.separator + "files";
+        String[] paths=path.split("&");
+        String filePath = realPath + File.separator + paths[0] + File.separator + paths[1];
+        File target = new File(filePath);
+        System.out.println("target: "+target);
+        if (target==null){
+            return ResponseEntity.status(200).body(FileStringRes.of(401, "해당 파일을 다운로드할 수 없습니다.", null));
+        }
+        byte[] fileByte = FileUtils.readFileToByteArray(target);
+        String fileString = new String(Base64.encodeBase64(fileByte));
+
+        return ResponseEntity.status(200).body(FileStringRes.of(200, "success", fileString));
     }
 }

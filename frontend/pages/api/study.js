@@ -1,4 +1,4 @@
-import api, { fileUrl } from './index';
+import api, { fileUrl, blobUrl } from './index';
 
 // 스터디 등록
 async function registAPI(formData) {
@@ -190,6 +190,14 @@ async function studyStackList() {
     .catch((err) => err.response.data);
 }
 
+// 파일 다운로드
+async function studyImageDownload(data) {
+  return await blobUrl
+    .get('/api/study/download/' + data.saveFolder + '&' + data.saveFile)
+    .then((res) => res)
+    .catch((err) => err.response.data);
+}
+
 export {
   registAPI,
   updateAPI,
@@ -209,4 +217,5 @@ export {
   studyStackList,
   changeStudyHost,
   joinCancelStudy,
+  studyImageDownload,
 };
