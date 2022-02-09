@@ -1,7 +1,17 @@
 module.exports = {
   reactStrictMode: true,
-  distDir: "dist",
+  images: {
+    loader: 'custom',
+  },
+  distDir: 'dist',
   trailingSlash: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  // images: {
+  //   domains: ['i6a502.p.ssafy.io'],
+  // },
+
   // swcMinify: true,
   // swcMinify : Rust 컴파일러로 변경 -> 속도 빨라짐
   // experimental: {
@@ -10,4 +20,4 @@ module.exports = {
   //   concurrentFeatures: true,
   //   serverComponents: true
   // }
-}
+};

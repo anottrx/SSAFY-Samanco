@@ -1,4 +1,4 @@
-import MyInfoMenu from "../../pages/myinfo/myinfoMenu";
+import MyInfoMenu from '../../pages/myinfo/myinfoMenu';
 
 const MyInfolayoutStyle = {
   margin: 20,

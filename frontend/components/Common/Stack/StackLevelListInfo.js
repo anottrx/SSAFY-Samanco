@@ -2,13 +2,13 @@ import StackItem from './item';
 import Rating from '@mui/material/Rating';
 import styled from '@emotion/styled';
 
-function StackLevelList({ items }) {
+function StackLevelListInfo({ items }) {
   const StackWrapper = styled.div`
     margin: 10px 0px;
   `;
 
-  const ItemWrapper = styled.div`
-    display: flex;
+  const ItemWrapper = styled.span`
+    display: inline-block;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: center;
@@ -31,4 +31,4 @@ function StackLevelList({ items }) {
   );
 }
 
-export default StackLevelList;
+export default StackLevelListInfo;

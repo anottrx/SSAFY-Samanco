@@ -40,6 +40,8 @@ public class QFiles extends EntityPathBase<Files> {
 
     public final StringPath originFile = createString("originFile");
 
+    public final StringPath path = createString("path");
+
     public final StringPath saveFile = createString("saveFile");
 
     public final StringPath saveFolder = createString("saveFolder");

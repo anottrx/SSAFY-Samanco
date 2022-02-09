@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import Router from "next/router";
-import Cookies from "universal-cookie";
-import { useCookies } from "react-cookie";
+import React, { useState, useEffect, useRef } from 'react';
+import Router from 'next/router';
+import Cookies from 'universal-cookie';
+// import { useCookies } from 'react-cookie';
 import {
   getUserLoginTokenAPI,
   getUserInfoAPI,
@@ -9,10 +9,10 @@ import {
   updateNicknameAPI,
   deleteUserAPI,
   loginAPI,
-} from "../../pages/api/user";
-import DatePickerUser from "../../components/Common/DatePickerUser";
-import { LocalizationProvider } from "@mui/lab";
-import DateAdapter from "@mui/lab/AdapterDateFns";
+} from '../../pages/api/user';
+import DatePickerUser from '../../components/Common/DatePickerUser';
+import { LocalizationProvider } from '@mui/lab';
+import DateAdapter from '@mui/lab/AdapterDateFns';
 import {
   TextField,
   Button,
@@ -25,13 +25,20 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-} from "@mui/material";
-import styled from "@emotion/styled";
-import StackLevelList from "../Common/Stack/StackLevelList";
-import StackLevelSelectRegister from "../Common/Stack/StackLevelSelectRegister";
-import LinkList from "../Common/LinkList";
-import StackLevelInfoDialog from "../Common/Stack/StackLevelInfoDialog";
-import forceReload from "../../util/ForceReload";
+  Card,
+  CardContent,
+  OutlinedInput,
+  Divider,
+  InputAdornment,
+  Container,
+} from '@mui/material';
+import styled from '@emotion/styled';
+import StackLevelListInfo from '../Common/Stack/StackLevelListInfo';
+import StackLevelSelectRegister from '../Common/Stack/StackLevelSelectRegister';
+import LinkList from '../Common/LinkList';
+import StackLevelInfoDialog from '../Common/Stack/StackLevelInfoDialog';
+// import forceReload from '../../util/ForceReload';
+import MyInfoLayout from './MenuLayout';
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
 // const urlReg = [(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*);
@@ -45,6 +52,23 @@ const DatePickerWrapper = styled.div`
     width: 370px;
     margin: 0px 0px;
   }
+`;
+const CusCard = styled(Card)`
+  // margin-top: 10px;
+  padding: 10px;
+
+  // display: flex;
+  margin: 10px 0px;
+  align-items: center;
+
+  & h4 {
+    font-weight: bolder;
+    padding: 0;
+    margin: 0;
+  }
+`;
+const CusContainer = styled(Container)`
+  float: left;
 `;
 const ImgUploadBtn = styled(Button)`
   padding: 20px;
@@ -73,9 +97,25 @@ const ImgDefault = styled.img`
   background-repeat: no-repeat;
   background-size: contain;
 `;
+// const DetailWrapper = styled.div`
+//   display: flex;
+//   flex-direction: row;
+// `;
 const DetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  // align-items: baseline;
+  & > div {
+    // display: flex;
+    // margin-left: auto;
+    // float: right;
+  }
+  & div > p {
+    margin-left: 10px;
+  }
+  & .dateOrTime {
+    color: gray;
+  }
 `;
 const CusSkeleton = styled.div`
   // display: flex;
@@ -110,9 +150,9 @@ const ButtonWrapper = styled.div`
 const RowUpWrapper = styled.div`
   display: grid;
   // grid-template-columns: max-content max-content;
-  grid-template-columns: 60px 12fl;
+  grid-template-columns: 60px 12fr;
   grid-gap: 8px;
-  padding: 1px 0px;
+  padding: 2px 0px;
 `;
 const RowWrapper = styled.div`
   display: grid;
@@ -131,52 +171,52 @@ export default function MyInfo() {
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
-  const [imageDefault, setImageDefault] = useState("");
+  const [imageDefault, setImageDefault] = useState('');
 
   const [inputState, setInputState] = useState({
-    userId: "",
-    password: "",
-    name: "",
-    email: "",
-    phone: "",
-    nickname: "",
-    class: "",
-    birthday: "",
-    initDate: "",
-    generation: "",
-    studentId: "",
+    userId: '',
+    password: '',
+    name: '',
+    email: '',
+    phone: '',
+    nickname: '',
+    class: '',
+    birthday: '',
+    initDate: '',
+    generation: '',
+    studentId: '',
     stacks: [],
     stacks_get: [],
-    position: "",
-    link: "",
-    description: "",
-    image_id: "",
+    position: '',
+    link: '',
+    description: '',
+    image_id: '',
   });
 
   const positionOptions = [
-    { value: "", name: "선택해 주세요" },
-    { value: "frontend", name: "프론트엔드" },
-    { value: "backend", name: "백엔드" },
-    { value: "mobile", name: "모바일" },
-    { value: "embedded", name: "임베디드" },
+    { value: '', name: '선택해 주세요' },
+    { value: 'frontend', name: '프론트엔드' },
+    { value: 'backend', name: '백엔드' },
+    { value: 'mobile', name: '모바일' },
+    { value: 'embedded', name: '임베디드' },
   ];
 
   const classOptions = [
-    { value: "JAVA", name: "자바반" },
-    { value: "PYTHON", name: "파이썬반" },
-    { value: "MOBILE", name: "모바일반" },
-    { value: "EMBEDDED", name: "임베디드반" },
+    { value: 'JAVA', name: '자바반' },
+    { value: 'PYTHON', name: '파이썬반' },
+    { value: 'MOBILE', name: '모바일반' },
+    { value: 'EMBEDDED', name: '임베디드반' },
   ];
 
   const [nicknameInfo, setNicknameInfo] = useState({
-    nickname: sessionStorage.getItem("nickname"),
-    id: sessionStorage.getItem("userId"),
+    nickname: sessionStorage.getItem('nickname'),
+    id: sessionStorage.getItem('userId'),
   });
 
   const cookies = new Cookies();
-  const [cookie, setCookie] = useCookies(["userToken"]);
+  // const [cookie, setCookie] = useCookies(['userToken']);
 
-  const [files, setFiles] = useState("");
+  const [files, setFiles] = useState('');
 
   const onImgChange = (event) => {
     const file = event.target.files[0];
@@ -186,10 +226,10 @@ export default function MyInfo() {
   const uploadRef = useRef(null);
 
   const changeHandle = (value, name) => {
-    if (name == "birthday") {
+    if (name == 'birthday') {
       inputState.birthday = value;
       userBirthday.value = value;
-      console.log("생일 " + JSON.stringify(inputState));
+      console.log('생일 ' + JSON.stringify(inputState));
     } else {
       if (name == null && value.length == 6) {
         inputState.birthday = value;
@@ -197,12 +237,17 @@ export default function MyInfo() {
         yy = Number(yy) > 25 ? 19 + yy : 20 + yy;
         let mm = inputState.birthday.slice(2, 4);
         let dd = inputState.birthday.slice(4, 6);
-        setUserBirthdayDate(yy + "-" + mm + "-" + dd);
-        userBirthday.initDate = yy + "-" + mm + "-" + dd;
-        userBirthday.value = yy + "-" + mm + "-" + dd;
+        setUserBirthdayDate(yy + '-' + mm + '-' + dd);
+        userBirthday.initDate = yy + '-' + mm + '-' + dd;
+        userBirthday.value = yy + '-' + mm + '-' + dd;
+        if (yy == 22 && mm == '02') {
+          inputState.birthday = '';
+          userBirthday.initDate = '';
+          userBirthday.value = '';
+        }
       }
       inputState[name] = value;
-      console.log("스택 " + JSON.stringify(inputState));
+      console.log('스택 ' + JSON.stringify(inputState));
     }
   };
 
@@ -219,29 +264,39 @@ export default function MyInfo() {
   };
 
   const [userBirthday, setUserBirthday] = useState({
-    value: "",
-    initDate: "",
+    value: '',
+    initDate: '',
   });
-  const [userBirthdayDate, setUserBirthdayDate] = useState("");
+  const [userBirthdayDate, setUserBirthdayDate] = useState('');
 
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
-    const token = cookie.userToken;
+    // const token = cookie.userToken;
+    const token = cookies.get('userToken')
+    cookies.remove("userToken", {path: "/myinfo"})  
+    // cookies.remove("userToken", {path: "/"}) 
 
-    getUserLoginTokenAPI(token).then((res) => {
-      if (res.statusCode == 200) {
-      } else {
-      }
-      console.log("getUserLoginTokenAPI 관련 결과" + JSON.stringify(res));
-      inputState.userId = res.userId;
-      inputState.email = res.email;
-      inputState.nickname = res.nickname;
-      nicknameInfo.nickname = inputState.nickname;
+    // getUserLoginTokenAPI(token).then((res) => {
+    //   if (res.statusCode == 200) {
+    //     //
+    //   } else {
+    //     // 
+    //   }
+    //   console.log('getUserLoginTokenAPI 관련 결과' + JSON.stringify(res));
+    //   inputState.userId = res.userId;
+    //   inputState.email = res.email;
+    //   inputState.nickname = res.nickname;
+    //   nicknameInfo.nickname = inputState.nickname;
 
-      const userId = res.userId;
-      getUserInfoAPI(userId).then((res) => {
+    //   const userId = res.userId;
+
+      inputState.userId = sessionStorage.getItem("userId");
+      inputState.nickname = sessionStorage.getItem("nickname");
+      inputState.email = sessionStorage.getItem("email");
+
+      getUserInfoAPI(inputState.userId).then((res) => {
         if (res.statusCode == 200) {
-          console.log("내 정보 보기 결과: " + JSON.stringify(res));
+          console.log('내 정보 보기 결과: ' + JSON.stringify(res));
           inputState.name = res.user.name;
           const today = new Date();
           const todayYear = today.getFullYear().toString().slice(2);
@@ -255,12 +310,16 @@ export default function MyInfo() {
             year = Number(year) > 25 ? 19 + year : 20 + year;
             let month = inputState.birthday.slice(2, 4);
             let day = inputState.birthday.slice(4, 6);
-            setUserBirthdayDate(year + "-" + month + "-" + day);
+            setUserBirthdayDate(year + '-' + month + '-' + day);
             // console.log(userBirthdayDate);
-            userBirthday.initDate = year + "-" + month + "-" + day;
-            userBirthday.value = year + "-" + month + "-" + day;
+            userBirthday.initDate = year + '-' + month + '-' + day;
+            userBirthday.value = year + '-' + month + '-' + day;
+            if (year == '22' && month == '02') {
+              userBirthday.value = '';
+              inputState.birthday = '';
+            }
           }
-          if (res.user.phone !== "00000000000") {
+          if (res.user.phone !== '00000000000') {
             inputState.phone = res.user.phone;
           }
           inputState.class = res.user.userClass;
@@ -273,30 +332,31 @@ export default function MyInfo() {
           inputState.stacks = res.user.stacks;
           inputState.stacks_get = res.user.stacks;
           inputState.image_id = res.user.file;
-  
+
           if (inputState.image_id == null) {
             if (inputState.generation == 7) {
-              setImageDefault("/images/profile_default_gen7.png");
+              setImageDefault('/images/profile_default_gen7.png');
             } else if (inputState.generation == 0) {
-              setImageDefault("/images/profile_default_gen0.png");
+              setImageDefault('/images/profile_default_gen0.png');
             } else {
-              setImageDefault("/images/profile_default_gen6.png");
+              setImageDefault('/images/profile_default_gen6.png');
             }
           }
-  
-          if (res.user.link != null) {
-            setLinks(inputState.link.split(" "));
-            console.log(links);
-            console.log(inputState.link.split(" "));
-          } else {
-            setLinks();
-          }
+
+          // if (res.user.link != null) {
+          //   setLinks(inputState.link.split(" "));
+          //   console.log(links);
+          //   console.log(inputState.link.split(" "));
+          // } else {
+          //   setLinks();
+          // }
           // inputState.file = res.user.file;
           setLoading(true);
         } else {
+          //
         }
       });
-    });
+    // });
   }
 
   useEffect(() => {
@@ -307,47 +367,47 @@ export default function MyInfo() {
   const preview = () => {
     if (!files) return false;
 
-    const imgEl = document.querySelector("#img_box");
+    const imgEl = document.querySelector('#img_box');
     const reader = new FileReader();
 
     reader.onload = () =>
       (imgEl.style.backgroundImage = `url(${reader.result})`);
 
-    imgEl.innerText = "";
+    imgEl.innerText = '';
     reader.readAsDataURL(files);
   };
 
   const handleNicknameChange = (e) => {
     setNicknameInfo({
       nickname: e.target.value,
-      id: sessionStorage.getItem("userId"),
+      id: sessionStorage.getItem('userId'),
     });
   };
 
   function handleLinksChange(linkArr) {
     console.log(linkArr);
-    let linkList = "";
+    let linkList = '';
     const size = linkArr.length;
     for (let i = 0; i < size; i++) {
-      linkList = linkList + " " + linkArr[i];
+      linkList = linkList + ' ' + linkArr[i];
       console.log(linkArr[i]);
     }
     linkList = linkList.trim();
     inputState.link = linkList;
-    setLinks(linkList.split(" "));
+    setLinks(linkList.split(' '));
   }
 
   const positionHandleChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     inputState.position = e.target.value;
-    console.log("inputState" + JSON.stringify(inputState));
-    console.log(inputState);
+    // console.log('inputState' + JSON.stringify(inputState));
+    // console.log(inputState);
   };
 
   const [checkedNickname, setCheckedNickname] = useState(true);
   const [changeNickname, setChangeNickname] = useState(false);
   const handleUserNicknameClick = (e) => {
-    alert("닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다");
+    alert('닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다');
     setCheckedNickname(false);
     setChangeNickname(true);
     setNicknameChange(true);
@@ -357,12 +417,12 @@ export default function MyInfo() {
     // 닉네임 바꿀 수 있는지 확인
     if (nicknameChange) {
       let isNormal = true;
-      let msg = "";
-      if (nicknameInfo.nickname == "") {
-        msg = "닉네임을 입력해주세요";
+      let msg = '';
+      if (nicknameInfo.nickname == '') {
+        msg = '닉네임을 입력해주세요';
         isNormal = false;
-      } else if (nicknameInfo.nickname == sessionStorage.getItem("nickname")) {
-        msg = "현재 닉네임과 동일합니다";
+      } else if (nicknameInfo.nickname == sessionStorage.getItem('nickname')) {
+        msg = '현재 닉네임과 동일합니다';
         isNormal = false;
       }
       if (!isNormal) {
@@ -375,7 +435,7 @@ export default function MyInfo() {
         updateNicknameAPI(nicknameInfo).then((res) => {
           if (res.statusCode == 200) {
             setCheckPassword(true);
-            alert("닉네임 변경이 가능합니다.");
+            alert('멋진 닉네임이네요~^^ 변경 가능합니다');
             setNicknameChange(false);
             setChangeNickname(false);
             setCheckedNickname(true);
@@ -385,6 +445,7 @@ export default function MyInfo() {
         });
       }
     } else {
+      //
     }
   };
 
@@ -392,8 +453,7 @@ export default function MyInfo() {
     e.preventDefault();
     setOnlyView(false);
     setFinishUpdate(true);
-
-    console.log("수정하기 버튼 누름");
+    // console.log("수정하기 버튼 누름");
 
     // setAuthChange(true);
     // setOnlyView(false);
@@ -412,12 +472,12 @@ export default function MyInfo() {
     setOpen(true);
   };
   const handleClose = (event, reason) => {
-    if (reason && reason == "backdropClick") return;
+    if (reason && reason == 'backdropClick') return;
     setOpen(false);
   };
   const [loginInfo, setLoginInfo] = useState({
     email: inputState.email,
-    password: "",
+    password: '',
   });
   const handlePasswordChange = (e) => {
     loginInfo.email = inputState.email;
@@ -426,40 +486,49 @@ export default function MyInfo() {
 
   const handleUpdateFinishClick = (e) => {
     e.preventDefault();
-    console.log(inputState.stacks);
+    // console.log(inputState.stacks);
 
     let isNormal = true;
 
     if (changeNickname) {
       isNormal = false;
-      alert("닉네임 중복 체크를 완료해 주세요.");
+      alert('닉네임 중복 체크를 완료해 주세요.');
     } else if (
+      inputState.phone != null &&
       inputState.phone.length > 0 &&
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert("전화번호 양식을 확인해 주세요.");
-    } else if (links.length >= 1 && !urlReg.test(links)) {
-      // isNormal = false;
-      console.log(links.length);
-      // alert("링크 양식을 확인해 주세요.")
+      alert('전화번호 양식을 확인해 주세요.');
+    } else if (
+      inputState.link != null &&
+      inputState.link.length >= 1 &&
+      !urlReg.test(inputState.link)
+    ) {
+      isNormal = false;
+      // console.log(links.length);
+      alert('링크 양식을 확인해 주세요.');
     }
 
     if (isNormal) {
       handleClickOpen();
-      console.log(loginInfo);
+      // console.log(loginInfo);
     }
   };
 
   const handleUpdateInfo = (e) => {
     let isNormal = true;
 
-    if (inputState.phone.length > 0 && !phoneReg.test(inputState.phone)) {
+    if (
+      inputState.phone != null &&
+      inputState.phone.length > 0 &&
+      !phoneReg.test(inputState.phone)
+    ) {
       isNormal = false;
-      alert("전화번호 양식을 확인해 주세요.");
+      alert('전화번호 양식을 확인해 주세요.');
     } else if (changeNickname) {
       isNormal = false;
-      alert("닉네임 중복 체크를 완료해 주세요.");
+      alert('닉네임 중복 체크를 완료해 주세요.');
     }
 
     if (isNormal) {
@@ -472,8 +541,8 @@ export default function MyInfo() {
         Python: inputState.Python,
         Java: inputState.Java,
         C: inputState.C,
-        "C++": inputState.C2,
-        "C#": inputState.C3,
+        'C++': inputState.C2,
+        'C#': inputState.C3,
         SpringBoot: inputState.SpringBoot,
         MySQL: inputState.MySQL,
         Git: inputState.Git,
@@ -483,6 +552,7 @@ export default function MyInfo() {
         Jira: inputState.Jira,
         Django: inputState.Django,
         Redis: inputState.Redis,
+        Kotlin: inputState.Kotlin,
       };
       Object.keys(inputState.stacks).forEach(function (key) {
         if (inputState.stacks[key] == 0 || inputState.stacks[key] == null) {
@@ -496,53 +566,60 @@ export default function MyInfo() {
       inputState.stacks_get = stacksArr;
 
       loginAPI(loginInfo).then((res) => {
-        console.log(loginInfo.email + " " + loginInfo.password);
+        // console.log(loginInfo.email + ' ' + loginInfo.password);
         if (res.statusCode == 200) {
           // console.log("로그인 성공");
           inputState.password = loginInfo.password;
 
           const formData = new FormData();
 
-          console.log("inputState" + JSON.stringify(inputState));
-          console.log(inputState);
+          // console.log('inputState' + JSON.stringify(inputState));
+          // console.log(inputState);
 
           Object.keys(inputState).map((key) => {
             let value = inputState[key];
-            if (key === "stacks") {
-              formData.append(key, "[" + JSON.stringify(value) + "]");
+            if (key === 'stacks') {
+              formData.append(key, '[' + JSON.stringify(value) + ']');
               // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
-            } else if (key === "phone") {
-              if (inputState.phone == "") {
-                const phoneNull = "00000000000";
-                formData.append(key, phoneNull);
-                // inputState.phone = "00000000000";
+            } else if (key === 'birthday') {
+              if (
+                inputState.birthday.slice(0, 2) == '22' &&
+                inputState.birthday.slice(2, 4) == '02'
+              ) {
+                //
+              } else {
+                formData.append(key, inputState.birthday);
+              }
+            } else if (key === 'phone') {
+              if (inputState.phone == null || inputState.phone == '') {
+                //
               } else {
                 formData.append(key, inputState.phone);
               }
             } else {
               formData.append(key, value);
-              console.log(key + " " + value);
+              // console.log(key + ' ' + value);
             }
           });
 
-          formData.append("file", files);
+          formData.append('file', files);
 
           for (let key of formData.entries()) {
-            console.log("key", `${key}`);
+            console.log('key', `${key}`);
           }
 
           updateUserAPI(formData).then((res) => {
-            console.log(res);
-            console.log(JSON.stringify(res));
+            // console.log(res);
+            // console.log(JSON.stringify(res));
             if (res.statusCode == 200) {
-              if(sessionStorage.getItem("nickname")!= inputState.nickname) {
+              if (sessionStorage.getItem('nickname') != inputState.nickname) {
                 // 닉네임 변경시 상단바 변경도 필요하기 때문
-                sessionStorage.setItem("nickname", inputState.nickname);
-                forceReload();
+                sessionStorage.setItem('nickname', inputState.nickname);
+                // forceReload();
               }
               setNicknameChange(false);
             } else {
-              alert("회원정보 추가에 실패했습니다. 에러코드:" + res.statusCode);
+              alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
             }
           });
 
@@ -565,355 +642,446 @@ export default function MyInfo() {
   };
 
   const handleQuitClick = (event) => {
-    const userId = sessionStorage.getItem("userId");
-    if (window.confirm("탈퇴하시겠습니까?")) {
+    const userId = sessionStorage.getItem('userId');
+    if (window.confirm('탈퇴하시겠습니까?')) {
       deleteUserAPI(userId).then((res) => {
         if (res.statusCode == 200) {
           // 탈퇴 성공 시
-          alert("다음에는 오프라인에서 함께 코딩해요!");
+          alert('다음에는 오프라인에서 함께 코딩해요!');
           sessionStorage.clear();
-          cookies.set("userToken", "");
-          cookies.set("userEmail", "");
+          cookies.set('userToken', '');
+          cookies.set('userEmail', '');
           // 페이지 이동
           window.history.forward();
-          document.location.href = "/";
+          document.location.href = '/';
         } else alert(`${res.message}`);
       });
     } else {
-      alert("좋아요! 싸피사만코와 오래오래 코딩해요!");
+      alert('좋아요! 싸피사만코와 오래오래 코딩해요!');
     }
   };
 
   return (
-    <div>
-      {loading ? (
-        <div>
+    <CusContainer maxWidth="md">
+      <CusCard>
+        {loading ? (
           <div>
-            <h1>{inputState.name}님, 환영합니다</h1>
-            <ContentUpWrapper>
-              <ButtonWrapper>
-                {finishUpdate ? (
-                  <>
+            <CardContent>
+              <h1>{inputState.name}님, 환영합니다</h1>
+              <ContentUpWrapper>
+                <ButtonWrapper>
+                  {finishUpdate ? (
+                    <>
+                      <Button
+                        variant="outlined"
+                        sx={{ float: 'right' }}
+                        onClick={handleUpdateFinishClick}
+                      >
+                        수정완료
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        sx={{ float: 'right', marginRight: 1 }}
+                        onClick={handleResetClick}
+                      >
+                        수정취소
+                      </Button>
+                    </>
+                  ) : (
                     <Button
-                      sx={{ float: "right" }}
-                      onClick={handleUpdateFinishClick}
+                      variant="outlined"
+                      sx={{ float: 'right' }}
+                      onClick={handleUpdateClick}
                     >
-                      수정완료
+                      수정하기
                     </Button>
-                    <Button sx={{ float: "right" }} onClick={handleResetClick}>
-                      수정취소
-                    </Button>
-                  </>
-                ) : (
-                  <Button sx={{ float: "right" }} onClick={handleUpdateClick}>
-                    수정하기
-                  </Button>
-                )}
-              </ButtonWrapper>
-              <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>비밀번호</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    회원정보 변경을 위해 비밀번호를 다시 입력해 주세요
-                  </DialogContentText>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="password"
-                    // value={loginInfo.password}
-                    onChange={handlePasswordChange}
-                    type="password"
-                    fullWidth
-                    variant="standard"
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose}>취소</Button>
-                  <Button onClick={handleUpdateInfo}>확인</Button>
-                </DialogActions>
-              </Dialog>
-              <br />
-              <div>
-                <DetailWrapper maxWidth="sm">
-                  <ContentWrapper>
-                    {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
+                  )}
+                </ButtonWrapper>
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle>비밀번호</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      회원정보 변경을 위해 비밀번호를 다시 입력해 주세요
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="password"
+                      // value={loginInfo.password}
+                      onChange={handlePasswordChange}
+                      type="password"
+                      fullWidth
+                      variant="standard"
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose}>취소</Button>
+                    <Button onClick={handleUpdateInfo}>확인</Button>
+                  </DialogActions>
+                </Dialog>
+                {/* <br /> */}
+                <Divider light sx={{ marginTop: 1.5, marginBottom: 1 }} />
+                <div>
+                  <DetailWrapper maxWidth="sm">
+                    <CardContent sx={{ width: '60%', marginRight: 5 }}>
+                      {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
                       <label>
                         <b>{inputState.name}</b>님, 환영합니다
                       </label>
                     </Box> */}
-                    <Box
-                      className="ssafyInfo"
-                      sx={{ width: "100%", fontSize: "18px", mb: 1 }}
-                    >
-                      싸피&nbsp;
-                      <label>{inputState.generation}기&nbsp;</label>
-                      {onlyView ? (
-                        <label>{inputState.class}반&nbsp;</label>
-                      ) : (
-                        <Select
-                          id="class"
-                          onChange={classHandleChange}
-                          defaultValue={classOptions[0].value}
-                          value={classOptions.value}
-                          sx={{ width: 120, fontSize: 14, height: 35 }}
-                        >
-                          {classOptions.map((opt) => {
-                            return (
-                              <MenuItem
-                                key={opt.value}
-                                value={opt.value}
-                                sx={{ minWidth: 120, fontSize: 14 }}
-                              >
-                                {opt.name}
-                              </MenuItem>
-                            );
-                          })}
-                        </Select>
-                      )}
-                      <label>(학번 {inputState.studentId})</label>
-                    </Box>
-                    <RowUpWrapper>
-                      {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
-                      <label>
-                        이메일
-                        {/* {inputState.email} */}
-                        <input value={inputState.email || ""} disabled />
-                      </label>
-                      {/* </Box> */}
-                    </RowUpWrapper>
-                    <RowUpWrapper>
-                      <label>
-                        <span>닉네임</span>
-                        <input
-                          id="nickname"
-                          value={nicknameInfo.nickname || ""}
-                          disabled={
-                            onlyView ? true : changeNickname ? false : true
-                          }
-                          // style={{ display: "inline-block", width: "240px" }}
-                          onChange={(e) => {
-                            handleNicknameChange(e);
-                            handleChange(e);
-                          }}
-                        />
-                        {finishUpdate ? (
-                          nicknameChange ? (
-                            <Button
-                              onClick={handleNicknameClick}
-                              sx={{ width: "100px" }}
-                            >
-                              중복 확인하기
-                            </Button>
-                          ) : (
-                            <Button
-                              onClick={handleUserNicknameClick}
-                              sx={{ width: "100px" }}
-                            >
-                              닉네임 변경하기
-                            </Button>
-                          )
-                        ) : (
-                          <></>
-                        )}
-                      </label>
-                    </RowUpWrapper>
-                  </ContentWrapper>
-                  {onlyView && inputState.file == null ? (
-                    <ImgDefault src={imageDefault}></ImgDefault>
-                  ) : (
-                    //  <ImgDefault src="/images/gen7.png"></ImgDefault>
-                    <CusSkeleton>
-                      <ImgUploadBtn
-                        id="img_box"
-                        onClick={(event) => {
-                          event.preventDefault();
-                          uploadRef.current.click();
-                        }}
+                      <Box
+                        className="ssafyInfo"
+                        sx={{ width: '100%', fontSize: '18px', mb: 1 }}
                       >
-                        Image Upload
-                      </ImgUploadBtn>
-                      <input
-                        ref={uploadRef}
-                        type="file"
-                        className="imgInput"
-                        id="projectImg"
-                        accept="image/*"
-                        name="file"
-                        encType="multipart/form-data"
-                        onChange={onImgChange}
-                      ></input>
-                    </CusSkeleton>
-                  )}
-                </DetailWrapper>
-              </div>
-              <ContentWrapper2>
-                <RowWrapper>
-                  {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
-                  <label>생년월일</label>
-                  {onlyView ? (
-                    <input
-                      value={userBirthday.value}
-                      // value={inputState.birthday}
-                      disabled
-                      // style={{ width: "60%" }}
-                    />
-                  ) : (
-                    <LocalizationProvider dateAdapter={DateAdapter}>
-                      <DatePickerWrapper>
-                        <DatePickerUser
-                          value={userBirthday || ""}
-                          label=""
-                          changeHandle={(e) => {
-                            changeHandle(e);
-                          }}
-                        ></DatePickerUser>
-                      </DatePickerWrapper>
-                    </LocalizationProvider>
-                  )}
-                </RowWrapper>
-                {/* </Box> */}
-                {/* <Box sx={{ mb: 2 }}> */}
-                <RowWrapper>
-                  <label>전화번호</label>
-                  <input
-                    id="phone"
-                    type="number"
-                    placeholder="01012345678"
-                    value={inputState.phone || ""}
-                    disabled={onlyView ? true : false}
-                    onChange={handleChange}
-                  />
-                </RowWrapper>
-                {/* </Box> */}
-                <RowWrapper>
-                  <label>분야</label>
-                  {onlyView ? (
-                    <>
-                      {/* <label>
+                        싸피&nbsp;
+                        <label>{inputState.generation}기&nbsp;</label>
+                        {onlyView ? (
+                          <label>{inputState.class}반&nbsp;</label>
+                        ) : (
+                          <Select
+                            id="class"
+                            onChange={classHandleChange}
+                            defaultValue={classOptions[0].value}
+                            value={classOptions.value}
+                            sx={{ width: 120, fontSize: 14, height: 35 }}
+                          >
+                            {classOptions.map((opt) => {
+                              return (
+                                <MenuItem
+                                  key={opt.value}
+                                  value={opt.value}
+                                  sx={{ minWidth: 120, fontSize: 14 }}
+                                >
+                                  {opt.name}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        )}
+                        <label>(학번 {inputState.studentId})</label>
+                      </Box>
+                      <RowUpWrapper>
+                        {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
+                        <label>이메일</label>
+                        {/* {inputState.email} */}
+                        {onlyView ? (
+                          <input value={inputState.email} disabled />
+                        ) : (
+                          <TextField
+                            value={inputState.email}
+                            disabled
+                            inputProps={{
+                              style: {
+                                height: 35,
+                                padding: '0 14px',
+                              },
+                            }}
+                          />
+                        )}
+                        {/* </Box> */}
+                      </RowUpWrapper>
+
+                      <RowUpWrapper>
+                        {/* <label> */}
+                        <label>닉네임</label>
+                        {onlyView ? (
+                          <>
+                            <input
+                              id="nickname"
+                              value={nicknameInfo.nickname || ''}
+                              disabled={
+                                onlyView ? true : changeNickname ? false : true
+                              }
+                              // style={{ display: "inline-block", width: "240px" }}
+                              onChange={(e) => {
+                                handleNicknameChange(e);
+                                handleChange(e);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <OutlinedInput
+                              id="nickname"
+                              value={nicknameInfo.nickname || ''}
+                              disabled={
+                                onlyView ? true : changeNickname ? false : true
+                              }
+                              // style={{ display: "inline-block", width: "240px" }}
+                              onChange={(e) => {
+                                handleNicknameChange(e);
+                                handleChange(e);
+                              }}
+                              sx={{ height: 35 }}
+                              endAdornment={
+                                <InputAdornment position="end">
+                                  {finishUpdate ? (
+                                    nicknameChange ? (
+                                      <Button
+                                        variant="outlined"
+                                        onClick={handleNicknameClick}
+                                        sx={{ width: '100px' }}
+                                      >
+                                        중복 확인하기
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="outlined"
+                                        onClick={handleUserNicknameClick}
+                                        sx={{ width: '100px' }}
+                                      >
+                                        닉네임 변경하기
+                                      </Button>
+                                    )
+                                  ) : (
+                                    <></>
+                                  )}
+                                </InputAdornment>
+                              }
+                            />
+                          </>
+                        )}
+
+                        {/* </label> */}
+                      </RowUpWrapper>
+                      <RowWrapper>
+                        {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
+                        <label>생년월일</label>
+                        {onlyView ? (
+                          <input
+                            value={
+                              userBirthday.value.length == 10 &&
+                              userBirthday.value.slice(2, 4) != '22'
+                                ? userBirthday.value
+                                : ''
+                            }
+                            // value={inputState.birthday}
+                            disabled
+                            // style={{ width: "60%" }}
+                          />
+                        ) : (
+                          <LocalizationProvider dateAdapter={DateAdapter}>
+                            <DatePickerWrapper>
+                              <DatePickerUser
+                                value={userBirthday || ''}
+                                label=""
+                                changeHandle={(e) => {
+                                  changeHandle(e);
+                                }}
+                              ></DatePickerUser>
+                            </DatePickerWrapper>
+                          </LocalizationProvider>
+                        )}
+                      </RowWrapper>
+                      {/* </Box> */}
+                      {/* <Box sx={{ mb: 2 }}> */}
+                      <RowWrapper>
+                        <label>전화번호</label>
+                        {onlyView ? (
+                          <input
+                            id="phone"
+                            type="number"
+                            value={inputState.phone || ''}
+                            disabled
+                          />
+                        ) : (
+                          <TextField
+                            id="phone"
+                            type="number"
+                            placeholder={onlyView ? '' : '01012345678'}
+                            value={inputState.phone || ''}
+                            onChange={handleChange}
+                            inputProps={{
+                              style: {
+                                height: 35,
+                                padding: '0 14px',
+                              },
+                            }}
+                          />
+                        )}
+                      </RowWrapper>
+                      {/* </Box> */}
+                      <RowWrapper>
+                        <label>분야</label>
+                        {onlyView ? (
+                          <>
+                            {/* <label>
                         {positionOptions.map((u, i) => {
                           if (u.value == inputState.position) {
                             return (<label>{u.name}</label>);
                           }
                         })}
                       </label> */}
-                      <input
-                        id="position"
-                        disabled
-                        value={
-                          inputState.position == ""
-                            ? ""
-                            : positionOptions
-                                .map((u, i) => {
-                                  if (u.value == inputState.position) {
-                                    return u.name;
-                                  }
-                                })
-                                .join("")
-                        }
-                        //  value={inputState.position || ""}
-                        // onChange={handleChange}
-                      />
-                    </>
-                  ) : (
-                    <Select
-                      id="position"
-                      onChange={(e) => {
-                        positionHandleChange(e);
-                        handleChange(e);
-                      }}
-                      value={inputState.position || ""}
-                      sx={{ minWidth: 350, height: 35, fontSize: 13 }}
-                    >
-                      {positionOptions.map((u, i) => {
-                        return (
-                          <MenuItem
-                            key={i}
-                            value={u.value}
-                            sx={{ minWidth: 120, fontSize: 14 }}
+                            <input
+                              id="position"
+                              disabled
+                              value={
+                                inputState.position == ''
+                                  ? ''
+                                  : positionOptions
+                                      .map((u, i) => {
+                                        if (u.value == inputState.position) {
+                                          return u.name;
+                                        }
+                                      })
+                                      .join('')
+                              }
+                              //  value={inputState.position || ""}
+                              // onChange={handleChange}
+                            />
+                          </>
+                        ) : (
+                          <Select
+                            id="position"
+                            onChange={(e) => {
+                              positionHandleChange(e);
+                              handleChange(e);
+                            }}
+                            value={inputState.position || ''}
+                            sx={{ minWidth: 350, height: 35, fontSize: 13 }}
                           >
-                            {u.name}
-                          </MenuItem>
-                        );
-                      })}
-                    </Select>
-                  )}
-                  {/* <input
+                            {positionOptions.map((u, i) => {
+                              return (
+                                <MenuItem
+                                  key={i}
+                                  value={u.value}
+                                  sx={{ minWidth: 120, fontSize: 14 }}
+                                >
+                                  {u.name}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        )}
+                        {/* <input
                   id="position"
                   value={inputState.position || ""}
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-                </RowWrapper>
-                <div>
-                  <label>기술 스택</label>
-                  <StackLevelInfoDialog />
-                  {onlyView && inputState.stacks_get != null ? (
-                    <StackLevelList items={inputState.stacks_get} />
-                  ) : (
-                    <StackLevelSelectRegister
-                      values={(inputState.stacks, inputState.stacks_get)}
-                      changeHandle={changeHandle}
-                    />
-                  )}
+                      </RowWrapper>
+                    </CardContent>
+                    {onlyView && inputState.file == null ? (
+                      <ImgDefault src={imageDefault}></ImgDefault>
+                    ) : (
+                      //  <ImgDefault src="/images/gen7.png"></ImgDefault>
+                      <CusSkeleton>
+                        <ImgUploadBtn
+                          id="img_box"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            uploadRef.current.click();
+                          }}
+                        >
+                          Image Upload
+                        </ImgUploadBtn>
+                        <input
+                          ref={uploadRef}
+                          type="file"
+                          className="imgInput"
+                          id="projectImg"
+                          accept="image/*"
+                          name="file"
+                          encType="multipart/form-data"
+                          onChange={onImgChange}
+                        ></input>
+                      </CusSkeleton>
+                    )}
+                  </DetailWrapper>
                 </div>
-                <Box sx={{ mb: 2 }}>
-                  <label>자기소개</label>
-                  <br />
-                  <TextField
-                    id="description"
-                    placeholder="자기자신에 대해 소개해주세요"
-                    fullWidth
-                    rows={4}
-                    multiline
-                    value={inputState.description || ""}
-                    disabled={onlyView ? true : false}
-                    onChange={(e) => {
-                      handleChange(e);
-                    }}
-                  />
-                </Box>
-                <Box>
-                  <label>링크</label>&nbsp;
-                  {onlyView ? (
-                    <LinkList items={links} />
-                  ) : (
-                    <>
-                      <span style={{ fontSize: "10px" }}>(최대 2개 가능)</span>
-                      <i style={{ fontSize: "10px" }}>
-                        &nbsp;입력 후 엔터를 눌러주세요
-                      </i>
-                      <Autocomplete
-                        multiple
-                        freeSolo
-                        // options={links}
-                        // getOptionLabel={(option) => option}
-                        value={links}
-                        options={links.map((l) => l.value)}
-                        getOptionLabel={(option) => (option ? option : "")}
-                        renderInput={(params) => <TextField {...params} />}
-                        onChange={(e, option, reason) => {
-                          handleLinksChange(option);
-                        }}
+                <ContentWrapper2>
+                  <CardContent>
+                    <label>기술 스택</label>
+                    <StackLevelInfoDialog />
+                    {onlyView && inputState.stacks_get != null ? (
+                      <StackLevelListInfo items={inputState.stacks_get} />
+                    ) : (
+                      <StackLevelSelectRegister
+                        values={(inputState.stacks, inputState.stacks_get)}
+                        changeHandle={changeHandle}
                       />
-                    </>
-                  )}
-                </Box>
-              </ContentWrapper2>
-              {finishUpdate ? (
-                <></>
-              ) : (
-                <ButtonWrapper>
-                  <Button sx={{ float: "right" }} onClick={handleQuitClick}>
-                    탈퇴하기
-                  </Button>
-                </ButtonWrapper>
-              )}
-            </ContentUpWrapper>
+                    )}
+                  </CardContent>
+                  <CardContent>
+                    <label>자기소개</label>
+                    <br />
+                    <TextField
+                      id="description"
+                      placeholder="자기자신에 대해 소개해주세요"
+                      fullWidth
+                      rows={4}
+                      multiline
+                      value={inputState.description || ''}
+                      disabled={onlyView ? true : false}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
+                    />
+                  </CardContent>
+                  <CardContent>
+                    <label>링크</label>
+                    <br />
+                    {onlyView ? (
+                      <a href={inputState.link} target="_blank">
+                        {inputState.link}
+                      </a>
+                    ) : (
+                      <TextField
+                        id="link"
+                        value={inputState.link || ''}
+                        onChange={handleChange}
+                        fullWidth
+                      />
+                    )}
+                    {/* {onlyView ? (
+                      <LinkList items={links} />
+                    ) : (
+                      <>
+                        <span style={{ fontSize: "10px" }}>
+                          (최대 2개 가능)
+                        </span>
+                        <i style={{ fontSize: "10px" }}>
+                          &nbsp;입력 후 엔터를 눌러주세요
+                        </i>
+                        <Autocomplete
+                          multiple
+                          freeSolo
+                          // options={links}
+                          // getOptionLabel={(option) => option}
+                          // value={links}
+                          // options={links.map((l) => l.value)}
+                          // getOptionLabel={(option) => (option ? option : "")}
+                          renderInput={(params) => <TextField {...params} />}
+                          onChange={(e, option, reason) => {
+                            handleLinksChange(option);
+                          }}
+                        />
+                      </>
+                    )} */}
+                  </CardContent>
+                </ContentWrapper2>
+                {finishUpdate ? (
+                  <></>
+                ) : (
+                  <ButtonWrapper>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      sx={{ float: 'right' }}
+                      onClick={handleQuitClick}
+                    >
+                      탈퇴하기
+                    </Button>
+                  </ButtonWrapper>
+                )}
+              </ContentUpWrapper>
+            </CardContent>
           </div>
-        </div>
-      ) : (
-        <></>
-      )}
-    </div>
+        ) : (
+          <></>
+        )}
+      </CusCard>
+    </CusContainer>
   );
 }

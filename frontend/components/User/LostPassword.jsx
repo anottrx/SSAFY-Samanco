@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   sendEmailPWCodeAPI,
   checkEmailPWAPI,
   resetPWAPI,
-} from "../../pages/api/user";
-import Link from "next/link";
-import FormControl, { useFormControl } from "@mui/material/FormControl";
-import Button from "@mui/material/Button";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import Box from "@mui/material/Box";
-import CheckEmailCode from "./CheckEmailCode";
-import ResetPassword from "./ResetPassword";
+} from '../../pages/api/user';
+import Link from 'next/link';
+import FormControl, { useFormControl } from '@mui/material/FormControl';
+import Button from '@mui/material/Button';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Box from '@mui/material/Box';
+import CheckEmailCode from './CheckEmailCode';
+import ResetPassword from './ResetPassword';
 
 export default function LostPassword(props) {
   // 비밀번호 재설정
@@ -19,7 +19,7 @@ export default function LostPassword(props) {
   const emailReg =
     /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [code, setCode] = useState(false);
 
   const [authFin, setAuthFin] = useState(false);
@@ -43,9 +43,9 @@ export default function LostPassword(props) {
     const value = email;
 
     if (!email) {
-      alert("이메일을 입력해주세요.");
+      alert('이메일을 입력해주세요.');
     } else if (!emailReg.test(email)) {
-      alert("이메일 양식을 확인해 주세요.");
+      alert('이메일 양식을 확인해 주세요.');
     } else {
       //   console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
@@ -64,17 +64,17 @@ export default function LostPassword(props) {
     // const value = code;
 
     if (!code) {
-      alert("인증코드 입력을 완료해 주세요");
+      alert('인증코드 입력을 완료해 주세요');
     } else {
       //   console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
       //   sendEmailCodeAPI(value).then((res) => {
       // setInputState.email(false);
       //   });
-      console.log("인증번호 " + code);
+      console.log('인증번호 ' + code);
       setAuthFin(true);
       setReset(true);
-      sessionStorage.setItem("email", email);
+      sessionStorage.setItem('email', email);
       // props.clickResetPasswordHandle(true, "reset");
       // setSendEmailButton(false); // 인증완료로 바꿔야함
     }
@@ -102,7 +102,7 @@ export default function LostPassword(props) {
         autoComplete="off"
         display="flex"
         justifyContent="center"
-        sx={{ flexDirection: "column" }}
+        sx={{ flexDirection: 'column' }}
         alignItems="center"
         minHeight="70vh"
       >
@@ -135,7 +135,7 @@ export default function LostPassword(props) {
               sx={{ width: 370, py: 1.2, fontSize: 14 }}
               onClick={sendEmailButton ? sendEmailClick : checkCodeClick}
             >
-              {sendEmailButton ? "이메일 보내기" : "비밀번호 재설정하러 가기"}
+              {sendEmailButton ? '이메일 보내기' : '비밀번호 재설정하러 가기'}
             </Button>
           </>
         )}

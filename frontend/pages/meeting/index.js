@@ -1,11 +1,11 @@
-import Layout from "../../components/Layout";
-import SearchBar from "../../components/Common/Search";
-import ItemList from "../../components/Meeting/ItemList";
+import Layout from '../../components/Layout';
+import SearchBar from '../../components/Common/Search';
+import ItemList from '../../components/Meeting/ItemList';
 
-import { Button } from "@mui/material";
-import styled from "@emotion/styled";
+import { Button } from '@mui/material';
+import styled from '@emotion/styled';
 
-import Router from "next/router";
+import Router from 'next/router';
 
 export default function Meeting() {
   const ItemWrapper = styled.div`
@@ -14,7 +14,7 @@ export default function Meeting() {
     justify-content: center;
     align-items: center;
     text-align: left;
-  `
+  `;
 
   const StudyActions = styled.div`
     width: 100%;
@@ -22,11 +22,11 @@ export default function Meeting() {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-  `
+  `;
 
   const CusButton = styled(Button)`
     height: fit-content;
-  `
+  `;
 
   return (
     <Layout>
@@ -34,14 +34,17 @@ export default function Meeting() {
       <ItemWrapper>
         <StudyActions>
           <SearchBar></SearchBar>
-          <CusButton variant="outlined" size="medium"
+          <CusButton
+            variant="outlined"
+            size="medium"
             onClick={() => {
-              Router.replace("/meeting/regist");
-            }}>
+              Router.replace('/meeting/regist');
+            }}
+          >
             등록
           </CusButton>
         </StudyActions>
-      <ItemList></ItemList>
+        <ItemList></ItemList>
       </ItemWrapper>
     </Layout>
   );

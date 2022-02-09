@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@babel/runtime": "^7.17.0",
     "@date-io/date-fns": "^2.11.0",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
@@ -21,10 +22,14 @@
     "cors": "^2.8.5",
     "date-fns": "^2.28.0",
     "dateformat": "^5.0.2",
+    "eslint-plugin-prettier": "^4.0.0",
     "form-data": "^4.0.0",
     "i": "^0.3.7",
+    "lodash": "^4.17.21",
     "next": "^12.0.10",
     "next-redux-wrapper": "^7.0.5",
+    "node-fetch": "^2.6.1",
+    "openvidu-browser": "2.20.0",
     "react": "17.0.2",
     "react-calendar": "^3.6.0",
     "react-cookie": "^4.1.1",
@@ -38,18 +43,33 @@
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.0",
+    "@babel/core": "^7.14.6",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
     "@next/eslint-plugin-next": "^12.0.10",
     "babel-eslint": "^10.1.0",
-    "eslint": "^8.7.0",
-    "eslint-config-next": "12.0.8",
+    "babel-jest": "^27.0.6",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-styled-components": "^1.13.1",
+    "dotenv-cli": "^5.0.0",
+    "eslint": "7.30.0",
+    "eslint-config-next": "11.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "msw": "^0.36.5",
+    "prettier": "^2.3.2",
     "redux-devtools-extension": "^2.13.9",
     "redux-logger": "^3.0.6"
   },
   "msw": {
     "workerDirectory": "public"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

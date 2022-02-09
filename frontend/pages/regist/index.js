@@ -1,21 +1,21 @@
-import React, { useEffect } from "react";
-import Router from "next/router";
-import Regist from "../../components/User/Regist";
-import Cookies from "universal-cookie";
+import React, { useEffect } from 'react';
+import Router from 'next/router';
+import Regist from '../../components/User/Regist';
+import Cookies from 'universal-cookie';
 
 export default function RegistPage() {
   const cookies = new Cookies();
 
   useEffect(() => {
-    document.title = "회원가입 | 싸피사만코";
+    document.title = '회원가입 | 싸피사만코';
 
     if (
-      cookies.get("userToken") != "" &&
-      !sessionStorage.getItem("nickname") &&
-      sessionStorage.getItem("nickname") != "undefined"
+      cookies.get('userToken') != '' &&
+      sessionStorage.getItem('nickname') != null &&
+      sessionStorage.getItem('nickname') != 'undefined'
     ) {
-      alert("로그인된 상태입니다");
-      Router.push("/");
+      alert('로그인된 상태입니다');
+      Router.push('/');
     }
   }, []);
 

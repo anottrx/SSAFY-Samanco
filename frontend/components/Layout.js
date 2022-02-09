@@ -1,4 +1,4 @@
-import Menu from "../pages/menu/index";
+import Menu from '../pages/menu/index';
 
 const layoutStyle = {
   margin: 20,
