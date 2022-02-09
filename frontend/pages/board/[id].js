@@ -39,12 +39,9 @@ import {
 import CommentList from '../../components/Board/CommentList';
 import BoardColor from '../../data/BoardColor.json';
 
-import forceReload from '../../util/ForceReload';
-
 //게시글 상세보기 페이지
 
 const BoardDetail = () => {
-  // const detail = useSelector(({ board }) => board.boardDetail);
   const detail = useSelector(({ board }) => board.boardDetail);
   const tag = detail.tag;
   const [reloadCondition, setReloadCondition] = useState(false);
@@ -67,7 +64,7 @@ const BoardDetail = () => {
 
   useEffect(() => {
     fetchData();
-  }, [like, reloadCondition]);
+  }, [like]);
 
   useEffect(() => {
     if (reloadCondition) {

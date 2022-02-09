@@ -8,9 +8,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { quitProject } from '../../pages/api/project';
 import { quitStudy } from '../../pages/api/study';
 
-import ForceReload from '../../util/ForceReload';
-
-export default function UserCard({ user, clubId, hostId, from }) {
+export default function UserCard({
+  user,
+  clubId,
+  hostId,
+  from,
+  setReloadCondition,
+}) {
   const CusCard = styled(Card)`
     display: flex;
     flex-direction: column;
@@ -82,7 +86,7 @@ export default function UserCard({ user, clubId, hostId, from }) {
                     }).then((res) => {
                       if (res.data.statusCode == 200) {
                         alert('해당 유저를 내보냈습니다.');
-                        ForceReload();
+                        setReloadCondition(true);
                       } else {
                         alert(`${res.data.message}`);
                       }
@@ -95,7 +99,7 @@ export default function UserCard({ user, clubId, hostId, from }) {
                     }).then((res) => {
                       if (res.statusCode == 200) {
                         alert('해당 유저를 내보냈습니다.');
-                        ForceReload();
+                        setReloadCondition(true);
                       } else {
                         alert(`${res.data.message}`);
                       }

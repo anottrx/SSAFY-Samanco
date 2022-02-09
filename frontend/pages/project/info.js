@@ -4,7 +4,7 @@ import StackList from '../../components/Club/StackList';
 import PositionList from '../../components/Club/PositionList';
 import UserCard from '../../components/Common/UserCard';
 
-import { useState, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -41,9 +41,10 @@ import Router from 'next/router';
 function ProjectInfo() {
   let clubData = useSelector(({ project }) => project.projectDetail);
   const userData = useSelector(({ project }) => project.userList);
+  const [reloadCondition, setReloadCondition] = useState(false);
   const dispatch = useDispatch();
 
-  useLayoutEffect(() => {
+  function fetchData() {
     getUserAtProject({
       projectId: clubData.id,
       userId: sessionStorage.getItem('userId'),
@@ -59,7 +60,18 @@ function ProjectInfo() {
         dispatch(projectActions.setProjectDetail({ detail: res.project }));
       }
     );
+  }
+
+  useLayoutEffect(() => {
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      fetchData();
+      setReloadCondition(false);
+    }
+  });
 
   const CusContainer = styled(Container)`
     float: left;
@@ -422,6 +434,7 @@ function ProjectInfo() {
                       key={user.id}
                       user={user}
                       from="project"
+                      setReloadCondition={setReloadCondition}
                     ></UserCard>
                   ) : null;
                 })
@@ -442,6 +455,7 @@ function ProjectInfo() {
                       projectId={clubData.id}
                       hostId={clubData.hostId}
                       from="project"
+                      setReloadCondition={setReloadCondition}
                     ></UserCard>
                   ) : null;
                 })

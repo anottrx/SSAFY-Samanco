@@ -15,7 +15,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 
 import { updateComment, deleteComment } from '../../pages/api/board';
-import forceReload from '../../util/ForceReload';
 import Router from 'next/router';
 
 //댓글 목록 페이지

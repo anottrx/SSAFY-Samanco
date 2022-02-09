@@ -42,16 +42,15 @@ import {
   quitStudy,
 } from '../api/study';
 
-import forceReload from '../../util/ForceReload';
-
 const StudyDetail = () => {
   const detail = useSelector(({ study }) => study.studyDetail);
   const userData = useSelector(({ study }) => study.userList);
+  const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  function fetchData() {
     getUserAtStudy({
       studyId: detail.id,
       userId: sessionStorage.getItem('userId'),
@@ -70,7 +69,18 @@ const StudyDetail = () => {
     }).then((res) => {
       dispatch(studyActions.setStudyDetail({ detail: res.study }));
     });
+  }
+
+  useEffect(() => {
+    fetchData();
   }, [like]);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      fetchData();
+      setReloadCondition(false);
+    }
+  }, [reloadCondition]);
 
   const DetailWrapper = styled.div`
     display: flex;
@@ -233,7 +243,7 @@ const StudyDetail = () => {
                     Router.push('/study');
                   } else alert(`${res.message}`);
                   // 페이지 새로고침
-                  forceReload();
+                  setReloadCondition(true);
                 });
               }}
             >
@@ -520,7 +530,7 @@ const StudyDetail = () => {
                       }
                     })
                     .catch((err) => console.log(err));
-                  forceReload();
+                  setReloadCondition(true);
                 }}
                 autoFocus
               >
@@ -543,13 +553,13 @@ const StudyDetail = () => {
                   })
                     .then((res) => {
                       if (res.statusCode === 200) {
-                        alert('프로젝트 지원 취소가 되었습니다.');
+                        alert('스터디 지원 취소가 되었습니다.');
                       } else {
                         alert(`${res.message}`);
                       }
                     })
                     .catch((err) => console.log(err));
-                  forceReload();
+                  setReloadCondition(true);
                 }}
                 autoFocus
               >
