@@ -129,14 +129,14 @@ export default function Regist() {
     } else {
       // 인증코드 보내기
       setShowEmailCodeCheck(true);
+      setAuthFin(true); // 우선 인증버튼 누르자마자 막기
       sendEmailCodeAPI(inputState.email).then((res) => {
-        console.log(inputState.email);
+        // console.log(inputState.email);
         if (res.statusCode == 200) {
           //
         } else {
           //
         }
-        setAuthFin(true);
       });
     }
   };
@@ -162,7 +162,6 @@ export default function Regist() {
     const value = e.target.value;
     setPwSameRes(inputState.password == value ? true : false);
   };
-
   const pwSameOtherCheck = (e) => {
     const value = e.target.value;
     setPwSameRes(inputState.passwordConfirm == value ? true : false);
@@ -275,7 +274,7 @@ export default function Regist() {
           });
         } else {
           alert(`${res.message}`);
-          console.log('회원가입실패');
+          // console.log('회원가입실패');
         }
       });
     } else {
