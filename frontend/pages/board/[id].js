@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Router from 'next/router';
 import Layout from '../../components/Layout';
@@ -46,16 +46,18 @@ const BoardDetail = () => {
   const tag = detail.tag;
   const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
+  const detailLikes = useRef(detail.likes);
 
   const dispatch = useDispatch();
 
-  function fetchData() {
+  function fetchData(addHit) {
     getArticleById({
       boardId: detail.boardId,
       userId:
         sessionStorage.getItem('userId') == null
           ? 0
           : sessionStorage.getItem('userId'),
+      addHit: addHit,
     }).then((res) => {
       changeLike(res.board.userLike);
       dispatch(boardActions.setBoardDetail({ detail: res.board }));
@@ -63,12 +65,20 @@ const BoardDetail = () => {
   }
 
   useEffect(() => {
-    fetchData();
+    if (like) {
+      detailLikes.current -= 1;
+    } else {
+      detailLikes.current += 1;
+    }
   }, [like]);
+
+  // useEffect(() => {
+  //   fetchData('0');
+  // }, []);
 
   useEffect(() => {
     if (reloadCondition) {
-      fetchData();
+      fetchData('0');
       setReloadCondition(false);
     }
   }, [reloadCondition]);
@@ -352,7 +362,7 @@ const BoardDetail = () => {
             variant={like ? 'contained' : 'outlined'}
           >
             {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-            <span>{detail.likes}</span>
+            <span>{detailLikes.current}</span>
           </Button>
         </ButtonGroup>
       </ActionWrapper>
