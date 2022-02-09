@@ -37,7 +37,7 @@ import StackLevelListInfo from '../Common/Stack/StackLevelListInfo';
 import StackLevelSelectRegister from '../Common/Stack/StackLevelSelectRegister';
 import LinkList from '../Common/LinkList';
 import StackLevelInfoDialog from '../Common/Stack/StackLevelInfoDialog';
-import forceReload from '../../util/ForceReload';
+// import forceReload from '../../util/ForceReload';
 import MyInfoLayout from './MenuLayout';
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
@@ -214,7 +214,7 @@ export default function MyInfo() {
   });
 
   const cookies = new Cookies();
-  const [cookie, setCookie] = useCookies(['userToken']);
+  // const [cookie, setCookie] = useCookies(['userToken']);
 
   const [files, setFiles] = useState('');
 
@@ -271,7 +271,8 @@ export default function MyInfo() {
 
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
-    const token = cookie.userToken;
+    // const token = cookie.userToken;
+    const token = cookies.get('userToken')
 
     getUserLoginTokenAPI(token).then((res) => {
       if (res.statusCode == 200) {
@@ -390,10 +391,10 @@ export default function MyInfo() {
   }
 
   const positionHandleChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     inputState.position = e.target.value;
-    console.log('inputState' + JSON.stringify(inputState));
-    console.log(inputState);
+    // console.log('inputState' + JSON.stringify(inputState));
+    // console.log(inputState);
   };
 
   const [checkedNickname, setCheckedNickname] = useState(true);
@@ -478,7 +479,7 @@ export default function MyInfo() {
 
   const handleUpdateFinishClick = (e) => {
     e.preventDefault();
-    console.log(inputState.stacks);
+    // console.log(inputState.stacks);
 
     let isNormal = true;
 
@@ -504,7 +505,7 @@ export default function MyInfo() {
 
     if (isNormal) {
       handleClickOpen();
-      console.log(loginInfo);
+      // console.log(loginInfo);
     }
   };
 
@@ -558,15 +559,15 @@ export default function MyInfo() {
       inputState.stacks_get = stacksArr;
 
       loginAPI(loginInfo).then((res) => {
-        console.log(loginInfo.email + ' ' + loginInfo.password);
+        // console.log(loginInfo.email + ' ' + loginInfo.password);
         if (res.statusCode == 200) {
           // console.log("로그인 성공");
           inputState.password = loginInfo.password;
 
           const formData = new FormData();
 
-          console.log('inputState' + JSON.stringify(inputState));
-          console.log(inputState);
+          // console.log('inputState' + JSON.stringify(inputState));
+          // console.log(inputState);
 
           Object.keys(inputState).map((key) => {
             let value = inputState[key];
@@ -590,7 +591,7 @@ export default function MyInfo() {
               }
             } else {
               formData.append(key, value);
-              console.log(key + ' ' + value);
+              // console.log(key + ' ' + value);
             }
           });
 
@@ -601,13 +602,13 @@ export default function MyInfo() {
           }
 
           updateUserAPI(formData).then((res) => {
-            console.log(res);
-            console.log(JSON.stringify(res));
+            // console.log(res);
+            // console.log(JSON.stringify(res));
             if (res.statusCode == 200) {
               if (sessionStorage.getItem('nickname') != inputState.nickname) {
                 // 닉네임 변경시 상단바 변경도 필요하기 때문
                 sessionStorage.setItem('nickname', inputState.nickname);
-                forceReload();
+                // forceReload();
               }
               setNicknameChange(false);
             } else {
