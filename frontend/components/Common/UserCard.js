@@ -18,7 +18,7 @@ export default function UserCard({
   const CusCard = styled(Card)`
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: fit-content;
     min-width: 200px;
     min-height: 150px;
