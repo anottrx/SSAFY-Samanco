@@ -225,9 +225,12 @@ const BoardDetail = () => {
 
     function changeToBlob(file) {
       fileDownload(file).then((res) => {
-          console.log(res);
-        const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
-        createAndDownloadBlobFile(arrayBuffer, file.originFile);
+        if (res.data.fileString) {
+          const arrayBuffer = base64ToArrayBuffer(res.data);
+          createAndDownloadBlobFile(arrayBuffer, file.originFile);
+        } else {
+          alert('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+        }
       });
     }
 

@@ -84,7 +84,7 @@ function Chatting() {
 
   const submitChatHandle = (event) => {
     event.preventDefault();
-    if(chatText.length>0) {
+    if (chatText.length > 0) {
       chat.text = chatText;
       chat.nickname = sessionStorage.getItem('nickname');
       chat.time = new Date().getTime();
