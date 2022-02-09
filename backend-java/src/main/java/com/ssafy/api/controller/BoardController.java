@@ -171,9 +171,9 @@ public class BoardController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> selectBoard(
-            @RequestBody @ApiParam(value="board id", required = true) BoardUserIdReq boardInfo) throws IOException {
+            @RequestBody @ApiParam(value="board id", required = true) BoardUserIdHitReq boardInfo) throws IOException {
 
-        BoardDto board=boardService.selectBoard(boardInfo.getUserId(), boardInfo.getBoardId());
+        BoardDto board=boardService.selectBoard(boardInfo.getUserId(), boardInfo.getBoardId(), boardInfo.getAddHit());
         if (board==null){
             return ResponseEntity.status(200).body(BoardSelectRes.of(401, "유효하지 않은 게시글입니다.", null));
         }

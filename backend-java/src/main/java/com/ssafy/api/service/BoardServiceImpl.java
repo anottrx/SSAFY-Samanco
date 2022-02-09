@@ -67,7 +67,7 @@ public class BoardServiceImpl implements BoardService {
         if (!valid.isBoardValid(boardId)) {
             return 401;
         }
-        Board board = boardRepositorySupport.selectBoard(boardId);
+        Board board = boardRepositorySupport.selectBoard(boardId, 0);
         if (board==null || userId!=board.getUserId()){
             return 402;
         }
@@ -82,8 +82,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDto selectBoard(Long userId, Long boardId) {
-        Board result=boardRepositorySupport.selectBoard(boardId);
+    public BoardDto selectBoard(Long userId, Long boardId, int addHit) {
+        Board result=boardRepositorySupport.selectBoard(boardId, addHit);
         if (result==null){
             return null;
         }
