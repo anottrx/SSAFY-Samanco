@@ -3,7 +3,7 @@ import Layout from '../../../components/Layout';
 import StackList from '../../../components/Club/StackList';
 import UserCard from '../../../components/Common/UserCard';
 
-import { useState, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -37,16 +37,15 @@ import * as studyActions from '../../../store/module/study';
 
 import Router, { useRouter } from 'next/router';
 
-import forceReload from '../../../util/ForceReload';
-
 function StudyInfo() {
   let clubData = useSelector(({ study }) => study.studyDetail);
   let userData = useSelector(({ study }) => study.userList);
+  const [reloadCondition, setReloadCondition] = useState(false);
   const dispatch = useDispatch();
 
   let { sid } = useRouter().query;
 
-  useLayoutEffect(() => {
+  function fetchData() {
     getUserAtStudy({
       // studyId: clubData.id,
       studyId: sid,
@@ -64,7 +63,18 @@ function StudyInfo() {
         })
       );
     });
+  }
+
+  useLayoutEffect(() => {
+    fetchData();
   }, [sid]);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      fetchData();
+      setReloadCondition(false);
+    }
+  }, [reloadCondition]);
 
   const CusContainer = styled(Container)`
     float: left;
@@ -221,7 +231,7 @@ function StudyInfo() {
                     Router.push('/study');
                   } else alert(`${res.message}`);
                   // 페이지 새로고침
-                  forceReload();
+                  setReloadCondition(true);
                 });
               }}
             >
@@ -424,7 +434,12 @@ function StudyInfo() {
               ) : (
                 userData.map((user) => {
                   return user.id == clubData.hostId ? (
-                    <UserCard key={user.id} user={user} from="study"></UserCard>
+                    <UserCard
+                      key={user.id}
+                      user={user}
+                      from="study"
+                      setReloadCondition={setReloadCondition}
+                    ></UserCard>
                   ) : null;
                 })
               )}
@@ -444,6 +459,7 @@ function StudyInfo() {
                       clubId={clubData.id}
                       hostId={clubData.hostId}
                       from="study"
+                      setReloadCondition={setReloadCondition}
                     ></UserCard>
                   ) : null;
                 })

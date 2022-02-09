@@ -22,8 +22,7 @@ import { getStudyUserByjoin } from '../../pages/api/study';
 import { useDispatch } from 'react-redux';
 import * as applyActions from '../../store/module/apply';
 
-import forceReload from '../../util/ForceReload';
-
+// project/[id], study/[id] 에 reloadCondition
 function ApplyAccordion(props) {
   const dispatch = useDispatch();
 
@@ -176,7 +175,7 @@ function ApplyAccordion(props) {
                         }
                       });
 
-                      forceReload();
+                      props.setReloadCondition(true);
                     }}
                   >
                     <CheckIcon />
@@ -243,7 +242,7 @@ function ApplyAccordion(props) {
                         }
                       });
 
-                      forceReload();
+                      props.setReloadCondition(true);
                     }}
                   >
                     <CloseIcon />

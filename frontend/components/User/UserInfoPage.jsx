@@ -37,7 +37,6 @@ import StackLevelListInfo from '../Common/Stack/StackLevelListInfo';
 import StackLevelSelectRegister from '../Common/Stack/StackLevelSelectRegister';
 import LinkList from '../Common/LinkList';
 import StackLevelInfoDialog from '../Common/Stack/StackLevelInfoDialog';
-import forceReload from '../../util/ForceReload';
 import MyInfoLayout from './MenuLayout';
 
 const phoneReg = /^[0-9]{8,13}$/; // 전화번호 정규표현식
@@ -171,6 +170,7 @@ export default function UserInfoPage() {
   const [finishUpdate, setFinishUpdate] = useState(false);
   const [nicknameChange, setNicknameChange] = useState(false);
   const [checkPassword, setCheckPassword] = useState(false);
+  const [reloadCondition, setReloadCondition] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
@@ -336,6 +336,14 @@ export default function UserInfoPage() {
     getUserInfo();
     preview();
   }, []);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      getUserInfo();
+      preview();
+      setReloadCondition(false);
+    }
+  }, [reloadCondition]);
 
   const preview = () => {
     if (!files) return false;
@@ -574,7 +582,7 @@ export default function UserInfoPage() {
             // if (sessionStorage.getItem("nickname") != inputState.nickname) {
             // 닉네임 변경시 상단바 변경도 필요하기 때문
             // sessionStorage.setItem("nickname", inputState.nickname);
-            forceReload();
+            setReloadCondition(true);
             // }
             // setNicknameChange(false);
           } else {

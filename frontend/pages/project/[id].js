@@ -43,17 +43,16 @@ import {
   quitProject,
 } from '../api/project';
 
-import forceReload from '../../util/ForceReload';
-
 const ProjectDetail = () => {
   const detail = useSelector(({ project }) => project.projectDetail);
   const userData = useSelector(({ project }) => project.userList);
+  const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
-  let blob, imageUrl;
+  let imageUrl;
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  function fetchData() {
     getUserAtProject({
       projectId: detail.id,
       userId: sessionStorage.getItem('userId'),
@@ -71,14 +70,19 @@ const ProjectDetail = () => {
           : sessionStorage.getItem('userId'),
     }).then((res) => {
       dispatch(projectActions.setProjectDetail({ detail: res.project }));
-
-      // blob = new Blob([new ArrayBuffer(detail.file.imageByteArr)], { type: "image/png" })
-      // imageUrl = URL.createObjectURL(blob);
-
-      // console.log(blob);
-      // console.log(detail.file.imageByteArr);
     });
+  }
+
+  useEffect(() => {
+    fetchData();
   }, [like]);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      fetchData();
+      setReloadCondition(false);
+    }
+  }, [reloadCondition]);
 
   const DetailWrapper = styled.div`
     display: flex;
@@ -575,7 +579,7 @@ const ProjectDetail = () => {
                       }
                     })
                     .catch((err) => console.log(err));
-                  forceReload();
+                  setReloadCondition(true);
                 }}
                 autoFocus
               >
@@ -605,7 +609,7 @@ const ProjectDetail = () => {
                       }
                     })
                     .catch((err) => console.log(err));
-                  forceReload();
+                  setReloadCondition(true);
                 }}
                 autoFocus
               >

@@ -1,6 +1,7 @@
 import Router from 'next/router';
 
 const forceReload = () => {
-  Router.reload(window.location.pathname);
+  console.log(Router);
+  Router.reload(Router.pathname);
 };
 export default forceReload;

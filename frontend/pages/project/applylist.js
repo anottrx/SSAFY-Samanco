@@ -3,15 +3,16 @@ import ApplyAccordion from '../../components/Club/ApplyAccordion';
 import * as applyActions from '../../store/module/apply';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { getProjectUserByjoin, approveProject } from '../../pages/api/project';
 
 function ApplyList() {
   const detail = useSelector(({ project }) => project.projectDetail);
   const applyData = useSelector(({ apply }) => apply.applyList);
+  const [reloadCondition, setReloadCondition] = useState(false);
   const dispatch = useDispatch();
 
-  useLayoutEffect(() => {
+  function fetchData() {
     getProjectUserByjoin({
       projectId: detail.id,
       userId: sessionStorage.getItem('userId'),
@@ -20,7 +21,18 @@ function ApplyList() {
         dispatch(applyActions.setApplyList({ list: res.users }));
       })
       .catch((err) => console.log(err));
+  }
+
+  useLayoutEffect(() => {
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      fetchData();
+      setReloadCondition(false);
+    }
+  }, [reloadCondition]);
 
   return (
     <Layout>
@@ -30,6 +42,7 @@ function ApplyList() {
         approveAPI={approveProject}
         clubId={detail.id}
         from="project"
+        setReloadCondition={setReloadCondition}
       ></ApplyAccordion>
     </Layout>
   );
