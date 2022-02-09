@@ -123,7 +123,7 @@ function MyApp({ Component, pageProps }) {
         <React.Fragment>
           <Head>
             <title>싸피사만코</title>
-            <meta name="viewport" content="viewport-fit=cover" />
+            <meta name="싸피사만코" content="SSAFY 교육생만을 위한 커뮤니티!" />
           </Head>
 
           <div style={styles.layout}>
@@ -137,7 +137,7 @@ function MyApp({ Component, pageProps }) {
         <React.Fragment>
           <Head>
             <title>싸피사만코</title>
-            <meta name="viewport" content="viewport-fit=cover" />
+            <meta name="싸피사만코" content="SSAFY 교육생만을 위한 커뮤니티!" />
           </Head>
           <div style={styles.layout}>
             <header style={styles.header}>
@@ -209,6 +209,17 @@ function MyApp({ Component, pageProps }) {
           >
             <span className="site-nav-item" style={styles.link}>
               마이페이지
+            </span>
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              e.preventDefault();
+              Router.push('/myinfo/club');
+              handleClose();
+            }}
+          >
+            <span className="site-nav-item" style={styles.link}>
+              내 클럽
             </span>
           </MenuItem>
           <MenuItem
