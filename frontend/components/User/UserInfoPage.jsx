@@ -102,6 +102,7 @@ const ImgDefault = styled.img`
 // `;
 const DetailWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   // align-items: baseline;
 

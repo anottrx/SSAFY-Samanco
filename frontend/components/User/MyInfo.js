@@ -47,6 +47,7 @@ const urlReg =
 
 const DatePickerWrapper = styled.div`
   display: flex;
+  width: 370px;
   & > div {
     flex: 1;
     width: 370px;
@@ -103,6 +104,7 @@ const ImgDefault = styled.img`
 // `;
 const DetailWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   // align-items: baseline;
   & > div {
