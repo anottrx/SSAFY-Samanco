@@ -20,7 +20,7 @@ export default function CheckEmailCode(props) {
 
   const changeTimerHandle = (value, name) => {
     setTimer(value);
-    console.log(value + ' ' + name);
+    // console.log(value + ' ' + name);
     props.changeHandle(false, 'code');
     alert('시간이 만료되었습니다! 인증코드를 재발급해 주세요');
     setAuthFin(true);
@@ -34,12 +34,12 @@ export default function CheckEmailCode(props) {
     if (!value) {
       alert('인증번호를 입력해주세요.');
     } else {
-      console.log(value);
+      // console.log(value);
       //   checkEmailPWAPI(value).then((res) => {
       //     setEmailCodeRes({ code: res.statusCode, msg: res.message });
 
       checkEmailCodeAPI(code).then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.statusCode == 200) {
           props.changeHandle(true, 'code');
           setAuthFin(true);

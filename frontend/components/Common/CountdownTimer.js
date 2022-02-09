@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 
 export default function CountdownTimer(props) {
-  const [seconds, setSeconds] = useState(10);
-  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(10);
 
   useEffect(() => {
     const countdown = setInterval(() => {
