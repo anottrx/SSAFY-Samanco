@@ -32,6 +32,7 @@ import {
   changeStudyHost,
   getStudyByUserId,
   quitStudy,
+  studyImageDownload,
 } from '../../api/study';
 import * as studyActions from '../../../store/module/study';
 
@@ -41,9 +42,40 @@ function StudyInfo() {
   let clubData = useSelector(({ study }) => study.studyDetail);
   let userData = useSelector(({ study }) => study.userList);
   const [reloadCondition, setReloadCondition] = useState(false);
+  let [imageUrl, setImageUrl] = useState(undefined);
   const dispatch = useDispatch();
 
   let { sid } = useRouter().query;
+
+  function base64ToArrayBuffer(base64) {
+    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(binaryString.length);
+    return bytes.map((byte, i) => binaryString.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const blob = new Blob([body]);
+    const fileName = `${filename}`;
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      const url = window.URL.createObjectURL(blob);
+      setImageUrl(url);
+    }
+  }
+
+  function changeToBlob(file) {
+    studyImageDownload(file).then((res) => {
+      console.log(res);
+      if (res.data.statusCode === 200 && res.data.fileString) {
+        console.log(res.data);
+        const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+        createAndDownloadBlobFile(arrayBuffer, file.originFile);
+      } else {
+        console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+      }
+    });
+  }
 
   function fetchData() {
     getUserAtStudy({
@@ -70,6 +102,10 @@ function StudyInfo() {
   }, [sid]);
 
   useEffect(() => {
+    if (clubData && clubData.file) changeToBlob(clubData.file);
+  }, [clubData]);
+
+  useEffect(() => {
     if (reloadCondition) {
       fetchData();
       setReloadCondition(false);
@@ -93,6 +129,15 @@ function StudyInfo() {
     flex-direction: row;
   `;
 
+  const ImageWrapper = styled.div`
+    margin-right: 30px;
+    margin-bottom: 10px;
+    min-width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `;
+
   const CusSkeleton = styled(Skeleton)`
     display: flex;
     flex: 1;
@@ -114,6 +159,14 @@ function StudyInfo() {
     }
   `;
 
+  const EndImage = styled.img`
+    width: 100px;
+    height: 100px;
+    // margin-right: auto;
+    // transform: translate(-90%, 10%);
+    position: absolute;
+  `;
+
   return (
     <Layout>
       <CusContainer maxWidth="md">
@@ -125,7 +178,24 @@ function StudyInfo() {
             </DetailHeader>
             <h2>{clubData.title}</h2>
             <DetailWrapper maxWidth="sm">
-              <CusSkeleton variant="rectangular" animation={false} />
+              {clubData.collectStatus === 'ING' ? (
+                <ImageWrapper>
+                  {imageUrl ? (
+                    <img src={imageUrl} height={200}></img>
+                  ) : (
+                    <CusSkeleton variant="rectangular" animation={false} />
+                  )}
+                </ImageWrapper>
+              ) : (
+                <ImageWrapper>
+                  <EndImage src="/images/apply_end.png"></EndImage>
+                  {imageUrl ? (
+                    <img src={imageUrl} height={200}></img>
+                  ) : (
+                    <CusSkeleton variant="rectangular" animation={false} />
+                  )}
+                </ImageWrapper>
+              )}
               <StudyInfo detail={clubData}></StudyInfo>
             </DetailWrapper>
             <StudyDetail></StudyDetail>

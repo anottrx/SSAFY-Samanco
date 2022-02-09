@@ -65,15 +65,8 @@ const ProjectDetail = () => {
     if (navigator.msSaveBlob) {
       navigator.msSaveBlob(blob, fileName);
     } else {
-      // const imageEl = document.getElementById('imageEl');
-      // if (imageEl) {
       const url = window.URL.createObjectURL(blob);
       setImageUrl(url);
-      //   // imageEl.style.backgroundImage = `url(${url})`;
-      //   // imageEl.style.width = '100%';
-      //   // imageEl.style.height = '200px';
-      //   imageEl.setAttribute('src', url);
-      // }
     }
   }
 
@@ -176,7 +169,7 @@ const ProjectDetail = () => {
     height: 100px;
     // margin-right: auto;
     // transform: translate(-90%, 10%);
-    position: fixed;
+    position: absolute;
   `;
 
   return (
