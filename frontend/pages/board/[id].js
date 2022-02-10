@@ -266,7 +266,7 @@ const BoardDetail = () => {
 
     function changeToBlob(file) {
       fileDownload(file).then((res) => {
-        if (res.data.statusCode == 200 && res.data.fileString) {
+        if (res.data && res.data.statusCode == 200 && res.data.fileString) {
           const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
           createAndDownloadBlobFile(arrayBuffer, file.originFile);
         } else {

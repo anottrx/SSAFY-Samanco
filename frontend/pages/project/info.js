@@ -66,7 +66,7 @@ function ProjectInfo() {
   function changeToBlob(file) {
     projectImageDownload(file).then((res) => {
       console.log(res);
-      if (res.data.statusCode === 200 && res.data.fileString) {
+      if (res.data && res.data.statusCode === 200 && res.data.fileString) {
         console.log(res.data);
         const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
         createAndDownloadBlobFile(arrayBuffer, file.originFile);
