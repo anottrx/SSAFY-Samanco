@@ -166,7 +166,6 @@ const RowWrapper = styled.div`
   padding: 2px 0px;
 `;
 
-// to do : 사진 띄우기
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
   const [onlyView, setOnlyView] = useState(true);
@@ -402,6 +401,10 @@ export default function MyInfo() {
   }, []);
 
   useEffect(() => {
+    preview();
+  }, [files]);
+
+  useEffect(() => {
     if (reloadCondition) {
       getUserInfo();
       preview();
@@ -415,10 +418,12 @@ export default function MyInfo() {
     const imgEl = document.querySelector('#img_box');
     const reader = new FileReader();
 
-    reader.onload = () =>
-      (imgEl.style.backgroundImage = `url(${reader.result})`);
-
-    imgEl.innerText = '';
+    reader.onload = () => {
+      if (imgEl) {
+        imgEl.style.backgroundImage = `url(${reader.result})`;
+        imgEl.innerText = '';
+      }
+    };
     reader.readAsDataURL(files);
   };
 
@@ -662,11 +667,11 @@ export default function MyInfo() {
                 // 닉네임 변경시 상단바 변경도 필요하기 때문
                 sessionStorage.setItem('nickname', inputState.nickname);
                 // 새로고침
-                setReloadCondition(true);
 
                 // forceReload();
               }
               setNicknameChange(false);
+              setReloadCondition(true);
             } else {
               alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
             }
