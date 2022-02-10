@@ -10,6 +10,7 @@ import {
   deleteUserAPI,
   loginAPI,
 } from '../../pages/api/user';
+import { projectImageDownload } from '../../pages/api/project';
 import DatePickerUser from '../../components/Common/DatePickerUser';
 import { LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
@@ -97,6 +98,7 @@ const ImgDefault = styled.img`
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
+  object-fit: scale-down;
 `;
 // const DetailWrapper = styled.div`
 //   display: flex;
@@ -171,6 +173,7 @@ export default function MyInfo() {
   const [finishUpdate, setFinishUpdate] = useState(false);
   const [nicknameChange, setNicknameChange] = useState(false);
   const [checkPassword, setCheckPassword] = useState(false);
+  const [reloadCondition, setReloadCondition] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
@@ -272,6 +275,34 @@ export default function MyInfo() {
   });
   const [userBirthdayDate, setUserBirthdayDate] = useState('');
 
+  function base64ToArrayBuffer(base64) {
+    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(binaryString.length);
+    return bytes.map((byte, i) => binaryString.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const blob = new Blob([body]);
+    const fileName = `${filename}`;
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      const url = window.URL.createObjectURL(blob);
+      setImageDefault(url);
+    }
+  }
+
+  function changeToBlob(file) {
+    projectImageDownload(file).then((res) => {
+      if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+        const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+        createAndDownloadBlobFile(arrayBuffer, file.originFile);
+      } else {
+        console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+      }
+    });
+  }
+
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
     // const token = cookie.userToken;
@@ -344,6 +375,9 @@ export default function MyInfo() {
           } else {
             setImageDefault('/images/profile_default_gen6.png');
           }
+        } else {
+          // 이미지 파일이 있으면
+          changeToBlob(res.user.file);
         }
 
         // if (res.user.link != null) {
@@ -366,6 +400,14 @@ export default function MyInfo() {
     getUserInfo();
     preview();
   }, []);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      getUserInfo();
+      preview();
+      setReloadCondition(false);
+    }
+  }, [reloadCondition]);
 
   const preview = () => {
     if (!files) return false;
@@ -456,6 +498,7 @@ export default function MyInfo() {
     e.preventDefault();
     setOnlyView(false);
     setFinishUpdate(true);
+    setReloadCondition(true);
     // console.log("수정하기 버튼 누름");
 
     // setAuthChange(true);
@@ -618,6 +661,9 @@ export default function MyInfo() {
               if (sessionStorage.getItem('nickname') != inputState.nickname) {
                 // 닉네임 변경시 상단바 변경도 필요하기 때문
                 sessionStorage.setItem('nickname', inputState.nickname);
+                // 새로고침
+                setReloadCondition(true);
+
                 // forceReload();
               }
               setNicknameChange(false);
