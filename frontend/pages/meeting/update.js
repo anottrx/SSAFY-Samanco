@@ -11,9 +11,12 @@ import {
 } from '@mui/material';
 import styled from '@emotion/styled';
 
-import { registAPI } from '../api/meeting';
+import { updateAPI } from '../api/meeting';
 
-function MeetingRegist() {
+function UpdateMeeting() {
+  const detail = useSelector(({ meeting }) => meeting.meetingDetail);
+  const url = '../../../backend-java';
+
   const CusPaper = styled(Paper)`
     width: 100%;
     padding: 10px;
@@ -75,10 +78,21 @@ function MeetingRegist() {
   let userId;
   useEffect(() => {
     userId = sessionStorage.getItem('userId');
+    if (inputValue.isSecret == 1) {
+      // 1로 체크되어 있다면 비밀방
+      setprivateCheck(true);
+    } else {
+      setprivateCheck(false);
+    }
   }, []);
 
   const [inputValue, setInputValue] = useState({
-    hostId: userId,
+    roomId: detail.id,
+    hostId: sessionStorage.getItem('userId'),
+    title: detail.title,
+    // size: detail.size,
+    isSecret: detail.isSecret,
+    password: detail.password,
   });
 
   const [files, setFiles] = useState('');
@@ -105,9 +119,17 @@ function MeetingRegist() {
 
     const imgEl = document.querySelector('#img_box');
     const reader = new FileReader();
+    let saveFile, saveFolder;
+
+    if (detail.file) {
+      saveFile = detail.file.saveFile;
+      saveFolder = detail.file.saveFolder;
+    }
 
     reader.onload = () =>
-      (imgEl.style.backgroundImage = `url(${reader.result})`);
+      detail.file
+        ? (imgEl.style.backgroundImage = `url(${url}/${saveFolder}/${saveFile})`)
+        : (imgEl.style.backgroundImage = `url(${reader.result})`);
 
     imgEl.innerText = '';
     reader.readAsDataURL(files);
@@ -120,12 +142,10 @@ function MeetingRegist() {
 
   function validateCheck() {
     let [check, msg] = [true, ''];
-    if (typeof inputValue.tag == 'undefined')
-      [check, msg] = [false, '태그를 선택해주세요'];
     if (typeof inputValue.title == 'undefined')
       [check, msg] = [false, '미팅룸 이름을 입력해주세요.'];
     // else if (typeof inputValue.size == 'undefined' || inputValue.size == 0)
-      // [check, msg] = [false, '미팅룸 인원은 한 명 이상이여야 합니다.'];
+    //   [check, msg] = [false, '미팅룸 인원은 한 명 이상이여야 합니다.'];
     else if (
       privateCheck &&
       (typeof inputValue.password == 'undefined' || inputValue.password == '')
@@ -173,14 +193,8 @@ function MeetingRegist() {
           select
           label="태그"
           defaultValue=""
-          onChange={(e) => changeHandle(e.target.value, 'tag')}
-        >
-          {currencies.map((option, index) => (
-            <MeetingRegistTagMenu key={index} value={option.value}>
-              {option.label}
-            </MeetingRegistTagMenu>
-          ))}
-        </MeetingRegistTagField>
+          value={inputValue.tag}
+        ></MeetingRegistTagField>
 
         <TextField
           fullWidth
@@ -198,20 +212,20 @@ function MeetingRegist() {
           value={inputValue.size}
         /> */}
 
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={privateCheck}
-              onChange={privateCheckHandle}
-              inputProps={{ 'aria-label': 'controlled' }}
-            />
-          }
-          label="비밀방으로 생성하기"
-          className="privateCheckBox"
-        ></FormControlLabel>
-
-        {privateCheck ? (
+        {inputState.isSecret === 1 ? (
           <>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={privateCheck}
+                  onChange={privateCheckHandle}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              }
+              label="비밀방으로 생성하기"
+              className="privateCheckBox"
+            ></FormControlLabel>
+
             <TextField
               fullWidth
               name="password"
@@ -249,17 +263,17 @@ function MeetingRegist() {
                 // }
               }
 
-              // registAPI(formData).then((res) => {
+              // updateAPI(formData).then((res) => {
               //     if (res.statusCode == 200) {
-              //         alert("방이 생성되었습니다.")
-              //         Router.push("/meeting");
+              //         alert("방이 수정되었습니다.")
+              //         Router.push('/meeting/' + inputValue.meetingId);
               //     } else {
               // alert(`${res.message}`);
               // }
               // });
             }}
           >
-            등록하기
+            수정하기
           </Button>
         </div>
       </CusPaper>
@@ -267,4 +281,4 @@ function MeetingRegist() {
   );
 }
 
-export default MeetingRegist;
+export default UpdateMeeting;
