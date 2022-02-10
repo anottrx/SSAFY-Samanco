@@ -235,7 +235,7 @@ function studyUpdate() {
 
           <StackSelect
             changeHandle={changeHandle}
-            initData={inputValue.stacks}
+            initData={detail.stacks}
             label="스터디 스택"
           ></StackSelect>
 
