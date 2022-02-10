@@ -93,10 +93,20 @@ function meetingDetail() {
   useEffect(() => {
     // 유저가 방에 들어왔을 때
     // if (detail && publisherStatus) {
-    importOpenVidu().then((ob) => {
-      OpenViduBrowser = ob; // 오픈비두 모듈을 임포트
-      setOV(new OpenViduBrowser.OpenVidu());
-    });
+    navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true })
+      .then(() => {
+        importOpenVidu().then((ob) => {
+          OpenViduBrowser = ob; // 오픈비두 모듈을 임포트
+          setOV(new OpenViduBrowser.OpenVidu());
+        });
+      })
+      .catch((err) => {
+        alert(
+          '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.'
+        );
+      });
+
     console.log('유저가 방에 들어옴');
 
     return () => {
