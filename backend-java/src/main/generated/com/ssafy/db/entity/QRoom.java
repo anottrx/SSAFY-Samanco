@@ -34,7 +34,7 @@ public class QRoom extends EntityPathBase<Room> {
     //inherited
     public final BooleanPath isDeleted = _super.isDeleted;
 
-    public final BooleanPath isSecret = createBoolean("isSecret");
+    public final NumberPath<Integer> isSecret = createNumber("isSecret", Integer.class);
 
     //inherited
     public final NumberPath<Long> modifiedBy = _super.modifiedBy;
@@ -42,13 +42,15 @@ public class QRoom extends EntityPathBase<Room> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
-    public final StringPath name = createString("name");
-
     public final StringPath password = createString("password");
 
     public final NumberPath<Integer> size = createNumber("size", Integer.class);
 
-    public final StringPath type = createString("type");
+    public final StringPath tag = createString("tag");
+
+    public final NumberPath<Long> tagId = createNumber("tagId", Long.class);
+
+    public final StringPath title = createString("title");
 
     public QRoom(String variable) {
         super(Room.class, forVariable(variable));

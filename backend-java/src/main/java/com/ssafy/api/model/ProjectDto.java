@@ -27,6 +27,8 @@ public class ProjectDto {
     private Long deadline;
     private boolean userLike=false;
     private String projectJoinStatus;
+    private boolean canRegister=false;
+    private boolean canJoin=false;
 
 }
 

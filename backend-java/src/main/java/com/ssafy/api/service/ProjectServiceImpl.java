@@ -6,6 +6,7 @@ import com.ssafy.api.request.ProjectChangeHostReq;
 import com.ssafy.api.request.ProjectRegisterReq;
 import com.ssafy.api.request.ProjectUpdateReq;
 import com.ssafy.db.entity.Project;
+import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.UserLike;
 import com.ssafy.db.repository.*;
@@ -36,6 +37,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     UserLikeRepositorySupport userLikeRepositorySupport;
+
+    @Autowired
+    CommonRepository commonRepository;
+
+    @Autowired
+    RoomRepositorySupport roomRepositorySupport;
 
 //    @Autowired
 //    UserRepositorySupport userRepositorySupport;  // 사용 못함
@@ -98,6 +105,17 @@ public class ProjectServiceImpl implements ProjectService {
         project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
         project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
         UserLike userLike = userLikeRepositorySupport.userLike(userId, projectId, "project");
+        User user=commonRepository.selectUser(userId);
+        if (user.getProjectId()==projectId){
+            Room room=roomRepositorySupport.selectRoomByTagId(projectId, "project");
+            if (room==null && room.getHostId()==userId){    // 방이 안만들어졌고 방장인 경우
+                project.setCanRegister(true);
+            }
+            if (room!=null && room.getHostId()!=userId){     // 방이 만들어졌고 방장이 아닌 팀원
+                project.setCanJoin(true);
+            }
+        }
+
 
         if (userLike!=null) {
             project.setUserLike(true);

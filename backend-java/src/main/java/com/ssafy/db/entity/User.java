@@ -27,33 +27,23 @@ public class User extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String email;
-
     private String nickname;
-
-
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-
     private String birthday;
-
     private String phone;
-
     private String name;
     private String userClass;   // JAVA, PYTHON, EMBEDDED, MOBILE
-
     private int generation;
-
     private String studentId;
-
     private String position;  // 사용자 포지션 [FRONTEND, BACKEND,  MOBILE, EMBEDDED]
     private String link;
-
     private String description;
     private Long projectId=0l;
     private String projectJoinStatus;
     private String projectPosition;
+    private Long roomId=0l;
 
 }
