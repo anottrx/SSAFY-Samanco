@@ -176,7 +176,7 @@ function MyApp({ Component, pageProps }) {
       color: black;
       margin-right: 5px;
       background-color: white;
-      padding: 5px;
+      padding: 5px 7px;
       border-radius: 5px;
     `;
 
