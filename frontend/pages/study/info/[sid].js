@@ -250,17 +250,34 @@ function StudyInfo() {
         )}
         <ButtonGroup variant="outlined">
           {sessionStorage.getItem('userId') == clubData.hostId ? (
+            // && detail.canRegister
+            // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
+            <>
+              <Button
+              onClick={() => {
+                Router.push('/meeting/regist');
+              }}
+              >
+                방 생성
+              </Button>
+              <Button
+                onClick={() => {
+                  Router.push('/study/update');
+                }}
+              >
+                수정
+              </Button>
+          </>
+          ) : null}
+          {sessionStorage.getItem('userId') != detail.hostId ? (
+            // && detail.canJoin
+            // 방 참가가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성)
             <Button
               onClick={() => {
-                Router.push('/study/update');
-                dispatch(
-                  studyActions.setStudyDetail({
-                    detail: { ...detail, imageUrl: imageUrl },
-                  })
-                );
+                Router.push('/meeting/join');
               }}
-            >
-              수정
+              >
+                방 참가
             </Button>
           ) : null}
           <Button onClick={QuitDialogOpen}>탈퇴</Button>
