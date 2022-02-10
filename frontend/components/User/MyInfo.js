@@ -47,6 +47,7 @@ const urlReg =
 
 const DatePickerWrapper = styled.div`
   display: flex;
+  width: 370px;
   & > div {
     flex: 1;
     width: 370px;
@@ -103,6 +104,7 @@ const ImgDefault = styled.img`
 // `;
 const DetailWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   // align-items: baseline;
   & > div {
@@ -229,7 +231,7 @@ export default function MyInfo() {
     if (name == 'birthday') {
       inputState.birthday = value;
       userBirthday.value = value;
-      console.log('생일 ' + JSON.stringify(inputState));
+      // console.log('생일 ' + JSON.stringify(inputState));
     } else {
       if (name == null && value.length == 6) {
         inputState.birthday = value;
@@ -247,7 +249,7 @@ export default function MyInfo() {
         }
       }
       inputState[name] = value;
-      console.log('스택 ' + JSON.stringify(inputState));
+      // console.log('스택 ' + JSON.stringify(inputState));
     }
   };
 
@@ -296,7 +298,7 @@ export default function MyInfo() {
 
       getUserInfoAPI(inputState.userId).then((res) => {
         if (res.statusCode == 200) {
-          console.log('내 정보 보기 결과: ' + JSON.stringify(res));
+          // console.log('내 정보 보기 결과: ' + JSON.stringify(res));
           inputState.name = res.user.name;
           const today = new Date();
           const todayYear = today.getFullYear().toString().slice(2);
@@ -385,12 +387,12 @@ export default function MyInfo() {
   };
 
   function handleLinksChange(linkArr) {
-    console.log(linkArr);
+    // console.log(linkArr);
     let linkList = '';
     const size = linkArr.length;
     for (let i = 0; i < size; i++) {
       linkList = linkList + ' ' + linkArr[i];
-      console.log(linkArr[i]);
+      // console.log(linkArr[i]);
     }
     linkList = linkList.trim();
     inputState.link = linkList;
@@ -845,7 +847,7 @@ export default function MyInfo() {
 
                         {/* </label> */}
                       </RowUpWrapper>
-                      <RowWrapper>
+                      <RowUpWrapper>
                         {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
                         <label>생년월일</label>
                         {onlyView ? (
@@ -873,7 +875,7 @@ export default function MyInfo() {
                             </DatePickerWrapper>
                           </LocalizationProvider>
                         )}
-                      </RowWrapper>
+                      </RowUpWrapper>
                       {/* </Box> */}
                       {/* <Box sx={{ mb: 2 }}> */}
                       <RowWrapper>
@@ -902,7 +904,7 @@ export default function MyInfo() {
                         )}
                       </RowWrapper>
                       {/* </Box> */}
-                      <RowWrapper>
+                      <RowUpWrapper>
                         <label>분야</label>
                         {onlyView ? (
                           <>
@@ -939,7 +941,7 @@ export default function MyInfo() {
                               handleChange(e);
                             }}
                             value={inputState.position || ''}
-                            sx={{ minWidth: 350, height: 35, fontSize: 13 }}
+                            sx={{ height: 35, fontSize: 13 }}
                           >
                             {positionOptions.map((u, i) => {
                               return (
@@ -960,7 +962,7 @@ export default function MyInfo() {
                   disabled={onlyView ? true : false}
                   onChange={handleChange}
                 /> */}
-                      </RowWrapper>
+                      </RowUpWrapper>
                     </CardContent>
                     {onlyView && inputState.file == null ? (
                       <ImgDefault src={imageDefault}></ImgDefault>

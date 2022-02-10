@@ -240,7 +240,7 @@ function StackLevelSelectRegister(props) {
       </Box>
       <Stack>
         {stacks.length > 0
-          ? stacks.map((stack) => (
+          ? stacks.slice(0).reverse().map((stack) => (
               <CusPaper
                 key={stack.name}
                 name={stack.name}

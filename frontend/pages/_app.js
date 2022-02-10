@@ -68,6 +68,7 @@ const ImgMacha = styled.img`
 `;
 const ImgLogo = styled.img`
   max-height: 30px;
+  cursor: pointer;
 `;
 
 function MyApp({ Component, pageProps }) {
@@ -123,7 +124,7 @@ function MyApp({ Component, pageProps }) {
         <React.Fragment>
           <Head>
             <title>싸피사만코</title>
-            <meta name="viewport" content="viewport-fit=cover" />
+            <meta name="싸피사만코" content="SSAFY 교육생만을 위한 커뮤니티!" />
           </Head>
 
           <div style={styles.layout}>
@@ -137,7 +138,7 @@ function MyApp({ Component, pageProps }) {
         <React.Fragment>
           <Head>
             <title>싸피사만코</title>
-            <meta name="viewport" content="viewport-fit=cover" />
+            <meta name="싸피사만코" content="SSAFY 교육생만을 위한 커뮤니티!" />
           </Head>
           <div style={styles.layout}>
             <header style={styles.header}>
@@ -180,13 +181,22 @@ function MyApp({ Component, pageProps }) {
     `;
 
     const UserMenu = () => (
-      <div>
-        <Menu
+      <>
+        <Menu 
           id="fade-menu"
           MenuListProps={{
             'aria-labelledby': 'fade-button',
           }}
           anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          sx={{marginTop: '8px'}}
           open={open}
           onClose={handleClose}
           TransitionComponent={Fade}
@@ -200,6 +210,28 @@ function MyApp({ Component, pageProps }) {
           >
             <span className="site-nav-item" style={styles.link}>
               마이페이지
+            </span>
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              e.preventDefault();
+              Router.push('/myinfo/club');
+              handleClose();
+            }}
+          >
+            <span className="site-nav-item" style={styles.link}>
+              내 클럽
+            </span>
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              e.preventDefault();
+              Router.push('/myinfo/board');
+              handleClose();
+            }}
+          >
+            <span className="site-nav-item" style={styles.link}>
+              내 게시글
             </span>
           </MenuItem>
           <MenuItem
@@ -221,7 +253,7 @@ function MyApp({ Component, pageProps }) {
             </span>
           </MenuItem>
         </Menu>
-      </div>
+      </>
     );
 
     return (
