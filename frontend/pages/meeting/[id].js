@@ -3,11 +3,26 @@ import styled from '@emotion/styled';
 import Users from '../../components/Meeting/User';
 import RoomInfo from '../../components/Meeting/RoomInfo';
 import Chatting from '../../components/Meeting/Chatting';
-import { Card, Divider } from '@mui/material';
+import {
+  Card,
+  Divider,
+  Button,
+  Grid,
+  Box,
+  Fab,
+  ToggleButtonGroup,
+  ToggleButton,
+} from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import axios from 'axios';
-// import UserVideo from '../../components/Meeting/UserVideo';
+import UserVideo from '../../components/Meeting/UserVideo';
 import Router from 'next/router';
 
 var OpenViduBrowser;
@@ -20,7 +35,7 @@ function meetingDetail() {
     padding: 20px;
     margin: 10px;
     height: calc(100vh - 20px);
-    overflow-y: scroll;
+    overflow-y: auto;
   `;
 
   const RoomContent = styled.div`
@@ -31,32 +46,77 @@ function meetingDetail() {
     height: calc(100% - 100px);
   `;
 
+  const NoVideo = styled.div`
+    width: 320px;
+    height: 240px;
+    background-color: #f9f9f9;
+    border: 1px solid gray;
+  `;
+
+  const VideoWrapper = styled.div`
+    min-width: 200px;
+    height: 350px;
+  `;
+
+  const GridWrapper = styled(Grid)`
+    flex: 1;
+    justify-content: space-between;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+  `;
+
+  const CusGrid = styled(Grid)`
+    width: 100%;
+    justify-content: center;
+
+    & .MuiGrid-root {
+      height: 250px;
+      transform: translate(0px, 0px);
+      padding: 0px 5px;
+    }
+  `;
+
   let detail = useSelector(({ meeting }) => meeting.meetingDetail);
-  let publisherStatus = useSelector(({ meeting }) => meeting.publisherStatus);
-  const [OV, setOV] = useState(undefined);
-  const [session, setSession] = useState(undefined);
-  const [publisher, setPublisher] = useState(publisherStatus);
+  const [OV, setOV] = useState();
+  const [session, setSession] = useState();
+  const [publisher, setPublisher] = useState();
   const [subscribers, setSubscribers] = useState([]);
+  const [micOn, setMicOn] = useState(false);
+  const [camOn, setCamOn] = useState(false);
+  const [isConfigModalShow, setIsConfigModalShow] = useState(true);
+
+  const myUserName = sessionStorage.getItem('nickname')
+    ? sessionStorage.getItem('nickname')
+    : 'unknown';
 
   useEffect(() => {
-    if (detail && publisherStatus) {
-      importOpenVidu().then((ob) => {
-        OpenViduBrowser = ob;
-        setOV(new OpenViduBrowser.OpenVidu());
-      });
+    // 유저가 방에 들어왔을 때
+    // if (detail && publisherStatus) {
+    importOpenVidu().then((ob) => {
+      OpenViduBrowser = ob; // 오픈비두 모듈을 임포트
+      setOV(new OpenViduBrowser.OpenVidu());
+    });
+    console.log('유저가 방에 들어옴');
 
-      return () => {
-        leaveSession();
-        clear();
-      };
-    }
-  }, [detail, publisherStatus]);
+    return () => {
+      leaveSession();
+      clear();
+    };
+  }, []);
 
   useEffect(() => {
-    if (OV) {
-      setSession(OV.initSession());
-    }
-  }, [OV]);
+    console.log('publisher가 변했다');
+    return () => {
+      allTrackOff(publisher);
+    };
+  }, [publisher]);
+
+  // useEffect(() => {
+  //   if (OV) {
+  //     setSession(OV.initSession());
+  //   }
+  // }, [OV]);
 
   // OpenVidu 모듈 동적 import
   const importOpenVidu = () => {
@@ -73,8 +133,11 @@ function meetingDetail() {
   };
 
   // 세션 변경 시 실행됨
+  // 각 유저마다 세션이 있따.
   useEffect(() => {
     if (!session) return;
+
+    console.log('session 있다');
 
     const mySession = session;
 
@@ -85,13 +148,11 @@ function meetingDetail() {
       let subs = subscribers;
       subs.push(sub);
       setSubscribers([...subs]);
-      console.log('streamCreated', subscribers);
     });
 
     // 어떤 스트림이 없어지면
     mySession.on('streamDestroyed', (event) => {
       deleteSubscriber(event.stream.streamManager);
-      console.log('streamDestroyed');
     });
 
     // 예외가 발생하면
@@ -107,27 +168,37 @@ function meetingDetail() {
     mySession.on('streamPropertyChanged', () => {
       const subs = subscribers;
       setSubscribers([...subs]);
-      console.log('streamPropertyChanged', subscribers);
     });
 
     getToken()
       .then((token) => {
         console.log('getToken:', token);
-        mySession
-          .connect(token, { clientData: sessionStorage.getItem('nickname') })
-          .then(() => {
-            if (!OV) return;
-            let pub = OV.initPublisher('', { ...publisherStatus.properties });
+        mySession.connect(token, { clientData: myUserName }).then(async () => {
+          if (!OV) return;
+          var devices = await OV.getDevices();
+          var videoDevices = devices.filter(
+            (device) => device.kind === 'videoinput'
+          );
 
-            mySession.publish(pub).then(() => {
-              setPublisher(pub);
-            });
+          let pub = OV.initPublisher('', {
+            audioSource: undefined,
+            videoSource: camOn ? videoDevices[0].deviceId : false,
+            publishAudio: micOn,
+            publishVideo: camOn,
+            resolution: '320x240',
+            frameRate: 30,
+            mirror: true,
           });
+
+          mySession.publish(pub).then(() => {
+            setPublisher(pub);
+          });
+        });
       })
       .catch((error) => {
         console.error(
           'There was an error connecting to the session:',
-          error.code,
+          error.name,
           error.message
         );
       });
@@ -147,13 +218,35 @@ function meetingDetail() {
     setSession(undefined);
     setPublisher(undefined);
     setSubscribers([]);
+    setMicOn(false);
+    setCamOn(false);
   };
 
   const leaveSession = () => {
     const mySession = session;
     if (mySession) {
+      // 세션 disconnect
       mySession.disconnect();
     }
+  };
+
+  const allTrackOff = (sm) => {
+    if (sm) {
+      const mediaTrack = sm.stream.getMediaStream();
+      if (mediaTrack)
+        mediaTrack.getTracks().map((m) => {
+          m.enabled = false;
+          m.stop();
+        });
+    }
+  };
+
+  const handlerJoinBtn = (micState, camState) => {
+    setMicOn(micState);
+    setCamOn(camState);
+
+    setIsConfigModalShow(false);
+    setSession(OV?.initSession());
   };
 
   const getToken = () => {
@@ -174,6 +267,65 @@ function meetingDetail() {
     }
   };
 
+  const handleVideoStateChanged = () => {
+    // if (videoDevices[0].deviceId) {
+    republish(!camOn);
+    // }
+  };
+
+  const handleAudioStateChanged = () => {
+    publisher?.publishAudio(!micOn);
+    setMicOn(!micOn);
+  };
+
+  const videoTrackOff = (streamManager) => {
+    if (streamManager) {
+      streamManager.stream
+        .getMediaStream()
+        .getVideoTracks()
+        .map((sm) => {
+          sm.enabled = false;
+          sm.stop();
+        });
+    }
+  };
+
+  const republish = async (newCamOnState) => {
+    if (!OV || !session) return;
+
+    if (publisher) {
+      await session.unpublish(publisher);
+    }
+
+    var devices = await OV.getDevices();
+    var videoDevices = devices.filter((device) => device.kind === 'videoinput');
+
+    let newPublisher = OV.initPublisher('', {
+      audioSource: undefined,
+      videoSource: videoDevices[0].deviceId,
+      publishAudio: micOn,
+      publishVideo: newCamOnState,
+      resolution: '320x240',
+      frameRate: 30,
+      mirror: true,
+    });
+
+    session.publish(newPublisher).then(() => {
+      setPublisher(newPublisher);
+      newPublisher?.publishVideo(newCamOnState);
+      setCamOn(newCamOnState);
+    });
+  };
+
+  const exitClick = () => {
+    videoTrackOff(publisher);
+    leaveSession();
+    clear();
+    Router.replace('/meeting');
+  };
+
+  // -----------------------------------------------------------
+  // 이 아래부턴 백엔드에 axios 보내서 데이터 받아옴
   const createSession = (sessionId) => {
     console.log('createSession:', sessionId);
     return new Promise((resolve, reject) => {
@@ -241,51 +393,153 @@ function meetingDetail() {
     });
   };
 
-  const videoTrackOff = (streamManager) => {
-    if (streamManager) {
-      streamManager.stream
-        .getMediaStream()
-        .getVideoTracks()
-        .map((sm) => {
-          sm.enabled = false;
-          sm.stop();
-        });
-    }
-  };
+  function UserName({ user }) {
+    const NameWrapper = styled.div`
+      transform: translate(10px, -160px);
+      background-color: white;
+      width: fit-content;
+      padding: 5px;
+    `;
 
-  const exitClick = () => {
-    videoTrackOff(publisher);
-    leaveSession();
-    clear();
-    Router.replace('/meeting');
-  };
+    const [name, setName] = useState('...loading');
+    useEffect(() => {
+      if (user && user.stream && user.stream.connection)
+        setName(JSON.parse(user.stream.connection.data).clientData);
+      else setName('...loading');
+    }, [user]);
+
+    return <NameWrapper>{name}</NameWrapper>;
+  }
 
   return (
     <RoomWrapper>
-      <RoomInfo detail={detail} exitClick={exitClick}></RoomInfo>
-      <Divider />
-      <RoomContent>
-        {/* {session !== undefined && (
-          <>
-            {publisher !== undefined && (
-              <div>
-                <UserVideo streamManager={publisher}></UserVideo>
-              </div>
+      {!isConfigModalShow ? (
+        <>
+          <RoomInfo
+            detail={detail}
+            exitClick={exitClick}
+            micOn={micOn}
+            setMicOn={setMicOn}
+            camOn={camOn}
+            setCamOn={setCamOn}
+            handleVideoStateChanged={handleVideoStateChanged}
+            handleAudioStateChanged={handleAudioStateChanged}
+          ></RoomInfo>
+          <Divider />
+          <RoomContent>
+            <GridWrapper>
+              <CusGrid container>
+                {/* <Users publisher={publisher} subscribers={subscribers}></Users> */}
+                {publisher !== undefined && (
+                  <Grid item xs={12} sm={10} md={6}>
+                    <VideoWrapper id="video-container">
+                      <UserVideo streamManager={publisher} />
+                    </VideoWrapper>
+                    <UserName user={publisher}></UserName>
+                  </Grid>
+                )}
+                {subscribers.map((sub, i) => (
+                  <Grid item xs={12} sm={10} md={6} key={i}>
+                    <VideoWrapper id="video-container">
+                      <UserVideo streamManager={sub} />
+                    </VideoWrapper>
+                    <UserName user={sub}></UserName>
+                  </Grid>
+                ))}
+              </CusGrid>
+            </GridWrapper>
+            <Chatting></Chatting>
+          </RoomContent>
+        </>
+      ) : null}
+      {isConfigModalShow && OV && (
+        <>
+          {/* <div id="video-container" className="col-md-6">
+            {camOn ? (
+              <UserVideo streamManager={publisher} /> // </div> //   /> //     name={sessionStorage.getItem('nickname')} //     streamManager={publisher} //   <UserVideo // <div className="stream-container col-md-6 col-xs-6">
+            ) : (
+              <>
+                <NoVideo />
+              </>
             )}
-            {subscribers.map((sub, idx) => {
-              <div key={idx}>
-                <UserVideo streamManager={sub}></UserVideo>
-              </div>;
-            })}
-          </>
-        )} */}
-        <Users
-          publisher={publisher}
-          subscribers={subscribers}
-          nickname={detail.nickname}
-        ></Users>
-        <Chatting></Chatting>
-      </RoomContent>
+          </div> */}
+          <ToggleButtonGroup
+            aria-label="user status formatting"
+            style={{ marginTop: '10px' }}
+          >
+            <ToggleButton
+              value="camera"
+              onClick={() => {
+                setCamOn(!camOn);
+              }}
+            >
+              {camOn ? <VideocamIcon /> : <VideocamOffOutlinedIcon />}
+            </ToggleButton>
+            <ToggleButton
+              value="audio"
+              onClick={() => {
+                setMicOn(!micOn);
+              }}
+            >
+              {micOn ? <MicIcon /> : <MicOffOutlinedIcon />}
+            </ToggleButton>
+            <ToggleButton
+              value="enter"
+              onClick={() => {
+                handlerJoinBtn(micOn, camOn);
+              }}
+            >
+              입장
+            </ToggleButton>
+          </ToggleButtonGroup>
+          {/* {
+            <Button
+              onClick={() => {
+                setCamOn(!camOn);
+              }}
+            >
+              {camOn ? <VideocamIcon /> : <VideocamOffOutlinedIcon />}
+            </Button>
+          }
+          {
+            <Button
+              onClick={() => {
+                setMicOn(!micOn);
+              }}
+            >
+              {micOn ? <MicIcon /> : <MicOffOutlinedIcon />}
+            </Button>
+          } */}
+          {/* <Button
+            onClick={() => {
+              handlerJoinBtn(micOn, camOn);
+            }}
+          >
+            입장하기
+          </Button> */}
+          {/* <ToggleButtonGroup
+            // value={userStatus}
+            // onChange={handleUserStatus}
+            aria-label="user status formatting"
+            style={{ marginTop: '10px' }}
+          >
+            <ToggleButton
+              value="camera"
+              aria-label="camera"
+              onClick={() => setCamOn(!camOn)}
+            >
+              {camOn ? <VideocamIcon /> : <VideocamOffOutlinedIcon />}
+            </ToggleButton>
+            <ToggleButton
+              value="audio"
+              aria-label="audio"
+              onClick={() =>setMicOn(!micOn)}
+            >
+              {micOn ? <MicIcon /> : <MicOffOutlinedIcon />}
+            </ToggleButton>
+          </ToggleButtonGroup> */}
+        </>
+      )}
     </RoomWrapper>
   );
 }

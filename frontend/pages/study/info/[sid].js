@@ -253,6 +253,7 @@ function StudyInfo() {
             <Button
               onClick={() => {
                 Router.push('/study/update');
+                alert('imageUrl', imageUrl);
                 dispatch(
                   studyActions.setStudyDetail({
                     detail: { ...detail, imageUrl: imageUrl },

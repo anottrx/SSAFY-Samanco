@@ -174,20 +174,19 @@ function ItemList() {
         room={room}
         pwDialogOpen={pwDialogOpen}
         setDetail={setDetail}
-        setPublisherStatus={setPublisherStatus}
       ></JoinDialog>
       <PwDialog
         open={openPw}
         pwDialogClose={pwDialogClose}
         room={room}
         setDetail={setDetail}
-        setPublisherStatus={setPublisherStatus}
       ></PwDialog>
       <CusPagination
         count={allPage}
         color="primary"
         page={page}
         onChange={handleChange}
+        setPublisherStatus={setPublisherStatus}
       />
     </>
   );
@@ -245,82 +244,60 @@ export function Item(props) {
 }
 
 function JoinDialog(props) {
-  let {
-    open,
-    joinDialogClose,
-    room,
-    pwDialogOpen,
-    setDetail,
-    setPublisherStatus,
-  } = props;
-  const [publisher, setPublisher] = useState(null);
+  let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
+  // const [publisher, setPublisher] = useState(null);
 
-  // userStatus : 카메라, 오디오 설정 -> 배열 안에 값이 있으면 ON 상태, 없으면 OFF 상태
-  const [userStatus, setUserStatus] = useState(['camera', 'audio']);
-  const handleUserStatus = (e, newValue) => {
-    setUserStatus(newValue);
-  };
+  // useEffect(() => {
+  //   if (publisher) {
+  //     let newPublisher = _.cloneDeep(publisher);
+  //     newPublisher.properties = {
+  //       ...publisher.properties,
+  //       publishAudio: userStatus.includes('audio'),
+  //       publishVideo: userStatus.includes('camera'),
+  //     };
+  //     setPublisher(newPublisher);
+  //   }
+  // }, [userStatus]);
 
-  const NoVideo = styled.div`
-    width: 320px;
-    height: 240px;
-    background-color: #f9f9f9;
-    border: 1px solid gray;
-  `;
+  // let commonSetting = {
+  //   audioSource: undefined, // 오디오 출처 : 디폴트값 - 마이크
+  //   resolution: '320x240', // 비디오 사이즈
+  //   frameRate: 30, // 비디오 프레임
+  //   insertMode: 'APPEND', // 비디오가 'video-container' 타겟 요소에 어떻게 삽입될 지 결정
+  //   mirror: false, // 비디오 좌우반전할지 말지 (true: 반전)
+  //   nickname: sessionStorage.getItem('nickname'),
+  // };
 
-  let openViduModule, OV, devices, videoDevices;
+  // const initOV = () => {
+  //   (async function init() {
+  //     // eslint-disable-next-line
+  //     openViduModule = await import('openvidu-browser');
+  //     OV = new openViduModule.OpenVidu();
+  //     devices = await OV.getDevices();
+  //     videoDevices = devices.filter((device) => device.kind == 'videoinput');
 
-  useEffect(() => {
-    if (publisher) {
-      let newPublisher = _.cloneDeep(publisher);
-      newPublisher.properties = {
-        ...publisher.properties,
-        publishAudio: userStatus.includes('audio'),
-        publishVideo: userStatus.includes('camera'),
-      };
-      setPublisher(newPublisher);
-    }
-  }, [userStatus]);
-
-  let commonSetting = {
-    audioSource: undefined, // 오디오 출처 : 디폴트값 - 마이크
-    resolution: '320x240', // 비디오 사이즈
-    frameRate: 30, // 비디오 프레임
-    insertMode: 'APPEND', // 비디오가 'video-container' 타겟 요소에 어떻게 삽입될 지 결정
-    mirror: false, // 비디오 좌우반전할지 말지 (true: 반전)
-    nickname: sessionStorage.getItem('nickname'),
-  };
-
-  const initOV = () => {
-    (async function init() {
-      // eslint-disable-next-line
-      openViduModule = await import('openvidu-browser');
-      OV = new openViduModule.OpenVidu();
-      devices = await OV.getDevices();
-      videoDevices = devices.filter((device) => device.kind == 'videoinput');
-
-      if (videoDevices.length > 0) {
-        setPublisher(
-          OV.initPublisher(undefined, {
-            ...commonSetting,
-            videoSource: videoDevices[0].deviceId, // 비디오 출처 : 디폴트값 - 웹캠
-            publishAudio: true, // 방에 들어갔을 때 오디오를 mute할지, 그렇지 않을지 결정 (true: ON)
-            publishVideo: true, // 방에 들어갔을 때 비디오를 킬 지, 끌 지 결정 (true: ON)
-          })
-        );
-      }
-    })();
-  };
+  //     if (videoDevices.length > 0) {
+  //       setPublisher(
+  //         OV.initPublisher(undefined, {
+  //           ...commonSetting,
+  //           videoSource: videoDevices[0].deviceId, // 비디오 출처 : 디폴트값 - 웹캠
+  //           publishAudio: true, // 방에 들어갔을 때 오디오를 mute할지, 그렇지 않을지 결정 (true: ON)
+  //           publishVideo: true, // 방에 들어갔을 때 비디오를 킬 지, 끌 지 결정 (true: ON)
+  //         })
+  //       );
+  //     }
+  //   })();
+  // };
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then((stream) => {
-        initOV();
-      })
-      .catch((err) => {
-        alert('접근이 거절되었습니다. 브라우저 설정에서 변경이 가능합니다.');
-      });
+    // navigator.mediaDevices
+    //   .getUserMedia({ audio: true, video: true })
+    //   .then((stream) => {
+    //     initOV();
+    //   })
+    //   .catch((err) => {
+    //     alert('접근이 거절되었습니다. 브라우저 설정에서 변경이 가능합니다.');
+    //   });
     return () => {};
   }, []);
 
@@ -328,7 +305,7 @@ function JoinDialog(props) {
     <Dialog open={open} onClose={joinDialogClose}>
       <DialogTitle>{`[${room.title}]\n방에 입장하시겠습니까?`}</DialogTitle>
       <DialogContent>
-        <div id="video-container" className="col-md-6">
+        {/* <div id="video-container" className="col-md-6">
           {userStatus.includes('camera') && publisher !== undefined ? (
             <div className="stream-container col-md-6 col-xs-6">
               <UserVideo
@@ -363,40 +340,41 @@ function JoinDialog(props) {
               <MicOffOutlinedIcon />
             )}
           </ToggleButton>
-        </ToggleButtonGroup>
+        </ToggleButtonGroup> */}
       </DialogContent>
       <DialogActions>
         <Button onClick={joinDialogClose}>취소</Button>
-        {userStatus.length > 0 ? (
-          <Button
-            onClick={
-              // 비밀방인지 여부 확인
-              room.isPrivate
-                ? () => {
-                    joinDialogClose();
-                    pwDialogOpen();
-                  }
-                : () => {
-                    setPublisherStatus({ status: publisher });
-                    Router.push('/meeting/' + room.no);
-                    setDetail({
-                      detail: room,
-                    });
-                    joinDialogClose();
-                  }
-            }
-            autoFocus
-          >
-            확인
-          </Button>
-        ) : (
+        {/* {userStatus.length > 0 ? ( */}
+        <Button
+          onClick={
+            // 비밀방인지 여부 확인
+            room.isPrivate
+              ? () => {
+                  joinDialogClose();
+                  pwDialogOpen();
+                }
+              : () => {
+                  // setPublisherStatus({ status: publisher });
+                  // 카메라, 오디오 정보 -> publisher
+                  Router.push('/meeting/' + room.no);
+                  setDetail({
+                    detail: room,
+                  });
+                  joinDialogClose();
+                }
+          }
+          autoFocus
+        >
+          확인
+        </Button>
+        {/* ) : (
           <Tooltip
             title="방에 입장하기 위해선 마이크나 카메라를 켜야해요."
             placement="top"
           >
             <Button>앗</Button>
           </Tooltip>
-        )}
+        )} */}
       </DialogActions>
     </Dialog>
   );
@@ -422,12 +400,12 @@ function PwDialog(props) {
             // To Do : 나중에 방 비밀번호로 변경
             pw === '1234'
               ? () => {
+                  // setPublisherStatus({ status: publisher });
                   Router.push('/meeting/' + room.no);
-                  setPublisherStatus({ status: publisher });
-                  pwDialogClose();
                   setDetail({
                     detail: room,
                   });
+                  pwDialogClose();
                 }
               : () => {
                   alert('비밀번호를 확인해주세요.');

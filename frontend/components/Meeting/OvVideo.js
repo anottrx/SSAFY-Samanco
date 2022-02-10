@@ -1,15 +1,26 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function OpenViduVideoComponent({ streamManager }) {
   const videoRef = useRef();
+  const [audioStatus, setAudioStatus] = useState('...loading');
 
   useEffect(() => {
     if (streamManager && !!videoRef) {
-      streamManager.addVideoElement(videoRef.current);
+      streamManager?.addVideoElement(videoRef?.current);
     }
   }, []);
 
-  return <video autoPlay={true} ref={videoRef} />;
+  useEffect(() => {
+    if (streamManager)
+      setAudioStatus(streamManager.properties.publishAudio + '');
+  }, [streamManager]);
+
+  return (
+    <>
+      {/* <div style={{ position: 'absolute' }}>{audioStatus}</div> */}
+      <video autoPlay={true} ref={videoRef} />
+    </>
+  );
 }
 
 export default OpenViduVideoComponent;

@@ -9,11 +9,28 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  Fab,
+  Box,
 } from '@mui/material';
+
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
+import IosShareIcon from '@mui/icons-material/IosShare';
 
 import Router from 'next/router';
 
-function RoomInfo({ detail, exitClick }) {
+function RoomInfo({
+  detail,
+  exitClick,
+  micOn,
+  setMicOn,
+  camOn,
+  setCamOn,
+  handleVideoStateChanged,
+  handleAudioStateChanged,
+}) {
   const InfoWrapper = styled.div`
     display: flex;
     flex-direction: row;
@@ -35,6 +52,10 @@ function RoomInfo({ detail, exitClick }) {
     }
   `;
 
+  const OperWrapper = styled.div`
+    float: left;
+  `;
+
   const [open, setOpen] = useState(false);
 
   const exitDialogOpen = () => {
@@ -48,18 +69,82 @@ function RoomInfo({ detail, exitClick }) {
     <InfoWrapper>
       <div className="names">
         <span className="roomTitle">{detail.title}</span>
-        <span className="hostName">방장 : {detail.host}</span>
+        <span className="hostName">[방장] {detail.host}</span>
+        <Stack>
+          <span>
+            <AccessTimeIcon />
+            {detail.startTime}분 / {detail.timeLimit}분
+          </span>
+        </Stack>
       </div>
-      <Stack>
-        <div>
-          <AccessTimeIcon />
-          {detail.startTime}분 / {detail.timeLimit}분
-        </div>
-        <Button onClick={exitDialogOpen}>
-          <ExitToAppIcon />
-          나가기
-        </Button>
-      </Stack>
+      <div>
+        <OperWrapper>
+          <Box sx={{ '& > :not(style)': { m: 1 } }}>
+            {camOn ? (
+              <Fab
+                color="primary"
+                variant="extended"
+                aria-label="add"
+                onClick={() => {
+                  setCamOn(false); // 버튼
+                  handleVideoStateChanged();
+                  // changeVideo(false); // 상태 변경
+                }}
+              >
+                <VideocamIcon fontSize="large" />
+              </Fab>
+            ) : (
+              <Fab
+                variant="extended"
+                aria-label="add"
+                onClick={() => {
+                  setCamOn(true);
+                  handleVideoStateChanged();
+                  // changeVideo(true);
+                }}
+              >
+                <VideocamOffOutlinedIcon fontSize="large" />
+              </Fab>
+            )}
+            {micOn ? (
+              <Fab
+                color="primary"
+                variant="extended"
+                aria-label="edit"
+                onClick={() => {
+                  setMicOn(false);
+                  // changeAudio(false);
+                  // publisher.properties.publishVideo = false;
+                  handleAudioStateChanged();
+                }}
+              >
+                <MicIcon fontSize="large" />
+              </Fab>
+            ) : (
+              <Fab
+                variant="extended"
+                aria-label="edit"
+                onClick={() => {
+                  setMicOn(true);
+                  handleAudioStateChanged();
+                  // changeAudio(true);
+
+                  // publisher.properties.publishVideo = false;
+                }}
+              >
+                <MicOffOutlinedIcon fontSize="large" />
+              </Fab>
+            )}
+            <Fab variant="extended" aria-label="edit">
+              <IosShareIcon fontSize="large" />
+            </Fab>
+            <Fab variant="extended" aria-label="edit" onClick={exitDialogOpen}>
+              <ExitToAppIcon fontSize="large" />
+            </Fab>
+          </Box>
+        </OperWrapper>
+      </div>
+
       <ExitDialog
         open={open}
         exitDialogClose={exitDialogClose}

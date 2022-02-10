@@ -1,14 +1,12 @@
 import OpenViduVideoComponent from './OvVideo';
 
-function UserVideo({ streamManager, name }) {
+function UserVideo({ streamManager }) {
+  console.log('-------------user', streamManager);
   return (
     <div>
       {streamManager !== undefined ? (
         <div className="streamcomponent">
           <OpenViduVideoComponent streamManager={streamManager} />
-          <div>
-            <p>{name}</p>
-          </div>
         </div>
       ) : null}
     </div>

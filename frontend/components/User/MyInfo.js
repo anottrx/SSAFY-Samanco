@@ -164,6 +164,7 @@ const RowWrapper = styled.div`
   padding: 2px 0px;
 `;
 
+// to do : 사진 띄우기
 export default function MyInfo() {
   const [authChange, setAuthChange] = useState(false);
   const [onlyView, setOnlyView] = useState(true);
@@ -274,15 +275,15 @@ export default function MyInfo() {
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
     // const token = cookie.userToken;
-    const token = cookies.get('userToken')
-    cookies.remove("userToken", {path: "/myinfo"})  
-    // cookies.remove("userToken", {path: "/"}) 
+    const token = cookies.get('userToken');
+    cookies.remove('userToken', { path: '/myinfo' });
+    // cookies.remove("userToken", {path: "/"})
 
     // getUserLoginTokenAPI(token).then((res) => {
     //   if (res.statusCode == 200) {
     //     //
     //   } else {
-    //     // 
+    //     //
     //   }
     //   console.log('getUserLoginTokenAPI 관련 결과' + JSON.stringify(res));
     //   inputState.userId = res.userId;
@@ -292,72 +293,72 @@ export default function MyInfo() {
 
     //   const userId = res.userId;
 
-      inputState.userId = sessionStorage.getItem("userId");
-      inputState.nickname = sessionStorage.getItem("nickname");
-      inputState.email = sessionStorage.getItem("email");
+    inputState.userId = sessionStorage.getItem('userId');
+    inputState.nickname = sessionStorage.getItem('nickname');
+    inputState.email = sessionStorage.getItem('email');
 
-      getUserInfoAPI(inputState.userId).then((res) => {
-        if (res.statusCode == 200) {
-          // console.log('내 정보 보기 결과: ' + JSON.stringify(res));
-          inputState.name = res.user.name;
-          const today = new Date();
-          const todayYear = today.getFullYear().toString().slice(2);
-          if (
-            res.user.birthday != null
-            // &&  res.user.birthday.toString().slice(0, 2) != todayYear
-          ) {
-            inputState.birthday = res.user.birthday;
-            inputState.initDate = res.user.birthday;
-            let year = inputState.birthday.slice(0, 2);
-            year = Number(year) > 25 ? 19 + year : 20 + year;
-            let month = inputState.birthday.slice(2, 4);
-            let day = inputState.birthday.slice(4, 6);
-            setUserBirthdayDate(year + '-' + month + '-' + day);
-            // console.log(userBirthdayDate);
-            userBirthday.initDate = year + '-' + month + '-' + day;
-            userBirthday.value = year + '-' + month + '-' + day;
-            if (year == '22' && month == '02') {
-              userBirthday.value = '';
-              inputState.birthday = '';
-            }
+    getUserInfoAPI(inputState.userId).then((res) => {
+      if (res.statusCode == 200) {
+        console.log('내 정보 보기 결과: ' + JSON.stringify(res));
+        inputState.name = res.user.name;
+        const today = new Date();
+        const todayYear = today.getFullYear().toString().slice(2);
+        if (
+          res.user.birthday != null
+          // &&  res.user.birthday.toString().slice(0, 2) != todayYear
+        ) {
+          inputState.birthday = res.user.birthday;
+          inputState.initDate = res.user.birthday;
+          let year = inputState.birthday.slice(0, 2);
+          year = Number(year) > 25 ? 19 + year : 20 + year;
+          let month = inputState.birthday.slice(2, 4);
+          let day = inputState.birthday.slice(4, 6);
+          setUserBirthdayDate(year + '-' + month + '-' + day);
+          // console.log(userBirthdayDate);
+          userBirthday.initDate = year + '-' + month + '-' + day;
+          userBirthday.value = year + '-' + month + '-' + day;
+          if (year == '22' && month == '02') {
+            userBirthday.value = '';
+            inputState.birthday = '';
           }
-          if (res.user.phone !== '00000000000') {
-            inputState.phone = res.user.phone;
-          }
-          inputState.class = res.user.userClass;
-          inputState.generation = res.user.generation;
-          inputState.studentId = res.user.studentId;
-          inputState.position = res.user.position;
-          inputState.password = res.user.password;
-          inputState.link = res.user.link;
-          inputState.description = res.user.description;
-          inputState.stacks = res.user.stacks;
-          inputState.stacks_get = res.user.stacks;
-          inputState.image_id = res.user.file;
-
-          if (inputState.image_id == null) {
-            if (inputState.generation == 7) {
-              setImageDefault('/images/profile_default_gen7.png');
-            } else if (inputState.generation == 0) {
-              setImageDefault('/images/profile_default_gen0.png');
-            } else {
-              setImageDefault('/images/profile_default_gen6.png');
-            }
-          }
-
-          // if (res.user.link != null) {
-          //   setLinks(inputState.link.split(" "));
-          //   console.log(links);
-          //   console.log(inputState.link.split(" "));
-          // } else {
-          //   setLinks();
-          // }
-          // inputState.file = res.user.file;
-          setLoading(true);
-        } else {
-          //
         }
-      });
+        if (res.user.phone !== '00000000000') {
+          inputState.phone = res.user.phone;
+        }
+        inputState.class = res.user.userClass;
+        inputState.generation = res.user.generation;
+        inputState.studentId = res.user.studentId;
+        inputState.position = res.user.position;
+        inputState.password = res.user.password;
+        inputState.link = res.user.link;
+        inputState.description = res.user.description;
+        inputState.stacks = res.user.stacks;
+        inputState.stacks_get = res.user.stacks;
+        inputState.image_id = res.user.file;
+
+        if (inputState.image_id == null) {
+          if (inputState.generation == 7) {
+            setImageDefault('/images/profile_default_gen7.png');
+          } else if (inputState.generation == 0) {
+            setImageDefault('/images/profile_default_gen0.png');
+          } else {
+            setImageDefault('/images/profile_default_gen6.png');
+          }
+        }
+
+        // if (res.user.link != null) {
+        //   setLinks(inputState.link.split(" "));
+        //   console.log(links);
+        //   console.log(inputState.link.split(" "));
+        // } else {
+        //   setLinks();
+        // }
+        // inputState.file = res.user.file;
+        setLoading(true);
+      } else {
+        //
+      }
+    });
     // });
   }
 
