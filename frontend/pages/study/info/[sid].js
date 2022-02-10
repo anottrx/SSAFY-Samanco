@@ -174,7 +174,11 @@ function StudyInfo() {
         {clubData ? (
           <>
             <DetailHeader>
-              <DetailOperation detail={clubData}></DetailOperation>
+              <DetailOperation
+                detail={clubData}
+                imageUrl={imageUrl}
+                dispatch={dispatch}
+              ></DetailOperation>
             </DetailHeader>
             <h2>{clubData.title}</h2>
             <DetailWrapper maxWidth="sm">
@@ -205,7 +209,7 @@ function StudyInfo() {
     </Layout>
   );
 
-  function DetailOperation({ detail }) {
+  function DetailOperation({ detail, imageUrl, dispatch }) {
     const [openQuit, setOpenQuit] = useState(false);
     const [openUsers, setOpenUsers] = useState(false);
 
@@ -249,6 +253,11 @@ function StudyInfo() {
             <Button
               onClick={() => {
                 Router.push('/study/update');
+                dispatch(
+                  studyActions.setStudyDetail({
+                    detail: { ...detail, imageUrl: imageUrl },
+                  })
+                );
               }}
             >
               수정
