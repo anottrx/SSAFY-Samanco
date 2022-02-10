@@ -37,7 +37,7 @@ async function joinRoomAPI(data) {
 }
 
 // 방 나가기
-async function quitAPI(data) {
+async function quitRoomAPI(data) {
   return await api
     .post('/api/room/quit', {
       roomId: data.roomId,
@@ -72,3 +72,13 @@ async function getArticleById(roomId) {
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
+
+export {
+  registAPI,
+  updateAPI,
+  joinRoomAPI,
+  quitRoomAPI,
+  getRoomAllAPI,
+  getRoomByTitle,
+  getArticleById,
+};
