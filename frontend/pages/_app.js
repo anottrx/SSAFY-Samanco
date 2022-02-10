@@ -215,12 +215,23 @@ function MyApp({ Component, pageProps }) {
           <MenuItem
             onClick={(e) => {
               e.preventDefault();
-              Router.push('/myinfo/club');
+              Router.push('/myinfo/project');
               handleClose();
             }}
           >
             <span className="site-nav-item" style={styles.link}>
-              내 클럽
+              내 프로젝트
+            </span>
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              e.preventDefault();
+              Router.push('/myinfo/study');
+              handleClose();
+            }}
+          >
+            <span className="site-nav-item" style={styles.link}>
+              내 스터디
             </span>
           </MenuItem>
           <MenuItem

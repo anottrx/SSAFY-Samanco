@@ -25,6 +25,7 @@ import Cookies from 'universal-cookie';
 
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { getArticleById, getArticleByUserId } from '../../pages/api/board';
+import BoardColor from '../../data/BoardColor.json';
 
 //게시글 목록 페이지
 
@@ -133,6 +134,13 @@ function MyBoardList(props) {
           margin: 0px 10px 0px 20px;
           color: gray;
       `;
+  
+  const TagSpan = style.span`
+      margin-right: 10px;
+      padding: 0;
+      font-weight: bolder;
+      ${({ colorinfo }) => colorinfo && `color: #${colorinfo}`}
+  `;
 
   return (
     <>
@@ -196,6 +204,9 @@ function MyBoardList(props) {
             }}
           >
             <StyledTableCell component="th" scope="row">
+              <TagSpan colorinfo={BoardColor[data.tag].color}>
+                  [{BoardColor[data.tag].label}]
+              </TagSpan>
               {`${data.title} (${data.comments ? data.comments.length : 0})`}
               {Array.isArray(data.files) && data.files.length !== 0 ? (
                 <FileIcon>
