@@ -6,7 +6,7 @@ import MicIcon from '@mui/icons-material/Mic';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import UserVideo from './UserVideo';
 
-function User({ publisher, subscribers, nickname }) {
+function User({ publisher, subscribers }) {
   let [users, setUsers] = useState([publisher, ...subscribers]);
   useEffect(() => {
     // if (subscribers !== undefined) {
@@ -54,7 +54,7 @@ function User({ publisher, subscribers, nickname }) {
                     <UserVideo streamManager={user}></UserVideo>
                   </VideoWrapper>
                   {/* <VideoWrapper height={350}></VideoWrapper> */}
-                  <UserName nickname={nickname}></UserName>
+                  <UserName user={user}></UserName>
                 </Grid>
               );
             })
@@ -66,7 +66,7 @@ function User({ publisher, subscribers, nickname }) {
                     <UserVideo streamManager={user}></UserVideo>
                   </VideoWrapper>
                   {/* <VideoWrapper height={350}></VideoWrapper> */}
-                  <UserName nickname={nickname}></UserName>
+                  <UserName user={user}></UserName>
                 </Grid>
               );
             })}
@@ -76,7 +76,7 @@ function User({ publisher, subscribers, nickname }) {
   );
 }
 
-function UserName({ nickname }) {
+function UserName({ user }) {
   const NameWrapper = styled.div`
     transform: translate(10px, -160px);
     background-color: white;
@@ -84,7 +84,13 @@ function UserName({ nickname }) {
     padding: 5px;
   `;
 
-  return <NameWrapper>{nickname}</NameWrapper>;
+  const [name, setName] = useState('...loading');
+  useEffect(() => {
+    if (user.stream && user.stream.connection)
+      setName(JSON.parse(user.stream.connection.data).clientData);
+  }, [user]);
+
+  return <NameWrapper>{name}</NameWrapper>;
 }
 
 function Operation() {

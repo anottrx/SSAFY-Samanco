@@ -288,6 +288,7 @@ function JoinDialog(props) {
     frameRate: 30, // 비디오 프레임
     insertMode: 'APPEND', // 비디오가 'video-container' 타겟 요소에 어떻게 삽입될 지 결정
     mirror: false, // 비디오 좌우반전할지 말지 (true: 반전)
+    nickname: sessionStorage.getItem('nickname'),
   };
 
   const initOV = () => {
@@ -379,10 +380,7 @@ function JoinDialog(props) {
                     setPublisherStatus({ status: publisher });
                     Router.push('/meeting/' + room.no);
                     setDetail({
-                      detail: {
-                        ...room,
-                        nickname: sessionStorage.getItem('nickname'),
-                      },
+                      detail: room,
                     });
                     joinDialogClose();
                   }
@@ -428,10 +426,7 @@ function PwDialog(props) {
                   setPublisherStatus({ status: publisher });
                   pwDialogClose();
                   setDetail({
-                    detail: {
-                      ...room,
-                      nickname: sessionStorage.getItem('nickname'),
-                    },
+                    detail: room,
                   });
                 }
               : () => {
