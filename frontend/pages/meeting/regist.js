@@ -120,8 +120,8 @@ function MeetingRegist() {
 
   function validateCheck() {
     let [check, msg] = [true, ''];
-    if (typeof inputValue.tag == 'undefined')
-      [check, msg] = [false, '태그를 선택해주세요'];
+    // if (typeof inputValue.tag == 'undefined')
+      // [check, msg] = [false, '태그를 선택해주세요'];
     if (typeof inputValue.title == 'undefined')
       [check, msg] = [false, '미팅룸 이름을 입력해주세요.'];
     // else if (typeof inputValue.size == 'undefined' || inputValue.size == 0)
@@ -146,7 +146,7 @@ function MeetingRegist() {
     <Layout>
       <h1>Meeting Regist</h1>
       <CusPaper>
-        <ImgUploadBtn
+        {/* <ImgUploadBtn
           id="img_box"
           onClick={(event) => {
             event.preventDefault();
@@ -180,7 +180,7 @@ function MeetingRegist() {
               {option.label}
             </MeetingRegistTagMenu>
           ))}
-        </MeetingRegistTagField>
+        </MeetingRegistTagField> */}
 
         <TextField
           fullWidth
