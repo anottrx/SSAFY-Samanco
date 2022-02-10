@@ -120,28 +120,30 @@ const BoardDetail = () => {
           {sessionStorage.getItem('userId') &&
           sessionStorage.getItem('userId') == detail.userId ? (
             <DetailOperation />
-          ) : <JoinRoomOperation />}
+          ) : (
+            <JoinRoomOperation />
+          )}
         </DetailHeader>
         <BoardDetail></BoardDetail>
       </CusContainer>
     </Layout>
   );
 
-  function JoinRoomOperation(){
+  function JoinRoomOperation() {
     return (
       <ButtonGroup variant="outlined">
         {/* {detail.canJoin ? (
           방 참가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성) */}
-          <Button
-            onClick={() => {
-              Router.push('/meeting/join');
-            }}
-            >
-              방 참가
-          </Button>
+        <Button
+          onClick={() => {
+            Router.push('/meeting/join');
+          }}
+        >
+          방 참가
+        </Button>
         {/* ) : null} */}
       </ButtonGroup>
-    )
+    );
   }
 
   function DetailOperation() {
@@ -157,15 +159,15 @@ const BoardDetail = () => {
     return (
       <>
         <ButtonGroup variant="outlined">
-          { detail.tag !== 'notice' ? (
-          // && detail.canRegister
-          // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
+          {detail.tag !== 'notice' ? (
+            // && detail.canRegister
+            // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
             <Button
               onClick={() => {
                 Router.push('/meeting/regist');
               }}
-              >
-                방 생성
+            >
+              방 생성
             </Button>
           ) : null}
           <Button
@@ -314,6 +316,9 @@ const BoardDetail = () => {
                       key={index}
                       onClick={() => {
                         changeToBlob(file);
+                      }}
+                      style={{
+                        cursor: 'pointer',
                       }}
                     >
                       <AttachFileIcon />

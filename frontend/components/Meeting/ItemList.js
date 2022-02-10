@@ -199,6 +199,7 @@ export function Item(props) {
     display: flex;
     flex-direction: column;
     text-align: left;
+    cursor: pointer;
 
     & .title {
       font-weight: bolder;

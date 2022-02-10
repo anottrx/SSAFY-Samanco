@@ -203,6 +203,7 @@ export function Item(props) {
     display: flex;
     flex-direction: column;
     text-align: left;
+    cursor: pointer;
   `;
 
   const CusCountBadge = styled(Badge)`
