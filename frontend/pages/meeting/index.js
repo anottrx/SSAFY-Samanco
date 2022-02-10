@@ -16,7 +16,7 @@ export default function Meeting() {
     text-align: left;
   `;
 
-  const StudyActions = styled.div`
+  const MeetingActions = styled.div`
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -32,8 +32,8 @@ export default function Meeting() {
     <Layout>
       <h1>Meeting</h1>
       <ItemWrapper>
-        <StudyActions>
-          <SearchBar></SearchBar>
+        <MeetingActions>
+        <SearchBar target="meeting"></SearchBar>
           <CusButton
             variant="outlined"
             size="medium"
@@ -43,7 +43,7 @@ export default function Meeting() {
           >
             등록
           </CusButton>
-        </StudyActions>
+        </MeetingActions>
         <ItemList></ItemList>
       </ItemWrapper>
     </Layout>

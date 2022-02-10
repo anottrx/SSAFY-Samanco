@@ -6,10 +6,12 @@ import { useDispatch } from 'react-redux';
 import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
 import * as boardActions from '../../store/module/board';
+import * as meetingActions from '../../store/module/meeting';
 
 import { getProjectBytitle } from '../../pages/api/project';
 import { getStudyBytitle } from '../../pages/api/study';
 import { getArticleByTitle } from '../../pages/api/board';
+import { getRoomByTitle } from '../../pages/api/meeting';
 
 function SearchBar(props) {
   const [keyword, setKeyword] = useState('');
@@ -48,6 +50,15 @@ function SearchBar(props) {
             title: keyword,
           }).then((res) => {
             dispatch(boardActions.setBoardFilterList({ list: res.boards }));
+          });
+        }
+      } else if (props.target === 'meeting') {
+        if (!keyword) dispatch(meetingActions.setMeetingFilterList({ list: null }));
+        else {
+          getRoomByTitle({
+            title: keyword,
+          }).then((res) => {
+            dispatch(meetingActions.setMeetingFilterList({ list: res.meetings }));
           });
         }
       }

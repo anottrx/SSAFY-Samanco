@@ -64,7 +64,7 @@ async function getRoomByTitle(title) {
 }
 
 // 방 번호로 상세 조회 (roomId)
-async function getArticleById(roomId) {
+async function getRoomById(roomId) {
   return await api
     .post('/api/room/view/', {
       roomId: roomId,
@@ -80,5 +80,5 @@ export {
   quitRoomAPI,
   getRoomAllAPI,
   getRoomByTitle,
-  getArticleById,
+  getRoomById,
 };
