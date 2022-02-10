@@ -35,4 +35,5 @@ public class UserDto {
     private String projectPosition;
     private List<StackGradeDto> stacks;
     private FileDto file;
+    private Long roomId;
 }

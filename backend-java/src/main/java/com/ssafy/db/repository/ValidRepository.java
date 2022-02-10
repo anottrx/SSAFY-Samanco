@@ -12,11 +12,13 @@ public class ValidRepository {
 
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
+
     QUser qUser = QUser.user;
     QProject qProject=QProject.project;
     QStudy qStudy = QStudy.study;
     QBoard qBoard = QBoard.board;
     QComment qComment = QComment.comment;
+    QRoom qRoom = QRoom.room;
 
     public boolean isUserValid(Long userId){
         User user = jpaQueryFactory.select(qUser).from(qUser)
@@ -110,8 +112,14 @@ public class ValidRepository {
         return true;
     }
 
-    public String selectUserNickname(Long userId) {
-        return jpaQueryFactory.select(qUser.nickname).from(qUser)
-                .where(qUser.isDeleted.eq(false), qUser.id.eq(userId)).fetchOne();
+    public boolean isRoomValid(Long roomId) {
+        Room room = jpaQueryFactory.selectFrom(qRoom)
+                .where(qRoom.id.eq(roomId), qRoom.isDeleted.eq(false)).fetchOne();
+
+        if (room==null){
+            return false;
+        }
+        return true;
+
     }
 }

@@ -55,9 +55,6 @@ public class BoardController {
     @Autowired
     FileService fileService;
 
-    @Autowired
-    private ServletContext servletContext;
-
     @PostMapping()
     @ApiOperation(value = "board register")
     @ApiResponses({
@@ -70,7 +67,8 @@ public class BoardController {
             @RequestParam("userId") Long userId,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam("tag") String tag,
+            @RequestParam("tag") String tag,    // tag id 추가
+
 //            @RequestParam(required = false, value="startDate") String startDate,
 //            @RequestParam(required = false, value="endDate") String endDate,
             @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {

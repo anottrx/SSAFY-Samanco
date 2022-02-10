@@ -36,8 +36,8 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     UserLikeRepositorySupport userLikeRepositorySupport;
 
-//    @Autowired
-//    CommentRepositorySupport commentRepositorySupport;
+    @Autowired
+    CommonRepository commonRepository;
 
     @Autowired
     CommentService commentService;
@@ -172,7 +172,7 @@ public class BoardServiceImpl implements BoardService {
         boardDto.setComments(comments);
 
         // 작성자 닉네임
-        String nickname = valid.selectUserNickname(result.getUserId());
+        String nickname = commonRepository.selectUserNickname(result.getUserId());
         if (nickname==null){
             return null;
         }

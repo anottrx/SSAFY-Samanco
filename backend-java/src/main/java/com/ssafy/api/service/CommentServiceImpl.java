@@ -32,6 +32,9 @@ public class CommentServiceImpl implements CommentService {
     ValidRepository valid;
 
     @Autowired
+    CommonRepository commonRepository;
+
+    @Autowired
     UserLikeRepositorySupport userLikeRepositorySupport;
 
 //    @Autowired
@@ -109,7 +112,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto commentEntityToDto(Comment result) {
-        String nickname = valid.selectUserNickname(result.getUserId());
+        String nickname = commonRepository.selectUserNickname(result.getUserId());
         if (nickname==null){
             return null;
         }

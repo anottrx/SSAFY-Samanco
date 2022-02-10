@@ -39,4 +39,10 @@ public interface UserService {
     List<UserDto> selectStudyUsers(Long userId, Long studyId);
 
 	List<UserDto> selectStudyJoinUsers(Long userId, Long studyId);
+
+    List<UserDto> selectRoomUsers(Long roomId);
+
+	int joinUserRoom(Long userId, Long roomId, String password);
+
+	int quitUserRoom(Long userId, Long roomId);
 }
