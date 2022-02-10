@@ -4,6 +4,7 @@ const initialState = {
   meetingList: [],
   meetingDetail: {},
   publisherStatus: null,
+  meetingFilterList: null,
 }; // 초기 상태 정의
 
 // counterSlice : action과 reducer를 한번에 정의
@@ -20,9 +21,16 @@ const counterSlice = createSlice({
     setPublisherStatus: (state, action) => {
       state.publisherStatus = action.payload.status;
     },
+    setMeetingFilterList: (state, action) => {
+      state.meetingFilterList = action.payload.list;
+    },
   },
 });
 
-export const { setMeetingList, setMeetingDetail, setPublisherStatus } =
-  counterSlice.actions; // 액션 생성함수
+export const {
+  setMeetingList,
+  setMeetingDetail,
+  setPublisherStatus,
+  setMeetingFilterList,
+} = counterSlice.actions; // 액션 생성함수
 export default counterSlice.reducer; // 리듀서

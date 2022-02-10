@@ -22,46 +22,46 @@ function SearchBar(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (keyword !== '')
-      if (props.target === 'project') {
-        // 프로젝트 페이지를 위한 검색창
-        if (!keyword)
-          dispatch(projectActions.setProjectFilterList({ list: null }));
-        else {
-          getProjectBytitle(keyword).then((res) =>
-            dispatch(
-              projectActions.setProjectFilterList({ list: res.projects })
-            )
-          );
-        }
-      } else if (props.target === 'study') {
-        // 스터디 페이지를 위한 검색창
-        if (!keyword) dispatch(studyActions.setStudyFilterList({ list: null }));
-        else {
-          getStudyBytitle(keyword).then((res) => {
-            dispatch(studyActions.setStudyFilterList({ list: res.studies }));
-          });
-        }
-      } else if (props.target === 'board') {
-        if (!keyword) dispatch(boardActions.setBoardFilterList({ list: null }));
-        else {
-          getArticleByTitle({
-            tag: props.tag,
-            title: keyword,
-          }).then((res) => {
-            dispatch(boardActions.setBoardFilterList({ list: res.boards }));
-          });
-        }
-      } else if (props.target === 'meeting') {
-        if (!keyword) dispatch(meetingActions.setMeetingFilterList({ list: null }));
-        else {
-          getRoomByTitle({
-            title: keyword,
-          }).then((res) => {
-            dispatch(meetingActions.setMeetingFilterList({ list: res.meetings }));
-          });
-        }
+    if (props.target === 'project') {
+      // 프로젝트 페이지를 위한 검색창
+      if (keyword === '')
+        dispatch(projectActions.setProjectFilterList({ list: null }));
+      else {
+        getProjectBytitle(keyword).then((res) =>
+          dispatch(projectActions.setProjectFilterList({ list: res.projects }))
+        );
       }
+    } else if (props.target === 'study') {
+      // 스터디 페이지를 위한 검색창
+      if (keyword === '')
+        dispatch(studyActions.setStudyFilterList({ list: null }));
+      else {
+        getStudyBytitle(keyword).then((res) => {
+          dispatch(studyActions.setStudyFilterList({ list: res.studies }));
+        });
+      }
+    } else if (props.target === 'board') {
+      if (keyword === '')
+        dispatch(boardActions.setBoardFilterList({ list: null }));
+      else {
+        getArticleByTitle({
+          tag: props.tag,
+          title: keyword,
+        }).then((res) => {
+          dispatch(boardActions.setBoardFilterList({ list: res.boards }));
+        });
+      }
+    } else if (props.target === 'meeting') {
+      if (keyword === '')
+        dispatch(meetingActions.setMeetingFilterList({ list: null }));
+      else {
+        getRoomByTitle({
+          title: keyword,
+        }).then((res) => {
+          dispatch(meetingActions.setMeetingFilterList({ list: res.meetings }));
+        });
+      }
+    }
   }, [keyword]);
 
   return (

@@ -143,19 +143,20 @@ function CommentList({ detail, setReloadCondition }) {
                     </ButtonGroup>
                   </CusUpdateWrapper>
                 ) : (
+                  // 수정 클릭 안하면 댓글 내용 표시
                   <span className="comment-content">{data.content}</span>
                 )
               }
               <span className="comment-time">{data.dateOrTime}</span>
             </div>
 
-            {editStatus && data.userId === sessionStorage.getItem('userId') ? (
-              targetComment.commentId === data.commentId ? (
+            {data.userId === sessionStorage.getItem('userId') ? (
+              targetComment.commentId !== data.commentId ? (
                 <CommentOperation data={data} />
               ) : null
-            ) : (
+            ) : !editStatus ? (
               <CommentOperation data={data} />
-            )}
+            ) : null}
           </CusComment>
         );
       })}

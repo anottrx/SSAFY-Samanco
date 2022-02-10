@@ -71,9 +71,7 @@ function MyClub(props) {
             ? 0
             : sessionStorage.getItem('userId')
         ).then((res) => {
-          // To Do: 내 스터디 리스트 처리
           dispatch(studyActions.setMyStudy({ study: res.studies }));
-          // dispatch(studyActions.setStudyDetail({detail: res.studies}))
         });
         break;
       default:

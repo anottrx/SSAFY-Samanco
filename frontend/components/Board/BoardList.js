@@ -123,12 +123,8 @@ function BoardList(props) {
       dispatch(boardActions.setBoardFilterList({ list: null }));
     };
   }, []);
+
   useLayoutEffect(() => {
-    // To do: tag 바뀔 때마다 태그로 리스트 불러오기
-    // /api/board/tag/{tag}
-
-    // dispatch(boardActions.setBoardFilterList({list: null}))
-
     getArticleByTag(tag).then((res) => {
       if (res.boards) setArticles({ list: res.boards });
       else setArticles({ list: [] });
