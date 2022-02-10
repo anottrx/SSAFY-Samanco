@@ -17,12 +17,13 @@ import { LocalizationProvider } from '@mui/lab';
 import StackSelect from '../../components/Common/Stack/StackSelect';
 
 import styled from '@emotion/styled';
-import { updateAPI } from '../api/study';
+import { updateAPI, studyImageDownload } from '../api/study';
 
 import Router from 'next/router';
 
 function studyUpdate() {
   const detail = useSelector(({ study }) => study.studyDetail);
+  let [imageUrl, setImageUrl] = useState(undefined);
 
   const CusPaper = styled(Paper)`
     width: 100%;
@@ -76,6 +77,32 @@ function studyUpdate() {
   useEffect(() => {
     preview();
   });
+
+  useEffect(() => {
+    if (detail.imageUrl) {
+      console.log(detail);
+      setImageUrl(detail.imageUrl);
+      initPreview();
+    }
+  }, []);
+
+  const initPreview = () => {
+    const imgEl = document.querySelector('#img_box');
+    const newImage = document.createElement('img');
+
+    newImage.setAttribute('src', imageUrl);
+    newImage.style.height = '100px';
+    newImage.style.width = '100px';
+    newImage.style.objectFit = 'contain';
+    // const reader = new FileReader();
+
+    // console.log(imageUrl);
+    // reader.onload = () => (imgEl.style.backgroundImage = `url(${imageUrl})`);
+
+    imgEl.innerText = '';
+    imgEl.append(newImage);
+    // reader.readAsDataURL(imageUrl);
+  };
 
   const preview = () => {
     if (!files) return false;

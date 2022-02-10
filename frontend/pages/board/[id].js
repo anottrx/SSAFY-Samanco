@@ -72,9 +72,9 @@ const BoardDetail = () => {
     }
   }, [like]);
 
-  // useEffect(() => {
-  //   fetchData('0');
-  // }, []);
+  useEffect(() => {
+    fetchData('0');
+  }, []);
 
   useEffect(() => {
     if (reloadCondition) {
