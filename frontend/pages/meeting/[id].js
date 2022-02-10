@@ -13,7 +13,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import VideocamIcon from '@mui/icons-material/Videocam';
@@ -85,6 +85,7 @@ function meetingDetail() {
   const [micOn, setMicOn] = useState(false);
   const [camOn, setCamOn] = useState(false);
   const [isConfigModalShow, setIsConfigModalShow] = useState(true);
+  const userGridSize = useRef(4);
 
   const myUserName = sessionStorage.getItem('nickname')
     ? sessionStorage.getItem('nickname')
@@ -93,6 +94,7 @@ function meetingDetail() {
   useEffect(() => {
     // 유저가 방에 들어왔을 때
     // if (detail && publisherStatus) {
+    // To do : 방 정보 받아와서 인원 수에 따라 userGridSize 변경하기
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(() => {
@@ -107,8 +109,6 @@ function meetingDetail() {
         );
       });
 
-    console.log('유저가 방에 들어옴');
-
     return () => {
       leaveSession();
       clear();
@@ -116,7 +116,6 @@ function meetingDetail() {
   }, []);
 
   useEffect(() => {
-    console.log('publisher가 변했다');
     return () => {
       allTrackOff(publisher);
     };
@@ -440,22 +439,39 @@ function meetingDetail() {
             <GridWrapper>
               <CusGrid container>
                 {/* <Users publisher={publisher} subscribers={subscribers}></Users> */}
-                {publisher !== undefined && (
-                  <Grid item xs={12} sm={10} md={6}>
-                    <VideoWrapper id="video-container">
-                      <UserVideo streamManager={publisher} />
-                    </VideoWrapper>
-                    <UserName user={publisher}></UserName>
-                  </Grid>
+                {publisher !== undefined &&
+                  (userGridSize.current === 4 ? (
+                    <Grid item xs={12} sm={10} md={6}>
+                      <VideoWrapper id="video-container">
+                        <UserVideo streamManager={publisher} />
+                      </VideoWrapper>
+                      <UserName user={publisher}></UserName>
+                    </Grid>
+                  ) : (
+                    <Grid item xs={12} sm={4} md={4}>
+                      <VideoWrapper id="video-container">
+                        <UserVideo streamManager={publisher} />
+                      </VideoWrapper>
+                      <UserName user={publisher}></UserName>
+                    </Grid>
+                  ))}
+                {subscribers.map((sub, i) =>
+                  userGridSize.current === 4 ? (
+                    <Grid item xs={12} sm={10} md={6} key={i}>
+                      <VideoWrapper id="video-container">
+                        <UserVideo streamManager={sub} />
+                      </VideoWrapper>
+                      <UserName user={sub}></UserName>
+                    </Grid>
+                  ) : (
+                    <Grid item xs={12} sm={4} md={4} key={i}>
+                      <VideoWrapper id="video-container">
+                        <UserVideo streamManager={sub} />
+                      </VideoWrapper>
+                      <UserName user={sub}></UserName>
+                    </Grid>
+                  )
                 )}
-                {subscribers.map((sub, i) => (
-                  <Grid item xs={12} sm={10} md={6} key={i}>
-                    <VideoWrapper id="video-container">
-                      <UserVideo streamManager={sub} />
-                    </VideoWrapper>
-                    <UserName user={sub}></UserName>
-                  </Grid>
-                ))}
               </CusGrid>
             </GridWrapper>
             <Chatting></Chatting>
