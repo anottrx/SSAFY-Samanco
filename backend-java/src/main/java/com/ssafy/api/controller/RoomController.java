@@ -49,33 +49,13 @@ public class RoomController {
             @ApiResponse(code = 401, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> register(
-            @RequestParam("hostId") Long hostId,
-            @RequestParam("title") String title,
-            @RequestParam("tag") String tag,
-            @RequestParam("tagId") Long tagId,
-            @RequestParam("isSecret") int isSecret,
-            @RequestParam(required = false, value="password") String password,
-            @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException {
-
-        RoomRegisterReq registerInfo=new RoomRegisterReq();
-        registerInfo.setTitle(title);
-        registerInfo.setHostId(hostId);
-        registerInfo.setTag(tag);
-        registerInfo.setTagId(tagId);
-        registerInfo.setPassword(password);
-        registerInfo.setIsSecret(isSecret);
+    public ResponseEntity<? extends BaseResponseBody> register(@RequestBody RoomRegisterReq roomRegisterReq) throws IOException {
 
         // room create
-        RoomDto room = roomService.createRoom(registerInfo);
+        RoomDto room = roomService.createRoom(roomRegisterReq);
 
         if (room==null){
             return ResponseEntity.status(200).body(RoomSelectRes.of(401, "미팅을 생성할 수 없습니다.", null));
-        }
-        // room 이미지 입력
-        if (files!=null) {
-            System.out.println(files[0].getOriginalFilename());
-            fileService.saveFile(files, room.getRoomId(), "room");
         }
         return ResponseEntity.status(200).body(RoomSelectRes.of(200, "Success", room));
     }
@@ -85,30 +65,15 @@ public class RoomController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> update(
-            @RequestParam("roomId") Long roomId,
-            @RequestParam("hostId") Long hostId,
-            @RequestParam("title") String title,
-            @RequestParam("isSecret") int isSecret,
-            @RequestParam(required = false, value="password") String password,
-            @RequestParam(required = false, value="file") MultipartFile[] files) throws IOException, ParseException {
-
-        RoomUpdateReq updateInfo=new RoomUpdateReq();
-        updateInfo.setRoomId(roomId);
-        updateInfo.setTitle(title);
-        updateInfo.setHostId(hostId);
-        updateInfo.setPassword(password);
-        updateInfo.setIsSecret(isSecret);
+    public ResponseEntity<? extends BaseResponseBody> update(@RequestBody RoomUpdateReq roomUpdateReq) throws IOException, ParseException {
 
         // room update
-        int roomCode=roomService.updateRoom(updateInfo);
+        int roomCode=roomService.updateRoom(roomUpdateReq);
         if (roomCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 미팅입니다."));
         } else if (roomCode==402){
             return ResponseEntity.status(200).body(BaseResponseBody.of(402, "유효하지 않은 사용자입니다."));
         }
-        // room 이미지 update
-        fileService.updateFile(files, updateInfo.getRoomId(), "room");
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
