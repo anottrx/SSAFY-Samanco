@@ -216,13 +216,22 @@ export function Item(props) {
     transform: translate(-10px, 45px);
   `;
 
+  const DefaultImage = styled.div`
+    height: 150px;
+    background-color: #e0e0e0;
+    background-image: url('/images/profile_default_gen0.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center center;
+  `;
+
   return (
     <Container>
       <ChipWrapper>
         <CusChip label={data.size} icon={<PersonIcon />} />
       </ChipWrapper>
       <Card>
-        <Skeleton variant="rectangular" height={150} animation={false} />
+        <DefaultImage></DefaultImage>
 
         <CardContent>
           <Typography
