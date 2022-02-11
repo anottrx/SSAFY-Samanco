@@ -364,9 +364,14 @@ public class UserServiceImpl implements UserService {
 		if (result.getRoomId()!=roomId){
 			return 402;
 		}
-		userRepositorySupport.quitUserRoom(userId);
-		if (room.getHostId()==userId){	// 방장이 나갈경우 미팅 삭제
+		if (room.getHostId()==userId){	// 방장이 나갈경우 방에 속해있는 사용자 전부 방 나가기, 미팅 삭제
+			List<User> users=userRepositorySupport.selectRoomUsers(roomId);
+			for (User user: users){
+				userRepositorySupport.quitUserRoom(user.getId());
+			}
 			roomRepositorySupport.deleteRoom(roomId);
+		} else {
+			userRepositorySupport.quitUserRoom(userId);
 		}
 
 		return 200;

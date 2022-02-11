@@ -5,6 +5,7 @@ import com.ssafy.api.request.RoomUpdateReq;
 import com.ssafy.db.entity.Room;
 import com.ssafy.db.entity.QRoom;
 import com.ssafy.db.entity.QUser;
+import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -78,5 +79,14 @@ public class RoomRepositorySupport {
                 .where(qRoom.tagId.eq(tagId), qRoom.tag.equalsIgnoreCase(tag), qRoom.isDeleted.eq(false))
                 .fetchOne();
     }
+
+//    public List<User> selectRoomUsers(Long roomId) {
+//        if (!valid.isRoomValid(roomId)){
+//            return null;
+//        }
+//        return jpaQueryFactory.selectFrom(qUser)
+//                .where(qUser.roomId.eq(roomId), qUser.isDeleted.eq(false))
+//                .fetch();
+//    }
 
 }
