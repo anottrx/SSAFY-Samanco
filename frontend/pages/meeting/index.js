@@ -33,7 +33,7 @@ export default function Meeting() {
       <h1>Meeting</h1>
       <ItemWrapper>
         <MeetingActions>
-        <SearchBar target="meeting"></SearchBar>
+          <SearchBar target="meeting"></SearchBar>
           <CusButton
             variant="outlined"
             size="medium"

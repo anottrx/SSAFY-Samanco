@@ -95,6 +95,7 @@ function meetingDetail() {
     // 유저가 방에 들어왔을 때
     // if (detail && publisherStatus) {
     // To do : 방 정보 받아와서 인원 수에 따라 userGridSize 변경하기
+
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(() => {
@@ -166,7 +167,12 @@ function meetingDetail() {
 
     // 예외가 발생하면
     mySession.on('exception', (exception) => {
-      if (exception.name === 'ICE_CONNECTION_DISCONNECTED') {
+      console.log('[exception]:', exception);
+      if (
+        exception.name === 'ICE_CONNECTION_DISCONNECTED' ||
+        exception.name === 'ICE_CONNECTION_FAILED' ||
+        exception.name === 'NO_STREAM_PLAYING_EVENT'
+      ) {
         deleteSubscriber(exception.origin.streamManager);
       } else {
         console.warn(exception);
@@ -235,6 +241,7 @@ function meetingDetail() {
     const mySession = session;
     if (mySession) {
       // 세션 disconnect
+      mySession.unpublish(publisher);
       mySession.disconnect();
     }
   };
@@ -256,6 +263,9 @@ function meetingDetail() {
 
     setIsConfigModalShow(false);
     setSession(OV?.initSession());
+
+    // 에러 발생 시 세션 삭제
+    // deleteSession();
   };
 
   const getToken = () => {
@@ -330,13 +340,33 @@ function meetingDetail() {
     videoTrackOff(publisher);
     leaveSession();
     clear();
+    // to do : 방장이면 방 삭제
+    // deleteSession();
     Router.replace('/meeting');
   };
 
   // -----------------------------------------------------------
+
+  const deleteSession = () => {
+    let mySessionId = `session${detail.no}`;
+    return new Promise((resolve, reject) => {
+      let headers = {
+        Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,POST',
+      };
+
+      axios
+        .delete(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${mySessionId}`, {
+          headers,
+        })
+        .then((res) => console.log('[delete]', res));
+    });
+  };
+
   // 이 아래부턴 백엔드에 axios 보내서 데이터 받아옴
   const createSession = (sessionId) => {
-    //console.log('createSession:', sessionId);
     return new Promise((resolve, reject) => {
       let data = JSON.stringify({ customSessionId: sessionId });
       let headers = {
@@ -366,7 +396,7 @@ function meetingDetail() {
             if (
               window.confirm(
                 `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}
-                
+
                 Click OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at ${OPENVIDU_SERVER_URL}`
               )
             ) {
