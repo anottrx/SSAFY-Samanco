@@ -283,7 +283,8 @@ function MeetingRegist() {
                     alert(
                       '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
                     );
-                    Router.push('/meeting/' + res.roomId);
+                    console.log(res,' : 방번호')
+                    Router.push('/meeting/' + res.room.roomId);
                   } else {
                     alert(`${res.message}`);
                   }
