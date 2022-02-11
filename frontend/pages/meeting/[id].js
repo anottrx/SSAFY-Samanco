@@ -350,16 +350,16 @@ function meetingDetail() {
     videoTrackOff(publisher);
     leaveSession();
     clear();
+    
+    quitRoomAPI(inputValue).then((res) => {
+      if (res.statusCode == 200) {
+      } else {
+        alert(`${res.message}`);
+      }
+    });
+    // 방장도 미팅룸 탈퇴
     // to do : 방장이면 방 삭제
     if (detail.hostId == sessionStorage.getItem('userId')) {
-      quitRoomAPI(inputValue).then((res) => {
-        // 방장도 미팅룸 탈퇴
-        if (res.statusCode == 200) {
-          // Router.push('/meeting');
-        } else {
-          alert(`${res.message}`);
-        }
-      });
       deleteSession();
     }
     Router.replace('/meeting');
