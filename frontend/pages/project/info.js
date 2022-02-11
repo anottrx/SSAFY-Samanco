@@ -243,7 +243,10 @@ function ProjectInfo() {
             <>
               <Button
               onClick={() => {
-                Router.push('/meeting/regist');
+                Router.push({
+                  pathname: '/meeting/regist',
+                  query: { tag: 'project' },
+                });
               }}
               >
                 방 생성

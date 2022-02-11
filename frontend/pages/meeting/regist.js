@@ -28,7 +28,7 @@ function MeetingRegist() {
   } else if(tag === 'study') {
     tagId = studyDetail.id
   } else if(tag === 'board') {
-    tagId = boardDetail.id
+    tagId = boardDetail.boardId
   }
 
   const CusPaper = styled(Paper)`
@@ -258,7 +258,7 @@ function MeetingRegist() {
                   formData.append(key, JSON.stringify(value));
                 });
 
-                if(tag!==null) {
+                if(tag !== undefined) {
                   formData.append('tag', tag);
                   formData.append('tagId', tagId);
                   console.log(tag, ", ", tagId)
