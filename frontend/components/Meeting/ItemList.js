@@ -104,11 +104,16 @@ function ItemList() {
   // 화면에 요소를 그리기 전에 store에 저장된 아이템 리스트가 있는지 확인
   // 없으면 store에 저장
   useLayoutEffect(() => {
-    if (meetingData.length == 0) {
-      // 빈 배열이면 배열 요청
-      // To Do : 나중에 api로 값 가져오게 수정
-      setList({ list: meetingJSONData });
-    }
+    getRoomAllAPI().then((res) => {
+      if (res.rooms) setList({ list: res.rooms });
+      else setList({ list: [] });
+    });
+
+    // if (meetingData.length == 0) {
+    //   // 빈 배열이면 배열 요청
+    //   // To Do : 나중에 api로 값 가져오게 수정
+    //   setList({ list: meetingJSONData });
+    // }
   }, []);
 
   const handleChange = (index, value) => {

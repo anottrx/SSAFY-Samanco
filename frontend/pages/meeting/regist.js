@@ -20,7 +20,6 @@ function MeetingRegist() {
   const projectDetail = useSelector(({ project }) => project.projectDetail);
   const studyDetail = useSelector(({ study }) => study.studyDetail);
   const boardDetail = useSelector(({ board }) => board.boardDetail);
-  console.log(boardDetail)
 
   let { tag } = useRouter().query;
   let tagId;
@@ -139,8 +138,6 @@ function MeetingRegist() {
   const changeHandle = (value, name) => {
     inputValue[name] = value;
     // 리렌더링 X
-
-    console.log(inputValue)
   };
 
   function validateCheck() {
@@ -269,7 +266,6 @@ function MeetingRegist() {
                 if(tag !== undefined) {
                   // formData.append('tag', tag);
                   // formData.append('tagId', tagId);
-                  // console.log(tag, ", ", tagId)
                   inputValue.tag = tag;
                   inputValue.tagId = tagId;
                 } else {
@@ -283,7 +279,6 @@ function MeetingRegist() {
                 // {
                 //     console.log(`${key}`);
                 // }
-                console.log(inputValue)
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
                     alert("방이 생성되었습니다.")
