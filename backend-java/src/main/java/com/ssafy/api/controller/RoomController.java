@@ -60,23 +60,23 @@ public class RoomController {
         return ResponseEntity.status(200).body(RoomSelectRes.of(200, "Success", room));
     }
 
-    @PostMapping("/update")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity<? extends BaseResponseBody> update(@RequestBody RoomUpdateReq roomUpdateReq) throws IOException, ParseException {
-
-        // room update
-        int roomCode=roomService.updateRoom(roomUpdateReq);
-        if (roomCode==401){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 미팅입니다."));
-        } else if (roomCode==402){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "유효하지 않은 사용자입니다."));
-        }
-
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-    }
+//    @PostMapping("/update")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "성공"),
+//            @ApiResponse(code = 500, message = "서버 오류")
+//    })
+//    public ResponseEntity<? extends BaseResponseBody> update(@RequestBody RoomUpdateReq roomUpdateReq) throws IOException, ParseException {
+//
+//        // room update
+//        int roomCode=roomService.updateRoom(roomUpdateReq);
+//        if (roomCode==401){
+//            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 미팅입니다."));
+//        } else if (roomCode==402){
+//            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "유효하지 않은 사용자입니다."));
+//        }
+//
+//        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+//    }
 
     @PostMapping("/join")
     @ApiResponses({
@@ -95,6 +95,8 @@ public class RoomController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(402, "유효하지 않은 미팅입니다."));
         } else if (joinCode==403){
             return ResponseEntity.status(200).body(BaseResponseBody.of(403, "비밀번호를 다시 확인하세요."));
+        } else if (joinCode==405){
+            return ResponseEntity.status(200).body(BaseResponseBody.of(405, "인원 초과로 미팅에 참여할 수 없습니다."));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }

@@ -130,7 +130,7 @@ public class StudyServiceImpl implements StudyService {
             study.setStudyJoinStatus(userStudy.getStudyJoinStatus());
             if ("OK".equalsIgnoreCase(userStudy.getStudyJoinStatus())){     // 팀원인 경우
                 Room room=roomRepositorySupport.selectRoomByTagId(studyId, "study");
-                if (room==null && room.getHostId()==userId){    // 방이 안 만들어졌고 방장인 경우
+                if (room==null && study.getHostId()==userId){    // 방이 안 만들어졌고 방장인 경우
                     study.setCanRegister(true);
                 }
                 if (room!=null && room.getHostId()!=userId){     // 방이 만들어졌고 방장이 아닌 팀원
