@@ -239,12 +239,12 @@ const ProjectDetail = () => {
             // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
             <>
               <Button
-              onClick={() => {
-                Router.push({
-                  pathname: '/meeting/regist',
-                  query: { tag: 'project' },
-                });
-              }}
+                onClick={() => {
+                  Router.push({
+                    pathname: '/meeting/regist',
+                    query: { tag: 'project' },
+                  });
+                }}
               >
                 방 생성
               </Button>
@@ -264,8 +264,8 @@ const ProjectDetail = () => {
               onClick={() => {
                 Router.push('/meeting/join');
               }}
-              >
-                방 참가
+            >
+              방 참가
             </Button>
           ) : null}
           {detail.projectJoinStatus === 'OK' ? (

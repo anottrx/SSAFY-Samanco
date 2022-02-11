@@ -1,18 +1,31 @@
 import api, { fileUrl, blobUrl } from './index';
 
 // 방 등록
-async function registAPI(formData) {
-  return await fileUrl
-    .post('/api/room', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+async function registAPI(data) {
+  return await api
+    .post('/api/room', {
+      hostId: data.hostId,
+      isSecret: data.isSecret,
+      password: data.password,
+      tag: data.tag,
+      tagId: data.tagId,
+      title: data.title
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
+// async function registAPI(formData) {
+//   return await fileUrl
+//     .post('/api/room', formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     })
+//     .then((res) => res.data)
+//     .catch((err) => err.response.data);
+// }
 
-// 방 들어가기
+// 방 들어가기 (방장, 방장 외의 사람)
 async function joinRoomAPI(data) {
   return await api
     .post('/api/room/join', {
@@ -24,7 +37,7 @@ async function joinRoomAPI(data) {
     .catch((err) => err.response.data);
 }
 
-// 방 나가기
+// 방 나가기 (방장, 방장 외의 사람) -> 방장이 나가면 세션 삭제
 async function quitRoomAPI(data) {
   return await api
     .post('/api/room/quit', {

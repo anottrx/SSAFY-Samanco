@@ -55,10 +55,8 @@ function SearchBar(props) {
       if (keyword === '')
         dispatch(meetingActions.setMeetingFilterList({ list: null }));
       else {
-        getRoomByTitle({
-          title: keyword,
-        }).then((res) => {
-          dispatch(meetingActions.setMeetingFilterList({ list: res.meetings }));
+        getRoomByTitle(keyword).then((res) => {
+          dispatch(meetingActions.setMeetingFilterList({ list: res.rooms }));
         });
       }
     }

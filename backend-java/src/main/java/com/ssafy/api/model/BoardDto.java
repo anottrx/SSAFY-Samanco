@@ -21,10 +21,10 @@ public class BoardDto {
     private int likes;  // Long으로 캐스팅이 안됨..
     private Long hit=0l;
     private List<FileDto> files;
-//    private String startDate;
-//    private String endDate;
     private boolean userLike=false;
     private List<CommentDto> comments;
     private String dateOrTime;
     private String dateAndTime;
+    private boolean canRegister=false;
+    private boolean canJoin=false;
 }

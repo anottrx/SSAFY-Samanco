@@ -27,10 +27,12 @@ import {
 } from '@mui/material';
 
 import meetingJSONData from '../../data/meetingData.json';
+import { getRoomAllAPI } from '../../pages/api/meeting';
 import Router from 'next/router';
 
 import { useSelector, useDispatch } from 'react-redux';
 import * as meetingActions from '../../store/module/meeting';
+import { joinRoomAPI } from '../../pages/api/meeting';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -51,6 +53,7 @@ var _ = require('lodash');
 function ItemList() {
   //-------------- redux dispatch로 값 저장, selector로 불러오기
   let meetingData = useSelector(({ meeting }) => meeting.meetingList);
+  let filterData = useSelector(({ meeting }) => meeting.meetingFilterList);
 
   const dispatch = useDispatch();
 
@@ -103,11 +106,16 @@ function ItemList() {
   // 화면에 요소를 그리기 전에 store에 저장된 아이템 리스트가 있는지 확인
   // 없으면 store에 저장
   useLayoutEffect(() => {
-    if (meetingData.length == 0) {
-      // 빈 배열이면 배열 요청
-      // To Do : 나중에 api로 값 가져오게 수정
-      setList({ list: meetingJSONData });
-    }
+    getRoomAllAPI().then((res) => {
+      if (res.rooms) setList({ list: res.rooms });
+      else setList({ list: [] });
+    });
+
+    // if (meetingData.length == 0) {
+    //   // 빈 배열이면 배열 요청
+    //   // To Do : 나중에 api로 값 가져오게 수정
+    //   setList({ list: meetingJSONData });
+    // }
   }, []);
 
   const handleChange = (index, value) => {
@@ -141,33 +149,63 @@ function ItemList() {
 
   return (
     <>
-      <CusGrid
-        container
-        maxWidth="lg"
-        rowSpacing={1}
-        columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
-      >
-        {meetingData
-          .slice(purPage.current * (page - 1), purPage.current * page)
-          .map((data) => {
-            return (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                key={data.no}
-                onClick={() => {
-                  joinDialogOpen();
-                  setRoom(data);
-                }}
-              >
-                <Item data={data}></Item>
-              </Grid>
-            );
-          })}
-      </CusGrid>
+      {!meetingData || meetingData.length == 0 ? (
+        <CusGrid>
+          <CusCard>등록된 데이터가 없습니다.</CusCard>
+        </CusGrid>
+      ) : (
+        <CusGrid
+          container
+          maxWidth="lg"
+          rowSpacing={1}
+          columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+        >
+          {
+            // 검색된 데이터가 있을 때
+            filterData != null
+              ? filterData
+                  .slice(purPage.current * (page - 1), purPage.current * page)
+                  .map((data) => {
+                    return (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        lg={3}
+                        key={data.no}
+                        onClick={() => {
+                          joinDialogOpen();
+                          setRoom(data);
+                        }}
+                      >
+                        <Item data={data}></Item>
+                      </Grid>
+                    );
+                  })
+              : meetingData
+                  .slice(purPage.current * (page - 1), purPage.current * page)
+                  .map((data) => {
+                    return (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        lg={3}
+                        key={data.no}
+                        onClick={() => {
+                          joinDialogOpen();
+                          setRoom(data);
+                        }}
+                      >
+                        <Item data={data}></Item>
+                      </Grid>
+                    );
+                  })
+          }
+        </CusGrid>
+      )}
       <JoinDialog
         open={openJoin}
         joinDialogClose={joinDialogClose}
@@ -240,7 +278,7 @@ export function Item(props) {
             variant="h5"
             component="div"
           >
-            {data.isPrivate ? <LockIcon /> : null} {data.title}
+            {data.isSecret === 1 ? <LockIcon /> : null} {data.title}
           </Typography>
           <div>{data.isPrivate ? '-' : data.host}</div>
           <div>
@@ -255,6 +293,12 @@ export function Item(props) {
 
 function JoinDialog(props) {
   let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
+
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+    password: '',
+  });
   // const [publisher, setPublisher] = useState(null);
 
   // useEffect(() => {
@@ -358,7 +402,7 @@ function JoinDialog(props) {
         <Button
           onClick={
             // 비밀방인지 여부 확인
-            room.isPrivate
+            room.isSecret === 1
               ? () => {
                   joinDialogClose();
                   pwDialogOpen();
@@ -366,9 +410,16 @@ function JoinDialog(props) {
               : () => {
                   // setPublisherStatus({ status: publisher });
                   // 카메라, 오디오 정보 -> publisher
-                  Router.push('/meeting/' + room.no);
-                  setDetail({
-                    detail: room,
+                  inputValue.roomId = room.roomId;
+                  joinRoomAPI(inputValue).then((res) => {
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + room.roomId);
+                      setDetail({
+                        detail: room,
+                      });
+                    } else {
+                      alert(`${res.message}`);
+                    }
                   });
                   joinDialogClose();
                 }
@@ -393,6 +444,13 @@ function JoinDialog(props) {
 function PwDialog(props) {
   let { open, pwDialogClose, room, setDetail } = props;
   let [pw, setPw] = useState('');
+
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+    password: '',
+  });
+
   const pwChangeHandle = (e) => {
     setPw(e.target.value);
   };
@@ -408,14 +466,22 @@ function PwDialog(props) {
           onClick={
             // 일치하면 입장
             // To Do : 나중에 방 비밀번호로 변경
-            pw === '1234'
+            pw === room.password
               ? () => {
                   // setPublisherStatus({ status: publisher });
-                  Router.push('/meeting/' + room.no);
-                  setDetail({
-                    detail: room,
+                  inputValue.password = pw;
+                  inputValue.roomId = room.roomId;
+                  joinRoomAPI(inputValue).then((res) => {
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + room.roomId);
+                      setDetail({
+                        detail: room,
+                      });
+                      pwDialogClose();
+                    } else {
+                      alert(`${res.message}`);
+                    }
                   });
-                  pwDialogClose();
                 }
               : () => {
                   alert('비밀번호를 확인해주세요.');

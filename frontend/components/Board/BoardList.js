@@ -84,10 +84,11 @@ function BoardList(props) {
   const dispatch = useDispatch();
   let tag = props.tag;
 
-  let boardData, setDetail, filterData, setArticles;
+  let boardData, setDetail, filterData, setArticles, articleTag;
 
   boardData = useSelector(({ board }) => board.boardList);
   filterData = useSelector(({ board }) => board.boardFilterList);
+  // articleTag = useSelector(({ board }) => board.tag);
 
   setDetail = useCallback(
     ({ detail }) => {
@@ -121,10 +122,19 @@ function BoardList(props) {
     }
     return () => {
       dispatch(boardActions.setBoardFilterList({ list: null }));
+
+      // return () => {
+      //   dispatch(boardActions.setTag({ tag: null }));
+      // };
     };
   }, []);
 
   useLayoutEffect(() => {
+    // if (articleDetail.tag) tag = articleDetail.tag;
+    // 조회했던 게시물의 태그가 있으면 변경
+    // if (articleTag) tag = articleTag;
+    // console.log(tag);
+
     getArticleByTag(tag).then((res) => {
       if (res.boards) setArticles({ list: res.boards });
       else setArticles({ list: [] });
@@ -262,7 +272,10 @@ function BoardList(props) {
                     : sessionStorage.getItem('userId'),
                 addHit: '1',
               }).then((res) => {
-                if (res.statusCode == 200) setDetail({ detail: res.board });
+                if (res.statusCode == 200) {
+                  setDetail({ detail: res.board });
+                  // dispatch(boardActions.setTag({ tag: res.board.tag }));
+                }
                 Router.push('/board/' + data.boardId);
               }); // 조회수 증가
             }}

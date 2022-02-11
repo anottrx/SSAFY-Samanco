@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import { useSelector, useDispatch } from 'react-redux';
 import Router, { useRouter } from 'next/router';
+import * as meetingActions from '../../store/module/meeting';
 
 import {
   Paper,
@@ -13,22 +14,21 @@ import {
 } from '@mui/material';
 import styled from '@emotion/styled';
 
-import { registAPI } from '../api/meeting';
+import { registAPI, joinRoomAPI } from '../api/meeting';
 
 function MeetingRegist() {
-
   const projectDetail = useSelector(({ project }) => project.projectDetail);
   const studyDetail = useSelector(({ study }) => study.studyDetail);
   const boardDetail = useSelector(({ board }) => board.boardDetail);
 
   let { tag } = useRouter().query;
   let tagId;
-  if(tag === 'project') {
-    tagId = projectDetail.id
-  } else if(tag === 'study') {
-    tagId = studyDetail.id
-  } else if(tag === 'board') {
-    tagId = boardDetail.id
+  if (tag === 'project') {
+    tagId = projectDetail.id;
+  } else if (tag === 'study') {
+    tagId = studyDetail.id;
+  } else if (tag === 'board') {
+    tagId = boardDetail.boardId;
   }
 
   const CusPaper = styled(Paper)`
@@ -91,11 +91,11 @@ function MeetingRegist() {
 
   let userId;
   useEffect(() => {
-    userId = sessionStorage.getItem('userId');
+    // userId = sessionStorage.getItem('userId');
   }, []);
 
   const [inputValue, setInputValue] = useState({
-    hostId: userId,
+    hostId: sessionStorage.getItem('userId'),
   });
 
   const [files, setFiles] = useState('');
@@ -104,6 +104,11 @@ function MeetingRegist() {
 
   const privateCheckHandle = (event) => {
     setprivateCheck(event.target.checked);
+    if (event.target.checked) {
+      inputValue.isSecret = 1;
+    } else {
+      inputValue.isSecret = 0;
+    }
   };
 
   const onImgChange = (event) => {
@@ -114,7 +119,7 @@ function MeetingRegist() {
   const uploadRef = useRef(null);
 
   useEffect(() => {
-    preview();
+    // preview();
   });
 
   const preview = () => {
@@ -138,11 +143,11 @@ function MeetingRegist() {
   function validateCheck() {
     let [check, msg] = [true, ''];
     // if (typeof inputValue.tag == 'undefined')
-      // [check, msg] = [false, '태그를 선택해주세요'];
+    // [check, msg] = [false, '태그를 선택해주세요'];
     if (typeof inputValue.title == 'undefined')
       [check, msg] = [false, '미팅룸 이름을 입력해주세요.'];
     // else if (typeof inputValue.size == 'undefined' || inputValue.size == 0)
-      // [check, msg] = [false, '미팅룸 인원은 한 명 이상이여야 합니다.'];
+    // [check, msg] = [false, '미팅룸 인원은 한 명 이상이여야 합니다.'];
     else if (
       privateCheck &&
       (typeof inputValue.password == 'undefined' || inputValue.password == '')
@@ -251,35 +256,51 @@ function MeetingRegist() {
             variant="outlined"
             onClick={() => {
               if (validateCheck()) {
-                const formData = new FormData();
+                // const formData = new FormData();
 
-                Object.keys(inputValue).map((key) => {
-                  let value = inputValue[key];
-                  formData.append(key, JSON.stringify(value));
-                });
+                // Object.keys(inputValue).map((key) => {
+                //   let value = inputValue[key];
+                //   formData.append(key, JSON.stringify(value));
+                // });
 
-                if(tag!==null) {
-                  formData.append('tag', tag);
-                  formData.append('tagId', tagId);
-                  console.log(tag, ", ", tagId)
+                if (tag !== undefined) {
+                  // formData.append('tag', tag);
+                  // formData.append('tagId', tagId);
+                  inputValue.tag = tag;
+                  inputValue.tagId = tagId;
+                } else {
+                  inputValue.tag = '';
+                  inputValue.tagId = '';
                 }
 
-                formData.append('file', files);
+                // formData.append('file', files);
 
                 // for(var key of formData.entries())
                 // {
                 //     console.log(`${key}`);
                 // }
+                registAPI(inputValue).then((res) => {
+                  if (res.statusCode == 200) {
+                    const roomId = res.room.roomId;
+                    alert(
+                      '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
+                    );
+                    console.log(res,' : 방번호')
+                    
+                    inputValue.roomId = roomId
+                    inputValue.userId = inputValue.hostId;
+                    joinRoomAPI(inputValue).then((res) => { // 방장도 미팅룸 가입
+                      if (res.statusCode == 200) {
+                        Router.push('/meeting/' + roomId);
+                      } else {
+                        alert(`${res.message}`);
+                      }
+                    });
+                  } else {
+                    alert(`${res.message}`);
+                  }
+                });
               }
-
-              // registAPI(formData).then((res) => {
-              //     if (res.statusCode == 200) {
-              //         alert("방이 생성되었습니다.")
-              //         Router.push("/meeting");
-              //     } else {
-              // alert(`${res.message}`);
-              // }
-              // });
             }}
           >
             등록하기

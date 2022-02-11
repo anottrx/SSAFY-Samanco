@@ -243,7 +243,10 @@ function ProjectInfo() {
             <>
               <Button
               onClick={() => {
-                Router.push('/meeting/regist');
+                Router.push({
+                  pathname: '/meeting/regist',
+                  query: { tag: 'project' },
+                });
               }}
               >
                 방 생성
@@ -450,7 +453,6 @@ function ProjectInfo() {
               <Typography>
                 {clubData.startDate} ~ {clubData.endDate}
               </Typography>
-              <div>진행 기간</div>
             </div>
           </DateWrapper>
         </RowWrapper>

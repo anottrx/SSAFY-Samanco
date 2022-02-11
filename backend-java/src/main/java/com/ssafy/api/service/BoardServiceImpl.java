@@ -42,6 +42,9 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    RoomRepositorySupport roomRepositorySupport;
+
 //    @Autowired
 //    UserRepositorySupport userRepositorySupport;
 
@@ -89,6 +92,13 @@ public class BoardServiceImpl implements BoardService {
         board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
         UserLike userLike = userLikeRepositorySupport.userLike(userId, boardId, "board");
 
+        if (board.getUserId()==userId){     // 게시글 작성자면 방 생성 가능
+            board.setCanRegister(true);
+        } else{     // 게시글 방이 만들어져있으면 누구나 참여 가능
+            if (roomRepositorySupport.selectRoomByTagId(boardId, "board")!=null){
+                board.setCanJoin(true);
+            }
+        }
         if (userLike!=null) {
             board.setUserLike(true);
         }
@@ -119,7 +129,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardDto> selectBoardAll() {
         List<Board> results = boardRepositorySupport.selectBoardAll();
-        if (results==null){
+        if (results==null || results.size()==0){
             return null;
         }
         List<BoardDto> boards=new ArrayList<>();
@@ -139,7 +149,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardDto> selectBoardAllByTag(String tag) {
         List<Board> results = boardRepositorySupport.selectBoardAllByTag(tag);
-        if (results==null){
+        if (results==null || results.size()==0){
             return null;
         }
         List<BoardDto> boards=new ArrayList<>();
