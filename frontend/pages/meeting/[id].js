@@ -25,6 +25,8 @@ import axios from 'axios';
 import UserVideo from '../../components/Meeting/UserVideo';
 import Router from 'next/router';
 
+import { quitRoomAPI } from '../api/meeting';
+
 var OpenViduBrowser;
 
 const OPENVIDU_SERVER_URL = 'https://i6a502.p.ssafy.io:5443';
@@ -78,6 +80,7 @@ function meetingDetail() {
   `;
 
   let detail = useSelector(({ meeting }) => meeting.meetingDetail);
+  
   const [OV, setOV] = useState();
   const [session, setSession] = useState();
   const [publisher, setPublisher] = useState();
@@ -336,14 +339,30 @@ function meetingDetail() {
     });
   };
 
+ 
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+  });
   const exitClick = () => {
+    inputValue.roomId = detail.roomId
+
     videoTrackOff(publisher);
     leaveSession();
     clear();
     // to do : 방장이면 방 삭제
-    if(detail.hostId==sessionStorage.getItem('userId')) {
-      alert('방장이 나가면 방이 삭제됩니다. 나가시겠습니까?');
-      // deleteSession();
+    if (detail.hostId == sessionStorage.getItem('userId')) {
+      if (window.confirm('방장이 나가면 방이 삭제됩니다. 나가시겠습니까?')) {
+        quitRoomAPI(inputValue).then((res) => {
+          // 방장도 미팅룸 탈퇴
+          if (res.statusCode == 200) {
+            Router.push('/meeting');
+          } else {
+            alert(`${res.message}`);
+          }
+        });
+        deleteSession();
+      }
     }
     Router.replace('/meeting');
   };
@@ -445,9 +464,11 @@ function meetingDetail() {
 
     const [name, setName] = useState('...loading');
     useEffect(() => {
-      if (user && user.stream && user.stream.connection)
-        setName(JSON.parse(user.stream.connection.data).clientData);
-      else setName('...loading');
+      if (user && user.stream && user.stream.connection) {
+        if (user.stream.connection.data) {
+          setName(JSON.parse(user.stream.connection.data).clientData);
+        } else setName('화면 공유 중');
+      } else setName('...loading');
     }, [user]);
 
     return <NameWrapper>{name}</NameWrapper>;

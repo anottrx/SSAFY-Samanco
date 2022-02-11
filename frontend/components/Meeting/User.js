@@ -112,9 +112,11 @@ function UserName({ user }) {
 
   const [name, setName] = useState('...loading');
   useEffect(() => {
-    if (user && user.stream && user.stream.connection)
-      setName(JSON.parse(user.stream.connection.data).clientData);
-    else setName('...loading');
+    if (user && user.stream && user.stream.connection) {
+      if (user.stream.connection.data) {
+        setName(JSON.parse(user.stream.connection.data).clientData);
+      } else setName('...loading');
+    } else setName('...loading');
   }, [user]);
 
   return <NameWrapper>{name}</NameWrapper>;

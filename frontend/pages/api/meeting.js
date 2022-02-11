@@ -25,7 +25,7 @@ async function registAPI(data) {
 //     .catch((err) => err.response.data);
 // }
 
-// 방 들어가기
+// 방 들어가기 (방장, 방장 외의 사람)
 async function joinRoomAPI(data) {
   return await api
     .post('/api/room/join', {
@@ -37,7 +37,7 @@ async function joinRoomAPI(data) {
     .catch((err) => err.response.data);
 }
 
-// 방 나가기
+// 방 나가기 (방장, 방장 외의 사람) -> 방장이 나가면 세션 삭제
 async function quitRoomAPI(data) {
   return await api
     .post('/api/room/quit', {

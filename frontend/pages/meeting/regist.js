@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import styled from '@emotion/styled';
 
-import { registAPI } from '../api/meeting';
+import { registAPI, joinRoomAPI } from '../api/meeting';
 
 function MeetingRegist() {
   const projectDetail = useSelector(({ project }) => project.projectDetail);
@@ -281,12 +281,21 @@ function MeetingRegist() {
                 // }
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
-                    
+                    const roomId = res.room.roomId;
                     alert(
                       '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
                     );
                     console.log(res,' : 방번호')
-                    Router.push('/meeting/' + res.room.roomId);
+                    
+                    inputValue.roomId = roomId
+                    inputValue.userId = inputValue.hostId;
+                    joinRoomAPI(inputValue).then((res) => { // 방장도 미팅룸 가입
+                      if (res.statusCode == 200) {
+                        Router.push('/meeting/' + roomId);
+                      } else {
+                        alert(`${res.message}`);
+                      }
+                    });
                   } else {
                     alert(`${res.message}`);
                   }
