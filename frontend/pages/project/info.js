@@ -453,7 +453,6 @@ function ProjectInfo() {
               <Typography>
                 {clubData.startDate} ~ {clubData.endDate}
               </Typography>
-              <div>진행 기간</div>
             </div>
           </DateWrapper>
         </RowWrapper>
