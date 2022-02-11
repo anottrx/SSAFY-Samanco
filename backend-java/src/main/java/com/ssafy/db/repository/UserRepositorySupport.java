@@ -127,4 +127,30 @@ public class UserRepositorySupport {
         }
         return 401;
     }
+
+    public List<User> selectRoomUsers(Long roomId) {
+        if (!valid.isRoomValid(roomId)){
+            return null;
+        }
+        return jpaQueryFactory.select(qUser)
+                .where(qUser.roomId.eq(roomId), qUser.isDeleted.eq(false))
+                .fetch();
+    }
+
+    @Transactional
+    public void quitUserRoom(Long userId){
+        jpaQueryFactory.update(qUser)
+                .set(qUser.roomId, 0l)
+                .where(qUser.id.eq(userId))
+                .execute();
+    }
+
+    @Transactional
+    public void joinUserRoom(Long userId, Long roomId){
+        jpaQueryFactory.update(qUser)
+                .set(qUser.roomId, roomId)
+                .where(qUser.id.eq(userId))
+                .execute();
+    }
+
 }

@@ -14,16 +14,12 @@ public class Room extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
-
-    private String type;    // STUDY, PROJECT, BOARD
+    private String title;
+    private String tag;    // STUDY, PROJECT, BOARD
+    private Long tagId;
     private int size;
-
-    private Boolean isSecret;
-
+    private int isSecret;
     private String password;
-
     private Long hostId;
 
 }

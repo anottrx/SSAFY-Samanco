@@ -12,18 +12,6 @@ async function registAPI(formData) {
     .catch((err) => err.response.data);
 }
 
-// 방 수정
-async function updateAPI(formData) {
-  return await fileUrl
-    .post('/api/room/update', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    .then((res) => res.data)
-    .catch((err) => err.response.data);
-}
-
 // 방 들어가기
 async function joinRoomAPI(data) {
   return await api
@@ -75,7 +63,6 @@ async function getRoomById(roomId) {
 
 export {
   registAPI,
-  updateAPI,
   joinRoomAPI,
   quitRoomAPI,
   getRoomAllAPI,

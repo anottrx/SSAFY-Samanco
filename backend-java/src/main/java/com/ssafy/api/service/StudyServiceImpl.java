@@ -3,9 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.model.StudyDto;
 import com.ssafy.api.request.StudyRegisterReq;
 import com.ssafy.api.request.StudyUpdateReq;
-import com.ssafy.db.entity.Study;
-import com.ssafy.db.entity.UserLike;
-import com.ssafy.db.entity.UserStudy;
+import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +30,12 @@ public class StudyServiceImpl implements StudyService {
 
     @Autowired
     UserLikeRepositorySupport userLikeRepositorySupport;
+
+    @Autowired
+    RoomRepositorySupport roomRepositorySupport;
+
+    @Autowired
+    CommonRepository commonRepository;
 
 //    @Autowired
 //    UserRepositorySupport userRepositorySupport;  // 사용 못함
@@ -121,8 +125,18 @@ public class StudyServiceImpl implements StudyService {
         if (userLike!=null) {
             study.setUserLike(true);
         }
-        if (userStudy!=null){
+
+        if (userStudy!=null){   // 사용자가 스터디에 지원했거나 팀원인 경우
             study.setStudyJoinStatus(userStudy.getStudyJoinStatus());
+            if ("OK".equalsIgnoreCase(userStudy.getStudyJoinStatus())){     // 팀원인 경우
+                Room room=roomRepositorySupport.selectRoomByTagId(studyId, "study");
+                if (room==null && room.getHostId()==userId){    // 방이 안 만들어졌고 방장인 경우
+                    study.setCanRegister(true);
+                }
+                if (room!=null && room.getHostId()!=userId){     // 방이 만들어졌고 방장이 아닌 팀원
+                    study.setCanJoin(true);
+                }
+            }
         }
 
         return study;

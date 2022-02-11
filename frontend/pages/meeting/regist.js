@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Layout from '../../components/Layout';
+import { useSelector, useDispatch } from 'react-redux';
+import Router, { useRouter } from 'next/router';
 
 import {
   Paper,
@@ -14,6 +16,21 @@ import styled from '@emotion/styled';
 import { registAPI } from '../api/meeting';
 
 function MeetingRegist() {
+
+  const projectDetail = useSelector(({ project }) => project.projectDetail);
+  const studyDetail = useSelector(({ study }) => study.studyDetail);
+  const boardDetail = useSelector(({ board }) => board.boardDetail);
+
+  let { tag } = useRouter().query;
+  let tagId;
+  if(tag === 'project') {
+    tagId = projectDetail.id
+  } else if(tag === 'study') {
+    tagId = studyDetail.id
+  } else if(tag === 'board') {
+    tagId = boardDetail.id
+  }
+
   const CusPaper = styled(Paper)`
     width: 100%;
     padding: 10px;
@@ -120,8 +137,8 @@ function MeetingRegist() {
 
   function validateCheck() {
     let [check, msg] = [true, ''];
-    if (typeof inputValue.tag == 'undefined')
-      [check, msg] = [false, '태그를 선택해주세요'];
+    // if (typeof inputValue.tag == 'undefined')
+      // [check, msg] = [false, '태그를 선택해주세요'];
     if (typeof inputValue.title == 'undefined')
       [check, msg] = [false, '미팅룸 이름을 입력해주세요.'];
     // else if (typeof inputValue.size == 'undefined' || inputValue.size == 0)
@@ -146,7 +163,7 @@ function MeetingRegist() {
     <Layout>
       <h1>Meeting Regist</h1>
       <CusPaper>
-        <ImgUploadBtn
+        {/* <ImgUploadBtn
           id="img_box"
           onClick={(event) => {
             event.preventDefault();
@@ -180,7 +197,7 @@ function MeetingRegist() {
               {option.label}
             </MeetingRegistTagMenu>
           ))}
-        </MeetingRegistTagField>
+        </MeetingRegistTagField> */}
 
         <TextField
           fullWidth
@@ -240,6 +257,12 @@ function MeetingRegist() {
                   let value = inputValue[key];
                   formData.append(key, JSON.stringify(value));
                 });
+
+                if(tag!==null) {
+                  formData.append('tag', tag);
+                  formData.append('tagId', tagId);
+                  console.log(tag, ", ", tagId)
+                }
 
                 formData.append('file', files);
 

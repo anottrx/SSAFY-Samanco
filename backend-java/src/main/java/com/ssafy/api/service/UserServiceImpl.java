@@ -4,16 +4,13 @@ import com.ssafy.api.model.UserDto;
 import com.ssafy.api.request.UserLikeTagReq;
 import com.ssafy.api.request.UserLoginReq;
 import com.ssafy.api.request.UserUpdateReq;
-import com.ssafy.db.entity.Project;
-import com.ssafy.db.entity.Study;
-import com.ssafy.db.entity.UserLike;
+import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserRegisterReq;
-import com.ssafy.db.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +45,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserLikeRepositorySupport userLikeRepositorySupport;
+
+	@Autowired
+	RoomRepositorySupport roomRepositorySupport;
 
 	@Autowired
 	ValidRepository valid;
@@ -194,6 +194,7 @@ public class UserServiceImpl implements UserService {
 		user.setProjectJoinStatus(result.getProjectJoinStatus());
 		user.setFile(fileRepositorySupport.selectFile(userId, "user"));
 		user.setStacks(stackRepositorySupport.selectStack(userId, "user"));
+		user.setRoomId(result.getRoomId());
 
 		return user;
 	}
@@ -319,6 +320,57 @@ public class UserServiceImpl implements UserService {
 		}
 		return users;
 	}
+
+	@Override
+	public List<UserDto> selectRoomUsers(Long roomId) {
+		List<User> results = userRepositorySupport.selectRoomUsers(roomId);
+		if (results==null || results.size()==0){
+			return null;
+		}
+		List<UserDto> users=new ArrayList<>();
+		for (User result: results){
+			users.add(userEntityToDto(result));
+		}
+		return users;
+	}
+
+	@Override
+	public int joinUserRoom(Long userId, Long roomId, String password) {
+		Room result=roomRepositorySupport.selectRoom(roomId);
+		if (result==null) {
+			return 402;
+		}
+		if (result.getIsSecret()!=0 && !result.getPassword().equals(password)){
+			return 403;
+		}
+		User user=userRepositorySupport.selectUser(userId);
+		if (user==null || user.getRoomId()!=0){		// 사용자 정보가 없거나 이미 방에 들어가 있으면
+			return 401;
+		}
+		userRepositorySupport.joinUserRoom(userId, roomId);
+		return 200;
+	}
+
+	@Override
+	public int quitUserRoom(Long userId, Long roomId) {
+		User result=userRepositorySupport.selectUser(userId);
+		if (result==null) {
+			return 401;
+		}
+		if (result.getRoomId()!=roomId){
+			return 402;
+		}
+		userRepositorySupport.quitUserRoom(userId);
+
+		List<User> users = userRepositorySupport.selectRoomUsers(roomId);
+		if (users==null || users.size()==0){	// 방 참여자가 없으면 방 삭제
+			roomRepositorySupport.deleteRoom(roomId);
+			fileRepositorySupport.deleteFile(roomId, "room");
+		}
+
+		return 200;
+	}
+
 
 	@Override
 	public int pwdCheck(String userPwd) {

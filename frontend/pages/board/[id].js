@@ -164,7 +164,10 @@ const BoardDetail = () => {
             // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
             <Button
               onClick={() => {
-                Router.push('/meeting/regist');
+                Router.push({
+                  pathname: '/meeting/regist',
+                  query: { tag: 'board' },
+                });
               }}
             >
               방 생성

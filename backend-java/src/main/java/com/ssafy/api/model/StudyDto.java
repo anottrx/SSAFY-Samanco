@@ -24,4 +24,6 @@ public class StudyDto {
     private FileDto file;
     private boolean userLike=false;
     private String studyJoinStatus;
+    private boolean canRegister=false;
+    private boolean canJoin=false;
 }
