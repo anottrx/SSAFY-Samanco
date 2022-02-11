@@ -1,5 +1,8 @@
 package com.ssafy.api.service;
 
 public interface EmailService {
-    public void sendSimpleMessage(String to) throws Exception;
+    void sendMessage(String to, String tagKor, String tag) throws Exception;
+    int confirmCode(String email, String code, String tag);
+
+//    public void sendFindPassMessage(String email, String tag) throws Exception;
 }
