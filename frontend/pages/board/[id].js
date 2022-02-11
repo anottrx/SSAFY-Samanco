@@ -46,7 +46,7 @@ const BoardDetail = () => {
   const tag = detail.tag;
   const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
-  const detailLikes = useRef(detail.likes);
+  const [detailLikes, setLikes] = useState(detail.likes);
 
   const dispatch = useDispatch();
 
@@ -59,17 +59,32 @@ const BoardDetail = () => {
           : sessionStorage.getItem('userId'),
       addHit: addHit,
     }).then((res) => {
-      changeLike(res.board.userLike);
+      changeLike(res.board?.userLike);
       dispatch(boardActions.setBoardDetail({ detail: res.board }));
     });
   }
 
   useEffect(() => {
-    // console.log('현재 상태:', like, detail.userLike);
-    if (!like) {
-      detailLikes.current = detail.likes - 1;
+    if (!detail.userLike) {
+      // 유저가 좋아요를 안누른 상태이면
+      if (like) {
+        // 버튼 눌렀을 때 == 좋아요
+        // console.log('좋아요 안누른 상태, like');
+        setLikes(detail.likes + 1);
+      } else {
+        // console.log('좋아요 안누른 상태, unlike');
+        setLikes(detail.likes);
+      }
     } else {
-      detailLikes.current = detail.likes;
+      // 유저가 좋아요를 누른 상태면
+      if (like) {
+        // 버튼 눌렀을 때 == 좋아요 취소
+        // console.log('좋아요 누른 상태, like');
+        setLikes(detail.likes);
+      } else {
+        // console.log('좋아요 누른 상태, unlike');
+        setLikes(detail.likes - 1);
+      }
     }
   }, [like]);
 
@@ -399,7 +414,7 @@ const BoardDetail = () => {
             variant={like ? 'contained' : 'outlined'}
           >
             {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-            <span>{detailLikes.current}</span>
+            <span>{detailLikes}</span>
           </Button>
         </ButtonGroup>
       </ActionWrapper>
