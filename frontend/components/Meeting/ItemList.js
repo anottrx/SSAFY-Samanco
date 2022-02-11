@@ -237,7 +237,7 @@ export function Item(props) {
             variant="h5"
             component="div"
           >
-            {data.isPrivate ? <LockIcon /> : null} {data.title}
+            {data.isSecret===1 ? <LockIcon /> : null} {data.title}
           </Typography>
           <div>{data.isPrivate ? '-' : data.host}</div>
           <div>
