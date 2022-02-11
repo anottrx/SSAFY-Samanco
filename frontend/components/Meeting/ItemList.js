@@ -27,6 +27,7 @@ import {
 } from '@mui/material';
 
 import meetingJSONData from '../../data/meetingData.json';
+import { getRoomAllAPI } from '../../pages/api/meeting';
 import Router from 'next/router';
 
 import { useSelector, useDispatch } from 'react-redux';
