@@ -352,17 +352,15 @@ function meetingDetail() {
     clear();
     // to do : 방장이면 방 삭제
     if (detail.hostId == sessionStorage.getItem('userId')) {
-      if (window.confirm('방장이 나가면 방이 삭제됩니다. 나가시겠습니까?')) {
-        quitRoomAPI(inputValue).then((res) => {
-          // 방장도 미팅룸 탈퇴
-          if (res.statusCode == 200) {
-            Router.push('/meeting');
-          } else {
-            alert(`${res.message}`);
-          }
-        });
-        deleteSession();
-      }
+      quitRoomAPI(inputValue).then((res) => {
+        // 방장도 미팅룸 탈퇴
+        if (res.statusCode == 200) {
+          // Router.push('/meeting');
+        } else {
+          alert(`${res.message}`);
+        }
+      });
+      deleteSession();
     }
     Router.replace('/meeting');
   };
