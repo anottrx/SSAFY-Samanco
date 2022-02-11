@@ -52,8 +52,6 @@ public class BoardServiceImpl implements BoardService {
         board.setContent(boardRegisterReq.getContent());
         board.setTitle(boardRegisterReq.getTitle());
         board.setTag(boardRegisterReq.getTag());
-//        board.setStartDate(boardRegisterReq.getStartDate());
-//        board.setEndDate(boardRegisterReq.getEndDate());
         return boardRepository.save(board);
     }
 
@@ -107,6 +105,9 @@ public class BoardServiceImpl implements BoardService {
         List<BoardDto> boards=new ArrayList<>();
         for (Board result: results) {
             BoardDto board=boardEntityToDto(result);
+            if (board==null){
+                continue;
+            }
             Long boardId=board.getBoardId();
             board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
             boards.add(board);
@@ -144,6 +145,9 @@ public class BoardServiceImpl implements BoardService {
         List<BoardDto> boards=new ArrayList<>();
         for (Board result: results) {
             BoardDto board=boardEntityToDto(result);
+            if (board==null){
+                continue;
+            }
             Long boardId=board.getBoardId();
             board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
             boards.add(board);
@@ -160,10 +164,8 @@ public class BoardServiceImpl implements BoardService {
         BoardDto boardDto=new BoardDto();
         boardDto.setBoardId(result.getId());
         boardDto.setContent(result.getContent());
-//        boardDto.setEndDate(result.getEndDate());
         boardDto.setUserId(result.getUserId());
         boardDto.setHit(result.getHit());
-//        boardDto.setStartDate(result.getStartDate());
         boardDto.setTitle(result.getTitle());
         boardDto.setLikes(likes);
         boardDto.setTag(result.getTag());
@@ -195,6 +197,9 @@ public class BoardServiceImpl implements BoardService {
         List<BoardDto> boards=new ArrayList<>();
         for (Board result: results) {
             BoardDto board=boardEntityToDto(result);
+            if (board==null){
+                continue;
+            }
             Long boardId=board.getBoardId();
             board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
             boards.add(board);
@@ -214,6 +219,9 @@ public class BoardServiceImpl implements BoardService {
         List<BoardDto> boards=new ArrayList<>();
         for (Board result: results) {
             BoardDto board=boardEntityToDto(result);
+            if (board==null){
+                continue;
+            }
             Long boardId=board.getBoardId();
             board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
             boards.add(board);
@@ -231,6 +239,9 @@ public class BoardServiceImpl implements BoardService {
         List<BoardDto> boards=new ArrayList<>();
         for (Board result: results) {
             BoardDto board=boardEntityToDto(result);
+            if (board==null){
+                continue;
+            }
             Long boardId=board.getBoardId();
             board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
             boards.add(board);
@@ -254,6 +265,9 @@ public class BoardServiceImpl implements BoardService {
         List<BoardDto> boards=new ArrayList<>();
         for (Board result: results) {
             BoardDto board=boardEntityToDto(result);
+            if (board==null){
+                continue;
+            }
             Long boardId=board.getBoardId();
             board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
             boards.add(board);

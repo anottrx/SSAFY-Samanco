@@ -16,7 +16,6 @@ public class RoomUpdateReq {
     private int isSecret;
     private String password;
     private String tag;
-    private Long tagId;
-    private FileDto file;
+    private Long tagId=0l;
 
 }

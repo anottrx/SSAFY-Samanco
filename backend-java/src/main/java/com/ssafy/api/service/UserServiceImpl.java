@@ -344,7 +344,7 @@ public class UserServiceImpl implements UserService {
 			return 403;
 		}
 		User user=userRepositorySupport.selectUser(userId);
-		if (user==null || user.getRoomId()!=0){		// 사용자 정보가 없거나 이미 방에 들어가 있으면
+		if (user==null || user.getRoomId()!=0l){		// 사용자 정보가 없거나 이미 방에 들어가 있으면
 			return 401;
 		}
 		userRepositorySupport.joinUserRoom(userId, roomId);
@@ -353,6 +353,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int quitUserRoom(Long userId, Long roomId) {
+		Room room = roomRepositorySupport.selectRoom(roomId);
+		if (room==null){
+			return 402;
+		}
 		User result=userRepositorySupport.selectUser(userId);
 		if (result==null) {
 			return 401;
@@ -360,12 +364,14 @@ public class UserServiceImpl implements UserService {
 		if (result.getRoomId()!=roomId){
 			return 402;
 		}
-		userRepositorySupport.quitUserRoom(userId);
-
-		List<User> users = userRepositorySupport.selectRoomUsers(roomId);
-		if (users==null || users.size()==0){	// 방 참여자가 없으면 방 삭제
+		if (room.getHostId()==userId){	// 방장이 나갈경우 방에 속해있는 사용자 전부 방 나가기, 미팅 삭제
+			List<User> users=userRepositorySupport.selectRoomUsers(roomId);
+			for (User user: users){
+				userRepositorySupport.quitUserRoom(user.getId());
+			}
 			roomRepositorySupport.deleteRoom(roomId);
-			fileRepositorySupport.deleteFile(roomId, "room");
+		} else {
+			userRepositorySupport.quitUserRoom(userId);
 		}
 
 		return 200;
