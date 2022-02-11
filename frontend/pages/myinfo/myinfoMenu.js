@@ -10,9 +10,14 @@ const MyInfoMenu = () => {
     { path: '/', label: '메인', name: '/myinfo/main' },
     { path: '/myinfo', label: '내 정보', name: '/myinfo' },
     {
-      path: '/myinfo/club',
-      label: '내 클럽',
-      name: '/myinfo/club',
+      path: '/myinfo/project',
+      label: '내 프로젝트',
+      name: '/myinfo/project',
+    },
+    {
+      path: '/myinfo/study',
+      label: '내 스터디',
+      name: '/myinfo/study',
     },
     {
       path: '/myinfo/board',

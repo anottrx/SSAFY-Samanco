@@ -66,9 +66,9 @@ function StudyInfo() {
 
   function changeToBlob(file) {
     studyImageDownload(file).then((res) => {
-      console.log(res);
-      if (res.data.statusCode === 200 && res.data.fileString) {
-        console.log(res.data);
+      //console.log(res);
+      if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+        //console.log(res.data);
         const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
         createAndDownloadBlobFile(arrayBuffer, file.originFile);
       } else {
@@ -250,17 +250,42 @@ function StudyInfo() {
         )}
         <ButtonGroup variant="outlined">
           {sessionStorage.getItem('userId') == clubData.hostId ? (
+            // && detail.canRegister
+            // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
+            <>
+              <Button
+                onClick={() => {
+                  Router.push({
+                    pathname: '/meeting/regist',
+                    query: { tag: 'study' },
+                  });
+                }}
+              >
+                방 생성
+              </Button>
+              <Button
+                onClick={() => {
+                  Router.push('/study/update');
+                  dispatch(
+                    studyActions.setStudyDetail({
+                      detail: { ...detail, imageUrl: imageUrl },
+                    })
+                  );
+                }}
+              >
+                수정
+              </Button>
+            </>
+          ) : null}
+          {sessionStorage.getItem('userId') != detail.hostId ? (
+            // && detail.canJoin
+            // 방 참가가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성)
             <Button
               onClick={() => {
-                Router.push('/study/update');
-                dispatch(
-                  studyActions.setStudyDetail({
-                    detail: { ...detail, imageUrl: imageUrl },
-                  })
-                );
+                Router.push('/meeting/join');
               }}
             >
-              수정
+              방 참가
             </Button>
           ) : null}
           <Button onClick={QuitDialogOpen}>탈퇴</Button>

@@ -1,13 +1,33 @@
 import { useState, useEffect } from 'react';
 import { Skeleton, Grid, Card, Fab, Box } from '@mui/material';
 import styled from '@emotion/styled';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
 import MicIcon from '@mui/icons-material/Mic';
+import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import UserVideo from './UserVideo';
 
-function User({ publisher, subscribers, nickname }) {
-  let [users, setUsers] = useState([publisher, ...subscribers]);
+function User({ publisher, subscribers }) {
+  let [users, setUsers] = useState(
+    subscribers ? [publisher, ...subscribers] : [publisher]
+  );
+
+  const [videoStatus, setVideoStatus] = useState(
+    publisher?.properties?.publishVideo
+  );
+  const [audioStatus, setAudioStatus] = useState(
+    publisher?.properties?.publishAudio
+  );
+
+  function changeVideo(value) {
+    publisher.publishVideo(value);
+  }
+
+  function changeAudio(value) {
+    publisher.publishAudio(value);
+  }
+
   useEffect(() => {
     // if (subscribers !== undefined) {
     //   let newArray = [publisher].concat(subscribers);
@@ -54,29 +74,35 @@ function User({ publisher, subscribers, nickname }) {
                     <UserVideo streamManager={user}></UserVideo>
                   </VideoWrapper>
                   {/* <VideoWrapper height={350}></VideoWrapper> */}
-                  <UserName nickname={nickname}></UserName>
+                  <UserName user={user}></UserName>
                 </Grid>
               );
             })
           : users.map((user, index) => {
-              console.log('--------------user', user);
               return (
                 <Grid item xs={12} sm={10} md={6} key={index}>
                   <VideoWrapper>
                     <UserVideo streamManager={user}></UserVideo>
                   </VideoWrapper>
                   {/* <VideoWrapper height={350}></VideoWrapper> */}
-                  <UserName nickname={nickname}></UserName>
+                  <UserName user={user}></UserName>
                 </Grid>
               );
             })}
       </CusGrid>
-      <Operation></Operation>
+      <Operation
+        videoStatus={videoStatus}
+        setVideoStatus={setVideoStatus}
+        audioStatus={audioStatus}
+        setAudioStatus={setAudioStatus}
+        changeVideo={changeVideo}
+        changeAudio={changeAudio}
+      ></Operation>
     </GridWrapper>
   );
 }
 
-function UserName({ nickname }) {
+function UserName({ user }) {
   const NameWrapper = styled.div`
     transform: translate(10px, -160px);
     background-color: white;
@@ -84,23 +110,89 @@ function UserName({ nickname }) {
     padding: 5px;
   `;
 
-  return <NameWrapper>{nickname}</NameWrapper>;
+  const [name, setName] = useState('...loading');
+  useEffect(() => {
+    if (user && user.stream && user.stream.connection) {
+      if (user.stream.connection.data) {
+        setName(JSON.parse(user.stream.connection.data).clientData);
+      } else setName('...loading');
+    } else setName('...loading');
+  }, [user]);
+
+  return <NameWrapper>{name}</NameWrapper>;
 }
 
-function Operation() {
+function Operation({
+  videoStatus,
+  setVideoStatus,
+  audioStatus,
+  setAudioStatus,
+  changeVideo,
+  changeAudio,
+}) {
   const OperWrapper = styled.div`
     float: left;
   `;
 
+  // useEffect(() => {
+  //   console.log('재렌더링');
+  //   console.log('video:', videoStatus, 'audio:', audioStatus);
+  // }, [videoStatus, audioStatus]);
+
   return (
     <OperWrapper>
       <Box sx={{ '& > :not(style)': { m: 1 } }}>
-        <Fab variant="extended" aria-label="add">
-          <CameraAltIcon fontSize="large" />
-        </Fab>
-        <Fab variant="extended" aria-label="edit">
-          <MicIcon fontSize="large" />
-        </Fab>
+        {videoStatus ? (
+          <Fab
+            color="primary"
+            variant="extended"
+            aria-label="add"
+            onClick={() => {
+              setVideoStatus(false); // 버튼
+              changeVideo(false); // 상태 변경
+            }}
+          >
+            <VideocamIcon fontSize="large" />
+          </Fab>
+        ) : (
+          <Fab
+            variant="extended"
+            aria-label="add"
+            onClick={() => {
+              setVideoStatus(true);
+              changeVideo(true);
+            }}
+          >
+            <VideocamOffOutlinedIcon fontSize="large" />
+          </Fab>
+        )}
+        {audioStatus ? (
+          <Fab
+            color="primary"
+            variant="extended"
+            aria-label="edit"
+            onClick={() => {
+              setAudioStatus(false);
+              changeAudio(false);
+              // publisher.properties.publishVideo = false;
+            }}
+          >
+            <MicIcon fontSize="large" />
+          </Fab>
+        ) : (
+          <Fab
+            variant="extended"
+            aria-label="edit"
+            onClick={() => {
+              setAudioStatus(true);
+              changeAudio(true);
+
+              // publisher.properties.publishVideo = false;
+            }}
+          >
+            <MicOffOutlinedIcon fontSize="large" />
+          </Fab>
+        )}
         <Fab variant="extended" aria-label="edit">
           <IosShareIcon fontSize="large" />
         </Fab>

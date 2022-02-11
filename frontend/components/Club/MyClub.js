@@ -71,9 +71,7 @@ function MyClub(props) {
             ? 0
             : sessionStorage.getItem('userId')
         ).then((res) => {
-          // To Do: 내 스터디 리스트 처리
           dispatch(studyActions.setMyStudy({ study: res.studies }));
-          // dispatch(studyActions.setStudyDetail({detail: res.studies}))
         });
         break;
       default:
@@ -81,7 +79,7 @@ function MyClub(props) {
     }
   }, []);
 
-  return typeof clubData === 'undefined' || clubData == null ? null : (
+  return !clubData ? null : (
     <>
       <MyClubWrapper>
         <h2>{props.label}</h2>
@@ -167,13 +165,16 @@ function MyClub(props) {
     }
 
     useEffect(() => {
-      if (Object.keys(clubData).length == 16 && clubData.file) {
+      if (clubData.id !== undefined && clubData.file) {
         // 프로젝트일 때
         getImageUrl(clubData.file);
       }
     }, []);
 
-    return Object.keys(clubData).length !== 16 ? (
+    // 클럽 데이터에 아이디가 없는지? -> (true) 없으면 스터디, (false) 있으면 프로젝트
+    console.log(clubData.id === undefined);
+
+    return clubData.id === undefined ? (
       <CarouselWrapper>
         <Slider {...settings}>
           {
@@ -221,7 +222,7 @@ function MyClub(props) {
                             );
                             Router.push({
                               pathname: '/study/info/[sid]',
-                              query: { sid: data.id },
+                              query: { sid: clubData.id },
                             });
                           }
                         }}
@@ -295,6 +296,16 @@ function MyClub(props) {
 }
 
 function CardImages({ data }) {
+  const DefaultImage = styled.div`
+    width: 150px;
+    height: 150px;
+    background-color: #e0e0e0;
+    background-image: url('/images/profile_default_gen0.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center center;
+  `;
+
   const [imageUrl, setImageUrl] = useState();
   function base64ToArrayBuffer(base64) {
     const binaryString = window.atob(base64); // Comment this if not using base64
@@ -331,7 +342,7 @@ function CardImages({ data }) {
   return data.file ? (
     <img src={imageUrl} height={150} style={{ objectFit: 'contain' }}></img>
   ) : (
-    <div className="img-wrapper"></div>
+    <DefaultImage />
   );
 }
 

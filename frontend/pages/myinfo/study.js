@@ -3,9 +3,9 @@ import Router from 'next/router';
 import MyInfoLayout from '../../components/User/MenuLayout';
 import MyClub from '../../components/Club/MyClub';
 
-export default function ResetPasswordPage() {
+export default function MyStudyPage() {
   useEffect(() => {
-    document.title = '내 클럽 | 싸피사만코';
+    document.title = '내 스터디 | 싸피사만코';
 
     if (!sessionStorage.getItem('userId')) {
       alert('로그인하신 뒤에 사용가능합니다');
@@ -16,8 +16,7 @@ export default function ResetPasswordPage() {
   return (
     <>
       <MyInfoLayout>
-        <h1>내 클럽</h1>
-        <MyClub label="내 프로젝트" from="project" />
+        {/* <h1>내 클럽</h1> */}
         <MyClub label="내 스터디" from="study" />
       </MyInfoLayout>
     </>

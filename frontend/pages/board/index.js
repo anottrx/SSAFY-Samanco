@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Tabs, Tab, Typography, Box, Button } from '@mui/material';
 
@@ -7,6 +8,7 @@ import styled from '@emotion/styled';
 
 import BoardColor from '../../data/BoardColor.json';
 import BoardList from '../../components/Board/BoardList';
+import * as boardActions from '../../store/module/board';
 import Router from 'next/router';
 
 //게시판 탭(공지사항, 자유게시판, 질문게시판, 정보공유, 사람구해요)
@@ -45,6 +47,9 @@ function a11yProps(index) {
 }
 
 export default function Board() {
+  const dispatch = useDispatch();
+  const detail = useSelector(({ board }) => board.boardDetail);
+
   const [value, setValue] = useState(0);
   const [tagColor, setTagColor] = useState('535353');
 
@@ -52,6 +57,31 @@ export default function Board() {
     setValue(newValue);
     setTagColor(BoardColor[e.target.id].color);
   };
+
+  // useEffect(() => {
+  //   if (detail) {
+  //     switch (detail.tag) {
+  //       case 'notice':
+  //         setValue(1);
+  //         break;
+  //       case 'free':
+  //         setValue(2);
+  //         break;
+  //       case 'qna':
+  //         setValue(3);
+  //         break;
+  //       case 'exam':
+  //         setValue(4);
+  //         break;
+  //       case 'job':
+  //         setValue(5);
+  //         break;
+  //       default:
+  //         setValue(0);
+  //         break;
+  //     }
+  //   }
+  // }, []);
 
   const CusButton = styled(Button)`
     height: fit-content;
@@ -64,6 +94,10 @@ export default function Board() {
   `;
 
   const CusTabs = styled(Tabs)`
+    & .MuiTab-root {
+      font-size: 13px;
+    }
+
     & .Mui-selected {
       font-weight: bolder;
       color: #${tagColor}!important;

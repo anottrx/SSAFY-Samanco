@@ -46,7 +46,7 @@ const BoardDetail = () => {
   const tag = detail.tag;
   const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
-  const detailLikes = useRef(detail.likes);
+  const [detailLikes, setLikes] = useState(detail.likes);
 
   const dispatch = useDispatch();
 
@@ -59,16 +59,32 @@ const BoardDetail = () => {
           : sessionStorage.getItem('userId'),
       addHit: addHit,
     }).then((res) => {
-      changeLike(res.board.userLike);
+      changeLike(res.board?.userLike);
       dispatch(boardActions.setBoardDetail({ detail: res.board }));
     });
   }
 
   useEffect(() => {
-    if (like) {
-      detailLikes.current -= 1;
+    if (!detail.userLike) {
+      // 유저가 좋아요를 안누른 상태이면
+      if (like) {
+        // 버튼 눌렀을 때 == 좋아요
+        // console.log('좋아요 안누른 상태, like');
+        setLikes(detail.likes + 1);
+      } else {
+        // console.log('좋아요 안누른 상태, unlike');
+        setLikes(detail.likes);
+      }
     } else {
-      detailLikes.current += 1;
+      // 유저가 좋아요를 누른 상태면
+      if (like) {
+        // 버튼 눌렀을 때 == 좋아요 취소
+        // console.log('좋아요 누른 상태, like');
+        setLikes(detail.likes);
+      } else {
+        // console.log('좋아요 누른 상태, unlike');
+        setLikes(detail.likes - 1);
+      }
     }
   }, [like]);
 
@@ -119,12 +135,31 @@ const BoardDetail = () => {
           {sessionStorage.getItem('userId') &&
           sessionStorage.getItem('userId') == detail.userId ? (
             <DetailOperation />
-          ) : null}
+          ) : (
+            <JoinRoomOperation />
+          )}
         </DetailHeader>
         <BoardDetail></BoardDetail>
       </CusContainer>
     </Layout>
   );
+
+  function JoinRoomOperation() {
+    return (
+      <ButtonGroup variant="outlined">
+        {/* {detail.canJoin ? (
+          방 참가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성) */}
+        <Button
+          onClick={() => {
+            Router.push('/meeting/join');
+          }}
+        >
+          방 참가
+        </Button>
+        {/* ) : null} */}
+      </ButtonGroup>
+    );
+  }
 
   function DetailOperation() {
     const [open, setOpen] = useState(false);
@@ -139,6 +174,20 @@ const BoardDetail = () => {
     return (
       <>
         <ButtonGroup variant="outlined">
+          {detail.tag !== 'notice' ? (
+            // && detail.canRegister
+            // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
+            <Button
+              onClick={() => {
+                Router.push({
+                  pathname: '/meeting/regist',
+                  query: { tag: 'board' },
+                });
+              }}
+            >
+              방 생성
+            </Button>
+          ) : null}
           <Button
             onClick={() => {
               Router.push('/board/update');
@@ -235,7 +284,7 @@ const BoardDetail = () => {
 
     function changeToBlob(file) {
       fileDownload(file).then((res) => {
-        if (res.data.statusCode == 200 && res.data.fileString) {
+        if (res.data && res.data.statusCode == 200 && res.data.fileString) {
           const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
           createAndDownloadBlobFile(arrayBuffer, file.originFile);
         } else {
@@ -285,6 +334,9 @@ const BoardDetail = () => {
                       key={index}
                       onClick={() => {
                         changeToBlob(file);
+                      }}
+                      style={{
+                        cursor: 'pointer',
                       }}
                     >
                       <AttachFileIcon />
@@ -362,7 +414,7 @@ const BoardDetail = () => {
             variant={like ? 'contained' : 'outlined'}
           >
             {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-            <span>{detailLikes.current}</span>
+            <span>{detailLikes}</span>
           </Button>
         </ButtonGroup>
       </ActionWrapper>

@@ -4,10 +4,16 @@ import SearchBar from '../../components/Common/Search';
 import StackTagList from '../../components/Club/StackTagList';
 import Carousel from '../../components/Club/Carousel';
 import MyClub from '../../components/Club/MyClub';
+// import CampaignIcon from '@mui/icons-material/Campaign';
+// import CloseIcon from '@mui/icons-material/Close';
 
 import styled from '@emotion/styled';
-import { Button, Divider } from '@mui/material';
+import { Button, Divider, Card } from '@mui/material';
+import { useState, useEffect } from 'react';
 import Router from 'next/router';
+
+// import Cookies from 'universal-cookie';
+// const cookies = new Cookies();
 
 export default function Study() {
   const ItemWrapper = styled.div`
@@ -34,8 +40,64 @@ export default function Study() {
     margin: 20px 0px;
   `;
 
+  const ClubInfo = styled(Card)`
+    background-color: #a2c2dc;
+    color: black;
+    float: right;
+    position: absolute;
+    padding: 10px;
+    font-size: 14px;
+    transform: translate(calc(100vw - 400px), -50px);
+
+    & span {
+      margin-left: 5px;
+    }
+
+    & .border {
+      font-weight: bolder;
+    }
+
+    & .popCloseBtn {
+      cursor: pointer;
+      margin-left: 10px;
+    }
+  `;
+
+  // const [popShow, isPopShow] = useState(false);
+
+  // function setCookie() {
+  //   cookies.set('studyNotice', 'closed', {
+  //     path: '/',
+  //     expires: new Date(
+  //       Date.now() + 60 * 60 * 24 * 1000 * 3 //3일
+  //     ),
+  //   });
+  // }
+  // useEffect(() => {
+  //   if (cookies.get('studyNotice')) {
+  //     isPopShow(false);
+  //   } else {
+  //     isPopShow(true);
+  //   }
+  // }, []);
+
   return (
     <Layout>
+      {/* {popShow && (
+        <ClubInfo
+          onClick={() => {
+            setCookie();
+            isPopShow(false);
+          }}
+        >
+          <CampaignIcon />
+          <span>
+            유저 당<span className="border">여러 개의 스터디</span>를 가입할 수
+            있습니다.
+          </span>
+          <CloseIcon className="popCloseBtn" />
+        </ClubInfo>
+      )} */}
       <h1>Study</h1>
       <ItemWrapper>
         {sessionStorage.getItem('userId') ? (

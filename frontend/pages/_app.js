@@ -98,7 +98,7 @@ function MyApp({ Component, pageProps }) {
       // console.log(token);
       setIsLogin(true);
       setNickname(userNickname);
-    } 
+    }
     // else if (token != null && token != '' && userNickname == null) {
     //   getUserLoginTokenAPI(token).then((res) => {
     //     sessionStorage.setItem('userId', res.userId);
@@ -176,13 +176,14 @@ function MyApp({ Component, pageProps }) {
       color: black;
       margin-right: 5px;
       background-color: white;
-      padding: 5px;
+      padding: 5px 10px;
       border-radius: 5px;
+      font-size: 15px;
     `;
 
     const UserMenu = () => (
       <>
-        <Menu 
+        <Menu
           id="fade-menu"
           MenuListProps={{
             'aria-labelledby': 'fade-button',
@@ -196,7 +197,7 @@ function MyApp({ Component, pageProps }) {
             vertical: 'top',
             horizontal: 'right',
           }}
-          sx={{marginTop: '8px'}}
+          sx={{ marginTop: '8px' }}
           open={open}
           onClose={handleClose}
           TransitionComponent={Fade}
@@ -215,12 +216,23 @@ function MyApp({ Component, pageProps }) {
           <MenuItem
             onClick={(e) => {
               e.preventDefault();
-              Router.push('/myinfo/club');
+              Router.push('/myinfo/project');
               handleClose();
             }}
           >
             <span className="site-nav-item" style={styles.link}>
-              내 클럽
+              내 프로젝트
+            </span>
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              e.preventDefault();
+              Router.push('/myinfo/study');
+              handleClose();
+            }}
+          >
+            <span className="site-nav-item" style={styles.link}>
+              내 스터디
             </span>
           </MenuItem>
           <MenuItem
@@ -239,8 +251,8 @@ function MyApp({ Component, pageProps }) {
               alert('로그아웃 되었습니다.');
               sessionStorage.clear();
               cookies.set('userToken', '', -1);
-              cookies.remove("userToken", {path: "/myinfo"}) 
-              cookies.remove("userToken", {path: "/"}) 
+              cookies.remove('userToken', { path: '/myinfo' });
+              cookies.remove('userToken', { path: '/' });
               cookies.remove('userToken');
               setIsLogin(false);
               setUserId(null);
@@ -278,7 +290,7 @@ function MyApp({ Component, pageProps }) {
             </>
           ) : (
             <>
-              <span className="site-nav-item" style={styles.link} >
+              <span className="site-nav-item" style={styles.link}>
                 <Link href="/login">로그인</Link>
               </span>
               <span className="site-nav-item" style={styles.link}>

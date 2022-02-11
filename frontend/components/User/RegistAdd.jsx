@@ -101,7 +101,7 @@ export default function RegistInfo() {
       window.location.replace('/');
     }
 
-    inputState.email = sessionStorage.getItem('userId');
+    inputState.email = sessionStorage.getItem('email');
     inputState.userId = sessionStorage.getItem('userId');
     inputState.nickname = sessionStorage.getItem('nickname');
     inputState.name = sessionStorage.getItem('name');

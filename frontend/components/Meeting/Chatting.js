@@ -37,16 +37,21 @@ const ChattingWrapper = styled.div`
     border: 1px solid gray;
     border-radius: 5px;
     padding: 5px;
+    margin: 0px 5px;
   }
 
   & .nickName {
     font-weight: bolder;
-    margin-right: 10px;
   }
 
   & .myMessageWrapper {
     text-align: right;
     margin-bottom: 15px;
+  }
+
+  & .time {
+    font-size: 11px;
+    color: gray;
   }
 `;
 const MyChattingWrapper = styled.div`
@@ -58,21 +63,14 @@ const MyChattingWrapper = styled.div`
     justify-content: space-between;
     `;
 
-function Chatting() {
-  let index = [0, 0, 0, 0, 0, 0, 0, 0];
+function Chatting({ session }) {
   const scrollEl = useRef(null);
 
   const scrollToBottom = () => {
-    scrollEl.current?.scrollIntoView({
-      // behavior: 'smooth',
-      block: 'end',
-      inline: 'end',
+    scrollEl.current?.scrollTo({
+      top: scrollEl.current.scrollHeight - scrollEl.current.clientHeight,
     });
   };
-
-  useEffect(() => {
-    scrollToBottom();
-  });
 
   const [chatHistory, setChatHistory] = useState([]);
   const [chatText, setChatText] = useState('');
@@ -82,42 +80,70 @@ function Chatting() {
     time: '',
   });
 
-  const submitChatHandle = (event) => {
-    event.preventDefault();
-    if (chatText.length > 0) {
-      chat.text = chatText;
-      chat.nickname = sessionStorage.getItem('nickname');
-      chat.time = new Date().getTime();
-      chatHistory.push(chat);
-      console.log(chatHistory);
+  const submitChatHandle = (e) => {
+    e.preventDefault();
+    if (!chatText) return;
+
+    return new Promise((resolve, reject) => {
+      const mySession = session;
+      const payload = {
+        message: chatText,
+        nickname: sessionStorage.getItem('nickname')
+          ? sessionStorage.getItem('nickname')
+          : 'unknown',
+      };
+
+      mySession.signal({
+        data: JSON.stringify(payload),
+        type: 'chat',
+      });
+
+      resolve();
       setChatText('');
-      setChat([]);
-    }
+    });
   };
+
+  useEffect(() => {
+    if (!session) return;
+
+    const mySession = session;
+
+    mySession.on('signal:chat', (event) => {
+      if (!event.data) return;
+      const today = new Date();
+      let hours = today.getHours();
+      let minutes = today.getMinutes();
+
+      const data = JSON.parse(event.data);
+      chatHistory.push({
+        nickname: data.nickname,
+        message: data.message,
+        createAt: hours + ':' + minutes,
+        connectionId: event.from?.connectionId,
+      });
+
+      setChatHistory([...chatHistory]);
+      scrollToBottom();
+    });
+  }, [session]);
 
   return (
     <ChattingWrapper>
       <div className="messages" ref={scrollEl}>
-        {chatHistory.map((idx) => {
-          if (idx.nickname == sessionStorage.getItem('nickname')) {
-            return (
-              <>
-                <div className="myMessageWrapper" key="message">
-                  <span className="nickName">{idx.nickname}</span>
-                  <span className="myMessage">{idx.text}</span>
-                </div>
-              </>
-            );
-          } else {
-            return (
-              <>
-                <div className="otherMessageWrapper">
-                  <span className="nickName">{idx.nickname}</span>
-                  <span className="otherMessage">{idx.text}</span>
-                </div>
-              </>
-            );
-          }
+        {chatHistory.map((data, index) => {
+          return data.nickname == sessionStorage.getItem('nickname') ? (
+            <div className="myMessageWrapper" key={index}>
+              <span className="time">{data.createAt}</span>
+              {/* <span className="nickName">{data.nickname}</span> */}
+              <span className="myMessage">{data.message}</span>
+            </div>
+          ) : (
+            <div className="otherMessageWrapper" key={index}>
+              <span className="nickName">{data.nickname}</span>
+              <span className="otherMessage">{data.message}</span>
+              <span className="time">{data.createAt}</span>
+            </div>
+          );
         })}
       </div>
       <hr />

@@ -13,6 +13,13 @@ const LinkButton = styled(Typography)`
   sx={{ width: 300, fontSize: 13.5, mr: 2 }}
 `;
 
+const LinkWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  min-width: 200px;
+  justify-content: space-evenly;
+`;
+
 export default function LoginPage() {
   const cookies = new Cookies();
 
@@ -40,14 +47,14 @@ export default function LoginPage() {
         sx={{ flexDirection: 'column' }}
       >
         <Login />
-        <div sx={{ flexDirection: 'row' }}>
-          <LinkButton className="site-nav-item">
+        <LinkWrapper>
+          <LinkButton>
             <Link href="/user/password">비밀번호 재설정</Link>
           </LinkButton>
-          <LinkButton className="site-nav-item">
+          <LinkButton>
             <Link href="/regist">회원가입</Link>
           </LinkButton>
-        </div>
+        </LinkWrapper>
       </Box>
     </>
   );

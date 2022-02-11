@@ -203,6 +203,7 @@ export function Item(props) {
     display: flex;
     flex-direction: column;
     text-align: left;
+    cursor: pointer;
   `;
 
   const CusCountBadge = styled(Badge)`
@@ -259,6 +260,15 @@ export function Item(props) {
     // margin-right: auto;
     // transform: translate(-90%, 10%);
     position: absolute;
+  `;
+
+  const DefaultImage = styled.div`
+    height: 150px;
+    background-color: #e0e0e0;
+    background-image: url('/images/profile_default_gen0.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center center;
   `;
 
   let totalSize = 0,
@@ -388,7 +398,7 @@ export function Item(props) {
               style={{ objectFit: 'contain', width: '100%' }}
             ></img>
           ) : (
-            <Skeleton variant="rectangular" height={150} animation={false} />
+            <DefaultImage></DefaultImage>
           )
 
           // data.collectStatus === 'ING' ? (

@@ -36,7 +36,6 @@ async function deleteBoard(data) {
 }
 
 // 게시물 리스트 태그로 조회 (tag)
-// to do: api 업데이트 되면 경로 변경
 async function getArticleByTag(tag) {
   return await api
     .get('/api/board/' + tag)

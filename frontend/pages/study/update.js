@@ -80,7 +80,7 @@ function studyUpdate() {
 
   useEffect(() => {
     if (detail.imageUrl) {
-      console.log(detail);
+      //console.log(detail);
       setImageUrl(detail.imageUrl);
       initPreview();
     }
@@ -235,7 +235,7 @@ function studyUpdate() {
 
           <StackSelect
             changeHandle={changeHandle}
-            initData={inputValue.stacks}
+            initData={detail.stacks}
             label="스터디 스택"
           ></StackSelect>
 

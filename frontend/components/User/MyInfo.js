@@ -10,6 +10,7 @@ import {
   deleteUserAPI,
   loginAPI,
 } from '../../pages/api/user';
+import { projectImageDownload } from '../../pages/api/project';
 import DatePickerUser from '../../components/Common/DatePickerUser';
 import { LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
@@ -97,6 +98,7 @@ const ImgDefault = styled.img`
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
+  object-fit: scale-down;
 `;
 // const DetailWrapper = styled.div`
 //   display: flex;
@@ -170,6 +172,7 @@ export default function MyInfo() {
   const [finishUpdate, setFinishUpdate] = useState(false);
   const [nicknameChange, setNicknameChange] = useState(false);
   const [checkPassword, setCheckPassword] = useState(false);
+  const [reloadCondition, setReloadCondition] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([]);
@@ -271,18 +274,46 @@ export default function MyInfo() {
   });
   const [userBirthdayDate, setUserBirthdayDate] = useState('');
 
+  function base64ToArrayBuffer(base64) {
+    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(binaryString.length);
+    return bytes.map((byte, i) => binaryString.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const blob = new Blob([body]);
+    const fileName = `${filename}`;
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      const url = window.URL.createObjectURL(blob);
+      setImageDefault(url);
+    }
+  }
+
+  function changeToBlob(file) {
+    projectImageDownload(file).then((res) => {
+      if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+        const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+        createAndDownloadBlobFile(arrayBuffer, file.originFile);
+      } else {
+        console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+      }
+    });
+  }
+
   async function getUserInfo() {
     // 사용자 정보 가져오는 함수
     // const token = cookie.userToken;
-    const token = cookies.get('userToken')
-    cookies.remove("userToken", {path: "/myinfo"})  
-    // cookies.remove("userToken", {path: "/"}) 
+    const token = cookies.get('userToken');
+    cookies.remove('userToken', { path: '/myinfo' });
+    // cookies.remove("userToken", {path: "/"})
 
     // getUserLoginTokenAPI(token).then((res) => {
     //   if (res.statusCode == 200) {
     //     //
     //   } else {
-    //     // 
+    //     //
     //   }
     //   console.log('getUserLoginTokenAPI 관련 결과' + JSON.stringify(res));
     //   inputState.userId = res.userId;
@@ -292,72 +323,75 @@ export default function MyInfo() {
 
     //   const userId = res.userId;
 
-      inputState.userId = sessionStorage.getItem("userId");
-      inputState.nickname = sessionStorage.getItem("nickname");
-      inputState.email = sessionStorage.getItem("email");
+    inputState.userId = sessionStorage.getItem('userId');
+    inputState.nickname = sessionStorage.getItem('nickname');
+    inputState.email = sessionStorage.getItem('email');
 
-      getUserInfoAPI(inputState.userId).then((res) => {
-        if (res.statusCode == 200) {
-          // console.log('내 정보 보기 결과: ' + JSON.stringify(res));
-          inputState.name = res.user.name;
-          const today = new Date();
-          const todayYear = today.getFullYear().toString().slice(2);
-          if (
-            res.user.birthday != null
-            // &&  res.user.birthday.toString().slice(0, 2) != todayYear
-          ) {
-            inputState.birthday = res.user.birthday;
-            inputState.initDate = res.user.birthday;
-            let year = inputState.birthday.slice(0, 2);
-            year = Number(year) > 25 ? 19 + year : 20 + year;
-            let month = inputState.birthday.slice(2, 4);
-            let day = inputState.birthday.slice(4, 6);
-            setUserBirthdayDate(year + '-' + month + '-' + day);
-            // console.log(userBirthdayDate);
-            userBirthday.initDate = year + '-' + month + '-' + day;
-            userBirthday.value = year + '-' + month + '-' + day;
-            if (year == '22' && month == '02') {
-              userBirthday.value = '';
-              inputState.birthday = '';
-            }
+    getUserInfoAPI(inputState.userId).then((res) => {
+      if (res.statusCode == 200) {
+        console.log('내 정보 보기 결과: ' + JSON.stringify(res));
+        inputState.name = res.user.name;
+        const today = new Date();
+        const todayYear = today.getFullYear().toString().slice(2);
+        if (
+          res.user.birthday != null
+          // &&  res.user.birthday.toString().slice(0, 2) != todayYear
+        ) {
+          inputState.birthday = res.user.birthday;
+          inputState.initDate = res.user.birthday;
+          let year = inputState.birthday.slice(0, 2);
+          year = Number(year) > 25 ? 19 + year : 20 + year;
+          let month = inputState.birthday.slice(2, 4);
+          let day = inputState.birthday.slice(4, 6);
+          setUserBirthdayDate(year + '-' + month + '-' + day);
+          // console.log(userBirthdayDate);
+          userBirthday.initDate = year + '-' + month + '-' + day;
+          userBirthday.value = year + '-' + month + '-' + day;
+          if (year == '22' && month == '02') {
+            userBirthday.value = '';
+            inputState.birthday = '';
           }
-          if (res.user.phone !== '00000000000') {
-            inputState.phone = res.user.phone;
-          }
-          inputState.class = res.user.userClass;
-          inputState.generation = res.user.generation;
-          inputState.studentId = res.user.studentId;
-          inputState.position = res.user.position;
-          inputState.password = res.user.password;
-          inputState.link = res.user.link;
-          inputState.description = res.user.description;
-          inputState.stacks = res.user.stacks;
-          inputState.stacks_get = res.user.stacks;
-          inputState.image_id = res.user.file;
-
-          if (inputState.image_id == null) {
-            if (inputState.generation == 7) {
-              setImageDefault('/images/profile_default_gen7.png');
-            } else if (inputState.generation == 0) {
-              setImageDefault('/images/profile_default_gen0.png');
-            } else {
-              setImageDefault('/images/profile_default_gen6.png');
-            }
-          }
-
-          // if (res.user.link != null) {
-          //   setLinks(inputState.link.split(" "));
-          //   console.log(links);
-          //   console.log(inputState.link.split(" "));
-          // } else {
-          //   setLinks();
-          // }
-          // inputState.file = res.user.file;
-          setLoading(true);
-        } else {
-          //
         }
-      });
+        if (res.user.phone !== '00000000000') {
+          inputState.phone = res.user.phone;
+        }
+        inputState.class = res.user.userClass;
+        inputState.generation = res.user.generation;
+        inputState.studentId = res.user.studentId;
+        inputState.position = res.user.position;
+        inputState.password = res.user.password;
+        inputState.link = res.user.link;
+        inputState.description = res.user.description;
+        inputState.stacks = res.user.stacks;
+        inputState.stacks_get = res.user.stacks;
+        inputState.image_id = res.user.file;
+
+        if (inputState.image_id == null) {
+          if (inputState.generation == 7) {
+            setImageDefault('/images/profile_default_gen7.png');
+          } else if (inputState.generation == 0) {
+            setImageDefault('/images/profile_default_gen0.png');
+          } else {
+            setImageDefault('/images/profile_default_gen6.png');
+          }
+        } else {
+          // 이미지 파일이 있으면
+          changeToBlob(res.user.file);
+        }
+
+        // if (res.user.link != null) {
+        //   setLinks(inputState.link.split(" "));
+        //   console.log(links);
+        //   console.log(inputState.link.split(" "));
+        // } else {
+        //   setLinks();
+        // }
+        // inputState.file = res.user.file;
+        setLoading(true);
+      } else {
+        //
+      }
+    });
     // });
   }
 
@@ -366,16 +400,30 @@ export default function MyInfo() {
     preview();
   }, []);
 
+  useEffect(() => {
+    preview();
+  }, [files]);
+
+  useEffect(() => {
+    if (reloadCondition) {
+      getUserInfo();
+      preview();
+      setReloadCondition(false);
+    }
+  }, [reloadCondition]);
+
   const preview = () => {
     if (!files) return false;
 
     const imgEl = document.querySelector('#img_box');
     const reader = new FileReader();
 
-    reader.onload = () =>
-      (imgEl.style.backgroundImage = `url(${reader.result})`);
-
-    imgEl.innerText = '';
+    reader.onload = () => {
+      if (imgEl) {
+        imgEl.style.backgroundImage = `url(${reader.result})`;
+        imgEl.innerText = '';
+      }
+    };
     reader.readAsDataURL(files);
   };
 
@@ -455,6 +503,7 @@ export default function MyInfo() {
     e.preventDefault();
     setOnlyView(false);
     setFinishUpdate(true);
+    setReloadCondition(true);
     // console.log("수정하기 버튼 누름");
 
     // setAuthChange(true);
@@ -617,9 +666,12 @@ export default function MyInfo() {
               if (sessionStorage.getItem('nickname') != inputState.nickname) {
                 // 닉네임 변경시 상단바 변경도 필요하기 때문
                 sessionStorage.setItem('nickname', inputState.nickname);
+                // 새로고침
+
                 // forceReload();
               }
               setNicknameChange(false);
+              setReloadCondition(true);
             } else {
               alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
             }
