@@ -237,8 +237,7 @@ function ProjectInfo() {
           <div></div>
         )}
         <ButtonGroup variant="outlined">
-          {sessionStorage.getItem('userId') == clubData.hostId ? (
-            // && detail.canRegister
+          {sessionStorage.getItem('userId') == clubData.hostId && detail.canRegister ? (
             // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
             <>
               <Button
@@ -260,8 +259,7 @@ function ProjectInfo() {
               </Button>
             </>
           ) : null}
-          {sessionStorage.getItem('userId') != detail.hostId ? (
-            // && detail.canJoin
+          {sessionStorage.getItem('userId') != detail.hostId && detail.canJoin ? (
             // 방 참가가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성)
             <Button
               onClick={() => {

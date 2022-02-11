@@ -147,8 +147,8 @@ const BoardDetail = () => {
   function JoinRoomOperation() {
     return (
       <ButtonGroup variant="outlined">
-        {/* {detail.canJoin ? (
-          방 참가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성) */}
+        {detail.canJoin ? (
+        //  방 참가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성) 
         <Button
           onClick={() => {
             Router.push('/meeting/join');
@@ -156,7 +156,7 @@ const BoardDetail = () => {
         >
           방 참가
         </Button>
-        {/* ) : null} */}
+        ) : null} 
       </ButtonGroup>
     );
   }
@@ -174,8 +174,7 @@ const BoardDetail = () => {
     return (
       <>
         <ButtonGroup variant="outlined">
-          {detail.tag !== 'notice' ? (
-            // && detail.canRegister
+          {detail.tag !== 'notice' && detail.canRegister ? (
             // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
             <Button
               onClick={() => {
