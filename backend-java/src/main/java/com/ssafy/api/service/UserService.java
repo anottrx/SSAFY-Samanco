@@ -12,7 +12,7 @@ import java.util.List;
 public interface UserService {
 	User createUser(UserRegisterReq userRegisterInfo);
 //	User getUserByUserId(String userId);
-	User getUserByEmail(String email);
+	public User getUserByEmail(String email);
 	int pwdCheck(String userPwd);
 	int nameCheck(String userName);
 	int emailCheck(String userEmail);
