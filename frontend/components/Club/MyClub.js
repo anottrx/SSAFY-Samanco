@@ -222,7 +222,7 @@ function MyClub(props) {
                             );
                             Router.push({
                               pathname: '/study/info/[sid]',
-                              query: { sid: data.id },
+                              query: { sid: clubData.id },
                             });
                           }
                         }}
@@ -296,6 +296,16 @@ function MyClub(props) {
 }
 
 function CardImages({ data }) {
+  const DefaultImage = styled.div`
+    width: 150px;
+    height: 150px;
+    background-color: #e0e0e0;
+    background-image: url('/images/profile_default_gen0.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center center;
+  `;
+
   const [imageUrl, setImageUrl] = useState();
   function base64ToArrayBuffer(base64) {
     const binaryString = window.atob(base64); // Comment this if not using base64
@@ -332,7 +342,7 @@ function CardImages({ data }) {
   return data.file ? (
     <img src={imageUrl} height={150} style={{ objectFit: 'contain' }}></img>
   ) : (
-    <div className="img-wrapper"></div>
+    <DefaultImage />
   );
 }
 

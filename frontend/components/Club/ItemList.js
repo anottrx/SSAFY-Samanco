@@ -262,6 +262,15 @@ export function Item(props) {
     position: absolute;
   `;
 
+  const DefaultImage = styled.div`
+    height: 150px;
+    background-color: #e0e0e0;
+    background-image: url('/images/profile_default_gen0.png');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-position: center center;
+  `;
+
   let totalSize = 0,
     currSize = 0;
   if (from === 'project') {
@@ -389,7 +398,7 @@ export function Item(props) {
               style={{ objectFit: 'contain', width: '100%' }}
             ></img>
           ) : (
-            <Skeleton variant="rectangular" height={150} animation={false} />
+            <DefaultImage></DefaultImage>
           )
 
           // data.collectStatus === 'ING' ? (
