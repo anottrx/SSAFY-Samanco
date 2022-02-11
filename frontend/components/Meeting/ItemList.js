@@ -32,7 +32,8 @@ import Router from 'next/router';
 
 import { useSelector, useDispatch } from 'react-redux';
 import * as meetingActions from '../../store/module/meeting';
-
+import { joinRoomAPI } from '../../pages/api/meeting'
+ 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
@@ -430,6 +431,11 @@ function JoinDialog(props) {
 function PwDialog(props) {
   let { open, pwDialogClose, room, setDetail } = props;
   let [pw, setPw] = useState('');
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+    password: ''
+  });
   const pwChangeHandle = (e) => {
     setPw(e.target.value);
   };
@@ -448,11 +454,20 @@ function PwDialog(props) {
             pw === room.password
               ? () => {
                   // setPublisherStatus({ status: publisher });
-                  Router.push('/meeting/' + room.no);
-                  setDetail({
-                    detail: room,
+                  inputValue.password = pw;
+                  inputValue.roomId = room.roomId
+                  joinRoomAPI(inputValue).then((res) => { 
+
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + room.no);
+                      setDetail({
+                        detail: room,
+                      });
+                      pwDialogClose();
+                    } else {
+                      alert(`${res.message}`);
+                    }
                   });
-                  pwDialogClose();
                 }
               : () => {
                   alert('비밀번호를 확인해주세요.');
