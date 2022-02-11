@@ -3,10 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.model.RoomDto;
 import com.ssafy.api.request.RoomRegisterReq;
 import com.ssafy.api.request.RoomUpdateReq;
-import com.ssafy.db.entity.Project;
-import com.ssafy.db.entity.Room;
-import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.UserStudy;
+import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,20 +21,10 @@ public class RoomServiceImpl implements RoomService {
     RoomRepositorySupport roomRepositorySupport;
 
     @Autowired
-    FileRepositorySupport fileRepositorySupport;
-
-    @Autowired
     ValidRepository valid;
 
     @Autowired
-    UserLikeRepositorySupport userLikeRepositorySupport;
-
-    @Autowired
     CommonRepository commonRepository;
-
-
-//    @Autowired
-//    StudyRepositorySupport studyRepositorySupport;
 
 //    @Autowired
 //    UserRepositorySupport userRepositorySupport;
@@ -55,6 +42,11 @@ public class RoomServiceImpl implements RoomService {
             }
         } else if ("study".equalsIgnoreCase(tag)){
             if (commonRepository.selectUserStudy(hostId, tagId)==null){
+                return null;
+            }
+        } else if ("board".equalsIgnoreCase(tag)){
+            Board board = commonRepository.selectBoard(tagId);
+            if (board==null || board.getUserId()!=hostId){
                 return null;
             }
         }
@@ -76,12 +68,9 @@ public class RoomServiceImpl implements RoomService {
         if (!valid.isUserValid(hostId)){
             return 402;
         }
-        if (!valid.isRoomValid(roomId)) {
-            return 401;
-        }
         Room room = roomRepositorySupport.selectRoom(roomId);
         if (room==null || hostId!=room.getHostId()){
-            return 402;
+            return 401;
         }
         return roomRepositorySupport.updateRoom(updateInfo);
     }
@@ -93,7 +82,6 @@ public class RoomServiceImpl implements RoomService {
             return null;
         }
         RoomDto room=roomEntityToDto(result);
-        room.setFile(fileRepositorySupport.selectFile(roomId, "room"));
 
         return room;
     }
@@ -110,8 +98,6 @@ public class RoomServiceImpl implements RoomService {
             if (room==null){
                 continue;
             }
-            Long roomId=room.getRoomId();
-            room.setFile(fileRepositorySupport.selectFile(roomId, "room"));
             rooms.add(room);
         }
 
@@ -147,9 +133,9 @@ public class RoomServiceImpl implements RoomService {
         List<RoomDto> rooms=new ArrayList<>();
         for (Room result: results) {
             RoomDto room=roomEntityToDto(result);
-            Long roomId=room.getRoomId();
-            room.setFile(fileRepositorySupport.selectFile(roomId, "room"));
-            rooms.add(room);
+            if (room!=null) {
+                rooms.add(room);
+            }
         }
 
         return rooms;
