@@ -146,7 +146,7 @@ function meetingDetail() {
   useEffect(() => {
     if (!session) return;
 
-    console.log('session 있다');
+    //console.log('session 있다');
 
     const mySession = session;
 
@@ -181,7 +181,7 @@ function meetingDetail() {
 
     getToken()
       .then((token) => {
-        console.log('getToken:', token);
+        //console.log('getToken:', token);
         mySession.connect(token, { clientData: myUserName }).then(async () => {
           if (!OV) return;
           var devices = await OV.getDevices();
@@ -260,7 +260,7 @@ function meetingDetail() {
 
   const getToken = () => {
     let mySessionId = `session${detail.no}`;
-    console.log('getToken:', mySessionId);
+    //console.log('getToken:', mySessionId);
     if (mySessionId) {
       if (typeof mySessionId === 'object') {
         return createSession(mySessionId[0]).then((sessionId) =>
@@ -336,7 +336,7 @@ function meetingDetail() {
   // -----------------------------------------------------------
   // 이 아래부턴 백엔드에 axios 보내서 데이터 받아옴
   const createSession = (sessionId) => {
-    console.log('createSession:', sessionId);
+    //console.log('createSession:', sessionId);
     return new Promise((resolve, reject) => {
       let data = JSON.stringify({ customSessionId: sessionId });
       let headers = {
@@ -351,7 +351,7 @@ function meetingDetail() {
           headers,
         })
         .then((response) => {
-          console.log('CREATE SESSION', response);
+          //console.log('CREATE SESSION', response);
           resolve(response.data.id);
         })
         .catch((response) => {
@@ -380,7 +380,7 @@ function meetingDetail() {
   };
 
   const createToken = (sessionId) => {
-    console.log('createToken', sessionId);
+    //console.log('createToken', sessionId);
     return new Promise((resolve, reject) => {
       let data = {};
       let headers = {

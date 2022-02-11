@@ -65,7 +65,7 @@ const BoardDetail = () => {
   }
 
   useEffect(() => {
-    console.log('현재 상태:', like, detail.userLike);
+    // console.log('현재 상태:', like, detail.userLike);
     if (!like) {
       detailLikes.current = detail.likes - 1;
     } else {

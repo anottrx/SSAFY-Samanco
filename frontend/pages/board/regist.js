@@ -97,7 +97,7 @@ function BoardRegist() {
     for (let i = 0; i < files.length; i++) {
       const reader = new FileReader();
       let file = files[i];
-      console.log(file);
+      // console.log(file);
       reader.onload = () => {
         fileEl.innerText += `[${i + 1}] ${file.name}\n`;
       };
@@ -214,9 +214,9 @@ function BoardRegist() {
                   formData.append('file', files[i]);
                 }
 
-                for (var key of formData.entries()) {
-                  console.log(`${key}`);
-                }
+                // for (var key of formData.entries()) {
+                //   console.log(`${key}`);
+                // }
 
                 registBoard(formData).then((res) => {
                   if (res.statusCode === 200) {
