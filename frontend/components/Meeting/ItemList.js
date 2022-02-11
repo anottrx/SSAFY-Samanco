@@ -394,7 +394,7 @@ function JoinDialog(props) {
               : () => {
                   // setPublisherStatus({ status: publisher });
                   // 카메라, 오디오 정보 -> publisher
-                  Router.push('/meeting/' + room.no);
+                  Router.push('/meeting/' + room.roomId);
                   setDetail({
                     detail: room,
                   });

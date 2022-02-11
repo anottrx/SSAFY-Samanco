@@ -341,7 +341,10 @@ function meetingDetail() {
     leaveSession();
     clear();
     // to do : 방장이면 방 삭제
-    // deleteSession();
+    if(detail.hostId==sessionStorage.getItem('userId')) {
+      alert('방장이 나가면 방이 삭제됩니다. 나가시겠습니까?');
+      // deleteSession();
+    }
     Router.replace('/meeting');
   };
 

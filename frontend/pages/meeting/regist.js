@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import { useSelector, useDispatch } from 'react-redux';
 import Router, { useRouter } from 'next/router';
+import * as meetingActions from '../../store/module/meeting';
 
 import {
   Paper,
@@ -280,6 +281,7 @@ function MeetingRegist() {
                 // }
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
+                    
                     alert(
                       '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
                     );
