@@ -30,6 +30,7 @@ function RoomInfo({
   setCamOn,
   handleVideoStateChanged,
   handleAudioStateChanged,
+  shareMonitor,
 }) {
   const InfoWrapper = styled.div`
     display: flex;
@@ -135,7 +136,8 @@ function RoomInfo({
                 <MicOffOutlinedIcon fontSize="large" />
               </Fab>
             )}
-            <Fab variant="extended" aria-label="edit">
+            {/* 화면 공유 */}
+            <Fab variant="extended" aria-label="edit" onClick={shareMonitor}>
               <IosShareIcon fontSize="large" />
             </Fab>
             <Fab variant="extended" aria-label="edit" onClick={exitDialogOpen}>

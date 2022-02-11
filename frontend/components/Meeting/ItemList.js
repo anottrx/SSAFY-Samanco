@@ -32,8 +32,8 @@ import Router from 'next/router';
 
 import { useSelector, useDispatch } from 'react-redux';
 import * as meetingActions from '../../store/module/meeting';
-import { joinRoomAPI } from '../../pages/api/meeting'
- 
+import { joinRoomAPI } from '../../pages/api/meeting';
+
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
@@ -299,7 +299,7 @@ function JoinDialog(props) {
   const [inputValue, setInputValue] = useState({
     roomId: '',
     userId: sessionStorage.getItem('userId'),
-    password: ''
+    password: '',
   });
   // const [publisher, setPublisher] = useState(null);
 
@@ -412,8 +412,8 @@ function JoinDialog(props) {
               : () => {
                   // setPublisherStatus({ status: publisher });
                   // 카메라, 오디오 정보 -> publisher
-                  inputValue.roomId = room.roomId
-                  joinRoomAPI(inputValue).then((res) => { 
+                  inputValue.roomId = room.roomId;
+                  joinRoomAPI(inputValue).then((res) => {
                     if (res.statusCode == 200) {
                       Router.push('/meeting/' + room.roomId);
                       setDetail({
@@ -450,9 +450,9 @@ function PwDialog(props) {
   const [inputValue, setInputValue] = useState({
     roomId: '',
     userId: sessionStorage.getItem('userId'),
-    password: ''
+    password: '',
   });
-  
+
   const pwChangeHandle = (e) => {
     setPw(e.target.value);
   };
@@ -472,10 +472,10 @@ function PwDialog(props) {
               ? () => {
                   // setPublisherStatus({ status: publisher });
                   inputValue.password = pw;
-                  inputValue.roomId = room.roomId
-                  joinRoomAPI(inputValue).then((res) => { 
+                  inputValue.roomId = room.roomId;
+                  joinRoomAPI(inputValue).then((res) => {
                     if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.no);
+                      Router.push('/meeting/' + room.roomId);
                       setDetail({
                         detail: room,
                       });
