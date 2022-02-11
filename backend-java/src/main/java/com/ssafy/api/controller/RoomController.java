@@ -118,7 +118,7 @@ public class RoomController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-    @GetMapping("/view")
+    @PostMapping("/view")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
@@ -131,7 +131,24 @@ public class RoomController {
             return ResponseEntity.status(200).body(RoomSelectRes.of(401, "유효하지 않은 미팅입니다.", null));
         }
         room.setUsers(userService.selectRoomUsers(roomId));
+        room.setSize(room.getUsers().size());
         return ResponseEntity.status(200).body(RoomSelectRes.of(200, "Success", room));
+    }
+
+    @GetMapping()
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "게시글 목록 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> selectRoomAll(){
+
+        List<RoomDto> rooms= roomService.selectRoomAll();
+
+        if (rooms==null || rooms.size()==0){
+            return ResponseEntity.status(200).body(RoomSelectAllRes.of(401, "미팅 목록이 없습니다.", null));
+        }
+        return ResponseEntity.status(200).body(RoomSelectAllRes.of(200, "Success", rooms));
     }
 
     @GetMapping("/title/{title}")

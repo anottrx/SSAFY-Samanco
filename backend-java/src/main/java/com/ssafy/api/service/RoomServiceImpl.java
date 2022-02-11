@@ -114,6 +114,7 @@ public class RoomServiceImpl implements RoomService {
         roomDto.setTagId(result.getTagId());
         roomDto.setPassword(result.getPassword());
         roomDto.setIsSecret(result.getIsSecret());
+
         // 작성자 닉네임
         String nickname = commonRepository.selectUserNickname(result.getHostId());
         if (nickname==null){

@@ -19,7 +19,6 @@ public class RoomDto {
     private String password;
     private String tag;
     private Long tagId;
-    private FileDto file;
     private List<UserDto> users;
 
 }

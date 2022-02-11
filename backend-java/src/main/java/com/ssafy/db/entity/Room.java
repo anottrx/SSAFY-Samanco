@@ -17,7 +17,6 @@ public class Room extends BaseEntity{
     private String title;
     private String tag;    // STUDY, PROJECT, BOARD
     private Long tagId;
-    private int size;
     private int isSecret;
     private String password;
     private Long hostId;
