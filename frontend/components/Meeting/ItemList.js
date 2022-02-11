@@ -355,7 +355,7 @@ function JoinDialog(props) {
         <Button
           onClick={
             // 비밀방인지 여부 확인
-            room.isPrivate
+            room.isSecret===1
               ? () => {
                   joinDialogClose();
                   pwDialogOpen();
@@ -405,7 +405,7 @@ function PwDialog(props) {
           onClick={
             // 일치하면 입장
             // To Do : 나중에 방 비밀번호로 변경
-            pw === '1234'
+            pw === room.password
               ? () => {
                   // setPublisherStatus({ status: publisher });
                   Router.push('/meeting/' + room.no);
