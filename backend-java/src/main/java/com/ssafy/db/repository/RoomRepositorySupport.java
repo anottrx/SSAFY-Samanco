@@ -80,6 +80,12 @@ public class RoomRepositorySupport {
                 .fetchOne();
     }
 
+    public Room selectRoomByHostId(Long hostId) {
+        return jpaQueryFactory.selectFrom(qRoom)
+                .where(qRoom.hostId.eq(hostId), qRoom.isDeleted.eq(false))
+                .fetchOne();
+    }
+
 //    public List<User> selectRoomUsers(Long roomId) {
 //        if (!valid.isRoomValid(roomId)){
 //            return null;

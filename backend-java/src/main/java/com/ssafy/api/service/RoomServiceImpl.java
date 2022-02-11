@@ -35,9 +35,16 @@ public class RoomServiceImpl implements RoomService {
         String tag=roomRegisterReq.getTag();
         Long hostId=roomRegisterReq.getHostId();
         Long tagId=roomRegisterReq.getTagId();
+        User user=commonRepository.selectUser(hostId);
+        if (user==null || user.getRoomId()!=0l){
+            return null;
+        }
+        Room oldRoom=roomRepositorySupport.selectRoomByHostId(hostId);
+        if (oldRoom!=null){ // 등록한 미팅이 있음
+            return null;
+        }
         if ("project".equalsIgnoreCase(tag)){
-            User user=commonRepository.selectUser(hostId);
-            if (user==null || user.getProjectId()!=tagId){
+            if (user.getProjectId()!=tagId){
                 return null;
             }
         } else if ("study".equalsIgnoreCase(tag)){

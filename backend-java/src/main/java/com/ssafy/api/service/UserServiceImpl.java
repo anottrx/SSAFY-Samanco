@@ -340,12 +340,15 @@ public class UserServiceImpl implements UserService {
 		if (result==null) {
 			return 402;
 		}
-		if (result.getIsSecret()!=0 && !result.getPassword().equals(password)){
+		if (result.getIsSecret()==1 && !result.getPassword().equals(password)){
 			return 403;
 		}
 		User user=userRepositorySupport.selectUser(userId);
 		if (user==null || user.getRoomId()!=0l){		// 사용자 정보가 없거나 이미 방에 들어가 있으면
 			return 401;
+		}
+		if (userRepositorySupport.selectRoomUsers(result.getId()).size()==6){	// 방 인원 제한 최대 6명
+			return 405;
 		}
 		userRepositorySupport.joinUserRoom(userId, roomId);
 		return 200;
