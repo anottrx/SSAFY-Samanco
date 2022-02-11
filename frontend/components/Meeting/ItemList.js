@@ -52,6 +52,7 @@ var _ = require('lodash');
 function ItemList() {
   //-------------- redux dispatch로 값 저장, selector로 불러오기
   let meetingData = useSelector(({ meeting }) => meeting.meetingList);
+  let filterData = useSelector(({ meeting }) => meeting.meetingFilterList);
 
   const dispatch = useDispatch();
 
@@ -147,33 +148,63 @@ function ItemList() {
 
   return (
     <>
-      <CusGrid
-        container
-        maxWidth="lg"
-        rowSpacing={1}
-        columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
-      >
-        {meetingData
-          .slice(purPage.current * (page - 1), purPage.current * page)
-          .map((data) => {
-            return (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                key={data.no}
-                onClick={() => {
-                  joinDialogOpen();
-                  setRoom(data);
-                }}
-              >
-                <Item data={data}></Item>
-              </Grid>
-            );
-          })}
-      </CusGrid>
+      {!meetingData || meetingData.length == 0 ? (
+        <CusGrid>
+          <CusCard>등록된 데이터가 없습니다.</CusCard>
+        </CusGrid>
+      ) : (
+        <CusGrid
+          container
+          maxWidth="lg"
+          rowSpacing={1}
+          columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
+        >
+          {
+            // 검색된 데이터가 있을 때
+            filterData != null
+              ? filterData
+                  .slice(purPage.current * (page - 1), purPage.current * page)
+                  .map((data) => {
+                    return (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        lg={3}
+                        key={data.no}
+                        onClick={() => {
+                          joinDialogOpen();
+                          setRoom(data);
+                        }}
+                      >
+                        <Item data={data}></Item>
+                      </Grid>
+                    );
+                  })
+              : meetingData
+                  .slice(purPage.current * (page - 1), purPage.current * page)
+                  .map((data) => {
+                    return (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        lg={3}
+                        key={data.no}
+                        onClick={() => {
+                          joinDialogOpen();
+                          setRoom(data);
+                        }}
+                      >
+                        <Item data={data}></Item>
+                      </Grid>
+                    );
+                  })
+          }
+        </CusGrid>
+      )}
       <JoinDialog
         open={openJoin}
         joinDialogClose={joinDialogClose}
@@ -237,7 +268,7 @@ export function Item(props) {
             variant="h5"
             component="div"
           >
-            {data.isSecret===1 ? <LockIcon /> : null} {data.title}
+            {data.isSecret === 1 ? <LockIcon /> : null} {data.title}
           </Typography>
           <div>{data.isPrivate ? '-' : data.host}</div>
           <div>
@@ -355,7 +386,7 @@ function JoinDialog(props) {
         <Button
           onClick={
             // 비밀방인지 여부 확인
-            room.isSecret===1
+            room.isSecret === 1
               ? () => {
                   joinDialogClose();
                   pwDialogOpen();
