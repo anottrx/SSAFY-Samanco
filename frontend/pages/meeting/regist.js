@@ -16,19 +16,18 @@ import styled from '@emotion/styled';
 import { registAPI } from '../api/meeting';
 
 function MeetingRegist() {
-
   const projectDetail = useSelector(({ project }) => project.projectDetail);
   const studyDetail = useSelector(({ study }) => study.studyDetail);
   const boardDetail = useSelector(({ board }) => board.boardDetail);
 
   let { tag } = useRouter().query;
   let tagId;
-  if(tag === 'project') {
-    tagId = projectDetail.id
-  } else if(tag === 'study') {
-    tagId = studyDetail.id
-  } else if(tag === 'board') {
-    tagId = boardDetail.boardId
+  if (tag === 'project') {
+    tagId = projectDetail.id;
+  } else if (tag === 'study') {
+    tagId = studyDetail.id;
+  } else if (tag === 'board') {
+    tagId = boardDetail.boardId;
   }
 
   const CusPaper = styled(Paper)`
@@ -95,7 +94,7 @@ function MeetingRegist() {
   }, []);
 
   const [inputValue, setInputValue] = useState({
-    hostId:  sessionStorage.getItem('userId'),
+    hostId: sessionStorage.getItem('userId'),
   });
 
   const [files, setFiles] = useState('');
@@ -104,10 +103,10 @@ function MeetingRegist() {
 
   const privateCheckHandle = (event) => {
     setprivateCheck(event.target.checked);
-    if(event.target.checked) {
-      inputValue.isSecret  = 1;
+    if (event.target.checked) {
+      inputValue.isSecret = 1;
     } else {
-      inputValue.isSecret  = 0;
+      inputValue.isSecret = 0;
     }
   };
 
@@ -143,11 +142,11 @@ function MeetingRegist() {
   function validateCheck() {
     let [check, msg] = [true, ''];
     // if (typeof inputValue.tag == 'undefined')
-      // [check, msg] = [false, '태그를 선택해주세요'];
+    // [check, msg] = [false, '태그를 선택해주세요'];
     if (typeof inputValue.title == 'undefined')
       [check, msg] = [false, '미팅룸 이름을 입력해주세요.'];
     // else if (typeof inputValue.size == 'undefined' || inputValue.size == 0)
-      // [check, msg] = [false, '미팅룸 인원은 한 명 이상이여야 합니다.'];
+    // [check, msg] = [false, '미팅룸 인원은 한 명 이상이여야 합니다.'];
     else if (
       privateCheck &&
       (typeof inputValue.password == 'undefined' || inputValue.password == '')
@@ -263,7 +262,7 @@ function MeetingRegist() {
                 //   formData.append(key, JSON.stringify(value));
                 // });
 
-                if(tag !== undefined) {
+                if (tag !== undefined) {
                   // formData.append('tag', tag);
                   // formData.append('tagId', tagId);
                   inputValue.tag = tag;
@@ -281,14 +280,16 @@ function MeetingRegist() {
                 // }
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
-                    alert("방이 생성되었습니다.")
-                    Router.push("/meeting");
+                    alert(
+                      '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
+                    );
+                    Router.push('/meeting/' + res.roomId);
                   } else {
                     alert(`${res.message}`);
                   }
-                })
-              }}
-            }
+                });
+              }
+            }}
           >
             등록하기
           </Button>
