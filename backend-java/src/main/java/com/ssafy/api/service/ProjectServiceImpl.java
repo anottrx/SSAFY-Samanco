@@ -108,7 +108,7 @@ public class ProjectServiceImpl implements ProjectService {
         User user=commonRepository.selectUser(userId);
         if (user.getProjectId()==projectId){
             Room room=roomRepositorySupport.selectRoomByTagId(projectId, "project");
-            if (room==null && room.getHostId()==userId){    // 방이 안만들어졌고 방장인 경우
+            if (room==null && project.getHostId()==userId){    // 방이 안만들어졌고 방장인 경우
                 project.setCanRegister(true);
             }
             if (room!=null && room.getHostId()!=userId){     // 방이 만들어졌고 방장이 아닌 팀원
