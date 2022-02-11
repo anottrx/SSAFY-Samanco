@@ -291,8 +291,16 @@ export function Item(props) {
   );
 }
 
+
+
 function JoinDialog(props) {
   let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
+
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+    password: ''
+  });
   // const [publisher, setPublisher] = useState(null);
 
   // useEffect(() => {
@@ -404,9 +412,16 @@ function JoinDialog(props) {
               : () => {
                   // setPublisherStatus({ status: publisher });
                   // 카메라, 오디오 정보 -> publisher
-                  Router.push('/meeting/' + room.roomId);
-                  setDetail({
-                    detail: room,
+                  inputValue.roomId = room.roomId
+                  joinRoomAPI(inputValue).then((res) => { 
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + room.roomId);
+                      setDetail({
+                        detail: room,
+                      });
+                    } else {
+                      alert(`${res.message}`);
+                    }
                   });
                   joinDialogClose();
                 }
@@ -431,11 +446,13 @@ function JoinDialog(props) {
 function PwDialog(props) {
   let { open, pwDialogClose, room, setDetail } = props;
   let [pw, setPw] = useState('');
+
   const [inputValue, setInputValue] = useState({
     roomId: '',
     userId: sessionStorage.getItem('userId'),
     password: ''
   });
+  
   const pwChangeHandle = (e) => {
     setPw(e.target.value);
   };
@@ -457,7 +474,6 @@ function PwDialog(props) {
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId
                   joinRoomAPI(inputValue).then((res) => { 
-
                     if (res.statusCode == 200) {
                       Router.push('/meeting/' + room.no);
                       setDetail({
