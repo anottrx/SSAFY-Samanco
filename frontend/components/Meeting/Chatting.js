@@ -67,19 +67,10 @@ function Chatting({ session }) {
   const scrollEl = useRef(null);
 
   const scrollToBottom = () => {
-    // scrollEl.current?.scrollIntoView({
-    //   // behavior: 'smooth',
-    //   block: 'end',
-    //   inline: 'end',
-    // });
     scrollEl.current?.scrollTo({
       top: scrollEl.current.scrollHeight - scrollEl.current.clientHeight,
     });
   };
-
-  // useEffect(() => {
-  //   scrollToBottom();
-  // });
 
   const [chatHistory, setChatHistory] = useState([]);
   const [chatText, setChatText] = useState('');
@@ -91,15 +82,6 @@ function Chatting({ session }) {
 
   const submitChatHandle = (e) => {
     e.preventDefault();
-    // if (chatText.length > 0) {
-    //   chat.text = chatText;
-    //   chat.nickname = sessionStorage.getItem('nickname');
-    //   chat.time = new Date().getTime();
-    //   chatHistory.push(chat);
-    //   console.log(chatHistory);
-    //   setChatText('');
-    //   setChat([]);
-    // }
     if (!chatText) return;
 
     return new Promise((resolve, reject) => {
@@ -118,11 +100,6 @@ function Chatting({ session }) {
 
       resolve();
       setChatText('');
-      // setChat({
-      //   text: '',
-      //   nickname: '',
-      //   time: '',
-      // });
     });
   };
 

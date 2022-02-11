@@ -79,7 +79,7 @@ function MyClub(props) {
     }
   }, []);
 
-  return typeof clubData === 'undefined' || clubData == null ? null : (
+  return !clubData ? null : (
     <>
       <MyClubWrapper>
         <h2>{props.label}</h2>
@@ -165,13 +165,16 @@ function MyClub(props) {
     }
 
     useEffect(() => {
-      if (Object.keys(clubData).length == 18 && clubData.file) {
+      if (clubData.id !== undefined && clubData.file) {
         // 프로젝트일 때
         getImageUrl(clubData.file);
       }
     }, []);
 
-    return Object.keys(clubData).length !== 18 ? (
+    // 클럽 데이터에 아이디가 없는지? -> (true) 없으면 스터디, (false) 있으면 프로젝트
+    console.log(clubData.id === undefined);
+
+    return clubData.id === undefined ? (
       <CarouselWrapper>
         <Slider {...settings}>
           {

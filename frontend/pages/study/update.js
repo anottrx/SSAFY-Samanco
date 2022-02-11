@@ -80,7 +80,7 @@ function studyUpdate() {
 
   useEffect(() => {
     if (detail.imageUrl) {
-      console.log(detail);
+      //console.log(detail);
       setImageUrl(detail.imageUrl);
       initPreview();
     }
