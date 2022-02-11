@@ -255,7 +255,10 @@ function StudyInfo() {
             <>
               <Button
                 onClick={() => {
-                  Router.push('/meeting/regist');
+                  Router.push({
+                    pathname: '/meeting/regist',
+                    query: { tag: 'study' },
+                  });
                 }}
               >
                 방 생성
