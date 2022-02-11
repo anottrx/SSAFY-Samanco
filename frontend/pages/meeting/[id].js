@@ -464,7 +464,7 @@ function meetingDetail() {
                       <UserName user={sub}></UserName>
                     </Grid>
                   ) : (
-                    <Grid item xs={12} sm={4} md={4} key={i}>
+                    <Grid item xss={12} sm={4} md={4} key={i}>
                       <VideoWrapper id="video-container">
                         <UserVideo streamManager={sub} />
                       </VideoWrapper>
@@ -474,7 +474,7 @@ function meetingDetail() {
                 )}
               </CusGrid>
             </GridWrapper>
-            <Chatting></Chatting>
+            <Chatting session={session}></Chatting>
           </RoomContent>
         </>
       ) : null}

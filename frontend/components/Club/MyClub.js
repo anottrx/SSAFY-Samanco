@@ -165,13 +165,13 @@ function MyClub(props) {
     }
 
     useEffect(() => {
-      if (Object.keys(clubData).length == 16 && clubData.file) {
+      if (Object.keys(clubData).length == 18 && clubData.file) {
         // 프로젝트일 때
         getImageUrl(clubData.file);
       }
     }, []);
 
-    return Object.keys(clubData).length !== 16 ? (
+    return Object.keys(clubData).length !== 18 ? (
       <CarouselWrapper>
         <Slider {...settings}>
           {
