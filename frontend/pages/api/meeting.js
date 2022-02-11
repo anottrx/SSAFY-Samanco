@@ -1,16 +1,29 @@
 import api, { fileUrl, blobUrl } from './index';
 
 // 방 등록
-async function registAPI(formData) {
-  return await fileUrl
-    .post('/api/room', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+async function registAPI(data) {
+  return await api
+    .post('/api/room', {
+      hostId: data.hostId,
+      isSecret: data.isSecret,
+      password: data.password,
+      tag: data.tag,
+      tagId: data.tagId,
+      title: data.title
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
+// async function registAPI(formData) {
+//   return await fileUrl
+//     .post('/api/room', formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     })
+//     .then((res) => res.data)
+//     .catch((err) => err.response.data);
+// }
 
 // 방 들어가기
 async function joinRoomAPI(data) {

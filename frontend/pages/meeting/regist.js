@@ -20,6 +20,7 @@ function MeetingRegist() {
   const projectDetail = useSelector(({ project }) => project.projectDetail);
   const studyDetail = useSelector(({ study }) => study.studyDetail);
   const boardDetail = useSelector(({ board }) => board.boardDetail);
+  console.log(boardDetail)
 
   let { tag } = useRouter().query;
   let tagId;
@@ -91,11 +92,11 @@ function MeetingRegist() {
 
   let userId;
   useEffect(() => {
-    userId = sessionStorage.getItem('userId');
+    // userId = sessionStorage.getItem('userId');
   }, []);
 
   const [inputValue, setInputValue] = useState({
-    hostId: userId,
+    hostId:  sessionStorage.getItem('userId'),
   });
 
   const [files, setFiles] = useState('');
@@ -104,6 +105,11 @@ function MeetingRegist() {
 
   const privateCheckHandle = (event) => {
     setprivateCheck(event.target.checked);
+    if(event.target.checked) {
+      inputValue.isSecret  = 1;
+    } else {
+      inputValue.isSecret  = 0;
+    }
   };
 
   const onImgChange = (event) => {
@@ -114,7 +120,7 @@ function MeetingRegist() {
   const uploadRef = useRef(null);
 
   useEffect(() => {
-    preview();
+    // preview();
   });
 
   const preview = () => {
@@ -133,6 +139,8 @@ function MeetingRegist() {
   const changeHandle = (value, name) => {
     inputValue[name] = value;
     // 리렌더링 X
+
+    console.log(inputValue)
   };
 
   function validateCheck() {
@@ -251,36 +259,41 @@ function MeetingRegist() {
             variant="outlined"
             onClick={() => {
               if (validateCheck()) {
-                const formData = new FormData();
+                // const formData = new FormData();
 
-                Object.keys(inputValue).map((key) => {
-                  let value = inputValue[key];
-                  formData.append(key, JSON.stringify(value));
-                });
+                // Object.keys(inputValue).map((key) => {
+                //   let value = inputValue[key];
+                //   formData.append(key, JSON.stringify(value));
+                // });
 
                 if(tag !== undefined) {
-                  formData.append('tag', tag);
-                  formData.append('tagId', tagId);
-                  console.log(tag, ", ", tagId)
+                  // formData.append('tag', tag);
+                  // formData.append('tagId', tagId);
+                  // console.log(tag, ", ", tagId)
+                  inputValue.tag = tag;
+                  inputValue.tagId = tagId;
+                } else {
+                  inputValue.tag = '';
+                  inputValue.tagId = '';
                 }
 
-                formData.append('file', files);
+                // formData.append('file', files);
 
                 // for(var key of formData.entries())
                 // {
                 //     console.log(`${key}`);
                 // }
-              }
-
-              // registAPI(formData).then((res) => {
-              //     if (res.statusCode == 200) {
-              //         alert("방이 생성되었습니다.")
-              //         Router.push("/meeting");
-              //     } else {
-              // alert(`${res.message}`);
-              // }
-              // });
-            }}
+                console.log(inputValue)
+                registAPI(inputValue).then((res) => {
+                  if (res.statusCode == 200) {
+                    alert("방이 생성되었습니다.")
+                    Router.push("/meeting");
+                  } else {
+                    alert(`${res.message}`);
+                  }
+                })
+              }}
+            }
           >
             등록하기
           </Button>
