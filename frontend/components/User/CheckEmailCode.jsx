@@ -45,15 +45,23 @@ export default function CheckEmailCode(props) {
       //     setEmailCodeRes({ code: res.statusCode, msg: res.message });
 
       // console.log(inputValue);
-      checkEmailCodeAPI(code).then((res) => {
-        // console.log(res);
-        if (res.statusCode == 200) {
-          props.changeHandle(true, 'code');
-          setAuthFin(true);
-        } else {
-          props.changeHandle(false, 'code');
-        }
-      });
+
+      if(props.lostpw) {
+        console.log('비밀번호 잃어버려서 온 것')
+      } else {
+        console.log('회원가입하다가 온 것')
+        checkEmailCodeAPI(code).then((res) => {
+          // console.log(res);
+          if (res.statusCode == 200) {
+            props.changeHandle(true, 'code');
+            setAuthFin(true);
+          } else {
+            props.changeHandle(false, 'code');
+          }
+        });
+      }
+
+      
       // 인증 실패시
       // props.changeHandle(false, "code");
       // props.changeHandle(true, "code");
