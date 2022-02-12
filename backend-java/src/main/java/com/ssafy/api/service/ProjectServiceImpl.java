@@ -113,6 +113,7 @@ public class ProjectServiceImpl implements ProjectService {
             }
             if (room!=null && room.getHostId()!=userId){     // 방이 만들어졌고 방장이 아닌 팀원
                 project.setCanJoin(true);
+                project.setRoomId(room.getId());
             }
         }
 

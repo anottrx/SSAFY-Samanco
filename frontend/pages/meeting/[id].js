@@ -79,18 +79,12 @@ function meetingDetail() {
 
   let detail = useSelector(({ meeting }) => meeting.meetingDetail);
   const [OV, setOV] = useState();
-<<<<<<< HEAD
-  const [session, setSession] = useState();
-  const [publisher, setPublisher] = useState();
-  const [subscribers, setSubscribers] = useState([]);
-=======
   const [screenOV, setScreenOV] = useState();
   const [session, setSession] = useState();
   const [screenSession, setScreenSession] = useState();
   const [publisher, setPublisher] = useState();
   const [subscribers, setSubscribers] = useState([]);
   const [screenShare, setScreenShare] = useState();
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
   const [micOn, setMicOn] = useState(false);
   const [camOn, setCamOn] = useState(false);
   const [isConfigModalShow, setIsConfigModalShow] = useState(true);
@@ -110,10 +104,7 @@ function meetingDetail() {
         importOpenVidu().then((ob) => {
           OpenViduBrowser = ob; // 오픈비두 모듈을 임포트
           setOV(new OpenViduBrowser.OpenVidu());
-<<<<<<< HEAD
-=======
           setScreenOV(new OpenViduBrowser.OpenVidu());
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
         });
       })
       .catch((err) => {
@@ -125,14 +116,11 @@ function meetingDetail() {
     return () => {
       leaveSession();
       clear();
-<<<<<<< HEAD
-=======
 
       // window.onbeforeunload = function () {
       //   // leaveSession();
       //   if (screenSession) screenSession.disconnect();
       // };
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
     };
   }, []);
 
@@ -293,10 +281,7 @@ function meetingDetail() {
     const mySession = session;
     if (mySession) {
       // 세션 disconnect
-<<<<<<< HEAD
-=======
       // mySession.unpublish(publisher);
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
       mySession.disconnect();
     }
 
@@ -326,25 +311,6 @@ function meetingDetail() {
     setScreenSession(screenOV?.initSession());
     // 에러 발생 시 세션 삭제
     // deleteSession();
-  };
-
-  const allTrackOff = (sm) => {
-    if (sm) {
-      const mediaTrack = sm.stream.getMediaStream();
-      if (mediaTrack)
-        mediaTrack.getTracks().map((m) => {
-          m.enabled = false;
-          m.stop();
-        });
-    }
-  };
-
-  const handlerJoinBtn = (micState, camState) => {
-    setMicOn(micState);
-    setCamOn(camState);
-
-    setIsConfigModalShow(false);
-    setSession(OV?.initSession());
   };
 
   const getToken = () => {
@@ -392,10 +358,7 @@ function meetingDetail() {
     if (!OV || !session) return;
 
     if (publisher) {
-<<<<<<< HEAD
-=======
       // await session.forceUnpublish(publisher);
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
       await session.unpublish(publisher);
     }
 
@@ -419,8 +382,6 @@ function meetingDetail() {
     });
   };
 
-<<<<<<< HEAD
-=======
   const shareMonitor = () => {
     if (!screenOV || !screenSession) return;
     const shareSession = screenSession;
@@ -430,7 +391,7 @@ function meetingDetail() {
         .connect(tokenScreen)
         .then(() => {
           if (!screenOV) return;
-          let pub = screenOV.initPublisher('container-screens', {
+          let pub = screenOV.initPublisher('', {
             videoSource: 'screen',
             resolution: '320x240',
           });
@@ -469,7 +430,6 @@ function meetingDetail() {
     });
   };
 
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
   const exitClick = () => {
     videoTrackOff(publisher);
     leaveSession();
@@ -478,8 +438,6 @@ function meetingDetail() {
   };
 
   // -----------------------------------------------------------
-<<<<<<< HEAD
-=======
 
   const deleteSession = () => {
     let mySessionId = `session${detail.roomId}`;
@@ -499,7 +457,6 @@ function meetingDetail() {
     });
   };
 
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
   // 이 아래부턴 백엔드에 axios 보내서 데이터 받아옴
   const createSession = (sessionId) => {
     console.log('createSession:', sessionId);
@@ -578,17 +535,11 @@ function meetingDetail() {
 
     const [name, setName] = useState('...loading');
     useEffect(() => {
-<<<<<<< HEAD
-      if (user && user.stream && user.stream.connection)
-        setName(JSON.parse(user.stream.connection.data).clientData);
-      else setName('...loading');
-=======
       if (user && user.stream && user.stream.connection) {
         if (user.stream.connection.data) {
           setName(JSON.parse(user.stream.connection.data).clientData);
         } else setName('화면 공유 중');
       } else setName('...loading');
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
     }, [user]);
 
     return <NameWrapper>{name}</NameWrapper>;
@@ -607,18 +558,13 @@ function meetingDetail() {
             setCamOn={setCamOn}
             handleVideoStateChanged={handleVideoStateChanged}
             handleAudioStateChanged={handleAudioStateChanged}
-<<<<<<< HEAD
-=======
             shareMonitor={shareMonitor}
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
           ></RoomInfo>
           <Divider />
           <RoomContent>
             <GridWrapper>
               <CusGrid container>
                 {/* <Users publisher={publisher} subscribers={subscribers}></Users> */}
-<<<<<<< HEAD
-=======
                 {screenShare !== undefined && (
                   <Grid item xs={12} sm={10} md={6}>
                     <VideoWrapper id="container-screens">
@@ -626,7 +572,6 @@ function meetingDetail() {
                     </VideoWrapper>
                   </Grid>
                 )}
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
                 {publisher !== undefined &&
                   (userGridSize.current === 4 ? (
                     <Grid item xs={12} sm={10} md={6}>
@@ -668,11 +613,7 @@ function meetingDetail() {
       ) : null}
       {isConfigModalShow && OV && (
         <>
-<<<<<<< HEAD
-          {/* <div id="video-container" className="col-md-6">
-=======
           <div id="video-container" className="col-md-6">
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
             {camOn ? (
               <UserVideo streamManager={publisher} /> // </div> //   /> //     name={sessionStorage.getItem('nickname')} //     streamManager={publisher} //   <UserVideo // <div className="stream-container col-md-6 col-xs-6">
             ) : (
@@ -680,11 +621,7 @@ function meetingDetail() {
                 <NoVideo />
               </>
             )}
-<<<<<<< HEAD
-          </div> */}
-=======
           </div>
->>>>>>> 0b76b163d71948099dd4f609222147a94766e420
           <ToggleButtonGroup
             aria-label="user status formatting"
             style={{ marginTop: '10px' }}
