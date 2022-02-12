@@ -216,7 +216,6 @@ function MyClub(props) {
                             );
                             Router.push('/project/info');
                           } else if (props.from === 'study') {
-                            // dispatch(studyActions.setMyStudy({study: data}))
                             dispatch(
                               studyActions.setStudyDetail({ detail: data })
                             );
