@@ -399,7 +399,7 @@ function meetingDetail() {
         .connect(tokenScreen)
         .then(() => {
           if (!screenOV) return;
-          let pub = screenOV.initPublisher('container-screens', {
+          let pub = screenOV.initPublisher('', {
             videoSource: 'screen',
             resolution: '320x240',
           });

@@ -27,4 +27,5 @@ public class BoardDto {
     private String dateAndTime;
     private boolean canRegister=false;
     private boolean canJoin=false;
+    private Long roomId=0l;
 }
