@@ -6,10 +6,7 @@ import Chatting from '../../components/Meeting/Chatting';
 import {
   Card,
   Divider,
-  Button,
   Grid,
-  Box,
-  Fab,
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
@@ -79,6 +76,19 @@ function meetingDetail() {
     }
   `;
 
+  const ConfigWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+
+    & button {
+      font-size: 20px;
+      padding: 10px;
+    }
+  `;
+
   let detail = useSelector(({ meeting }) => meeting.meetingDetail);
 
   const [OV, setOV] = useState();
@@ -92,6 +102,11 @@ function meetingDetail() {
   const [camOn, setCamOn] = useState(false);
   const [isConfigModalShow, setIsConfigModalShow] = useState(true);
   const userGridSize = useRef(4);
+  const [setup, changeSetup] = useState(() => []);
+
+  const handleChangeSetup = (event, newValue) => {
+    changeSetup(newValue);
+  };
 
   const myUserName = sessionStorage.getItem('nickname')
     ? sessionStorage.getItem('nickname')
@@ -702,19 +717,11 @@ function meetingDetail() {
         </>
       ) : null}
       {isConfigModalShow && OV && (
-        <>
-          <div id="video-container" className="col-md-6">
-            {camOn ? (
-              <UserVideo streamManager={publisher} /> // </div> //   /> //     name={sessionStorage.getItem('nickname')} //     streamManager={publisher} //   <UserVideo // <div className="stream-container col-md-6 col-xs-6">
-            ) : (
-              <>
-                <NoVideo />
-              </>
-            )}
-          </div>
+        <ConfigWrapper>
           <ToggleButtonGroup
             aria-label="user status formatting"
-            style={{ marginTop: '10px' }}
+            value={setup}
+            onChange={handleChangeSetup}
           >
             <ToggleButton
               value="camera"
@@ -722,7 +729,17 @@ function meetingDetail() {
                 setCamOn(!camOn);
               }}
             >
-              {camOn ? <VideocamIcon /> : <VideocamOffOutlinedIcon />}
+              {camOn ? (
+                <>
+                  <VideocamIcon fontSize="large" />
+                  &nbsp;&nbsp;ON
+                </>
+              ) : (
+                <>
+                  <VideocamOffOutlinedIcon fontSize="large" />
+                  &nbsp;OFF
+                </>
+              )}
             </ToggleButton>
             <ToggleButton
               value="audio"
@@ -730,7 +747,17 @@ function meetingDetail() {
                 setMicOn(!micOn);
               }}
             >
-              {micOn ? <MicIcon /> : <MicOffOutlinedIcon />}
+              {micOn ? (
+                <>
+                  <MicIcon fontSize="large" />
+                  &nbsp;&nbsp;ON
+                </>
+              ) : (
+                <>
+                  <MicOffOutlinedIcon fontSize="large" />
+                  &nbsp;OFF
+                </>
+              )}
             </ToggleButton>
             <ToggleButton
               value="enter"
@@ -741,7 +768,7 @@ function meetingDetail() {
               입장
             </ToggleButton>
           </ToggleButtonGroup>
-        </>
+        </ConfigWrapper>
       )}
     </RoomWrapper>
   );
