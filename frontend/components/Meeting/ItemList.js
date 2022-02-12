@@ -266,7 +266,7 @@ export function Item(props) {
           <div>{data.isPrivate ? '-' : data.host}</div>
           <div>
             <AccessTimeIcon style={{ marginRight: '5px' }} />
-            {data.startTime}분 / {data.timeLimit}분
+            {data.runTime}
           </div>
         </CardContent>
       </Card>
