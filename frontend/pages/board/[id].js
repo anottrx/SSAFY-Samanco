@@ -156,38 +156,39 @@ const BoardDetail = () => {
     const [inputValue, setInputValue] = useState({
       password: '', // 비밀번호 없는 방
       roomId: '',
-      userId: sessionStorage.getItem("userId")
-    })
+      userId: sessionStorage.getItem('userId'),
+    });
 
     return (
       <ButtonGroup variant="outlined">
-        {detail.canJoin && detail.roomId!=0 ? (
-        <Button
-          onClick={() => {
-            inputValue.roomId = detail.roomId;
+        {detail.canJoin && detail.roomId != 0 ? (
+          <Button
+            onClick={() => {
+              inputValue.roomId = detail.roomId;
 
-            // Router.push('/meeting/join');
-            joinRoomAPI(inputValue).then((res) => {
-              if (res.statusCode == 200) {
-                getRoomById(detail.roomId).then((res) => {
-                  if (res.statusCode == 200) {
-                    Router.push('/meeting/' + detail.roomId);
-                    setDetail({
-                      detail: res.room,
-                    });
-                  } else {
-                    alert(`${res.message}`);
-                  }
-                });
-              } else {
-                alert(`${res.message}`);
-              }
-            });
-          }}
-        >
-          방 참가
-        </Button>
-        ) : null} 
+              // Router.push('/meeting/join');
+              joinRoomAPI(inputValue).then((res) => {
+                if (res.statusCode == 200) {
+                  getRoomById(detail.roomId).then((res) => {
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + detail.roomId);
+                      setDetail({
+                        detail: res.room,
+                      });
+                      console.log(detail);
+                    } else {
+                      alert(`${res.message}`);
+                    }
+                  });
+                } else {
+                  alert(`${res.message}`);
+                }
+              });
+            }}
+          >
+            방 참가
+          </Button>
+        ) : null}
       </ButtonGroup>
     );
   }

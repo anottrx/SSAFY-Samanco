@@ -80,7 +80,7 @@ function meetingDetail() {
   `;
 
   let detail = useSelector(({ meeting }) => meeting.meetingDetail);
-  
+
   const [OV, setOV] = useState();
   const [screenOV, setScreenOV] = useState();
   const [session, setSession] = useState();
@@ -423,20 +423,15 @@ function meetingDetail() {
     });
   };
 
- 
   const [inputValue, setInputValue] = useState({
     roomId: '',
     userId: sessionStorage.getItem('userId'),
   });
   const shareMonitor = () => {
     if (!screenOV || !screenSession) return;
-
-    // const mySession = screenSession;
     const mySession = screenOV.initSession();
-    // const mySession = session;
 
     getToken().then((tokenScreen) => {
-      // Create a token for screen share
       mySession
         .connect(tokenScreen)
         .then(() => {
@@ -448,7 +443,6 @@ function meetingDetail() {
 
           setScreenShare(pub);
           pub.once('accessAllowed', (event) => {
-            // It is very important to define what to do when the stream ends.
             console.log('스크린 쉐어 accessAllowed!!!!!!!!!!!!!!!!', event);
             pub.stream.getMediaStream().getVideoTracks()[0].applyConstraints({
               // width: 800,
@@ -500,12 +494,12 @@ function meetingDetail() {
   };
 
   const exitClick = () => {
-    inputValue.roomId = detail.roomId
+    inputValue.roomId = detail.roomId;
 
     videoTrackOff(publisher);
     leaveSession();
     clear();
-    
+
     quitRoomAPI(inputValue).then((res) => {
       if (res.statusCode == 200) {
       } else {
@@ -648,7 +642,6 @@ function meetingDetail() {
           <RoomContent>
             <GridWrapper>
               <CusGrid container>
-                {/* <Users publisher={publisher} subscribers={subscribers}></Users> */}
                 {screenShare !== undefined && (
                   // 화면 공유 발생 시
                   <>
@@ -666,32 +659,25 @@ function meetingDetail() {
                     <br />
                   </>
                 )}
-                {
-                  // !screenShare &&
+                {!screenShare &&
                   publisher !== undefined &&
-                    (userGridSize.current === 4 ? (
-                      <Grid item xs={12} sm={10} md={6}>
-                        <VideoWrapper id="video-container">
-                          <UserVideo streamManager={publisher} />
-                        </VideoWrapper>
-                        <UserName user={publisher}></UserName>
-                      </Grid>
-                    ) : (
-                      <Grid item xs={12} sm={4} md={4}>
-                        <VideoWrapper id="video-container">
-                          <UserVideo streamManager={publisher} />
-                        </VideoWrapper>
-                        <UserName user={publisher}></UserName>
-                      </Grid>
-                    ))
-                }
-                {
-                  // !screenShare &&
+                  (userGridSize.current === 4 ? (
+                    <Grid item xs={12} sm={10} md={6}>
+                      <VideoWrapper id="video-container">
+                        <UserVideo streamManager={publisher} />
+                      </VideoWrapper>
+                      <UserName user={publisher}></UserName>
+                    </Grid>
+                  ) : (
+                    <Grid item xs={12} sm={4} md={4}>
+                      <VideoWrapper id="video-container">
+                        <UserVideo streamManager={publisher} />
+                      </VideoWrapper>
+                      <UserName user={publisher}></UserName>
+                    </Grid>
+                  ))}
+                {!screenShare &&
                   subscribers.map((sub, i) => {
-                    console.log(
-                      'sub!!!!!!!!!!!!!!!!!!!1',
-                      sub.stream.typeOfVideo
-                    );
                     return sub.stream.typeOfVideo !== 'SCREEN' &&
                       userGridSize.current === 4 ? (
                       <Grid item xs={12} sm={10} md={6} key={i}>
@@ -708,8 +694,7 @@ function meetingDetail() {
                         <UserName user={sub}></UserName>
                       </Grid>
                     );
-                  })
-                }
+                  })}
               </CusGrid>
             </GridWrapper>
             {!screenShare && <Chatting session={session}></Chatting>}
@@ -756,52 +741,6 @@ function meetingDetail() {
               입장
             </ToggleButton>
           </ToggleButtonGroup>
-          {/* {
-            <Button
-              onClick={() => {
-                setCamOn(!camOn);
-              }}
-            >
-              {camOn ? <VideocamIcon /> : <VideocamOffOutlinedIcon />}
-            </Button>
-          }
-          {
-            <Button
-              onClick={() => {
-                setMicOn(!micOn);
-              }}
-            >
-              {micOn ? <MicIcon /> : <MicOffOutlinedIcon />}
-            </Button>
-          } */}
-          {/* <Button
-            onClick={() => {
-              handlerJoinBtn(micOn, camOn);
-            }}
-          >
-            입장하기
-          </Button> */}
-          {/* <ToggleButtonGroup
-            // value={userStatus}
-            // onChange={handleUserStatus}
-            aria-label="user status formatting"
-            style={{ marginTop: '10px' }}
-          >
-            <ToggleButton
-              value="camera"
-              aria-label="camera"
-              onClick={() => setCamOn(!camOn)}
-            >
-              {camOn ? <VideocamIcon /> : <VideocamOffOutlinedIcon />}
-            </ToggleButton>
-            <ToggleButton
-              value="audio"
-              aria-label="audio"
-              onClick={() =>setMicOn(!micOn)}
-            >
-              {micOn ? <MicIcon /> : <MicOffOutlinedIcon />}
-            </ToggleButton>
-          </ToggleButtonGroup> */}
         </>
       )}
     </RoomWrapper>

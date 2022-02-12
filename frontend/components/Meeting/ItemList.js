@@ -40,13 +40,6 @@ import { useTheme } from '@mui/material/styles';
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockIcon from '@mui/icons-material/Lock';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
-
-// import { OpenVidu } from 'openvidu-browser';
-import UserVideo from './UserVideo';
 
 var _ = require('lodash');
 
@@ -67,13 +60,6 @@ function ItemList() {
   const setList = useCallback(
     ({ list }) => {
       dispatch(meetingActions.setMeetingList({ list }));
-    },
-    [dispatch]
-  );
-
-  const setPublisherStatus = useCallback(
-    ({ status }) => {
-      dispatch(meetingActions.setPublisherStatus({ status }));
     },
     [dispatch]
   );
@@ -224,7 +210,6 @@ function ItemList() {
         color="primary"
         page={page}
         onChange={handleChange}
-        setPublisherStatus={setPublisherStatus}
       />
     </>
   );
@@ -290,8 +275,6 @@ export function Item(props) {
     </Container>
   );
 }
-
-
 
 function JoinDialog(props) {
   let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
@@ -410,7 +393,6 @@ function JoinDialog(props) {
                   pwDialogOpen();
                 }
               : () => {
-                  // setPublisherStatus({ status: publisher });
                   // 카메라, 오디오 정보 -> publisher
                   inputValue.roomId = room.roomId;
                   joinRoomAPI(inputValue).then((res) => {
@@ -470,7 +452,6 @@ function PwDialog(props) {
             // To Do : 나중에 방 비밀번호로 변경
             pw === room.password
               ? () => {
-                  // setPublisherStatus({ status: publisher });
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId;
                   joinRoomAPI(inputValue).then((res) => {

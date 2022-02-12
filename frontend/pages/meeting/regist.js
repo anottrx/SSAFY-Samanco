@@ -97,7 +97,6 @@ function MeetingRegist() {
   const [inputValue, setInputValue] = useState({
     hostId: sessionStorage.getItem('userId'),
     isSecret: 0,
-    password: '',
   });
 
   const [files, setFiles] = useState('');
@@ -283,12 +282,6 @@ function MeetingRegist() {
                   inputValue.tagId = '';
                 }
 
-                // formData.append('file', files);
-
-                // for(var key of formData.entries())
-                // {
-                //     console.log(`${key}`);
-                // }
                 console.log(inputValue);
                 let roomId;
                 registAPI(inputValue).then((res) => {
