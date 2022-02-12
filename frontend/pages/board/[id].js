@@ -145,13 +145,49 @@ const BoardDetail = () => {
   );
 
   function JoinRoomOperation() {
+    const [inputValue, setInputValue] = useState({
+      password: '',
+      roomId: '',
+      userId: sessionStorage.getItem("userId")
+    })
+
     return (
       <ButtonGroup variant="outlined">
-        {detail.canJoin ? (
-        //  방 참가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성) 
+        {detail.canJoin && detail.roomId!=0 ? (
         <Button
           onClick={() => {
-            Router.push('/meeting/join');
+            inputValue.roomId = detail.roomId;
+
+            // Router.push('/meeting/join');
+            joinRoomAPI(inputValue).then((res) => {
+              console.log(
+                'joinRoomAPI의 결과는 ' + JSON.stringify(res)
+              );
+              if (res.statusCode == 200) {
+                //
+                console.log('가입되었습니다');
+
+                console.log('roomId번 방의 정보를 가져올 것', roomId);
+                getRoomById(roomId).then((res) => {
+                  console.log('getRoomById의 결과는 ', res);
+                  console.log(
+                    'getRoomById의 결과는 ',
+                    JSON.stringify(res)
+                  );
+                  if (res.statusCode == 200) {
+                    console.log('여기 오면 성공인데');
+                    Router.push('/meeting/' + roomId);
+                    setDetail({
+                      detail: res.room,
+                    });
+                  } else {
+                    alert(`${res.message}`);
+                  }
+                });
+              } else {
+                alert(`${res.message}`);
+              }
+            });
           }}
         >
           방 참가
@@ -175,7 +211,6 @@ const BoardDetail = () => {
       <>
         <ButtonGroup variant="outlined">
           {detail.tag !== 'notice' && detail.canRegister ? (
-            // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
             <Button
               onClick={() => {
                 Router.push({

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Layout from '../../components/Layout';
 import { useSelector, useDispatch } from 'react-redux';
 import Router, { useRouter } from 'next/router';
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import styled from '@emotion/styled';
 
-import { registAPI, joinRoomAPI } from '../api/meeting';
+import { registAPI, joinRoomAPI, getRoomById } from '../api/meeting';
 
 function MeetingRegist() {
   const projectDetail = useSelector(({ project }) => project.projectDetail);
@@ -96,6 +96,8 @@ function MeetingRegist() {
 
   const [inputValue, setInputValue] = useState({
     hostId: sessionStorage.getItem('userId'),
+    isSecret: 0,
+    password: '',
   });
 
   const [files, setFiles] = useState('');
@@ -163,6 +165,14 @@ function MeetingRegist() {
     if (!check) alert(msg);
     return check;
   }
+
+  const dispatch = useDispatch();
+  const setDetail = useCallback(
+    ({ detail }) => {
+      dispatch(meetingActions.setMeetingDetail({ detail }));
+    },
+    [dispatch]
+  );
 
   return (
     <Layout>
@@ -279,19 +289,59 @@ function MeetingRegist() {
                 // {
                 //     console.log(`${key}`);
                 // }
+                console.log(inputValue);
+                let roomId;
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
-                    const roomId = res.room.roomId;
+                    roomId = res.room.roomId;
+                    console.log('방번호는 ', roomId, '번이라고 생각합니다');
                     alert(
                       '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
                     );
-                    console.log(res,' : 방번호')
-                    
-                    inputValue.roomId = roomId
+
+                    // const setList = useCallback(
+                    //   ({ list }) => {
+                    //     dispatch(meetingActions.setMeetingList({ list }));
+                    //   },
+                    //   [dispatch]
+                    // );
+                    // getRoomAllAPI().then((res) => {
+                    //   if (res.rooms) setList({ list: res.rooms });
+                    //   else setList({ list: [] });
+                    // });
+
+                    inputValue.roomId = roomId;
                     inputValue.userId = inputValue.hostId;
-                    joinRoomAPI(inputValue).then((res) => { // 방장도 미팅룸 가입
+                    console.log(
+                      'inputValue 이걸통해 방장도 조인상태되는거 : ',
+                      inputValue
+                    );
+                    joinRoomAPI(inputValue).then((res) => {
+                      // 방장도 미팅룸 가입
+                      console.log(
+                        'joinRoomAPI의 결과는 ' + JSON.stringify(res)
+                      );
                       if (res.statusCode == 200) {
-                        Router.push('/meeting/' + roomId);
+                        //
+                        console.log('가입되었습니다');
+
+                        console.log('roomId번 방의 정보를 가져올 것', roomId);
+                        getRoomById(roomId).then((res) => {
+                          console.log('getRoomById의 결과는 ', res);
+                          console.log(
+                            'getRoomById의 결과는 ',
+                            JSON.stringify(res)
+                          );
+                          if (res.statusCode == 200) {
+                            console.log('여기 오면 성공인데');
+                            Router.push('/meeting/' + roomId);
+                            setDetail({
+                              detail: res.room,
+                            });
+                          } else {
+                            alert(`${res.message}`);
+                          }
+                        });
                       } else {
                         alert(`${res.message}`);
                       }
