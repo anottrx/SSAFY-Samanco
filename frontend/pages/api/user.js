@@ -62,18 +62,17 @@ async function getUserInfoAPI(userId) {
 async function sendEmailPWCodeAPI(email) {
   // 비밀번호 재설정 위해 이메일로 인증번호 보내기
   return await api
-    .post('/api/user/findpass', {
-      email: email,
-    })
+    .post('/api/email/findpass', email)
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
 
-async function checkEmailPWAPI(code) {
+async function checkEmailPWAPI(data) {
   // 비밀번호 재설정 위해 받은 인증번호 확인하기
   return await api
-    .post('/api/user/passcode', {
-      code: code,
+    .post('/api/email/passcode', {
+      code: data.code,
+      email: data.email
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);

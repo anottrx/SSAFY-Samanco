@@ -151,7 +151,7 @@ function MyApp({ Component, pageProps }) {
               {/* <Link href="/developer">
                   <img src="/images/pojangmacha.png" width={110} ></img>
                 </Link> */}
-              <a href="https://obvious-spade-e4e.notion.site/2-e9c8cb53c7ad41bc97ce50af77b34a69">
+              <a href="https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A502">
                 <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
               </a>
               {/* footer */}

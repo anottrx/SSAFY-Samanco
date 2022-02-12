@@ -186,7 +186,8 @@ dfn {
 }
 h1 {
   margin: 0.67em 0;
-  font-size: 2em;
+  /* font-size: 2em; */
+  font-size: 32px;
 }
 small {
   font-size: 80%;
@@ -466,12 +467,14 @@ h6 {
 
 h1 {
   margin: 0 0 0.5em 0;
-  font-size: 4rem;
+  /* font-size: 4rem; */
+  font-size: 32px;
   font-weight: 700;
 }
 @media (max-width: 500px) {
   h1 {
-    font-size: 2rem;
+    /* font-size: 2rem; */
+    font-size: 32px;
   }
 }
 
@@ -571,7 +574,8 @@ h6 {
 }
 @media (max-width: 500px) {
   .content-body h1 {
-    font-size: 2.8rem;
+    /* font-size: 2.8rem; */
+    font-size: 32px;
   }
 }
 

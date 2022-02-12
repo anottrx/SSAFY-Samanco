@@ -151,8 +151,12 @@ function ItemList() {
                         lg={3}
                         key={data.roomId}
                         onClick={() => {
-                          joinDialogOpen();
-                          setRoom(data);
+                          if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
+                            joinDialogOpen();
+                            setRoom(data);
+                          } else {
+                            alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                          }                          
                         }}
                       >
                         <Item data={data}></Item>
@@ -171,8 +175,12 @@ function ItemList() {
                         lg={3}
                         key={data.roomId}
                         onClick={() => {
-                          joinDialogOpen();
-                          setRoom(data);
+                          if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
+                            joinDialogOpen();
+                            setRoom(data);
+                          } else {
+                            alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                          }    
                         }}
                       >
                         <Item data={data}></Item>
@@ -258,7 +266,7 @@ export function Item(props) {
           <div>{data.isPrivate ? '-' : data.nickname}</div>
           <div>
             <AccessTimeIcon style={{ marginRight: '5px' }} />
-            {data.startTime}분 / {data.timeLimit}분
+            {data.runTime}
           </div>
         </CardContent>
       </Card>

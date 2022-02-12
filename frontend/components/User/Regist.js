@@ -131,9 +131,13 @@ export default function Regist() {
       setShowEmailCodeCheck(true);
       setAuthFin(true); // 우선 인증버튼 누르자마자 막기
       sendEmailCodeAPI(inputState.email).then((res) => {
-        // console.log(inputState.email);
+        console.log(res);
         if (res.statusCode == 200) {
           //
+        } else if(res.statusCode == 401) {
+          alert("이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요")
+          setShowEmailCodeCheck(false);
+          setAuthFin(false); // 우선 인증버튼 누르자마자 막기
         } else {
           //
         }

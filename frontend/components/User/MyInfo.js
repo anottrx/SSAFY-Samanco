@@ -48,10 +48,10 @@ const urlReg =
 
 const DatePickerWrapper = styled.div`
   display: flex;
-  width: 370px;
+  // width: 370px;
   & > div {
     flex: 1;
-    width: 370px;
+    // width: 370px;
     margin: 0px 0px;
   }
 `;
@@ -883,9 +883,9 @@ export default function MyInfo() {
                                       <Button
                                         variant="outlined"
                                         onClick={handleUserNicknameClick}
-                                        sx={{ width: '100px' }}
+                                        sx={{ width: '10px' }}
                                       >
-                                        닉네임 변경하기
+                                        변경하기
                                       </Button>
                                     )
                                   ) : (
