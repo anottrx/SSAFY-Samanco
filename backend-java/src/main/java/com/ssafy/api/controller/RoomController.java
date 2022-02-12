@@ -154,6 +154,14 @@ public class RoomController {
         if (rooms==null || rooms.size()==0){
             return ResponseEntity.status(200).body(RoomSelectAllRes.of(401, "미팅 목록이 없습니다.", null));
         }
+        for (RoomDto room: rooms) {
+            room.setUsers(userService.selectRoomUsers(room.getRoomId()));
+            if (room.getUsers() == null) {
+                room.setSize(0);
+            } else {
+                room.setSize(room.getUsers().size());
+            }
+        }
         return ResponseEntity.status(200).body(RoomSelectAllRes.of(200, "Success", rooms));
     }
 

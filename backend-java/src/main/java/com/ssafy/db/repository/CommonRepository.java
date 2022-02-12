@@ -5,6 +5,8 @@ import com.ssafy.db.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class CommonRepository {
 
@@ -55,4 +57,9 @@ public class CommonRepository {
                 .where(qBoard.id.eq(boardId), qBoard.isDeleted.eq(false)).fetchOne();
     }
 
+//    public List<User> selectRoomUsers(Long roomId) {
+//        return jpaQueryFactory.selectFrom(qUser)
+//                .where(qUser.roomId.eq(roomId), qUser.isDeleted.eq(false))
+//                .fetch();
+//    }
 }
