@@ -6,10 +6,7 @@ import com.ssafy.api.model.BoardDto;
 import com.ssafy.api.request.BoardRegisterReq;
 import com.ssafy.api.request.BoardUpdateReq;
 import com.ssafy.common.util.DateUtil;
-import com.ssafy.db.entity.Board;
-import com.ssafy.db.entity.Comment;
-import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.UserLike;
+import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,8 +92,10 @@ public class BoardServiceImpl implements BoardService {
         if (board.getUserId()==userId){     // 게시글 작성자면 방 생성 가능
             board.setCanRegister(true);
         } else{     // 게시글 방이 만들어져있으면 누구나 참여 가능
-            if (roomRepositorySupport.selectRoomByTagId(boardId, "board")!=null){
+            Room room = roomRepositorySupport.selectRoomByTagId(boardId, "board");
+            if (room!=null){
                 board.setCanJoin(true);
+                board.setRoomId(room.getId());
             }
         }
         if (userLike!=null) {

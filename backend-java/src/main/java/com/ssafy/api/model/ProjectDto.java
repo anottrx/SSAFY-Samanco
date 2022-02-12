@@ -29,6 +29,7 @@ public class ProjectDto {
     private String projectJoinStatus;
     private boolean canRegister=false;
     private boolean canJoin=false;
+    private Long roomId=0l;
 
 }
 
