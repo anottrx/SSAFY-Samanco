@@ -162,27 +162,46 @@ function meetingDetail() {
     // 어떤 새로운 스트림이 도착하면
     mySession.on('streamCreated', (event) => {
       const sub = mySession.subscribe(event.stream, '');
+      if (event.stream.typeOfVideo === 'SCREEN') {
+        // 새로운 스트림이 화면 공유이면
+        setScreenShare(event.stream.streamManager);
+        console.log(
+          '새로운 스트림이 화면 공유이면',
+          event.stream.streamManager
+        );
+      }
       // sub : 새로운 스트림 / subs : 기존 참여자들
-      let subs = subscribers;
-      subs.push(sub);
-      setSubscribers([...subs]);
+      else {
+        let subs = subscribers;
+        subs.push(sub);
+        setSubscribers([...subs]);
+      }
     });
 
     // 어떤 스트림이 없어지면
     mySession.on('streamDestroyed', (event) => {
-      deleteSubscriber(event.stream.streamManager);
+      if (event.stream.typeOfVideo === 'SCREEN') {
+        // 새로운 스트림이 화면 공유이면
+        setScreenShare(undefined);
+      } else {
+        deleteSubscriber(event.stream.streamManager);
+      }
     });
 
     // 예외가 발생하면
     mySession.on('exception', (exception) => {
-      if (exception.name === 'ICE_CONNECTION_DISCONNECTED') {
+      if (
+        exception.name === 'ICE_CONNECTION_DISCONNECTED' ||
+        exception.name === 'NO_STREAM_PLAYING_EVENT'
+      ) {
         deleteSubscriber(exception.origin.streamManager);
-      } else {
-        console.warn(exception);
-      }
+      } else if (exception.name === 'OPENVIDU_NOT_CONNECTED')
+        setScreenShare(undefined);
+      console.warn(exception);
     });
     // 스트림 속성이 변경되면
-    mySession.on('streamPropertyChanged', () => {
+    mySession.on('streamPropertyChanged', (event) => {
+      console.log('스트림 속성이 변경되면', event);
       const subs = subscribers;
       setSubscribers([...subs]);
     });
@@ -225,28 +244,46 @@ function meetingDetail() {
     if (!screenSession) return;
 
     const shareSession = screenSession;
+    // const mySession = session;
+
+    console.log('shareSession 변경 됨!!!!!!', shareSession);
 
     shareSession.on('streamCreated', (event) => {
       if (event.stream.typeOfVideo == 'SCREEN') {
-        const sub = mySession.subscribe(event.stream, '');
+        console.log('스트림 생겼다@!!!!!!!!!!!!근데 스크린이야~!!!!');
+        // const screen = shareSession.subscribe(event.stream, '');
+        // setScreenShare(screen);
+        // const sub = shareSession.subscribe(event.stream, '');
         // sub : 새로운 스트림 / subs : 기존 참여자들
-        let subs = subscribers;
-        subs.push(sub);
-        setSubscribers([...subs]);
+        // let subs = [sub, ...subscribers];
+        // setSubscribers([...subs]);
       }
     });
 
     shareSession.on('streamDestroyed', (event) => {
-      deleteSubscriber(event.stream.streamManager);
+      // setScreenShare(undefined);
+      console.log('스트림 없어졌다@!!!!!!!!!!!!근데 스크린이야~!!!!');
+      // deleteSubscriber(event.stream.streamManager);
     });
 
     shareSession.on('exception', (exception) => {
+      if (
+        exception.name === 'ICE_CONNECTION_DISCONNECTED' ||
+        exception.name === 'NO_STREAM_PLAYING_EVENT'
+      ) {
+        deleteSubscriber(exception.origin.streamManager);
+      } else if (exception.name === 'OPENVIDU_NOT_CONNECTED')
+        setScreenShare(undefined);
+      console.log('스트림 예외발생@!!!!!!!!!!!!근데 스크린이야~!!!!');
       console.warn(exception);
     });
 
     shareSession.on('streamPropertyChanged', () => {
-      const subs = subscribers;
-      setSubscribers([...subs]);
+      // const subs = subscribers;
+      // setSubscribers([...subs]);
+      console.log('스트림 변경됐다@!!!!!!!!!!!!근데 스크린이야~!!!!');
+      const sub = screenShare;
+      setScreenShare(sub);
     });
   }, [screenSession]);
 
@@ -270,6 +307,7 @@ function meetingDetail() {
     setOV(undefined);
     setScreenOV(undefined);
     setSession(undefined);
+    setScreenShare(undefined);
     setScreenSession(undefined);
     setPublisher(undefined);
     setSubscribers([]);
@@ -384,36 +422,49 @@ function meetingDetail() {
 
   const shareMonitor = () => {
     if (!screenOV || !screenSession) return;
-    const shareSession = screenSession;
+
+    // const mySession = screenSession;
+    const mySession = screenOV.initSession();
+    // const mySession = session;
+
     getToken().then((tokenScreen) => {
       // Create a token for screen share
-      shareSession
+      mySession
         .connect(tokenScreen)
         .then(() => {
-          if (!screenOV) return;
-          let pub = screenOV.initPublisher('', {
+          const pub = screenOV.initPublisher('container-screens', {
             videoSource: 'screen',
-            resolution: '320x240',
+            publishAudio: false,
+            // resolution: '800x720',
           });
+
           setScreenShare(pub);
-          shareSession.once('accessAllowed', (event) => {
+          pub.once('accessAllowed', (event) => {
             // It is very important to define what to do when the stream ends.
-            shareSession.stream
+            console.log('스크린 쉐어 accessAllowed!!!!!!!!!!!!!!!!', event);
+            pub.stream.getMediaStream().getVideoTracks()[0].applyConstraints({
+              // width: 800,
+              height: 600,
+            });
+
+            pub.stream
               .getMediaStream()
               .getVideoTracks()[0]
               .addEventListener('ended', () => {
-                console.log('User pressed the "Stop sharing" button');
-                shareSession.unpublish(pub);
+                console.log('스크린 쉐어 종료!!!!!!! ');
+                stopScreenSharing();
+                mySession.unpublish(pub);
               });
-            shareSession.publish(pub);
+            mySession.publish(pub).then(() => {
+              setScreenShare(pub);
+              console.log('스크린 쉐어 publish 됨!!!!!!! ', screenShare);
+            });
+            // mySession.publish(pub);
           });
-          // publisherScreen.on('videoElementCreated', function (event) {
-          //   // appendUserData(event.element, sessionScreen.connection);
-          //   // event.element['muted'] = true;
-          //   console.log('videoElementCreated');
-          // });
-          shareSession.once('accessDenied', (event) => {
-            console.error('Screen Share: Access Denied');
+
+          pub.once('accessDenied', (event) => {
+            console.error('스크린쉐어: Access Denied!!!!!!!!!!!', event);
+            stopScreenSharing();
           });
           // shareSession.publish(pub).then(() => {
           //   setScreenShare(pub);
@@ -422,12 +473,22 @@ function meetingDetail() {
         })
         .catch((error) => {
           console.warn(
-            'There was an error connecting to the session for screen share:',
+            '스크린 쉐어에 문제 있다!!!!!!!!!!',
             error.code,
             error.message
           );
         });
     });
+  };
+
+  const stopScreenSharing = () => {
+    const shareSession = screenSession;
+    const mySession = session;
+
+    console.log('!!!!!!!!!!!!!!!stopScreenSharing       => ', screenShare);
+    if (shareSession) shareSession.unpublish(screenShare);
+    deleteSubscriber(screenShare);
+    setScreenShare(undefined);
   };
 
   const exitClick = () => {
@@ -558,6 +619,7 @@ function meetingDetail() {
             setCamOn={setCamOn}
             handleVideoStateChanged={handleVideoStateChanged}
             handleAudioStateChanged={handleAudioStateChanged}
+            screenShare={screenShare}
             shareMonitor={shareMonitor}
           ></RoomInfo>
           <Divider />
@@ -566,48 +628,69 @@ function meetingDetail() {
               <CusGrid container>
                 {/* <Users publisher={publisher} subscribers={subscribers}></Users> */}
                 {screenShare !== undefined && (
-                  <Grid item xs={12} sm={10} md={6}>
-                    <VideoWrapper id="container-screens">
-                      <UserVideo streamManager={screenShare} />
-                    </VideoWrapper>
-                  </Grid>
+                  // 화면 공유 발생 시
+                  <>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      style={{ marginBottom: '600px' }}
+                    >
+                      <VideoWrapper id="container-screens">
+                        <UserVideo streamManager={screenShare} />
+                      </VideoWrapper>
+                    </Grid>
+                    <br />
+                  </>
                 )}
-                {publisher !== undefined &&
-                  (userGridSize.current === 4 ? (
-                    <Grid item xs={12} sm={10} md={6}>
-                      <VideoWrapper id="video-container">
-                        <UserVideo streamManager={publisher} />
-                      </VideoWrapper>
-                      <UserName user={publisher}></UserName>
-                    </Grid>
-                  ) : (
-                    <Grid item xs={12} sm={4} md={4}>
-                      <VideoWrapper id="video-container">
-                        <UserVideo streamManager={publisher} />
-                      </VideoWrapper>
-                      <UserName user={publisher}></UserName>
-                    </Grid>
-                  ))}
-                {subscribers.map((sub, i) =>
-                  userGridSize.current === 4 ? (
-                    <Grid item xs={12} sm={10} md={6} key={i}>
-                      <VideoWrapper id="video-container">
-                        <UserVideo streamManager={sub} />
-                      </VideoWrapper>
-                      <UserName user={sub}></UserName>
-                    </Grid>
-                  ) : (
-                    <Grid item xss={12} sm={4} md={4} key={i}>
-                      <VideoWrapper id="video-container">
-                        <UserVideo streamManager={sub} />
-                      </VideoWrapper>
-                      <UserName user={sub}></UserName>
-                    </Grid>
-                  )
-                )}
+                {
+                  // !screenShare &&
+                  publisher !== undefined &&
+                    (userGridSize.current === 4 ? (
+                      <Grid item xs={12} sm={10} md={6}>
+                        <VideoWrapper id="video-container">
+                          <UserVideo streamManager={publisher} />
+                        </VideoWrapper>
+                        <UserName user={publisher}></UserName>
+                      </Grid>
+                    ) : (
+                      <Grid item xs={12} sm={4} md={4}>
+                        <VideoWrapper id="video-container">
+                          <UserVideo streamManager={publisher} />
+                        </VideoWrapper>
+                        <UserName user={publisher}></UserName>
+                      </Grid>
+                    ))
+                }
+                {
+                  // !screenShare &&
+                  subscribers.map((sub, i) => {
+                    console.log(
+                      'sub!!!!!!!!!!!!!!!!!!!1',
+                      sub.stream.typeOfVideo
+                    );
+                    return sub.stream.typeOfVideo !== 'SCREEN' &&
+                      userGridSize.current === 4 ? (
+                      <Grid item xs={12} sm={10} md={6} key={i}>
+                        <VideoWrapper id="video-container">
+                          <UserVideo streamManager={sub} />
+                        </VideoWrapper>
+                        <UserName user={sub}></UserName>
+                      </Grid>
+                    ) : (
+                      <Grid item xs={12} sm={4} md={4} key={i}>
+                        <VideoWrapper id="video-container">
+                          <UserVideo streamManager={sub} />
+                        </VideoWrapper>
+                        <UserName user={sub}></UserName>
+                      </Grid>
+                    );
+                  })
+                }
               </CusGrid>
             </GridWrapper>
-            <Chatting session={session}></Chatting>
+            {!screenShare && <Chatting session={session}></Chatting>}
           </RoomContent>
         </>
       ) : null}

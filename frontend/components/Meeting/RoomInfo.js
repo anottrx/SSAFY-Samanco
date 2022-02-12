@@ -30,6 +30,7 @@ function RoomInfo({
   setCamOn,
   handleVideoStateChanged,
   handleAudioStateChanged,
+  screenShare,
   shareMonitor,
 }) {
   const InfoWrapper = styled.div`
@@ -137,9 +138,11 @@ function RoomInfo({
               </Fab>
             )}
             {/* 화면 공유 */}
-            <Fab variant="extended" aria-label="edit" onClick={shareMonitor}>
-              <IosShareIcon fontSize="large" />
-            </Fab>
+            {!screenShare && (
+              <Fab variant="extended" aria-label="edit" onClick={shareMonitor}>
+                <IosShareIcon fontSize="large" />
+              </Fab>
+            )}
             <Fab variant="extended" aria-label="edit" onClick={exitDialogOpen}>
               <ExitToAppIcon fontSize="large" />
             </Fab>
@@ -159,15 +162,15 @@ function RoomInfo({
 
 function ExitDialog(props) {
   let { open, exitDialogClose, detail } = props;
-  console.log(detail.hostId)
-  console.log(sessionStorage.getItem("userId"))
   return (
     <Dialog open={open} onClose={exitDialogClose}>
-      {detail.hostId == sessionStorage.getItem("userId") ? 
-        (<DialogTitle>{'방장이 방을 나가면 미팅이 종료됩니다. 그래도 나가시겠습니까?'}</DialogTitle>)
-        :
-        (<DialogTitle>{'방을 나가시겠습니까?'}</DialogTitle>)
-      }
+      {detail.hostId == sessionStorage.getItem('userId') ? (
+        <DialogTitle>
+          {'방장이 방을 나가면 미팅이 종료됩니다. 그래도 나가시겠습니까?'}
+        </DialogTitle>
+      ) : (
+        <DialogTitle>{'방을 나가시겠습니까?'}</DialogTitle>
+      )}
       <DialogActions>
         <Button onClick={exitDialogClose}>취소</Button>
         <Button
