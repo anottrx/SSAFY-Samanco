@@ -48,10 +48,19 @@ import {
 
 const ProjectDetail = () => {
   const detail = useSelector(({ project }) => project.projectDetail);
+  const roomDetail = useSelector(({ meeting }) => meeting.meetingDetail);
   const userData = useSelector(({ project }) => project.userList);
   const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
   let [imageUrl, setImageUrl] = useState(undefined);
+  const [openPw, setOpenPw] = useState(false);
+
+  const pwDialogOpen = () => {
+    setOpenPw(true);
+  };
+  const pwDialogClose = () => {
+    setOpenPw(false);
+  };
 
   const dispatch = useDispatch();
   const setDetail = useCallback(
@@ -186,7 +195,10 @@ const ProjectDetail = () => {
         <br></br>
         <DetailHeader>
           <h2>{detail.title}</h2>
-          <DetailOperation detail={detail}></DetailOperation>
+          <DetailOperation
+            detail={detail}
+            pwDialogOpen={pwDialogOpen}
+          ></DetailOperation>
         </DetailHeader>
         <DetailWrapper maxWidth="sm">
           {detail.collectStatus === 'ING' ? (
@@ -210,11 +222,17 @@ const ProjectDetail = () => {
           <ProjectInfo detail={detail}></ProjectInfo>
         </DetailWrapper>
         <ProjectDetail></ProjectDetail>
+        <PwDialog
+          open={openPw}
+          pwDialogClose={pwDialogClose}
+          room={roomDetail}
+          setDetail={setDetail}
+        ></PwDialog>
       </CusContainer>
     </Layout>
   );
 
-  function DetailOperation({ detail }) {
+  function DetailOperation({ detail, pwDialogOpen }) {
     const [openQuit, setOpenQuit] = useState(false);
     const [openUsers, setOpenUsers] = useState(false);
 
@@ -242,8 +260,8 @@ const ProjectDetail = () => {
     const [inputValue, setInputValue] = useState({
       password: '', // 비밀번호 없는 방
       roomId: '',
-      userId: sessionStorage.getItem("userId")
-    })
+      userId: sessionStorage.getItem('userId'),
+    });
 
     return (
       <>
@@ -277,20 +295,31 @@ const ProjectDetail = () => {
             <Button
               onClick={() => {
                 inputValue.roomId = detail.roomId;
-                // Router.push('/meeting/join');
-                joinRoomAPI(inputValue).then((res) => {
+
+                getRoomById(detail.roomId).then((res) => {
                   if (res.statusCode == 200) {
-                    getRoomById(detail.roomId).then((res) => {
-                      if (res.statusCode == 200) {
-                        Router.push('/meeting/' + detail.roomId);
-                        setDetail({
-                          detail: res.room,
-                        });
-                      } else {
-                        alert(`${res.message}`);
-                      }
+                    let roomData = res.room;
+
+                    setDetail({
+                      detail: roomData,
                     });
+
+                    if (roomData.isSecret) {
+                      // 비밀방이면
+                      pwDialogOpen();
+                    } else {
+                      // 비밀방 아니면 바로 입장
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Router.push('/meeting/' + detail.roomId);
+                        } else {
+                          // 방 입장 실패
+                          alert(`${res.message}`);
+                        }
+                      });
+                    }
                   } else {
+                    // 방 조회 실패 시
                     alert(`${res.message}`);
                   }
                 });
@@ -728,5 +757,56 @@ const ProjectDetail = () => {
     );
   }
 };
+
+function PwDialog(props) {
+  let { open, pwDialogClose, room, setDetail } = props;
+  let [pw, setPw] = useState('');
+
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+    password: '',
+  });
+
+  const pwChangeHandle = (e) => {
+    setPw(e.target.value);
+  };
+
+  return (
+    <Dialog open={open} onClose={pwDialogClose}>
+      <DialogTitle>{`비밀번호를 입력해주세요.`}</DialogTitle>
+      <DialogContent>
+        <TextField value={pw} onChange={pwChangeHandle}></TextField>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={pwDialogClose}>취소</Button>
+        <Button
+          onClick={
+            // 입력한 비밀번호와 일치하면 입장
+            pw === room.password
+              ? () => {
+                  inputValue.password = pw;
+                  inputValue.roomId = room.roomId;
+                  joinRoomAPI(inputValue).then((res) => {
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + room.roomId);
+                      pwDialogClose();
+                    } else {
+                      alert(`${res.message}`);
+                    }
+                  });
+                }
+              : () => {
+                  alert('비밀번호를 확인해주세요.');
+                }
+          }
+          autoFocus
+        >
+          확인
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 export default ProjectDetail;
