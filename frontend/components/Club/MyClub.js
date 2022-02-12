@@ -222,7 +222,7 @@ function MyClub(props) {
                             );
                             Router.push({
                               pathname: '/study/info/[sid]',
-                              query: { sid: clubData.id },
+                              query: { sid: data.id },
                             });
                           }
                         }}

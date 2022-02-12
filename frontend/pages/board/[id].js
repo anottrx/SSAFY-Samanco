@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Router from 'next/router';
 import Layout from '../../components/Layout';
 import * as boardActions from '../../store/module/board';
+import { joinRoomAPI, getRoomById } from '../api/meeting';
 
 import {
   getArticleById,
@@ -38,6 +39,7 @@ import {
 } from '@mui/material';
 import CommentList from '../../components/Board/CommentList';
 import BoardColor from '../../data/BoardColor.json';
+import * as meetingActions from '../../store/module/meeting';
 
 //게시글 상세보기 페이지
 
@@ -49,6 +51,12 @@ const BoardDetail = () => {
   const [detailLikes, setLikes] = useState(detail.likes);
 
   const dispatch = useDispatch();
+  const setDetail = useCallback(
+    ({ detail }) => {
+      dispatch(meetingActions.setMeetingDetail({ detail }));
+    },
+    [dispatch]
+  );
 
   function fetchData(addHit) {
     getArticleById({
@@ -146,7 +154,7 @@ const BoardDetail = () => {
 
   function JoinRoomOperation() {
     const [inputValue, setInputValue] = useState({
-      password: '',
+      password: '', // 비밀번호 없는 방
       roomId: '',
       userId: sessionStorage.getItem("userId")
     })
@@ -160,23 +168,10 @@ const BoardDetail = () => {
 
             // Router.push('/meeting/join');
             joinRoomAPI(inputValue).then((res) => {
-              console.log(
-                'joinRoomAPI의 결과는 ' + JSON.stringify(res)
-              );
               if (res.statusCode == 200) {
-                //
-                console.log('가입되었습니다');
-
-                console.log('roomId번 방의 정보를 가져올 것', roomId);
-                getRoomById(roomId).then((res) => {
-                  console.log('getRoomById의 결과는 ', res);
-                  console.log(
-                    'getRoomById의 결과는 ',
-                    JSON.stringify(res)
-                  );
+                getRoomById(detail.roomId).then((res) => {
                   if (res.statusCode == 200) {
-                    console.log('여기 오면 성공인데');
-                    Router.push('/meeting/' + roomId);
+                    Router.push('/meeting/' + detail.roomId);
                     setDetail({
                       detail: res.room,
                     });

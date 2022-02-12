@@ -294,46 +294,17 @@ function MeetingRegist() {
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
                     roomId = res.room.roomId;
-                    console.log('방번호는 ', roomId, '번이라고 생각합니다');
                     alert(
                       '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
                     );
 
-                    // const setList = useCallback(
-                    //   ({ list }) => {
-                    //     dispatch(meetingActions.setMeetingList({ list }));
-                    //   },
-                    //   [dispatch]
-                    // );
-                    // getRoomAllAPI().then((res) => {
-                    //   if (res.rooms) setList({ list: res.rooms });
-                    //   else setList({ list: [] });
-                    // });
-
                     inputValue.roomId = roomId;
                     inputValue.userId = inputValue.hostId;
-                    console.log(
-                      'inputValue 이걸통해 방장도 조인상태되는거 : ',
-                      inputValue
-                    );
                     joinRoomAPI(inputValue).then((res) => {
                       // 방장도 미팅룸 가입
-                      console.log(
-                        'joinRoomAPI의 결과는 ' + JSON.stringify(res)
-                      );
                       if (res.statusCode == 200) {
-                        //
-                        console.log('가입되었습니다');
-
-                        console.log('roomId번 방의 정보를 가져올 것', roomId);
                         getRoomById(roomId).then((res) => {
-                          console.log('getRoomById의 결과는 ', res);
-                          console.log(
-                            'getRoomById의 결과는 ',
-                            JSON.stringify(res)
-                          );
                           if (res.statusCode == 200) {
-                            console.log('여기 오면 성공인데');
                             Router.push('/meeting/' + roomId);
                             setDetail({
                               detail: res.room,
