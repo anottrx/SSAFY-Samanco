@@ -53,18 +53,22 @@ export default function CheckEmailCode(props) {
           if (res.statusCode == 200) {
             props.changeHandle(true, 'code');
             setAuthFin(true);
-          } else {
+          } else if (res.statusCode == 401) { 
+            alert('잘못 입력했습니다')
+           } else {
             props.changeHandle(false, 'code');
           }
         });
       } else {
         // console.log('회원가입하다가 온 것')
         checkEmailCodeAPI(inputValue).then((res) => {
-          // console.log(res);
+          console.log(res);
           if (res.statusCode == 200) {
             props.changeHandle(true, 'code');
             setAuthFin(true);
-          } else {
+          } else if (res.statusCode == 401) { 
+            alert('잘못 입력했습니다')
+           } else {
             props.changeHandle(false, 'code');
           }
         });
