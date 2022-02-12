@@ -133,7 +133,11 @@ public class RoomController {
             return ResponseEntity.status(200).body(RoomSelectRes.of(401, "유효하지 않은 미팅입니다.", null));
         }
         room.setUsers(userService.selectRoomUsers(roomId));
-        room.setSize(room.getUsers().size());
+        if (room.getUsers()==null){
+            room.setSize(0);
+        } else {
+            room.setSize(room.getUsers().size());
+        }
         return ResponseEntity.status(200).body(RoomSelectRes.of(200, "Success", room));
     }
 
@@ -149,6 +153,14 @@ public class RoomController {
 
         if (rooms==null || rooms.size()==0){
             return ResponseEntity.status(200).body(RoomSelectAllRes.of(401, "미팅 목록이 없습니다.", null));
+        }
+        for (RoomDto room: rooms) {
+            room.setUsers(userService.selectRoomUsers(room.getRoomId()));
+            if (room.getUsers() == null) {
+                room.setSize(0);
+            } else {
+                room.setSize(room.getUsers().size());
+            }
         }
         return ResponseEntity.status(200).body(RoomSelectAllRes.of(200, "Success", rooms));
     }

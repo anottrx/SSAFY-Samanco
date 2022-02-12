@@ -20,5 +20,6 @@ public class RoomDto {
     private String tag;
     private Long tagId;
     private List<UserDto> users;
+    private String runTime;
 
 }

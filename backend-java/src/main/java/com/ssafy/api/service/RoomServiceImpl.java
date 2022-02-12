@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.model.RoomDto;
 import com.ssafy.api.request.RoomRegisterReq;
 import com.ssafy.api.request.RoomUpdateReq;
+import com.ssafy.common.util.DateUtil;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,21 +114,28 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto roomEntityToDto(Room result) {
+        Long roomId=result.getId();
         RoomDto roomDto=new RoomDto();
-        roomDto.setRoomId(result.getId());
+        roomDto.setRoomId(roomId);
         roomDto.setHostId(result.getHostId());
         roomDto.setTitle(result.getTitle());
         roomDto.setTag(result.getTag());
         roomDto.setTagId(result.getTagId());
         roomDto.setPassword(result.getPassword());
         roomDto.setIsSecret(result.getIsSecret());
-
+        roomDto.setRunTime(DateUtil.Runtime(result.getCreatedDate().toString()));
         // 작성자 닉네임
         String nickname = commonRepository.selectUserNickname(result.getHostId());
         if (nickname==null){
             return null;
         }
         roomDto.setNickname(nickname);
+//        roomDto.setUsers(commonRepository.selectRoomUsers(roomId));
+//        if (result.getUsers()==null){
+//            roomDto.setSize(0);
+//        } else {
+//            roomDto.setSize(result.getUsers().size());
+//        }
 
         return  roomDto;
     }

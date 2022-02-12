@@ -106,7 +106,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
         UserLike userLike = userLikeRepositorySupport.userLike(userId, projectId, "project");
         User user=commonRepository.selectUser(userId);
-        if (user.getProjectId()==projectId){
+        if (user!=null && user.getProjectId()==projectId){
             Room room=roomRepositorySupport.selectRoomByTagId(projectId, "project");
             if (room==null && project.getHostId()==userId){    // 방이 안만들어졌고 방장인 경우
                 project.setCanRegister(true);
