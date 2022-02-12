@@ -29,6 +29,7 @@
     "next": "^12.0.10",
     "next-redux-wrapper": "^7.0.5",
     "node-fetch": "^2.6.1",
+    "notistack": "^2.0.3",
     "openvidu-browser": "2.20.0",
     "react": "17.0.2",
     "react-calendar": "^3.6.0",

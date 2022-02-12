@@ -114,7 +114,7 @@ export default function Board() {
 
   return (
     <Layout>
-      <h1>Board</h1>
+      <h1>게시판</h1>
       <ButtonWrapper>
         <CusButton
           variant="outlined"

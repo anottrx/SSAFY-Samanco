@@ -10,7 +10,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import VideocamIcon from '@mui/icons-material/Videocam';
@@ -22,6 +22,8 @@ import axios from 'axios';
 import UserVideo from '../../components/Meeting/UserVideo';
 import Router from 'next/router';
 
+import { SnackbarProvider, useSnackbar } from 'notistack';
+
 import { quitRoomAPI } from '../api/meeting';
 
 var OpenViduBrowser;
@@ -29,12 +31,17 @@ var OpenViduBrowser;
 const OPENVIDU_SERVER_URL = 'https://i6a502.p.ssafy.io:5443';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
-function meetingDetail() {
+function MeetingDetail() {
   const RoomWrapper = styled(Card)`
     padding: 20px;
     margin: 10px;
     height: calc(100vh - 20px);
     overflow-y: auto;
+
+    // & div#notistack-snackbar {
+    //   font-size: 15px;
+    //   color: red;
+    // }
   `;
 
   const RoomContent = styled.div`
@@ -95,6 +102,7 @@ function meetingDetail() {
   const [screenOV, setScreenOV] = useState();
   const [session, setSession] = useState();
   const [screenSession, setScreenSession] = useState();
+  const [connectionId, setConnectionId] = useState();
   const [publisher, setPublisher] = useState();
   const [subscribers, setSubscribers] = useState([]);
   const [screenShare, setScreenShare] = useState();
@@ -108,6 +116,27 @@ function meetingDetail() {
     changeSetup(newValue);
   };
 
+  // 스낵바
+  const { enqueueSnackbar } = useSnackbar();
+
+  const welcomeSnackBar = (newMember) => {
+    enqueueSnackbar(`🎉 ${newMember} 님이 입장하셨습니다!`, {
+      autoHideDuration: 2000,
+      preventDuplicate: true,
+    });
+  };
+
+  const GoodByeSnackBar = (newMember) => {
+    enqueueSnackbar(`🖐 ${newMember} 님이 퇴장하셨습니다!`, {
+      autoHideDuration: 2000,
+      preventDuplicate: true,
+    });
+  };
+
+  // const handleClickVariant = (variant) => () => {
+  //   // variant could be success, error, warning, info, or default
+  //   enqueueSnackbar('This is a success message!', { variant });
+  // };
   const myUserName = sessionStorage.getItem('nickname')
     ? sessionStorage.getItem('nickname')
     : 'unknown';
@@ -173,7 +202,7 @@ function meetingDetail() {
   useEffect(() => {
     if (!session) return;
 
-    console.log('session 있다');
+    // console.log('session 있다');
 
     const mySession = session;
 
@@ -183,13 +212,25 @@ function meetingDetail() {
       if (event.stream.typeOfVideo === 'SCREEN') {
         // 새로운 스트림이 화면 공유이면
         setScreenShare(event.stream.streamManager);
-        console.log(
-          '새로운 스트림이 화면 공유이면',
-          event.stream.streamManager
-        );
       }
       // sub : 새로운 스트림 / subs : 기존 참여자들
       else {
+        // console.log('새로 들어왔다!!!!!!!!!!!!!!!!!!!!!!!!!!', sub);
+
+        // console.log('------------------getConnectionInfo--------------------');
+        getConnectionInfo(event).then((res) => {
+          let subscribersInfos = res.subscribers;
+          let target = subscribersInfos?.filter((subs) => {
+            subs.streamId === event.stream.streamId;
+          });
+
+          if (!target)
+            welcomeSnackBar(
+              JSON.parse(event.stream.connection.data).clientData
+            );
+        });
+        // welcomeSnackBar(JSON.parse(event.stream.connection.data).clientData);
+
         let subs = subscribers;
         subs.push(sub);
         setSubscribers([...subs]);
@@ -202,8 +243,19 @@ function meetingDetail() {
         // 새로운 스트림이 화면 공유이면
         setScreenShare(undefined);
       } else {
+        // let leftUserName = JSON.parse(event.stream.connection.data).clientData;
+        // console.log('참여자 퇴장 => ', leftUserName);
+        // if (!subscribers.includes(event.stream)) GoodByeSnackBar(leftUserName);
         deleteSubscriber(event.stream.streamManager);
       }
+    });
+
+    mySession.on('signal:userin', (event) => {
+      welcomeSnackBar(event.data);
+    });
+
+    mySession.on('signal:userleft', (event) => {
+      GoodByeSnackBar(event.data);
     });
 
     // 예외가 발생하면
@@ -212,27 +264,46 @@ function meetingDetail() {
         exception.name === 'ICE_CONNECTION_DISCONNECTED' ||
         exception.name === 'NO_STREAM_PLAYING_EVENT'
       ) {
+        // console.log(exception);
+        mySession.signal({ data: myUserName, to: [], type: 'userleft' });
         deleteSubscriber(exception.origin.streamManager);
       } else if (exception.name === 'OPENVIDU_NOT_CONNECTED')
         setScreenShare(undefined);
       console.warn(exception);
     });
+
     // 스트림 속성이 변경되면
     mySession.on('streamPropertyChanged', (event) => {
-      console.log('스트림 속성이 변경되면', event);
+      // console.log('스트림 속성이 변경되면', event);
       const subs = subscribers;
       setSubscribers([...subs]);
     });
 
     getToken()
       .then((token) => {
-        console.log('getToken:', token);
+        // console.log('getToken:', token);
         mySession.connect(token, { clientData: myUserName }).then(async () => {
           if (!OV) return;
           var devices = await OV.getDevices();
           var videoDevices = devices.filter(
             (device) => device.kind === 'videoinput'
           );
+
+          if (!publisher) {
+            mySession
+              .signal({
+                data: myUserName,
+                to: [],
+                type: 'userin',
+              })
+              .then(() => {
+                // console.log(subscribers);
+                // console.log('Message successfully sent');
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }
 
           let pub = OV.initPublisher('', {
             audioSource: undefined,
@@ -244,8 +315,11 @@ function meetingDetail() {
             mirror: true,
           });
 
+          // publisher가 undefined일 때만 웰컴 메세지 표시
           mySession.publish(pub).then(() => {
             setPublisher(pub);
+            // let newUserName = JSON.parse(pub.stream.connection.data).clientData;
+            // console.log('새로운 참여자 입장 => ', newUserName);
           });
         });
       })
@@ -262,27 +336,6 @@ function meetingDetail() {
     if (!screenSession) return;
 
     const shareSession = screenSession;
-    // const mySession = session;
-
-    console.log('shareSession 변경 됨!!!!!!', shareSession);
-
-    shareSession.on('streamCreated', (event) => {
-      if (event.stream.typeOfVideo == 'SCREEN') {
-        console.log('스트림 생겼다@!!!!!!!!!!!!근데 스크린이야~!!!!');
-        // const screen = shareSession.subscribe(event.stream, '');
-        // setScreenShare(screen);
-        // const sub = shareSession.subscribe(event.stream, '');
-        // sub : 새로운 스트림 / subs : 기존 참여자들
-        // let subs = [sub, ...subscribers];
-        // setSubscribers([...subs]);
-      }
-    });
-
-    shareSession.on('streamDestroyed', (event) => {
-      // setScreenShare(undefined);
-      console.log('스트림 없어졌다@!!!!!!!!!!!!근데 스크린이야~!!!!');
-      // deleteSubscriber(event.stream.streamManager);
-    });
 
     shareSession.on('exception', (exception) => {
       if (
@@ -292,25 +345,14 @@ function meetingDetail() {
         deleteSubscriber(exception.origin.streamManager);
       } else if (exception.name === 'OPENVIDU_NOT_CONNECTED')
         setScreenShare(undefined);
-      console.log('스트림 예외발생@!!!!!!!!!!!!근데 스크린이야~!!!!');
       console.warn(exception);
     });
 
     shareSession.on('streamPropertyChanged', () => {
-      // const subs = subscribers;
-      // setSubscribers([...subs]);
-      console.log('스트림 변경됐다@!!!!!!!!!!!!근데 스크린이야~!!!!');
       const sub = screenShare;
       setScreenShare(sub);
     });
   }, [screenSession]);
-
-  // 스크린 세션
-  // useEffect(() => {
-  //   if (!screenSession) return;
-  //   const shareSession = screenSession;
-
-  // }, [screenSession]);
 
   const deleteSubscriber = (streamManager) => {
     let subs = subscribers;
@@ -358,13 +400,14 @@ function meetingDetail() {
     }
   };
 
-  const handlerJoinBtn = (micState, camState) => {
+  const handlerJoinBtn = async (micState, camState) => {
     setMicOn(micState);
     setCamOn(camState);
 
     setIsConfigModalShow(false);
-    setSession(OV?.initSession());
-    setScreenSession(screenOV?.initSession());
+    await setSession(OV?.initSession());
+    await setScreenSession(screenOV?.initSession());
+
     // 에러 발생 시 세션 삭제
     // deleteSession();
   };
@@ -458,7 +501,7 @@ function meetingDetail() {
 
           setScreenShare(pub);
           pub.once('accessAllowed', (event) => {
-            console.log('스크린 쉐어 accessAllowed!!!!!!!!!!!!!!!!', event);
+            // console.log('스크린 쉐어 accessAllowed!!!!!!!!!!!!!!!!', event);
             pub.stream.getMediaStream().getVideoTracks()[0].applyConstraints({
               // width: 800,
               height: 600,
@@ -468,25 +511,21 @@ function meetingDetail() {
               .getMediaStream()
               .getVideoTracks()[0]
               .addEventListener('ended', () => {
-                console.log('스크린 쉐어 종료!!!!!!! ');
+                // console.log('스크린 쉐어 종료!!!!!!! ');
                 stopScreenSharing();
                 mySession.unpublish(pub);
               });
             mySession.publish(pub).then(() => {
               setScreenShare(pub);
-              console.log('스크린 쉐어 publish 됨!!!!!!! ', screenShare);
+              // console.log('스크린 쉐어 publish 됨!!!!!!! ', screenShare);
             });
             // mySession.publish(pub);
           });
 
           pub.once('accessDenied', (event) => {
-            console.error('스크린쉐어: Access Denied!!!!!!!!!!!', event);
+            // console.error('스크린쉐어: Access Denied!!!!!!!!!!!', event);
             stopScreenSharing();
           });
-          // shareSession.publish(pub).then(() => {
-          //   setScreenShare(pub);
-          // });
-          // console.log('screen share detected');
         })
         .catch((error) => {
           console.warn(
@@ -502,14 +541,18 @@ function meetingDetail() {
     const shareSession = screenSession;
     const mySession = session;
 
-    console.log('!!!!!!!!!!!!!!!stopScreenSharing       => ', screenShare);
+    // console.log('!!!!!!!!!!!!!!!stopScreenSharing       => ', screenShare);
     if (shareSession) shareSession.unpublish(screenShare);
     deleteSubscriber(screenShare);
     setScreenShare(undefined);
   };
 
   const exitClick = () => {
+    const mySession = session;
     inputValue.roomId = detail.roomId;
+
+    mySession.signal({ data: myUserName, to: [], type: 'userleft' });
+    // GoodByeSnackBar(myUserName);
 
     videoTrackOff(publisher);
     leaveSession();
@@ -545,13 +588,13 @@ function meetingDetail() {
         .delete(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${mySessionId}`, {
           headers,
         })
-        .then((res) => console.log('[delete]', res));
+        .then((res) => console.log('[deleteSession]', res));
     });
   };
 
   // 이 아래부턴 백엔드에 axios 보내서 데이터 받아옴
   const createSession = (sessionId) => {
-    console.log('createSession:', sessionId);
+    // console.log('createSession:', sessionId);
     return new Promise((resolve, reject) => {
       let data = JSON.stringify({ customSessionId: sessionId });
       let headers = {
@@ -566,7 +609,7 @@ function meetingDetail() {
           headers,
         })
         .then((response) => {
-          console.log('CREATE SESSION', response);
+          // console.log('CREATE SESSION', response);
           resolve(response.data.id);
         })
         .catch((response) => {
@@ -595,7 +638,7 @@ function meetingDetail() {
   };
 
   const createToken = (sessionId) => {
-    console.log('createToken', sessionId);
+    // console.log('createToken', sessionId);
     return new Promise((resolve, reject) => {
       let data = {};
       let headers = {
@@ -611,9 +654,33 @@ function meetingDetail() {
         )
         .then((response) => {
           // console.log('TOKEN', response);
+          // console.log('-------------connectionId', response.data.id);
+          // setConnectionId(response.data.id);
           resolve(response.data.token);
         })
         .catch((error) => reject(error));
+    });
+  };
+
+  const getConnectionInfo = (pub) => {
+    let mySessionId = `session${detail.roomId}`;
+    let connectionId = pub.stream.connection.connectionId;
+    return new Promise((resolve, reject) => {
+      let headers = {
+        Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,POST',
+      };
+
+      axios
+        .get(
+          `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${mySessionId}/connection/${connectionId}`,
+          {
+            headers,
+          }
+        )
+        .then((res) => res.data);
     });
   };
 
@@ -638,139 +705,141 @@ function meetingDetail() {
   }
 
   return (
-    <RoomWrapper>
-      {!isConfigModalShow ? (
-        <>
-          <RoomInfo
-            detail={detail}
-            exitClick={exitClick}
-            micOn={micOn}
-            setMicOn={setMicOn}
-            camOn={camOn}
-            setCamOn={setCamOn}
-            handleVideoStateChanged={handleVideoStateChanged}
-            handleAudioStateChanged={handleAudioStateChanged}
-            screenShare={screenShare}
-            shareMonitor={shareMonitor}
-          ></RoomInfo>
-          <Divider />
-          <RoomContent>
-            <GridWrapper>
-              <CusGrid container>
-                {screenShare !== undefined && (
-                  // 화면 공유 발생 시
-                  <>
-                    <Grid
-                      item
-                      xs={12}
-                      sm={12}
-                      md={12}
-                      style={{ marginBottom: '600px' }}
-                    >
-                      <VideoWrapper id="container-screens">
-                        <UserVideo streamManager={screenShare} />
-                      </VideoWrapper>
-                    </Grid>
-                    <br />
-                  </>
-                )}
-                {!screenShare &&
-                  publisher !== undefined &&
-                  (userGridSize.current === 4 ? (
-                    <Grid item xs={12} sm={10} md={6}>
-                      <VideoWrapper id="video-container">
-                        <UserVideo streamManager={publisher} />
-                      </VideoWrapper>
-                      <UserName user={publisher}></UserName>
-                    </Grid>
-                  ) : (
-                    <Grid item xs={12} sm={4} md={4}>
-                      <VideoWrapper id="video-container">
-                        <UserVideo streamManager={publisher} />
-                      </VideoWrapper>
-                      <UserName user={publisher}></UserName>
-                    </Grid>
-                  ))}
-                {!screenShare &&
-                  subscribers.map((sub, i) => {
-                    return sub.stream.typeOfVideo !== 'SCREEN' &&
-                      userGridSize.current === 4 ? (
-                      <Grid item xs={12} sm={10} md={6} key={i}>
-                        <VideoWrapper id="video-container">
-                          <UserVideo streamManager={sub} />
+    <SnackbarProvider maxSnack={3}>
+      <RoomWrapper>
+        {!isConfigModalShow ? (
+          <>
+            <RoomInfo
+              detail={detail}
+              exitClick={exitClick}
+              micOn={micOn}
+              setMicOn={setMicOn}
+              camOn={camOn}
+              setCamOn={setCamOn}
+              handleVideoStateChanged={handleVideoStateChanged}
+              handleAudioStateChanged={handleAudioStateChanged}
+              screenShare={screenShare}
+              shareMonitor={shareMonitor}
+            ></RoomInfo>
+            <Divider />
+            <RoomContent>
+              <GridWrapper>
+                <CusGrid container>
+                  {screenShare !== undefined && (
+                    // 화면 공유 발생 시
+                    <>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        style={{ marginBottom: '600px' }}
+                      >
+                        <VideoWrapper id="container-screens">
+                          <UserVideo streamManager={screenShare} />
                         </VideoWrapper>
-                        <UserName user={sub}></UserName>
+                      </Grid>
+                      <br />
+                    </>
+                  )}
+                  {!screenShare &&
+                    publisher !== undefined &&
+                    (userGridSize.current === 4 ? (
+                      <Grid item xs={12} sm={10} md={6}>
+                        <VideoWrapper id="video-container">
+                          <UserVideo streamManager={publisher} />
+                        </VideoWrapper>
+                        <UserName user={publisher}></UserName>
                       </Grid>
                     ) : (
-                      <Grid item xs={12} sm={4} md={4} key={i}>
+                      <Grid item xs={12} sm={4} md={4}>
                         <VideoWrapper id="video-container">
-                          <UserVideo streamManager={sub} />
+                          <UserVideo streamManager={publisher} />
                         </VideoWrapper>
-                        <UserName user={sub}></UserName>
+                        <UserName user={publisher}></UserName>
                       </Grid>
-                    );
-                  })}
-              </CusGrid>
-            </GridWrapper>
-            {!screenShare && <Chatting session={session}></Chatting>}
-          </RoomContent>
-        </>
-      ) : null}
-      {isConfigModalShow && OV && (
-        <ConfigWrapper>
-          <ToggleButtonGroup
-            aria-label="user status formatting"
-            value={setup}
-            onChange={handleChangeSetup}
-          >
-            <ToggleButton
-              value="camera"
-              onClick={() => {
-                setCamOn(!camOn);
-              }}
+                    ))}
+                  {!screenShare &&
+                    subscribers.map((sub, i) => {
+                      return sub.stream.typeOfVideo !== 'SCREEN' &&
+                        userGridSize.current === 4 ? (
+                        <Grid item xs={12} sm={10} md={6} key={i}>
+                          <VideoWrapper id="video-container">
+                            <UserVideo streamManager={sub} />
+                          </VideoWrapper>
+                          <UserName user={sub}></UserName>
+                        </Grid>
+                      ) : (
+                        <Grid item xs={12} sm={4} md={4} key={i}>
+                          <VideoWrapper id="video-container">
+                            <UserVideo streamManager={sub} />
+                          </VideoWrapper>
+                          <UserName user={sub}></UserName>
+                        </Grid>
+                      );
+                    })}
+                </CusGrid>
+              </GridWrapper>
+              {!screenShare && <Chatting session={session}></Chatting>}
+            </RoomContent>
+          </>
+        ) : null}
+        {isConfigModalShow && OV && (
+          <ConfigWrapper>
+            <ToggleButtonGroup
+              aria-label="user status formatting"
+              value={setup}
+              onChange={handleChangeSetup}
             >
-              {camOn ? (
-                <>
-                  <VideocamIcon fontSize="large" />
-                  &nbsp;&nbsp;ON
-                </>
-              ) : (
-                <>
-                  <VideocamOffOutlinedIcon fontSize="large" />
-                  &nbsp;OFF
-                </>
-              )}
-            </ToggleButton>
-            <ToggleButton
-              value="audio"
-              onClick={() => {
-                setMicOn(!micOn);
-              }}
-            >
-              {micOn ? (
-                <>
-                  <MicIcon fontSize="large" />
-                  &nbsp;&nbsp;ON
-                </>
-              ) : (
-                <>
-                  <MicOffOutlinedIcon fontSize="large" />
-                  &nbsp;OFF
-                </>
-              )}
-            </ToggleButton>
-            <ToggleButton
-              value="enter"
-              onClick={() => {
-                handlerJoinBtn(micOn, camOn);
-              }}
-            >
-              입장
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </ConfigWrapper>
-      )}
-    </RoomWrapper>
+              <ToggleButton
+                value="camera"
+                onClick={() => {
+                  setCamOn(!camOn);
+                }}
+              >
+                {camOn ? (
+                  <>
+                    <VideocamIcon fontSize="large" />
+                    &nbsp;&nbsp;ON
+                  </>
+                ) : (
+                  <>
+                    <VideocamOffOutlinedIcon fontSize="large" />
+                    &nbsp;OFF
+                  </>
+                )}
+              </ToggleButton>
+              <ToggleButton
+                value="audio"
+                onClick={() => {
+                  setMicOn(!micOn);
+                }}
+              >
+                {micOn ? (
+                  <>
+                    <MicIcon fontSize="large" />
+                    &nbsp;&nbsp;ON
+                  </>
+                ) : (
+                  <>
+                    <MicOffOutlinedIcon fontSize="large" />
+                    &nbsp;OFF
+                  </>
+                )}
+              </ToggleButton>
+              <ToggleButton
+                value="enter"
+                onClick={() => {
+                  handlerJoinBtn(micOn, camOn);
+                }}
+              >
+                입장
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </ConfigWrapper>
+        )}
+      </RoomWrapper>
+    </SnackbarProvider>
   );
 }
 
@@ -780,4 +849,10 @@ meetingDetail.getInitialProps = async (ctx) => {
   return { pathname };
 };
 
-export default meetingDetail;
+export default function meetingDetail() {
+  return (
+    <SnackbarProvider maxSnack={3}>
+      <MeetingDetail />
+    </SnackbarProvider>
+  );
+}

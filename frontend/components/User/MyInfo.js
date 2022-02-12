@@ -329,7 +329,7 @@ export default function MyInfo() {
 
     getUserInfoAPI(inputState.userId).then((res) => {
       if (res.statusCode == 200) {
-        console.log('내 정보 보기 결과: ' + JSON.stringify(res));
+        // console.log('내 정보 보기 결과: ' + JSON.stringify(res));
         inputState.name = res.user.name;
         const today = new Date();
         const todayYear = today.getFullYear().toString().slice(2);

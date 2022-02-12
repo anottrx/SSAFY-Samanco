@@ -71,7 +71,7 @@ function RoomInfo({
     <InfoWrapper>
       <div className="names">
         <span className="roomTitle">{detail.title}</span>
-        <span className="hostName">[방장] {detail.host}</span>
+        <span className="hostName">[방장] {detail.nickname}</span>
         <Stack>
           <span>
             <AccessTimeIcon />
