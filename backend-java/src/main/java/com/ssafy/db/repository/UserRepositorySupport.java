@@ -111,6 +111,10 @@ public class UserRepositorySupport {
         return jpaQueryFactory.selectFrom(qUser).where(qUser.isDeleted.eq(false)).fetch();
     }
 
+    public List<User> selectDeletedUserAll() {
+        return jpaQueryFactory.selectFrom(qUser).where(qUser.isDeleted.eq(true)).fetch();
+    }
+
     public User selectUser(Long userId) {
         return jpaQueryFactory.selectFrom(qUser).where(qUser.id.eq(userId), qUser.isDeleted.eq(false)).fetchOne();
     }

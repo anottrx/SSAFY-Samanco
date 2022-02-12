@@ -34,10 +34,6 @@ import java.util.List;
 
 import static com.ssafy.common.util.JsonUtil.getListMapFromString;
 
-/**
- * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
- */
-@Api(value = "유저 API", tags = {"User"})
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -336,6 +332,21 @@ public class UserController {
 			return ResponseEntity.status(200).body(UserSelectAllRes.of(200, "사용자가 없습니다.", null));
 		}
 		return ResponseEntity.status(200).body(UserSelectAllRes.of(200, "사용자 전체 목록", users));
+	}
+
+	@GetMapping("/deleted")
+	@ApiOperation(value = "삭제된 사용자 전체 조회")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> selectDeletedUserAll() {
+		//200 일때 사용 가능
+		List<UserDto> users=userService.selectDeletedUserAll();
+		if (users==null){
+			return ResponseEntity.status(200).body(UserSelectAllRes.of(200, "삭제된 사용자가 없습니다.", null));
+		}
+		return ResponseEntity.status(200).body(UserSelectAllRes.of(200, "삭제된 사용자 전체 목록", users));
 	}
 
 	@PostMapping("/view")

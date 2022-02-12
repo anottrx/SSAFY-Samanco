@@ -141,7 +141,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDto> selectUserAll() {
 		List<User> results=userRepositorySupport.selectUserAll();
-		if (results==null){
+		if (results==null || results.size()==0){
+			return null;
+		}
+		List<UserDto> users=new ArrayList<>();
+		for (User result: results){
+			users.add(userEntityToDto(result));
+		}
+
+		return users;
+	}
+	@Override
+	public List<UserDto> selectDeletedUserAll() {
+		List<User> results=userRepositorySupport.selectDeletedUserAll();
+		if (results==null || results.size()==0){
 			return null;
 		}
 		List<UserDto> users=new ArrayList<>();
@@ -223,7 +236,7 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 		List<User> results = projectRepositorySupport.selectJoinUsers(projectId);
-		if (results==null){
+		if (results==null || results.size()==0){
 			return null;
 		}
 		List<UserDto> users=new ArrayList<>();

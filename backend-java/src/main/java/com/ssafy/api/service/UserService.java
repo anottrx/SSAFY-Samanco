@@ -11,7 +11,6 @@ import java.util.List;
  */
 public interface UserService {
 	User createUser(UserRegisterReq userRegisterInfo);
-//	User getUserByUserId(String userId);
 	public User getUserByEmail(String email);
 	int pwdCheck(String userPwd);
 	int nameCheck(String userName);
@@ -21,9 +20,7 @@ public interface UserService {
     int updateUser(UserUpdateReq registerInfo);
 	void deleteUser(Long userId);
 	int joinUserProject(Long userId, Long projectId, String projectPosition, String projectJoinStatus);
-
 	int approveUserProject(Long hostId, Long userId, Long projectId, String projectJoinStatus);
-
 	int updateUserPassword(UserLoginReq updateInfo);
 	List<UserDto> selectUserAll();
     UserDto selectUser(Long userId);
@@ -33,16 +30,11 @@ public interface UserService {
     List<UserDto> selectProjectJoinUsers(Long userId, Long projectId);
 	int quitProject(Long userId, Long projectId);
 	int joinCancelProject(Long userId, Long projectId);
-
 	int userLikeTag(UserLikeTagReq userLikeTagReq);
-
     List<UserDto> selectStudyUsers(Long userId, Long studyId);
-
 	List<UserDto> selectStudyJoinUsers(Long userId, Long studyId);
-
     List<UserDto> selectRoomUsers(Long roomId);
-
 	int joinUserRoom(Long userId, Long roomId, String password);
-
 	int quitUserRoom(Long userId, Long roomId);
+    List<UserDto> selectDeletedUserAll();
 }
