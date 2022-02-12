@@ -47,11 +47,11 @@ export default function LostPassword(props) {
     } else if (!emailReg.test(email)) {
       alert('이메일 양식을 확인해 주세요.');
     } else {
-      //   console.log(value);
+        console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
-      //   sendEmailCodeAPI(value).then((res) => {
+      // sendEmailPWCodeAPI(value).then((res) => {
       // setInputState.email(false);
-      //   });
+      // });
       setShowCodeInput(true);
       setAuthFin(true);
       setShowEmailAgainText(true);
@@ -127,7 +127,8 @@ export default function LostPassword(props) {
             {showEmailAgainText ? <ShowEmailAgain /> : null}
             {/* <br /> */}
             {showCodeInput ? (
-              <CheckEmailCode changeHandle={changeHandle} />
+              <CheckEmailCode changeHandle={changeHandle} email={email} lostpw={true}
+              />
             ) : null}
             <br />
             <Button

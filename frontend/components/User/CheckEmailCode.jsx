@@ -9,6 +9,10 @@ import { checkEmailCodeAPI, checkEmailPWAPI } from '../../pages/api/user';
 import CountdownTimer from '../Common/CountdownTimer';
 
 export default function CheckEmailCode(props) {
+  const [inputValue, setInputValue] = useState({
+    code: '',
+    email: props.email
+  })
   const [code, setCode] = useState('');
   const [authFin, setAuthFin] = useState(false);
   const [timer, setTimer] = useState(true);
@@ -30,6 +34,8 @@ export default function CheckEmailCode(props) {
     // 이메일로 받은 인증번호 입력해서 확인하기 + 확인 완료되면 폼 닫고 이메일 입력 못 받게 바꾸기
     e.preventDefault();
     const value = code;
+    inputValue.code = code;
+    inputValue.email = props.email
 
     if (!value) {
       alert('인증번호를 입력해주세요.');
@@ -38,15 +44,24 @@ export default function CheckEmailCode(props) {
       //   checkEmailPWAPI(value).then((res) => {
       //     setEmailCodeRes({ code: res.statusCode, msg: res.message });
 
-      checkEmailCodeAPI(code).then((res) => {
-        // console.log(res);
-        if (res.statusCode == 200) {
-          props.changeHandle(true, 'code');
-          setAuthFin(true);
-        } else {
-          props.changeHandle(false, 'code');
-        }
-      });
+      // console.log(inputValue);
+
+      if(props.lostpw) {
+        console.log('비밀번호 잃어버려서 온 것')
+      } else {
+        console.log('회원가입하다가 온 것')
+        checkEmailCodeAPI(code).then((res) => {
+          // console.log(res);
+          if (res.statusCode == 200) {
+            props.changeHandle(true, 'code');
+            setAuthFin(true);
+          } else {
+            props.changeHandle(false, 'code');
+          }
+        });
+      }
+
+      
       // 인증 실패시
       // props.changeHandle(false, "code");
       // props.changeHandle(true, "code");

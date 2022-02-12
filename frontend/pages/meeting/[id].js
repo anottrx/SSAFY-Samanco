@@ -25,6 +25,8 @@ import axios from 'axios';
 import UserVideo from '../../components/Meeting/UserVideo';
 import Router from 'next/router';
 
+import { quitRoomAPI } from '../api/meeting';
+
 var OpenViduBrowser;
 
 const OPENVIDU_SERVER_URL = 'https://i6a502.p.ssafy.io:5443';
@@ -78,6 +80,7 @@ function meetingDetail() {
   `;
 
   let detail = useSelector(({ meeting }) => meeting.meetingDetail);
+  
   const [OV, setOV] = useState();
   const [screenOV, setScreenOV] = useState();
   const [session, setSession] = useState();
@@ -420,6 +423,11 @@ function meetingDetail() {
     });
   };
 
+ 
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+  });
   const shareMonitor = () => {
     if (!screenOV || !screenSession) return;
 
@@ -492,9 +500,23 @@ function meetingDetail() {
   };
 
   const exitClick = () => {
+    inputValue.roomId = detail.roomId
+
     videoTrackOff(publisher);
     leaveSession();
     clear();
+    
+    quitRoomAPI(inputValue).then((res) => {
+      if (res.statusCode == 200) {
+      } else {
+        alert(`${res.message}`);
+      }
+    });
+    // 방장도 미팅룸 탈퇴
+    // to do : 방장이면 방 삭제
+    if (detail.hostId == sessionStorage.getItem('userId')) {
+      deleteSession();
+    }
     Router.replace('/meeting');
   };
 
