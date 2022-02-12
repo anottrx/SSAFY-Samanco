@@ -486,7 +486,8 @@ public class ProjectController{
         try {
             fileByte = FileUtils.readFileToByteArray(target);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println("file not found");
             return ResponseEntity.status(200).body(FileStringRes.of(401, "해당 파일을 다운로드할 수 없습니다.", null));
         }
         String fileString = new String(Base64.encodeBase64(fileByte));
