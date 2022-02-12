@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Router from 'next/router';
 import Layout from '../../components/Layout';
 import * as boardActions from '../../store/module/board';
+import { joinRoomAPI, getRoomById } from '../api/meeting';
 
 import {
   getArticleById,
@@ -38,6 +39,7 @@ import {
 } from '@mui/material';
 import CommentList from '../../components/Board/CommentList';
 import BoardColor from '../../data/BoardColor.json';
+import * as meetingActions from '../../store/module/meeting';
 
 //게시글 상세보기 페이지
 
@@ -49,6 +51,12 @@ const BoardDetail = () => {
   const [detailLikes, setLikes] = useState(detail.likes);
 
   const dispatch = useDispatch();
+  const setDetail = useCallback(
+    ({ detail }) => {
+      dispatch(meetingActions.setMeetingDetail({ detail }));
+    },
+    [dispatch]
+  );
 
   function fetchData(addHit) {
     getArticleById({
@@ -145,18 +153,41 @@ const BoardDetail = () => {
   );
 
   function JoinRoomOperation() {
+    const [inputValue, setInputValue] = useState({
+      password: '', // 비밀번호 없는 방
+      roomId: '',
+      userId: sessionStorage.getItem("userId")
+    })
+
     return (
       <ButtonGroup variant="outlined">
-        {/* {detail.canJoin ? (
-          방 참가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성) */}
+        {detail.canJoin && detail.roomId!=0 ? (
         <Button
           onClick={() => {
-            Router.push('/meeting/join');
+            inputValue.roomId = detail.roomId;
+
+            // Router.push('/meeting/join');
+            joinRoomAPI(inputValue).then((res) => {
+              if (res.statusCode == 200) {
+                getRoomById(detail.roomId).then((res) => {
+                  if (res.statusCode == 200) {
+                    Router.push('/meeting/' + detail.roomId);
+                    setDetail({
+                      detail: res.room,
+                    });
+                  } else {
+                    alert(`${res.message}`);
+                  }
+                });
+              } else {
+                alert(`${res.message}`);
+              }
+            });
           }}
         >
           방 참가
         </Button>
-        {/* ) : null} */}
+        ) : null} 
       </ButtonGroup>
     );
   }
@@ -174,9 +205,7 @@ const BoardDetail = () => {
     return (
       <>
         <ButtonGroup variant="outlined">
-          {detail.tag !== 'notice' ? (
-            // && detail.canRegister
-            // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
+          {detail.tag !== 'notice' && detail.canRegister ? (
             <Button
               onClick={() => {
                 Router.push({

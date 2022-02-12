@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Layout from '../../components/Layout';
 import { useSelector, useDispatch } from 'react-redux';
 import Router, { useRouter } from 'next/router';
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import styled from '@emotion/styled';
 
-import { registAPI, joinRoomAPI } from '../api/meeting';
+import { registAPI, joinRoomAPI, getRoomById } from '../api/meeting';
 
 function MeetingRegist() {
   const projectDetail = useSelector(({ project }) => project.projectDetail);
@@ -96,6 +96,8 @@ function MeetingRegist() {
 
   const [inputValue, setInputValue] = useState({
     hostId: sessionStorage.getItem('userId'),
+    isSecret: 0,
+    password: '',
   });
 
   const [files, setFiles] = useState('');
@@ -163,6 +165,14 @@ function MeetingRegist() {
     if (!check) alert(msg);
     return check;
   }
+
+  const dispatch = useDispatch();
+  const setDetail = useCallback(
+    ({ detail }) => {
+      dispatch(meetingActions.setMeetingDetail({ detail }));
+    },
+    [dispatch]
+  );
 
   return (
     <Layout>
@@ -279,19 +289,30 @@ function MeetingRegist() {
                 // {
                 //     console.log(`${key}`);
                 // }
+                console.log(inputValue);
+                let roomId;
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
-                    const roomId = res.room.roomId;
+                    roomId = res.room.roomId;
                     alert(
                       '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
                     );
-                    console.log(res,' : 방번호')
-                    
-                    inputValue.roomId = roomId
+
+                    inputValue.roomId = roomId;
                     inputValue.userId = inputValue.hostId;
-                    joinRoomAPI(inputValue).then((res) => { // 방장도 미팅룸 가입
+                    joinRoomAPI(inputValue).then((res) => {
+                      // 방장도 미팅룸 가입
                       if (res.statusCode == 200) {
-                        Router.push('/meeting/' + roomId);
+                        getRoomById(roomId).then((res) => {
+                          if (res.statusCode == 200) {
+                            Router.push('/meeting/' + roomId);
+                            setDetail({
+                              detail: res.room,
+                            });
+                          } else {
+                            alert(`${res.message}`);
+                          }
+                        });
                       } else {
                         alert(`${res.message}`);
                       }

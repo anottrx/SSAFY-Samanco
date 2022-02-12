@@ -4,7 +4,7 @@ import StackList from '../../components/Club/StackList';
 import PositionList from '../../components/Club/PositionList';
 import UserCard from '../../components/Common/UserCard';
 
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -35,7 +35,9 @@ import {
   quitProject,
   projectImageDownload,
 } from '../../pages/api/project';
+import { joinRoomAPI, getRoomById } from '../api/meeting';
 import * as projectActions from '../../store/module/project';
+import * as meetingActions from '../../store/module/meeting';
 
 import Router from 'next/router';
 
@@ -45,6 +47,13 @@ function ProjectInfo() {
   const [reloadCondition, setReloadCondition] = useState(false);
   let [imageUrl, setImageUrl] = useState(undefined);
   const dispatch = useDispatch();
+
+  const setDetail = useCallback(
+    ({ detail }) => {
+      dispatch(meetingActions.setMeetingDetail({ detail }));
+    },
+    [dispatch]
+  );
 
   function base64ToArrayBuffer(base64) {
     const binaryString = window.atob(base64); // Comment this if not using base64
@@ -222,6 +231,12 @@ function ProjectInfo() {
     const [hostAssign, setHostAssign] = useState(null);
     const [nextHost, setNextHost] = useState(null);
 
+    const [inputValue, setInputValue] = useState({
+      password: '', // 비밀번호 없는 방
+      roomId: '',
+      userId: sessionStorage.getItem("userId")
+    })
+    
     return (
       <>
         {sessionStorage.getItem('userId') == detail.hostId ? (
@@ -237,9 +252,7 @@ function ProjectInfo() {
           <div></div>
         )}
         <ButtonGroup variant="outlined">
-          {sessionStorage.getItem('userId') == clubData.hostId ? (
-            // && detail.canRegister
-            // 방 생성이 가능한지 확인하는 작업 필요 (canRegister가 true면 버튼 생성)
+          {sessionStorage.getItem('userId') == clubData.hostId && detail.canRegister ? (
             <>
               <Button
               onClick={() => {
@@ -260,12 +273,28 @@ function ProjectInfo() {
               </Button>
             </>
           ) : null}
-          {sessionStorage.getItem('userId') != detail.hostId ? (
-            // && detail.canJoin
-            // 방 참가가 가능한지 확인하는 작업 필요 (canJoin가 true면 버튼 생성)
+          {sessionStorage.getItem('userId') != detail.hostId && detail.canJoin &&
+            detail.roomId != 0 ? (
             <Button
               onClick={() => {
-                Router.push('/meeting/join');
+                inputValue.roomId = detail.roomId;
+                // Router.push('/meeting/join');
+                joinRoomAPI(inputValue).then((res) => {
+                  if (res.statusCode == 200) {
+                    getRoomById(detail.roomId).then((res) => {
+                      if (res.statusCode == 200) {
+                        Router.push('/meeting/' + detail.roomId);
+                        setDetail({
+                          detail: res.room,
+                        });
+                      } else {
+                        alert(`${res.message}`);
+                      }
+                    });
+                  } else {
+                    alert(`${res.message}`);
+                  }
+                });
               }}
               >
                 방 참가

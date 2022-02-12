@@ -291,6 +291,8 @@ export function Item(props) {
   );
 }
 
+
+
 function JoinDialog(props) {
   let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
 

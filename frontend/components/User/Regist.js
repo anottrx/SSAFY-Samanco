@@ -323,7 +323,7 @@ export default function Regist() {
           />
           <>
             {showEmailCodeCheck ? (
-              <CheckEmailCode changeHandle={changeHandle} />
+              <CheckEmailCode changeHandle={changeHandle} email={inputState.email}/>
             ) : (
               <></>
             )}
