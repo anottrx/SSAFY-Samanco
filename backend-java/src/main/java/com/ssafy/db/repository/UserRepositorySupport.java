@@ -134,9 +134,6 @@ public class UserRepositorySupport {
 
 //    @Transactional
     public List<User> selectRoomUsers(Long roomId) {
-        if (!valid.isRoomValid(roomId)){
-            return null;
-        }
         return jpaQueryFactory.selectFrom(qUser)
                 .where(qUser.roomId.eq(roomId), qUser.isDeleted.eq(false))
                 .fetch();

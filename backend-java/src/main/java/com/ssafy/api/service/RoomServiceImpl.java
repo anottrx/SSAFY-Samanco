@@ -114,8 +114,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto roomEntityToDto(Room result) {
+        Long roomId=result.getId();
         RoomDto roomDto=new RoomDto();
-        roomDto.setRoomId(result.getId());
+        roomDto.setRoomId(roomId);
         roomDto.setHostId(result.getHostId());
         roomDto.setTitle(result.getTitle());
         roomDto.setTag(result.getTag());
@@ -129,6 +130,12 @@ public class RoomServiceImpl implements RoomService {
             return null;
         }
         roomDto.setNickname(nickname);
+//        roomDto.setUsers(commonRepository.selectRoomUsers(roomId));
+//        if (result.getUsers()==null){
+//            roomDto.setSize(0);
+//        } else {
+//            roomDto.setSize(result.getUsers().size());
+//        }
 
         return  roomDto;
     }
