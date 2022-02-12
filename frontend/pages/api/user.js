@@ -38,10 +38,13 @@ async function sendEmailCodeAPI(email) {
     .catch((err) => err.response.data);
 }
 
-async function checkEmailCodeAPI(code) {
+async function checkEmailCodeAPI(data) {
   // 회원가입시 이메일로 받은 인증번호로 인증하기
   return await api
-    .post('/api/email/code', code)
+    .post('/api/email/code', {
+      email: data.email,
+      code: data.code
+    })
     .then((res) => res.data)
     .catch((err) => err.response.data);
 }
