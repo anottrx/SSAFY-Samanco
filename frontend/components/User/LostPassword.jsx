@@ -47,15 +47,21 @@ export default function LostPassword(props) {
     } else if (!emailReg.test(email)) {
       alert('이메일 양식을 확인해 주세요.');
     } else {
-        console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
-      // sendEmailPWCodeAPI(value).then((res) => {
-      // setInputState.email(false);
-      // });
-      setShowCodeInput(true);
-      setAuthFin(true);
-      setShowEmailAgainText(true);
+      sendEmailPWCodeAPI(value).then((res) => {
+        // console.log(res)
+        if (res.statusCode == 200) {
+          // props.changeHandle(true, 'code');
+          setAuthFin(true);
+          setShowEmailAgainText(true);
+        } else {
+          // 
+          // props.changeHandle(false, 'code');
+      }});
       setSendEmailButton(false);
+      setShowCodeInput(true);
+      // setAuthFin(true);
+      
     }
   };
 
@@ -68,10 +74,9 @@ export default function LostPassword(props) {
     } else {
       //   console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
-      //   sendEmailCodeAPI(value).then((res) => {
-      // setInputState.email(false);
-      //   });
-      console.log('인증번호 ' + code);
+        // sendEmailCodeAPI(value).then((res) => {
+        // });
+      // console.log('인증번호 ' + code);
       setAuthFin(true);
       setReset(true);
       sessionStorage.setItem('email', email);

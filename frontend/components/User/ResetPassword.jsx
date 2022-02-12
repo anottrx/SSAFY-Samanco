@@ -94,7 +94,7 @@ export default function ResetPassword() {
     inputState.email = sessionStorage.getItem('email');
     if (isNormal) {
       resetPWAPI(inputState).then((res) => {
-        console.log(res);
+        // console.log(res);
         alert(`${res.message}`);
         if (res.statusCode == 200) {
           if (sessionStorage.getItem('nickname') == null) {
