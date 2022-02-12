@@ -149,7 +149,7 @@ function ItemList() {
                         sm={6}
                         md={4}
                         lg={3}
-                        key={data.no}
+                        key={data.roomId}
                         onClick={() => {
                           joinDialogOpen();
                           setRoom(data);
@@ -169,7 +169,7 @@ function ItemList() {
                         sm={6}
                         md={4}
                         lg={3}
-                        key={data.no}
+                        key={data.roomId}
                         onClick={() => {
                           joinDialogOpen();
                           setRoom(data);

@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-
-import Users from '../../components/Meeting/User';
 import RoomInfo from '../../components/Meeting/RoomInfo';
 import Chatting from '../../components/Meeting/Chatting';
 import {
@@ -17,7 +15,6 @@ import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
-import IosShareIcon from '@mui/icons-material/IosShare';
 import axios from 'axios';
 import UserVideo from '../../components/Meeting/UserVideo';
 import Router from 'next/router';
@@ -277,6 +274,12 @@ function MeetingDetail() {
       // console.log('스트림 속성이 변경되면', event);
       const subs = subscribers;
       setSubscribers([...subs]);
+    });
+
+    mySession.once('sessionDisconnected', () => {
+      alert('미팅이 종료 되었습니다.');
+      clear();
+      Router.push('/meeting');
     });
 
     getToken()
