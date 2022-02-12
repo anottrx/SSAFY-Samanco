@@ -175,8 +175,12 @@ function ItemList() {
                         lg={3}
                         key={data.no}
                         onClick={() => {
-                          joinDialogOpen();
-                          setRoom(data);
+                          if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
+                            joinDialogOpen();
+                            setRoom(data);
+                          } else {
+                            alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                          }                          
                         }}
                       >
                         <Item data={data}></Item>
@@ -195,8 +199,12 @@ function ItemList() {
                         lg={3}
                         key={data.no}
                         onClick={() => {
-                          joinDialogOpen();
-                          setRoom(data);
+                          if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
+                            joinDialogOpen();
+                            setRoom(data);
+                          } else {
+                            alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                          }    
                         }}
                       >
                         <Item data={data}></Item>
