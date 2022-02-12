@@ -105,13 +105,21 @@ function StudyInfo() {
       })
       .catch((err) => console.log(err));
 
-    getStudyByUserId(parseInt(sessionStorage.getItem('userId'))).then((res) => {
+    // getStudyByUserId(parseInt(sessionStorage.getItem('userId'))).then((res) => {
+    //   dispatch(
+    //     studyActions.setStudyDetail({
+    //       detail: res.studies.filter((data) => data.id == sid)[0],
+    //     })
+    //   );
+    // });
+
+    getStudyById({studyId: sid, userId: sessionStorage.getItem('userId')}).then((res)=> {
       dispatch(
         studyActions.setStudyDetail({
-          detail: res.studies.filter((data) => data.id == sid)[0],
+          detail: res.study
         })
       );
-    });
+    })
   }
 
   useLayoutEffect(() => {
@@ -274,7 +282,7 @@ function StudyInfo() {
           <div></div>
         )}
         <ButtonGroup variant="outlined">
-          {sessionStorage.getItem('userId') == detail.hostId ? (
+          {sessionStorage.getItem('userId') == detail.hostId && detail.canRegister ? (
             <>
               <Button
                 onClick={() => {
@@ -300,7 +308,7 @@ function StudyInfo() {
               </Button>
             </>
           ) : null}
-          {sessionStorage.getItem('userId') != detail.hostId ? (
+          {sessionStorage.getItem('userId') != detail.hostId && detail.canJoin ? (
             <Button
               onClick={() => {
                 inputValue.roomId = detail.roomId;
