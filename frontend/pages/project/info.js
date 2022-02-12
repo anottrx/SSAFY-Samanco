@@ -25,6 +25,7 @@ import {
   FormControlLabel,
   Radio,
   DialogActions,
+  TextField,
 } from '@mui/material';
 
 import {
@@ -44,8 +45,17 @@ import Router from 'next/router';
 function ProjectInfo() {
   let clubData = useSelector(({ project }) => project.projectDetail);
   const userData = useSelector(({ project }) => project.userList);
+  const roomDetail = useSelector(({ meeting }) => meeting.meetingDetail);
   const [reloadCondition, setReloadCondition] = useState(false);
   let [imageUrl, setImageUrl] = useState(undefined);
+  const [openPw, setOpenPw] = useState(false);
+
+  const pwDialogOpen = () => {
+    setOpenPw(true);
+  };
+  const pwDialogClose = () => {
+    setOpenPw(false);
+  };
   const dispatch = useDispatch();
 
   const setDetail = useCallback(
@@ -177,7 +187,10 @@ function ProjectInfo() {
       <CusContainer maxWidth="md">
         <br></br>
         <DetailHeader>
-          <DetailOperation detail={clubData}></DetailOperation>
+          <DetailOperation
+            detail={clubData}
+            pwDialogOpen={pwDialogOpen}
+          ></DetailOperation>
         </DetailHeader>
         <h2>{clubData.title}</h2>
         <DetailWrapper maxWidth="sm">
@@ -202,11 +215,17 @@ function ProjectInfo() {
           <ProjectInfo detail={clubData}></ProjectInfo>
         </DetailWrapper>
         <ProjectDetail></ProjectDetail>
+        <PwDialog
+          open={openPw}
+          pwDialogClose={pwDialogClose}
+          room={roomDetail}
+          setDetail={setDetail}
+        ></PwDialog>
       </CusContainer>
     </Layout>
   );
 
-  function DetailOperation({ detail }) {
+  function DetailOperation({ detail, pwDialogOpen }) {
     const [openQuit, setOpenQuit] = useState(false);
     const [openUsers, setOpenUsers] = useState(false);
 
@@ -234,9 +253,9 @@ function ProjectInfo() {
     const [inputValue, setInputValue] = useState({
       password: '', // 비밀번호 없는 방
       roomId: '',
-      userId: sessionStorage.getItem("userId")
-    })
-    
+      userId: sessionStorage.getItem('userId'),
+    });
+
     return (
       <>
         {sessionStorage.getItem('userId') == detail.hostId ? (
@@ -252,15 +271,16 @@ function ProjectInfo() {
           <div></div>
         )}
         <ButtonGroup variant="outlined">
-          {sessionStorage.getItem('userId') == clubData.hostId && detail.canRegister ? (
+          {sessionStorage.getItem('userId') == clubData.hostId &&
+          detail.canRegister ? (
             <>
               <Button
-              onClick={() => {
-                Router.push({
-                  pathname: '/meeting/regist',
-                  query: { tag: 'project' },
-                });
-              }}
+                onClick={() => {
+                  Router.push({
+                    pathname: '/meeting/regist',
+                    query: { tag: 'project' },
+                  });
+                }}
               >
                 방 생성
               </Button>
@@ -273,31 +293,42 @@ function ProjectInfo() {
               </Button>
             </>
           ) : null}
-          {sessionStorage.getItem('userId') != detail.hostId && detail.canJoin &&
-            detail.roomId != 0 ? (
+          {sessionStorage.getItem('userId') != detail.hostId &&
+          detail.canJoin &&
+          detail.roomId != 0 ? (
             <Button
               onClick={() => {
                 inputValue.roomId = detail.roomId;
-                // Router.push('/meeting/join');
-                joinRoomAPI(inputValue).then((res) => {
+                getRoomById(detail.roomId).then((res) => {
                   if (res.statusCode == 200) {
-                    getRoomById(detail.roomId).then((res) => {
-                      if (res.statusCode == 200) {
-                        Router.push('/meeting/' + detail.roomId);
-                        setDetail({
-                          detail: res.room,
-                        });
-                      } else {
-                        alert(`${res.message}`);
-                      }
+                    let roomData = res.room;
+
+                    setDetail({
+                      detail: roomData,
                     });
+
+                    if (roomData.isSecret) {
+                      // 비밀방이면
+                      pwDialogOpen();
+                    } else {
+                      // 비밀방 아니면 바로 입장
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Router.push('/meeting/' + detail.roomId);
+                        } else {
+                          // 방 입장 실패
+                          alert(`${res.message}`);
+                        }
+                      });
+                    }
                   } else {
+                    // 방 조회 실패 시
                     alert(`${res.message}`);
                   }
                 });
               }}
-              >
-                방 참가
+            >
+              방 참가
             </Button>
           ) : null}
           <Button onClick={QuitDialogOpen}>탈퇴</Button>
@@ -589,6 +620,57 @@ function ProjectInfo() {
       );
     }
   }
+}
+
+function PwDialog(props) {
+  let { open, pwDialogClose, room } = props;
+  let [pw, setPw] = useState('');
+
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+    password: '',
+  });
+
+  const pwChangeHandle = (e) => {
+    setPw(e.target.value);
+  };
+
+  return (
+    <Dialog open={open} onClose={pwDialogClose}>
+      <DialogTitle>{`비밀번호를 입력해주세요.`}</DialogTitle>
+      <DialogContent>
+        <TextField value={pw} onChange={pwChangeHandle}></TextField>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={pwDialogClose}>취소</Button>
+        <Button
+          onClick={
+            // 입력한 비밀번호와 일치하면 입장
+            pw === room.password
+              ? () => {
+                  inputValue.password = pw;
+                  inputValue.roomId = room.roomId;
+                  joinRoomAPI(inputValue).then((res) => {
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + room.roomId);
+                      pwDialogClose();
+                    } else {
+                      alert(`${res.message}`);
+                    }
+                  });
+                }
+              : () => {
+                  alert('비밀번호를 확인해주세요.');
+                }
+          }
+          autoFocus
+        >
+          확인
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 export default ProjectInfo;

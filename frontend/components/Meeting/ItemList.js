@@ -21,12 +21,8 @@ import {
   DialogActions,
   DialogContent,
   TextField,
-  Tooltip,
-  ToggleButton,
-  ToggleButtonGroup,
 } from '@mui/material';
 
-import meetingJSONData from '../../data/meetingData.json';
 import { getRoomAllAPI } from '../../pages/api/meeting';
 import Router from 'next/router';
 
@@ -40,13 +36,6 @@ import { useTheme } from '@mui/material/styles';
 import PersonIcon from '@mui/icons-material/Person';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LockIcon from '@mui/icons-material/Lock';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
-
-// import { OpenVidu } from 'openvidu-browser';
-import UserVideo from './UserVideo';
 
 var _ = require('lodash');
 
@@ -67,13 +56,6 @@ function ItemList() {
   const setList = useCallback(
     ({ list }) => {
       dispatch(meetingActions.setMeetingList({ list }));
-    },
-    [dispatch]
-  );
-
-  const setPublisherStatus = useCallback(
-    ({ status }) => {
-      dispatch(meetingActions.setPublisherStatus({ status }));
     },
     [dispatch]
   );
@@ -110,12 +92,6 @@ function ItemList() {
       if (res.rooms) setList({ list: res.rooms });
       else setList({ list: [] });
     });
-
-    // if (meetingData.length == 0) {
-    //   // 빈 배열이면 배열 요청
-    //   // To Do : 나중에 api로 값 가져오게 수정
-    //   setList({ list: meetingJSONData });
-    // }
   }, []);
 
   const handleChange = (index, value) => {
@@ -232,7 +208,6 @@ function ItemList() {
         color="primary"
         page={page}
         onChange={handleChange}
-        setPublisherStatus={setPublisherStatus}
       />
     </>
   );
@@ -299,8 +274,6 @@ export function Item(props) {
   );
 }
 
-
-
 function JoinDialog(props) {
   let { open, joinDialogClose, room, pwDialogOpen, setDetail } = props;
 
@@ -309,106 +282,13 @@ function JoinDialog(props) {
     userId: sessionStorage.getItem('userId'),
     password: '',
   });
-  // const [publisher, setPublisher] = useState(null);
-
-  // useEffect(() => {
-  //   if (publisher) {
-  //     let newPublisher = _.cloneDeep(publisher);
-  //     newPublisher.properties = {
-  //       ...publisher.properties,
-  //       publishAudio: userStatus.includes('audio'),
-  //       publishVideo: userStatus.includes('camera'),
-  //     };
-  //     setPublisher(newPublisher);
-  //   }
-  // }, [userStatus]);
-
-  // let commonSetting = {
-  //   audioSource: undefined, // 오디오 출처 : 디폴트값 - 마이크
-  //   resolution: '320x240', // 비디오 사이즈
-  //   frameRate: 30, // 비디오 프레임
-  //   insertMode: 'APPEND', // 비디오가 'video-container' 타겟 요소에 어떻게 삽입될 지 결정
-  //   mirror: false, // 비디오 좌우반전할지 말지 (true: 반전)
-  //   nickname: sessionStorage.getItem('nickname'),
-  // };
-
-  // const initOV = () => {
-  //   (async function init() {
-  //     // eslint-disable-next-line
-  //     openViduModule = await import('openvidu-browser');
-  //     OV = new openViduModule.OpenVidu();
-  //     devices = await OV.getDevices();
-  //     videoDevices = devices.filter((device) => device.kind == 'videoinput');
-
-  //     if (videoDevices.length > 0) {
-  //       setPublisher(
-  //         OV.initPublisher(undefined, {
-  //           ...commonSetting,
-  //           videoSource: videoDevices[0].deviceId, // 비디오 출처 : 디폴트값 - 웹캠
-  //           publishAudio: true, // 방에 들어갔을 때 오디오를 mute할지, 그렇지 않을지 결정 (true: ON)
-  //           publishVideo: true, // 방에 들어갔을 때 비디오를 킬 지, 끌 지 결정 (true: ON)
-  //         })
-  //       );
-  //     }
-  //   })();
-  // };
-
-  useEffect(() => {
-    // navigator.mediaDevices
-    //   .getUserMedia({ audio: true, video: true })
-    //   .then((stream) => {
-    //     initOV();
-    //   })
-    //   .catch((err) => {
-    //     alert('접근이 거절되었습니다. 브라우저 설정에서 변경이 가능합니다.');
-    //   });
-    return () => {};
-  }, []);
 
   return (
     <Dialog open={open} onClose={joinDialogClose}>
       <DialogTitle>{`[${room.title}]\n방에 입장하시겠습니까?`}</DialogTitle>
-      <DialogContent>
-        {/* <div id="video-container" className="col-md-6">
-          {userStatus.includes('camera') && publisher !== undefined ? (
-            <div className="stream-container col-md-6 col-xs-6">
-              <UserVideo
-                streamManager={publisher}
-                name={sessionStorage.getItem('nickname')}
-              />
-            </div>
-          ) : (
-            <>
-              <NoVideo />
-              <p>{sessionStorage.getItem('nickname')}</p>
-            </>
-          )}
-        </div>
-        <ToggleButtonGroup
-          value={userStatus}
-          onChange={handleUserStatus}
-          aria-label="user status formatting"
-          style={{ marginTop: '10px' }}
-        >
-          <ToggleButton value="camera" aria-label="camera">
-            {userStatus.includes('camera') ? (
-              <VideocamIcon />
-            ) : (
-              <VideocamOffOutlinedIcon />
-            )}
-          </ToggleButton>
-          <ToggleButton value="audio" aria-label="audio">
-            {userStatus.includes('audio') ? (
-              <MicIcon />
-            ) : (
-              <MicOffOutlinedIcon />
-            )}
-          </ToggleButton>
-        </ToggleButtonGroup> */}
-      </DialogContent>
+      <DialogContent></DialogContent>
       <DialogActions>
         <Button onClick={joinDialogClose}>취소</Button>
-        {/* {userStatus.length > 0 ? ( */}
         <Button
           onClick={
             // 비밀방인지 여부 확인
@@ -418,7 +298,6 @@ function JoinDialog(props) {
                   pwDialogOpen();
                 }
               : () => {
-                  // setPublisherStatus({ status: publisher });
                   // 카메라, 오디오 정보 -> publisher
                   inputValue.roomId = room.roomId;
                   joinRoomAPI(inputValue).then((res) => {
@@ -438,14 +317,6 @@ function JoinDialog(props) {
         >
           확인
         </Button>
-        {/* ) : (
-          <Tooltip
-            title="방에 입장하기 위해선 마이크나 카메라를 켜야해요."
-            placement="top"
-          >
-            <Button>앗</Button>
-          </Tooltip>
-        )} */}
       </DialogActions>
     </Dialog>
   );
@@ -475,10 +346,8 @@ function PwDialog(props) {
         <Button
           onClick={
             // 일치하면 입장
-            // To Do : 나중에 방 비밀번호로 변경
             pw === room.password
               ? () => {
-                  // setPublisherStatus({ status: publisher });
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId;
                   joinRoomAPI(inputValue).then((res) => {

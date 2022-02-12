@@ -30,6 +30,7 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  DialogContent,
   ButtonGroup,
   TextField,
   Accordion,
@@ -45,10 +46,19 @@ import * as meetingActions from '../../store/module/meeting';
 
 const BoardDetail = () => {
   const detail = useSelector(({ board }) => board.boardDetail);
+  const roomDetail = useSelector(({ meeting }) => meeting.meetingDetail);
   const tag = detail.tag;
   const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
   const [detailLikes, setLikes] = useState(detail.likes);
+  const [openPw, setOpenPw] = useState(false);
+
+  const pwDialogOpen = () => {
+    setOpenPw(true);
+  };
+  const pwDialogClose = () => {
+    setOpenPw(false);
+  };
 
   const dispatch = useDispatch();
   const setDetail = useCallback(
@@ -77,20 +87,16 @@ const BoardDetail = () => {
       // 유저가 좋아요를 안누른 상태이면
       if (like) {
         // 버튼 눌렀을 때 == 좋아요
-        // console.log('좋아요 안누른 상태, like');
         setLikes(detail.likes + 1);
       } else {
-        // console.log('좋아요 안누른 상태, unlike');
         setLikes(detail.likes);
       }
     } else {
       // 유저가 좋아요를 누른 상태면
       if (like) {
         // 버튼 눌렀을 때 == 좋아요 취소
-        // console.log('좋아요 누른 상태, like');
         setLikes(detail.likes);
       } else {
-        // console.log('좋아요 누른 상태, unlike');
         setLikes(detail.likes - 1);
       }
     }
@@ -144,50 +150,66 @@ const BoardDetail = () => {
           sessionStorage.getItem('userId') == detail.userId ? (
             <DetailOperation />
           ) : (
-            <JoinRoomOperation />
+            <JoinRoomOperation pwDialogOpen={pwDialogOpen} />
           )}
         </DetailHeader>
         <BoardDetail></BoardDetail>
+        <PwDialog
+          open={openPw}
+          pwDialogClose={pwDialogClose}
+          room={roomDetail}
+          setDetail={setDetail}
+        ></PwDialog>
       </CusContainer>
     </Layout>
   );
 
-  function JoinRoomOperation() {
+  function JoinRoomOperation({ pwDialogOpen }) {
     const [inputValue, setInputValue] = useState({
       password: '', // 비밀번호 없는 방
       roomId: '',
-      userId: sessionStorage.getItem("userId")
-    })
+      userId: sessionStorage.getItem('userId'),
+    });
 
     return (
       <ButtonGroup variant="outlined">
-        {detail.canJoin && detail.roomId!=0 ? (
-        <Button
-          onClick={() => {
-            inputValue.roomId = detail.roomId;
+        {detail.canJoin && detail.roomId != 0 ? (
+          <Button
+            onClick={() => {
+              inputValue.roomId = detail.roomId;
 
-            // Router.push('/meeting/join');
-            joinRoomAPI(inputValue).then((res) => {
-              if (res.statusCode == 200) {
-                getRoomById(detail.roomId).then((res) => {
-                  if (res.statusCode == 200) {
-                    Router.push('/meeting/' + detail.roomId);
-                    setDetail({
-                      detail: res.room,
-                    });
+              getRoomById(detail.roomId).then((res) => {
+                if (res.statusCode == 200) {
+                  let roomData = res.room;
+
+                  setDetail({
+                    detail: roomData,
+                  });
+
+                  if (roomData.isSecret) {
+                    // 비밀방이면
+                    pwDialogOpen();
                   } else {
-                    alert(`${res.message}`);
+                    // 비밀방 아니면 바로 입장
+                    joinRoomAPI(inputValue).then((res) => {
+                      if (res.statusCode == 200) {
+                        Router.push('/meeting/' + detail.roomId);
+                      } else {
+                        // 방 입장 실패
+                        alert(`${res.message}`);
+                      }
+                    });
                   }
-                });
-              } else {
-                alert(`${res.message}`);
-              }
-            });
-          }}
-        >
-          방 참가
-        </Button>
-        ) : null} 
+                } else {
+                  // 방 조회 실패 시
+                  alert(`${res.message}`);
+                }
+              });
+            }}
+          >
+            방 참가
+          </Button>
+        ) : null}
       </ButtonGroup>
     );
   }
@@ -514,5 +536,56 @@ const BoardDetail = () => {
     );
   }
 };
+
+function PwDialog(props) {
+  let { open, pwDialogClose, room } = props;
+  let [pw, setPw] = useState('');
+
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+    password: '',
+  });
+
+  const pwChangeHandle = (e) => {
+    setPw(e.target.value);
+  };
+
+  return (
+    <Dialog open={open} onClose={pwDialogClose}>
+      <DialogTitle>{`비밀번호를 입력해주세요.`}</DialogTitle>
+      <DialogContent>
+        <TextField value={pw} onChange={pwChangeHandle}></TextField>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={pwDialogClose}>취소</Button>
+        <Button
+          onClick={
+            // 입력한 비밀번호와 일치하면 입장
+            pw === room.password
+              ? () => {
+                  inputValue.password = pw;
+                  inputValue.roomId = room.roomId;
+                  joinRoomAPI(inputValue).then((res) => {
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + room.roomId);
+                      pwDialogClose();
+                    } else {
+                      alert(`${res.message}`);
+                    }
+                  });
+                }
+              : () => {
+                  alert('비밀번호를 확인해주세요.');
+                }
+          }
+          autoFocus
+        >
+          확인
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 export default BoardDetail;

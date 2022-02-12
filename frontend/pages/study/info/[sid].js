@@ -24,6 +24,7 @@ import {
   FormControlLabel,
   Radio,
   DialogActions,
+  TextField 
 } from '@mui/material';
 
 import {
@@ -33,7 +34,7 @@ import {
   getStudyByUserId,
   quitStudy,
   studyImageDownload,
-  getStudyById
+  getStudyById,
 } from '../../api/study';
 import * as studyActions from '../../../store/module/study';
 import { joinRoomAPI, getRoomById } from '../../api/meeting';
@@ -44,8 +45,18 @@ import Router, { useRouter } from 'next/router';
 function StudyInfo() {
   let clubData = useSelector(({ study }) => study.studyDetail);
   let userData = useSelector(({ study }) => study.userList);
+  const roomDetail = useSelector(({ meeting }) => meeting.meetingDetail);
   const [reloadCondition, setReloadCondition] = useState(false);
   let [imageUrl, setImageUrl] = useState(undefined);
+  const [openPw, setOpenPw] = useState(false);
+
+  const pwDialogOpen = () => {
+    setOpenPw(true);
+  };
+  const pwDialogClose = () => {
+    setOpenPw(false);
+  };
+
   const dispatch = useDispatch();
 
   const setDetail = useCallback(
@@ -113,13 +124,16 @@ function StudyInfo() {
     //   );
     // });
 
-    getStudyById({studyId: sid, userId: sessionStorage.getItem('userId')}).then((res)=> {
+    getStudyById({
+      studyId: sid,
+      userId: sessionStorage.getItem('userId'),
+    }).then((res) => {
       dispatch(
         studyActions.setStudyDetail({
-          detail: res.study
+          detail: res.study,
         })
       );
-    })
+    });
   }
 
   useLayoutEffect(() => {
@@ -203,6 +217,7 @@ function StudyInfo() {
                 detail={clubData}
                 imageUrl={imageUrl}
                 dispatch={dispatch}
+                pwDialogOpen={pwDialogOpen}
               ></DetailOperation>
             </DetailHeader>
             <h2>{clubData.title}</h2>
@@ -228,13 +243,19 @@ function StudyInfo() {
               <StudyInfo detail={clubData}></StudyInfo>
             </DetailWrapper>
             <StudyDetail></StudyDetail>
+            <PwDialog
+              open={openPw}
+              pwDialogClose={pwDialogClose}
+              room={roomDetail}
+              setDetail={setDetail}
+            ></PwDialog>
           </>
         ) : null}
       </CusContainer>
     </Layout>
   );
 
-  function DetailOperation({ detail, imageUrl, dispatch }) {
+  function DetailOperation({ detail, imageUrl, dispatch, pwDialogOpen }) {
     const [openQuit, setOpenQuit] = useState(false);
     const [openUsers, setOpenUsers] = useState(false);
 
@@ -262,10 +283,10 @@ function StudyInfo() {
     const [inputValue, setInputValue] = useState({
       password: '', // 비밀번호 없는 방
       roomId: '',
-      userId: sessionStorage.getItem("userId")
-    })
+      userId: sessionStorage.getItem('userId'),
+    });
 
-   console.log(detail) 
+    console.log(detail);
 
     return (
       <>
@@ -282,7 +303,8 @@ function StudyInfo() {
           <div></div>
         )}
         <ButtonGroup variant="outlined">
-          {sessionStorage.getItem('userId') == detail.hostId && detail.canRegister ? (
+          {sessionStorage.getItem('userId') == detail.hostId &&
+          detail.canRegister ? (
             <>
               <Button
                 onClick={() => {
@@ -308,24 +330,36 @@ function StudyInfo() {
               </Button>
             </>
           ) : null}
-          {sessionStorage.getItem('userId') != detail.hostId && detail.canJoin ? (
+          {sessionStorage.getItem('userId') != detail.hostId &&
+          detail.canJoin ? (
             <Button
               onClick={() => {
                 inputValue.roomId = detail.roomId;
-                // Router.push('/meeting/join');
-                joinRoomAPI(inputValue).then((res) => {
+
+                getRoomById(detail.roomId).then((res) => {
                   if (res.statusCode == 200) {
-                    getRoomById(detail.roomId).then((res) => {
-                      if (res.statusCode == 200) {
-                        Router.push('/meeting/' + detail.roomId);
-                        setDetail({
-                          detail: res.room,
-                        });
-                      } else {
-                        alert(`${res.message}`);
-                      }
+                    let roomData = res.room;
+
+                    setDetail({
+                      detail: roomData,
                     });
+
+                    if (roomData.isSecret) {
+                      // 비밀방이면
+                      pwDialogOpen();
+                    } else {
+                      // 비밀방 아니면 바로 입장
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Router.push('/meeting/' + detail.roomId);
+                        } else {
+                          // 방 입장 실패
+                          alert(`${res.message}`);
+                        }
+                      });
+                    }
                   } else {
+                    // 방 조회 실패 시
                     alert(`${res.message}`);
                   }
                 });
@@ -620,6 +654,57 @@ function StudyInfo() {
       );
     }
   }
+}
+
+function PwDialog(props) {
+  let { open, pwDialogClose, room } = props;
+  let [pw, setPw] = useState('');
+
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+    password: '',
+  });
+
+  const pwChangeHandle = (e) => {
+    setPw(e.target.value);
+  };
+
+  return (
+    <Dialog open={open} onClose={pwDialogClose}>
+      <DialogTitle>{`비밀번호를 입력해주세요.`}</DialogTitle>
+      <DialogContent>
+        <TextField value={pw} onChange={pwChangeHandle}></TextField>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={pwDialogClose}>취소</Button>
+        <Button
+          onClick={
+            // 입력한 비밀번호와 일치하면 입장
+            pw === room.password
+              ? () => {
+                  inputValue.password = pw;
+                  inputValue.roomId = room.roomId;
+                  joinRoomAPI(inputValue).then((res) => {
+                    if (res.statusCode == 200) {
+                      Router.push('/meeting/' + room.roomId);
+                      pwDialogClose();
+                    } else {
+                      alert(`${res.message}`);
+                    }
+                  });
+                }
+              : () => {
+                  alert('비밀번호를 확인해주세요.');
+                }
+          }
+          autoFocus
+        >
+          확인
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 export default StudyInfo;
