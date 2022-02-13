@@ -377,7 +377,7 @@ public class UserServiceImpl implements UserService {
 		if (result==null) {
 			return 401;
 		}
-		if (result.getRoomId()!=roomId){
+		if (!result.getRoomId().equals(room.getId())){
 			return 402;
 		}
 		if (room.getHostId()==userId){	// 방장이 나갈경우 방에 속해있는 사용자 전부 방 나가기, 미팅 삭제
