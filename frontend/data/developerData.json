@@ -1,0 +1,32 @@
+[
+  {
+    "id": 0,
+    "name": "구련아",
+    "isLeader": true,
+    "position": "Frontend",
+    "github": "https://github.com/anottrx",
+    "email": "anottrx@gmail.com",
+    "image": "https://avatars.githubusercontent.com/u/59449215?v=4",
+    "mbti": "INTP"
+  },
+  {
+    "id": 1,
+    "name": "강진",
+    "isLeader": false,
+    "position": "Backend",
+    "github": "https://github.com/kjin41",
+    "email": "kjin4_1@naver.com",
+    "image": "https://avatars.githubusercontent.com/u/51227769?v=4",
+    "mbti": "ESTJ"
+  },
+  {
+    "id": 2,
+    "name": "김도연",
+    "isLeader": false,
+    "position": "Frontend",
+    "github": "https://github.com/uoayop",
+    "email": "uxahxp@gmail.com",
+    "image": "https://avatars.githubusercontent.com/u/70973495?v=4",
+    "mbti": "INFJ"
+  }
+]
