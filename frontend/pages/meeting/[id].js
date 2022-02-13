@@ -7,6 +7,12 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+
 import Swal from 'sweetalert2';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -112,9 +118,17 @@ function MeetingDetail() {
   const userGridSize = useRef(4);
   const [inputValue, setInputValue] = useState({
     roomId: '',
-    userId: sessionStorage.getItem('userId'),
+    userId: Number(sessionStorage.getItem('userId')),
   });
   const [setup, changeSetup] = useState(() => []);
+  const [open, setOpen] = useState(false);
+
+  const exitDialogOpen = () => {
+    setOpen(true);
+  };
+  const exitDialogClose = () => {
+    setOpen(false);
+  };
 
   const router = useRouter();
 
@@ -334,49 +348,18 @@ function MeetingDetail() {
   }, [session]);
 
   useEffect(() => {
-    // 뒤로 가기 누르면 실행됨
-    let flag=false;
-    console.log("use effect")
-    const handleStart = (url) => {
-      if (url !== '/meeting/' + detail.roomId + '/' && url !== '/meeting') {
-        inputValue.roomId = detail.roomId;
-        console.log("out");
-        if (detail.hostId == sessionStorage.getItem('userId')) {
-          // 방장일 경우 한번 더 확인
-          console.log("hostid");
-          if (
-            confirm('방장이 방을 나가면 방이 삭제됩니다. 그래도 나가시겠어요?')
-          ) {
-            console.log("confirm")
-            quitRoomAPI(inputValue).then((res) => {
-              if (res.statusCode == 200) {
-                console.log("quit url");
-                deleteSession();
-                Router.replace('/meeting');
-              }
-            });
-          } else {
-            Router.replace('/meeting/' + detail.roomId);
-          }
-        } else {
-          // 방장이 아니면 방 나가기
-          quitRoomAPI(inputValue).then((res) => {
-            if (res.statusCode == 200) {
-              Router.replace('/meeting');
-              videoTrackOff(publisher);
-              leaveSession();
-              clear();
-            }
-          });
-        }
+    router.beforePopState(({ as }) => {
+      if (as !== router.asPath) {
+        exitDialogOpen();
+        return false;
       }
-    };
+      return true;
+    });
 
-    router.events.on('routeChangeStart', handleStart);
     return () => {
-      router.events.off('routeChangeStart', handleStart);
+      router.beforePopState(() => true);
     };
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (!screenSession) return;
@@ -595,31 +578,19 @@ function MeetingDetail() {
 
     if (mySession)
       mySession.signal({ data: myUserName, to: [], type: 'userleft' });
-    // GoodByeSnackBar(myUserName);
 
-    videoTrackOff(publisher);
-    leaveSession();
-    clear();
-
-    if (detail.hostId != sessionStorage.getItem('userId')) {
-      quitRoomAPI(inputValue).then((res) => {
-        if (res.statusCode == 200) {
-        }
-      });
-    }
-    // quitRoomAPI(inputValue).then((res) => {
-    //   if (res.statusCode == 200) {
-    //   }
-    // });
-    // 방장도 미팅룸 탈퇴
-    // to do : 방장이면 방 삭제
-    // if (detail.hostId == sessionStorage.getItem('userId')) {
-    //   deleteSession();
-    // }
-    Router.replace('/meeting');
+    quitRoomAPI(inputValue).then((res) => {
+      console.log(inputValue);
+      console.log(res);
+      videoTrackOff(publisher);
+      leaveSession();
+      clear();
+      if (detail.hostId == sessionStorage.getItem('userId')) {
+        // deleteSession();
+      }
+      Router.push('/meeting');
+    });
   };
-
-  // -----------------------------------------------------------
 
   const deleteSession = () => {
     let mySessionId = `session${detail.roomId}`;
@@ -671,7 +642,7 @@ function MeetingDetail() {
             if (
               window.confirm(
                 `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}
-                
+
                 Click OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at ${OPENVIDU_SERVER_URL}`
               )
             ) {
@@ -700,9 +671,6 @@ function MeetingDetail() {
           { headers }
         )
         .then((response) => {
-          // console.log('TOKEN', response);
-          // console.log('-------------connectionId', response.data.id);
-          // setConnectionId(response.data.id);
           resolve(response.data.token);
         })
         .catch((error) => reject(error));
@@ -889,7 +857,65 @@ function MeetingDetail() {
           </ConfigWrapper>
         )}
       </RoomWrapper>
+      <ExitDialog
+        open={open}
+        exitDialogClose={exitDialogClose}
+        deleteSession={deleteSession}
+        leaveSession={leaveSession}
+        inputValue={inputValue}
+        detail={detail}
+      />
     </SnackbarProvider>
+  );
+}
+
+function ExitDialog(props) {
+  let {
+    open,
+    exitDialogClose,
+    deleteSession,
+    leaveSession,
+    inputValue,
+    detail,
+  } = props;
+  inputValue.roomId = detail.roomId;
+  console.log('----------------------------ExitDialog inputValue', inputValue);
+  return (
+    <Dialog open={open} onClose={exitDialogClose}>
+      {detail.hostId == sessionStorage.getItem('userId') ? (
+        <DialogTitle>
+          {'방장이 방을 나가면 미팅이 종료됩니다. 그래도 나가시겠습니까?'}
+        </DialogTitle>
+      ) : (
+        <DialogTitle>{'방을 나가시겠습니까?'}</DialogTitle>
+      )}
+
+      <DialogActions>
+        <Button onClick={exitDialogClose}>취소</Button>
+        <Button
+          onClick={() => {
+            quitRoomAPI(inputValue)
+              .then((res) => {
+                // if (res.statusCode == 200) {
+                // leaveSession();
+                if (detail.hostId == sessionStorage.getItem('userId')) {
+                  // 방장일 경우
+                  leaveSession();
+                  // deleteSession();
+                } else {
+                  leaveSession();
+                }
+              })
+              .finally(() => {
+                Router.push('/meeting');
+              });
+          }}
+          autoFocus
+        >
+          확인
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

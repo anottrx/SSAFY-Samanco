@@ -153,12 +153,12 @@ function MyApp({ Component, pageProps }) {
               <Component {...pageProps} />
             </main>
             <footer style={styles.footer}>
-              {/* <Link href="/developer">
-                  <img src="/images/pojangmacha.png" width={110} ></img>
-                </Link> */}
-              <a href="https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A502">
+              <Link href="/developer">
                 <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
-              </a>
+              </Link>
+              {/* <a href="https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A502">
+                <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
+              </a> */}
               {/* footer */}
             </footer>
           </div>
