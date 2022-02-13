@@ -18,6 +18,7 @@ import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 import axios from 'axios';
 import UserVideo from '../../components/Meeting/UserVideo';
 import Router, { useRouter } from 'next/router';
+import Head from 'next/head';
 
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import { useBeforeunload } from 'react-beforeunload';
@@ -726,6 +727,9 @@ function MeetingDetail() {
 
   return (
     <SnackbarProvider maxSnack={3}>
+      <Head>
+        <title>미팅룸 | 싸피사만코</title>
+      </Head>
       <RoomWrapper>
         {!isConfigModalShow ? (
           <>

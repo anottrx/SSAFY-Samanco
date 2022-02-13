@@ -8,6 +8,7 @@ import styles from '../../styles/Board.module.css';
 
 import { registBoard } from '../api/board';
 import Router from 'next/router';
+import Head from 'next/head';
 
 //게시글 등록 페이지
 function BoardRegist() {
@@ -120,6 +121,9 @@ function BoardRegist() {
 
   return (
     <Layout>
+      <Head>
+        <title>게시물 등록 | 싸피사만코</title>
+      </Head>
       <h1 style={{ marginTop: '20px' }}>게시물 등록</h1>
       <CusPaper>
         {nickname == 'admin' ? (

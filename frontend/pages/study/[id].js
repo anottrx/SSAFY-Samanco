@@ -30,6 +30,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 
 import * as studyActions from '../../store/module/study';
 import {
@@ -192,6 +193,9 @@ const StudyDetail = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>스터디 상세보기 | 싸피사만코</title>
+      </Head>
       <CusContainer maxWidth="md">
         <br></br>
         <DetailHeader>

@@ -4,13 +4,11 @@ import SearchBar from '../../components/Common/Search';
 import StackTagList from '../../components/Club/StackTagList';
 import Carousel from '../../components/Club/Carousel';
 import MyClub from '../../components/Club/MyClub';
-// import CampaignIcon from '@mui/icons-material/Campaign';
-// import CloseIcon from '@mui/icons-material/Close';
 
 import styled from '@emotion/styled';
 import { Button, Divider, Card } from '@mui/material';
-import { useState, useEffect } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 
 // import Cookies from 'universal-cookie';
 // const cookies = new Cookies();
@@ -83,6 +81,9 @@ export default function Study() {
 
   return (
     <Layout>
+      <Head>
+        <title>스터디 | 싸피사만코</title>
+      </Head>
       {/* {popShow && (
         <ClubInfo
           onClick={() => {

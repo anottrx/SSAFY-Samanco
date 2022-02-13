@@ -3,8 +3,10 @@ import ApplyAccordion from '../../components/Club/ApplyAccordion';
 import * as applyActions from '../../store/module/apply';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getProjectUserByjoin, approveProject } from '../../pages/api/project';
+
+import Head from 'next/head';
 
 function ApplyList() {
   const detail = useSelector(({ project }) => project.projectDetail);
@@ -23,10 +25,6 @@ function ApplyList() {
       .catch((err) => console.log(err));
   }
 
-  useLayoutEffect(() => {
-    fetchData();
-  }, []);
-
   useEffect(() => {
     if (reloadCondition) {
       fetchData();
@@ -36,6 +34,9 @@ function ApplyList() {
 
   return (
     <Layout>
+      <Head>
+        <title>프로젝트 지원자 목록 | 싸피사만코</title>
+      </Head>
       <h2>지원자 목록 조회</h2>
       <ApplyAccordion
         applyData={applyData}

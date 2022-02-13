@@ -11,6 +11,7 @@ import styled from '@emotion/styled';
 
 import { registAPI } from '../api/study';
 import Router from 'next/router';
+import Head from 'next/head';
 
 function StudyRegist() {
   const CusPaper = styled(Paper)`
@@ -104,6 +105,9 @@ function StudyRegist() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
+        <Head>
+          <title>스터디 등록 | 싸피사만코</title>
+        </Head>
         <h1 style={{ marginTop: '20px' }}>스터디 등록</h1>
         <CusPaper>
           <ImgUploadBtn

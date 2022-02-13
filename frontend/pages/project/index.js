@@ -12,6 +12,7 @@ import { Button, Card, Divider } from '@mui/material';
 
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -78,6 +79,7 @@ export default function Project() {
       ),
     });
   }
+
   useEffect(() => {
     if (cookies.get('projectNotice')) {
       isPopShow(false);
@@ -88,6 +90,9 @@ export default function Project() {
 
   return (
     <Layout>
+      <Head>
+        <title>프로젝트 | 싸피사만코</title>
+      </Head>
       {popShow && (
         <ClubInfo
           onClick={() => {

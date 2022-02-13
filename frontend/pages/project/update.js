@@ -23,6 +23,7 @@ import styled from '@emotion/styled';
 import { updateAPI } from '../api/project';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 const position = [
   { name: 'Frontend', count: 0 },
@@ -160,6 +161,9 @@ function projectUpdate() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
+        <Head>
+          <title>프로젝트 수정 | 싸피사만코</title>
+        </Head>
         <h1 style={{ marginTop: '20px' }}>프로젝트 수정</h1>
         <CusPaper>
           <ImgUploadBtn

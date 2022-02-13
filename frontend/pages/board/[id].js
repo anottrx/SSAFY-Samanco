@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Router from 'next/router';
+import Head from 'next/head';
 import Layout from '../../components/Layout';
 import * as boardActions from '../../store/module/board';
 import { joinRoomAPI, getRoomById } from '../api/meeting';
@@ -139,6 +140,9 @@ const BoardDetail = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>게시물 상세보기 | 싸피사만코</title>
+      </Head>
       <CusContainer maxWidth="md">
         <br></br>
         <DetailHeader>

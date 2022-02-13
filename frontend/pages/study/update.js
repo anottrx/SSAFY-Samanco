@@ -17,9 +17,10 @@ import { LocalizationProvider } from '@mui/lab';
 import StackSelect from '../../components/Common/Stack/StackSelect';
 
 import styled from '@emotion/styled';
-import { updateAPI, studyImageDownload } from '../api/study';
+import { updateAPI } from '../api/study';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 function studyUpdate() {
   const detail = useSelector(({ study }) => study.studyDetail);
@@ -154,6 +155,9 @@ function studyUpdate() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
+        <Head>
+          <title>스터디 수정 | 싸피사만코</title>
+        </Head>
         <h1 style={{ marginTop: '20px' }}>스터디 수정</h1>
         <CusPaper>
           <ImgUploadBtn

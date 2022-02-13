@@ -31,6 +31,7 @@ import {
 } from '@mui/material';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 
 import { joinRoomAPI, getRoomById } from '../api/meeting';
 import * as projectActions from '../../store/module/project';
@@ -192,6 +193,9 @@ const ProjectDetail = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>프로젝트 상세보기 | 싸피사만코</title>
+      </Head>
       <CusContainer maxWidth="md">
         <br></br>
         <DetailHeader>

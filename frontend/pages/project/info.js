@@ -41,6 +41,7 @@ import * as projectActions from '../../store/module/project';
 import * as meetingActions from '../../store/module/meeting';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 function ProjectInfo() {
   let clubData = useSelector(({ project }) => project.projectDetail);
@@ -184,6 +185,9 @@ function ProjectInfo() {
 
   return (
     <Layout>
+      <Head>
+        <title>내 프로젝트 | 싸피사만코</title>
+      </Head>
       <CusContainer maxWidth="md">
         <br></br>
         <DetailHeader>
