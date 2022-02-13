@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import Swal from 'sweetalert2';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -155,9 +156,14 @@ function MeetingDetail() {
         });
       })
       .catch((err) => {
-        alert(
-          '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.'
-        );
+        // alert(
+        //   '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.'
+        // );
+        Swal.fire({
+          icon: 'info',
+          title: '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.',
+          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+        });
       });
 
     return () => {
@@ -259,10 +265,19 @@ function MeetingDetail() {
     });
 
     mySession.once('sessionDisconnected', () => {
-      if (sessionStorage.getItem('userId') != detail.hostId)
-        alert('미팅이 종료 되었습니다.');
-      clear();
-      Router.push('/meeting');
+      if (sessionStorage.getItem('userId') != detail.hostId){
+        // alert('미팅이 종료 되었습니다.');
+        Swal.fire({
+          title: '미팅이 종료 되었습니다.',
+          text: '미팅룸 목록으로 이동합니다',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 800,
+        }).then(() => {
+          clear();
+          Router.push('/meeting');
+        })
+      }
     });
 
     getToken()
@@ -581,10 +596,16 @@ function MeetingDetail() {
     leaveSession();
     clear();
 
-    quitRoomAPI(inputValue).then((res) => {
-      if (res.statusCode == 200) {
-      }
-    });
+    if (detail.hostId != sessionStorage.getItem('userId')) {
+      quitRoomAPI(inputValue).then((res) => {
+        if (res.statusCode == 200) {
+        }
+      });
+    }
+    // quitRoomAPI(inputValue).then((res) => {
+    //   if (res.statusCode == 200) {
+    //   }
+    // });
     // 방장도 미팅룸 탈퇴
     // to do : 방장이면 방 삭제
     // if (detail.hostId == sessionStorage.getItem('userId')) {

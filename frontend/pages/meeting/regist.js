@@ -10,6 +10,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Swal from 'sweetalert2';
 
 import styled from '@emotion/styled';
 
@@ -89,7 +90,14 @@ function MeetingRegist() {
     )
       [check, msg] = [false, '입력된 비밀번호가 일치하지 않습니다.'];
 
-    if (!check) alert(msg);
+    if (!check) {
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
+    }
     return check;
   }
 
@@ -181,15 +189,30 @@ function MeetingRegist() {
                               detail: res.room,
                             });
                           } else {
-                            alert(`${res.message}`);
+                            // alert(`${res.message}`);
+                            Swal.fire({
+                              icon: 'error',
+                              title: res.message,
+                              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                            });
                           }
                         });
                       } else {
-                        alert(`${res.message}`);
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
                       }
                     });
                   } else {
-                    alert(`${res.message}`);
+                    // alert(`${res.message}`);
+                    Swal.fire({
+                      icon: 'error',
+                      title: res.message,
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    });
                   }
                 });
               }

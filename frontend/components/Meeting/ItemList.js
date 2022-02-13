@@ -21,6 +21,7 @@ import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
+import Swal from 'sweetalert2';
 
 import { getRoomAllAPI } from '../../pages/api/meeting';
 import Router from 'next/router';
@@ -159,7 +160,16 @@ function ItemList() {
                             joinDialogOpen();
                             setRoom(data);
                           } else {
-                            alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                            // alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                            Swal.fire({
+                              title: '로그인이 필요한 작업입니다.',
+                              text: '로그인 페이지로 이동합니다.',
+                              icon: 'warning',
+                              showConfirmButton: false,
+                              timer: 800,
+                            }).then(() => {
+                              Router.push('/login');
+                            });
                           }                          
                         }}
                       >
@@ -183,7 +193,16 @@ function ItemList() {
                             joinDialogOpen();
                             setRoom(data);
                           } else {
-                            alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                            // alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                            Swal.fire({
+                              title: '로그인이 필요한 작업입니다.',
+                              text: '로그인 페이지로 이동합니다.',
+                              icon: 'warning',
+                              showConfirmButton: false,
+                              timer: 800,
+                            }).then(() => {
+                              Router.push('/login');
+                            });
                           }    
                         }}
                       >
@@ -311,7 +330,12 @@ function JoinDialog(props) {
                         detail: room,
                       });
                     } else {
-                      alert(`${res.message}`);
+                      // alert(`${res.message}`);
+                      Swal.fire({
+                        icon: 'error',
+                        title: res.message,
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
                     }
                   });
                   joinDialogClose();
@@ -362,12 +386,22 @@ function PwDialog(props) {
                       });
                       pwDialogClose();
                     } else {
-                      alert(`${res.message}`);
+                      // alert(`${res.message}`);
+                      Swal.fire({
+                        icon: 'error',
+                        title: res.message,
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
                     }
                   });
                 }
               : () => {
-                  alert('비밀번호를 확인해주세요.');
+                  // alert('비밀번호를 확인해주세요.');
+                  Swal.fire({
+                    icon: 'error',
+                    title: '비밀번호를 확인해주세요.',
+                    confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  });
                 }
           }
           autoFocus
