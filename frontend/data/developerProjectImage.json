@@ -1,0 +1,26 @@
+[
+  {
+    "url": "/images/developer/gitlab.PNG",
+    "title": "GitLab",
+    "width": "25%",
+    "link": "https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A502"
+  },
+  {
+    "url": "/images/developer/notion.PNG",
+    "title": "Notion",
+    "width": "25%",
+    "link": "https://www.notion.so/2-e9c8cb53c7ad41bc97ce50af77b34a69"
+  },
+  {
+    "url": "/images/developer/api.PNG",
+    "title": "API docs",
+    "width": "25%",
+    "link": "https://docs.google.com/spreadsheets/u/1/d/12uD2LLekhywXKfPABvxevmAVTjWOg-V4VEFnt_CTbEc/edit#gid=403503433"
+  },
+  {
+    "url": "/images/developer/figma.PNG",
+    "title": "Figma",
+    "width": "25%",
+    "link": "https://www.figma.com/file/pGbmriDDNqDFY53a7kTMnE/%EC%8B%B8%ED%94%BC%EC%82%AC%EB%A7%8C%EC%BD%94?node-id=0%3A1"
+  }
+]
