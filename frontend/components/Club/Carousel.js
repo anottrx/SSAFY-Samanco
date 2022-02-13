@@ -103,7 +103,11 @@ export default function Carousel(props) {
   useEffect(() => {
     if (props.target === 'project') {
       if (props.subject === 'deadline') {
-        getProjectByDeadLine().then((res) => setClubData(res.projects));
+        getProjectByDeadLine().then((res) => {
+          // setClubData(res.projects);
+          let deadlineProjects = res.projects.filter((el) => el.deadline >= 0); // 마감된 프로젝트는 가리기
+          setClubData(deadlineProjects);
+        });
       } else {
         getProjectByLike().then((res) => setClubData(res.projects));
       }
