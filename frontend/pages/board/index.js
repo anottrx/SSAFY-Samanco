@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Swal from 'sweetalert2';
 
 import Layout from '../../components/Layout';
 import styled from '@emotion/styled';
@@ -131,8 +132,17 @@ export default function Board() {
           onClick={() => {
             if (sessionStorage.getItem('userId')) Router.push('/board/regist');
             else {
-              alert('로그인이 필요한 작업입니다.');
-              Router.push('/login');
+              // alert('로그인이 필요한 작업입니다.');
+              Swal.fire({
+                title: '로그인이 필요한 작업입니다.',
+                text: '로그인 페이지로 이동합니다.',
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 800,
+              }).then(() => {
+                Router.push('/login');
+              });
+              // Router.push('/login');
             }
           }}
         >

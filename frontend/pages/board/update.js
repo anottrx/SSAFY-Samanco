@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Swal from 'sweetalert2';
 
 import styled from '@emotion/styled';
 import styles from '../../styles/Board.module.css';
@@ -124,7 +125,14 @@ function BoardUpdate() {
     else if (inputValue.content == '')
       [check, msg] = [false, '게시물 내용을 입력해주세요.'];
 
-    if (!check) alert(msg);
+    if (!check) {
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
+    }
     return check;
   }
 
@@ -232,10 +240,22 @@ function BoardUpdate() {
 
                 updateBoard(formData).then((res) => {
                   if (res.statusCode === 200) {
-                    alert('게시물이 수정되었습니다.');
-                    Router.push('/board/' + detail.boardId);
+                    // alert('게시물이 수정되었습니다.');
+                    Swal.fire({
+                      title: '게시물이 수정되었습니다.',
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 500,
+                    }).then(() => {
+                      Router.push('/board/' + detail.boardId);
+                    })
                   } else {
-                    alert(`${res.message}`);
+                    // alert(`${res.message}`);
+                    Swal.fire({
+                      icon: 'error',
+                      title: res.message,
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    });
                   }
                 });
               }

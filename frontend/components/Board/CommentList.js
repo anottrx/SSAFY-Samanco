@@ -12,6 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
+import Swal from 'sweetalert2';
 
 import { updateComment, deleteComment } from '../../pages/api/board';
 import Router from 'next/router';
@@ -87,11 +88,22 @@ function CommentList({ detail, setReloadCondition }) {
           : sessionStorage.getItem('userId'),
     }).then((res) => {
       if (res.statusCode === 200) {
-        alert('댓글이 수정되었습니다.');
+        // alert('댓글이 수정되었습니다.');
+        Swal.fire({
+          title: '댓글이 수정되었습니다',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 500,
+        });
         Router.replace('/board/' + detail.boardId);
         setReloadCondition(true);
       } else {
-        alert(`${res.message}`);
+        // alert(`${res.message}`);
+        Swal.fire({
+          icon: 'error',
+          title: res.message,
+          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+        });
       }
     });
   }
@@ -222,10 +234,21 @@ function CommentList({ detail, setReloadCondition }) {
                     : sessionStorage.getItem('userId'),
               }).then((res) => {
                 if (res.statusCode === 200) {
-                  alert('댓글이 삭제되었습니다.');
+                  // alert('댓글이 삭제되었습니다.');
+                  Swal.fire({
+                    title: '댓글이 삭제되었습니다',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 500,
+                  });
                   setReloadCondition(true);
                 } else {
-                  alert(`${res.message}`);
+                  // alert(`${res.message}`);
+                  Swal.fire({
+                    icon: 'error',
+                    title: res.message,
+                    confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  });
                 }
               });
             }}
