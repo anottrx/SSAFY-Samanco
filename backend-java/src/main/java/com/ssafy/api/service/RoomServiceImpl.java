@@ -130,12 +130,6 @@ public class RoomServiceImpl implements RoomService {
             return null;
         }
         roomDto.setNickname(nickname);
-//        roomDto.setUsers(commonRepository.selectRoomUsers(roomId));
-//        if (result.getUsers()==null){
-//            roomDto.setSize(0);
-//        } else {
-//            roomDto.setSize(result.getUsers().size());
-//        }
 
         return  roomDto;
     }
