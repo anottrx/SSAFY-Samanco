@@ -98,7 +98,7 @@ export default function Study() {
           <CloseIcon className="popCloseBtn" />
         </ClubInfo>
       )} */}
-      <h1>Study</h1>
+      <h1 style={{ marginTop: '20px' }}>스터디</h1>
       <ItemWrapper>
         {sessionStorage.getItem('userId') ? (
           <MyClub label="내 스터디" from="study"></MyClub>

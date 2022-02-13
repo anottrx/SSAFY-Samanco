@@ -124,7 +124,7 @@ function BoardUpdate() {
 
   return (
     <Layout>
-      <h1>Board Update</h1>
+      <h1 style={{ marginTop: '20px' }}>게시물 수정</h1>
       <CusPaper>
         {nickname == 'admin' ? (
           <TextField

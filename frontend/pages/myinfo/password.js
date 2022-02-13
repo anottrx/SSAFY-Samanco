@@ -16,7 +16,7 @@ export default function ResetPasswordPage() {
   return (
     <>
       <MyInfoLayout>
-        <h1>비밀번호 재설정</h1>
+        <h2>비밀번호 재설정</h2>
         <ResetPassword />
       </MyInfoLayout>
     </>

@@ -315,7 +315,7 @@ export default function RegistInfo() {
         minHeight="70vh"
         onSubmit={handleSubmit}
       >
-        <h1>추가 정보 입력</h1>
+        <h1 style={{ marginTop: '20px' }}>추가 정보 입력</h1>
         <div>
           {/* 이미지 업로드 */}
           <ImgUploadBtn

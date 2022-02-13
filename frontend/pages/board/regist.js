@@ -120,7 +120,7 @@ function BoardRegist() {
 
   return (
     <Layout>
-      <h1>Board Regist</h1>
+      <h1 style={{ marginTop: '20px' }}>게시물 등록</h1>
       <CusPaper>
         {nickname == 'admin' ? (
           <TextField

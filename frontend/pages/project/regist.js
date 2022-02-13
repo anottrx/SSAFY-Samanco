@@ -130,7 +130,7 @@ function ProjectRegist() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
-        <h1>Project Regist</h1>
+        <h1 style={{ marginTop: '20px' }}>프로젝트 등록</h1>
         <CusPaper>
           <ImgUploadBtn
             id="img_box"

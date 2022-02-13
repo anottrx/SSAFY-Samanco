@@ -16,8 +16,8 @@ export default function ResetPasswordPage() {
   return (
     <>
       <MyInfoLayout>
-        <h1>내 게시글</h1>
-        <MyBoardList tag="mylist"/>
+        <h2>내 게시글</h2>
+        <MyBoardList tag="mylist" />
       </MyInfoLayout>
     </>
   );

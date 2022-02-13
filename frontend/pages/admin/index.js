@@ -23,7 +23,7 @@ export default function AdminPage() {
     <Layout>
       {isAdmin ? (
         <>
-          <h1>회원 관리</h1>
+          <h1 style={{ margin: '20px 0px 30px 0px' }}>회원 관리</h1>
           <AdminList />
         </>
       ) : (

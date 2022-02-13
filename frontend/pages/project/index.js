@@ -104,7 +104,7 @@ export default function Project() {
         </ClubInfo>
       )}
 
-      <h1>Project</h1>
+      <h1 style={{ marginTop: '20px' }}>프로젝트</h1>
       <ItemWrapper>
         <MyClub label="내 프로젝트" from="project"></MyClub>
         <ProjectActions>

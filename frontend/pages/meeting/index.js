@@ -30,7 +30,7 @@ export default function Meeting() {
 
   return (
     <Layout>
-      <h1>Meeting</h1>
+      <h1 style={{ marginTop: '20px' }}>미팅룸</h1>
       <ItemWrapper>
         <MeetingActions>
           <SearchBar target="meeting"></SearchBar>

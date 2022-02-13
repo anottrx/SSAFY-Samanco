@@ -134,8 +134,8 @@ export default function Regist() {
         console.log(res);
         if (res.statusCode == 200) {
           //
-        } else if(res.statusCode == 401) {
-          alert("이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요")
+        } else if (res.statusCode == 401) {
+          alert('이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요');
           setShowEmailCodeCheck(false);
           setAuthFin(false); // 우선 인증버튼 누르자마자 막기
         } else {
@@ -299,7 +299,7 @@ export default function Regist() {
         minHeight="70vh"
         onSubmit={handleSubmit}
       >
-        <h1>회원가입</h1>
+        <h1 style={{ marginTop: '20px' }}>회원가입</h1>
         {/* 이메일 */}
         <div>
           <Typography display="inline" sx={{ fontSize: 14 }}>
@@ -327,7 +327,10 @@ export default function Regist() {
           />
           <>
             {showEmailCodeCheck ? (
-              <CheckEmailCode changeHandle={changeHandle} email={inputState.email}/>
+              <CheckEmailCode
+                changeHandle={changeHandle}
+                email={inputState.email}
+              />
             ) : (
               <></>
             )}

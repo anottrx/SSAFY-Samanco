@@ -160,7 +160,7 @@ function projectUpdate() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
-        <h1>Project Update</h1>
+        <h1 style={{ marginTop: '20px' }}>프로젝트 수정</h1>
         <CusPaper>
           <ImgUploadBtn
             id="img_box"

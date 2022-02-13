@@ -175,7 +175,7 @@ function MeetingRegist() {
 
   return (
     <Layout>
-      <h1>Meeting Regist</h1>
+      <h1 style={{ marginTop: '20px' }}>미팅룸 등록</h1>
       <CusPaper>
         {/* <ImgUploadBtn
           id="img_box"
