@@ -57,8 +57,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public int updateBoard(BoardUpdateReq updateInfo) {
-        Long userId= updateInfo.getUserId();
-        Long boardId= updateInfo.getBoardId();
+        Long userId=updateInfo.getUserId();
+        Long boardId=updateInfo.getBoardId();
         if (!valid.isUserValid(userId)){
             return 402;
         }
@@ -66,7 +66,7 @@ public class BoardServiceImpl implements BoardService {
             return 401;
         }
         Board board = boardRepositorySupport.selectBoard(boardId, 0);
-        if (board==null || userId!=board.getUserId()){
+        if (board==null || !userId.equals(board.getUserId())){
             return 402;
         }
         return boardRepositorySupport.updateBoard(updateInfo);
@@ -89,7 +89,7 @@ public class BoardServiceImpl implements BoardService {
         board.setFiles(fileRepositorySupport.selectFiles(boardId, "board"));
         UserLike userLike = userLikeRepositorySupport.userLike(userId, boardId, "board");
 
-        if (board.getUserId()==userId){     // 게시글 작성자면 방 생성 가능
+        if (board.getUserId().equals(userId)){     // 게시글 작성자면 방 생성 가능
             board.setCanRegister(true);
         } else{     // 게시글 방이 만들어져있으면 누구나 참여 가능
             Room room = roomRepositorySupport.selectRoomByTagId(boardId, "board");

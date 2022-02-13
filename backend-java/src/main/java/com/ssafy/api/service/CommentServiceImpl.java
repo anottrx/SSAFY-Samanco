@@ -68,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
             return 401;
         }
         Comment comment = commentRepositorySupport.selectComment(commentId);
-        if (comment==null || userId!=comment.getUserId()){
+        if (comment==null || !userId.equals(comment.getUserId())){
             return 401;
         }
 
@@ -78,7 +78,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public int deleteComment(Long userId, Long commentId) {
         Comment comment = commentRepositorySupport.selectComment(commentId);
-        if (comment==null || comment.getUserId()!=userId){
+        if (comment==null || !comment.getUserId().equals(userId)){
             return 401;
         }
         commentRepositorySupport.deleteComment(commentId);

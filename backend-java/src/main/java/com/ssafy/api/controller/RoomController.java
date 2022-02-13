@@ -132,7 +132,7 @@ public class RoomController {
         if (room==null){
             return ResponseEntity.status(200).body(RoomSelectRes.of(401, "유효하지 않은 미팅입니다.", null));
         }
-        room.setUsers(userService.selectRoomUsers(roomId));
+        room.setUsers(userService.selectRoomUsers(roomId)); // userDto가 필요해서 controller 단계에서 처리
         if (room.getUsers()==null){
             room.setSize(0);
         } else {

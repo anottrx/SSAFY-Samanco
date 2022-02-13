@@ -231,18 +231,18 @@ public class ProjectController{
             @ApiResponse(code = 401, message = "해당 프로젝트 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectProject(@RequestBody ProjectUserIdReq projectInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectProject(@RequestBody ProjectUserIdHitReq projectInfo) throws IOException {
 
         Long projectId= projectInfo.getProjectId();
         Long userId = projectInfo.getUserId();
-//        int addHit = projectInfo.getAddHit();
+        int addHit = projectInfo.getAddHit();
 
-        ProjectDto project=projectService.selectProject(userId, projectId);
+        ProjectDto project=projectService.selectProject(userId, projectId, addHit);
         UserDto user=userService.selectUser(userId);
         if (project==null){
             return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
         }
-        if (user!=null && projectId==user.getProjectId()) {
+        if (user!=null && projectId.equals(user.getProjectId())) {
             project.setProjectJoinStatus(user.getProjectJoinStatus());
         }
         return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
@@ -351,12 +351,12 @@ public class ProjectController{
         String newHostPosition= projectChangeHostReq.getNewHostPosition();
         UserDto user=userService.selectUser(newHostId);
         System.out.println(user);
-        if (user==null || user.getProjectId()!= projectId || !"OK".equalsIgnoreCase(user.getProjectJoinStatus())){
+        if (user==null || !user.getProjectId().equals(projectId) || !"OK".equalsIgnoreCase(user.getProjectJoinStatus())){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트의 호스트를 넘길 수 없습니다."));
         }
         ProjectDto project=projectService.selectByHost(oldHostId);
         System.out.println(project);
-        if (project==null || projectId!=project.getId()){
+        if (project==null || !projectId.equals(project.getId())){
             return ResponseEntity.status(200).body(BaseResponseBody.of(402, "프로젝트의 호스트를 넘길 수 없습니다."));
         }
 

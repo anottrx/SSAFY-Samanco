@@ -197,11 +197,12 @@ public class StudyController {
             @ApiResponse(code = 401, message = "해당 스터디 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectStudy(@RequestBody StudyUserIdReq studyInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectStudy(@RequestBody StudyUserIdHitReq studyInfo) throws IOException {
 
         Long userId = studyInfo.getUserId();
         Long studyId = studyInfo.getStudyId();
-        StudyDto study=studyService.selectStudy(userId, studyId);
+        int addHit = studyInfo.getAddHit();
+        StudyDto study=studyService.selectStudy(userId, studyId, addHit);
         if (study==null) {
             return ResponseEntity.status(200).body(StudySelectRes.of(401, "유효하지 않은 스터디입니다.", null));
         }
@@ -399,7 +400,7 @@ public class StudyController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "유효하지 않은 사용자"),
-            @ApiResponse(code = 401, message = "유효하지 않은 태그"),
+            @ApiResponse(code = 402, message = "유효하지 않은 태그"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<? extends BaseResponseBody> updateStudyLike(@RequestBody UserLikeTagReq userLikeTagReq) throws IOException {
@@ -408,7 +409,7 @@ public class StudyController {
         if (likeCode==401){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 사용자입니다."));
         } else if (likeCode==402){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "유효하지 않은 태그입니다."));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(402, "유효하지 않은 태그입니다."));
         } else if (likeCode==201){
             return ResponseEntity.status(200).body(BaseResponseBody.of(201, "좋아요 취소"));
         }
