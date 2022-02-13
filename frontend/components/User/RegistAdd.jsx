@@ -7,15 +7,14 @@ import {
   getUserInfoAPI,
   updateUserAPI,
 } from '../../pages/api/user';
-import {
-  TextField,
-  Box,
-  OutlinedInput,
-  Button,
-  Autocomplete,
-  Select,
-  Typography,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+
 import styled from '@emotion/styled';
 import { LocalizationProvider } from '@mui/lab';
 import MenuItem from '@mui/material/MenuItem';

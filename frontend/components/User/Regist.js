@@ -11,16 +11,16 @@ import {
   sendEmailCodeAPI,
   getUserLoginTokenAPI,
 } from '../../pages/api/user';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-  Box,
-  OutlinedInput,
-  Button,
-  Select,
-  Typography,
-  MenuItem,
-  IconButton,
-} from '@mui/material';
+
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Box from '@mui/material/Box';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import styled from '@emotion/styled';
 

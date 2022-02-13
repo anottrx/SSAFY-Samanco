@@ -6,7 +6,10 @@ import Carousel from '../../components/Club/Carousel';
 import MyClub from '../../components/Club/MyClub';
 
 import styled from '@emotion/styled';
-import { Button, Divider, Card } from '@mui/material';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import Divider from '@mui/material/Divider';
+import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
 
