@@ -17,17 +17,11 @@ import {
   TableHead,
   TableRow,
   Pagination,
-  Button,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
 } from '@mui/material';
 import Router from 'next/router';
 import * as userActions from '../../store/module/user';
 import style from '@emotion/styled';
 import { getAllUserInfoAPI } from '../../pages/api/user';
-import UserInfo from './UserInfoPage';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -52,13 +46,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function AdminList() {
   const dispatch = useDispatch();
 
-  // let boardData, setDetail, filterData, setArticles;
-
-  let setUsers, userData, filterData;
+  let setUsers, userData, setDetail;
 
   userData = useSelector(({ user }) => user.userList);
   // console.log(userData)
-  filterData = useSelector(({ user }) => user.userFilterList);
 
   //  setDetail = useCallback(
   //       ({detail}) => {
@@ -73,12 +64,6 @@ export default function AdminList() {
     },
     [dispatch]
   );
-
-  useEffect(() => {
-    return () => {
-      dispatch(userActions.setUserFilterList({ list: null }));
-    };
-  }, []);
 
   useLayoutEffect(() => {
     getAllUserInfoAPI().then((res) => {
@@ -99,7 +84,6 @@ export default function AdminList() {
   if (userData) {
     allPage = parseInt(userData.length / purPage.current);
     if (userData.length % purPage.current > 0) allPage += 1;
-    // console.log(userData)
   }
 
   const handleChange = (index, value) => {
@@ -153,7 +137,6 @@ export default function AdminList() {
   );
 
   function Users({ userInfo }) {
-    //   console.log(userInfo)
     return userInfo
       .slice(purPage.current * (page - 1), purPage.current * page)
       .map((data) => {

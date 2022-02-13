@@ -106,6 +106,11 @@ function ItemList() {
     min-height: 530px;
   `;
 
+  const CusCard = styled(Card)`
+    width: 100%;
+    padding: 10px;
+  `;
+
   const [openJoin, setOpenJoin] = useState(false);
   const [openPw, setOpenPw] = useState(false);
   const [room, setRoom] = useState({});

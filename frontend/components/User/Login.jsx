@@ -4,16 +4,24 @@ import { useCookies } from 'react-cookie';
 // import Cookies from 'universal-cookie';
 import FormControl, { useFormControl } from '@mui/material/FormControl';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-  Box,
-  OutlinedInput,
-  InputAdornment,
-  IconButton,
-  Button,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-} from '@mui/material';
+// import {
+//   Box,
+//   OutlinedInput,
+//   InputAdornment,
+//   IconButton,
+//   Button,
+//   FormGroup,
+//   FormControlLabel,
+//   Checkbox,
+// } from '@mui/material';
+import Box from '@mui/material/Box';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 export default function Login() {
   const [inputState, setInputState] = useState({
@@ -69,7 +77,8 @@ export default function Login() {
       msg = '비밀번호를 입력해주세요.';
     }
 
-    if (isNormal) { // 유효성 검사 통과 시 login API 요청
+    if (isNormal) {
+      // 유효성 검사 통과 시 login API 요청
       loginAPI(inputState).then((res) => {
         switch (res.statusCode) {
           case 200: // 로그인 성공
@@ -86,11 +95,11 @@ export default function Login() {
                 } else {
                   setCookie('userEmail', '');
                 }
-                if(sessionStorage.getItem('nickname')==res1.nickname) {
+                if (sessionStorage.getItem('nickname') == res1.nickname) {
                   window.history.forward();
                   window.location.replace('/');
                 }
-              })
+              });
             }
             break;
           case 401: // 비밀번호 틀림

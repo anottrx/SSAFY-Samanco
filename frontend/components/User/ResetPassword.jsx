@@ -1,21 +1,16 @@
-import RegistInfo from './RegistAdd';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Router from 'next/router';
-import CheckEmailCode from './CheckEmailCode';
-import { useCookies } from 'react-cookie';
+// import { useCookies } from 'react-cookie';
 import { resetPWAPI } from '../../pages/api/user';
-import {
-  Box,
-  OutlinedInput,
-  Button,
-  Typography,
-  MenuItem,
-  IconButton,
-} from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import styled from '@emotion/styled';
-import session from 'redux-persist/lib/storage/session';
+// import styled from '@emotion/styled';
 
 export default function ResetPassword() {
   const [pwCheckRes, setPwCheckRes] = useState(null);
@@ -94,7 +89,6 @@ export default function ResetPassword() {
     inputState.email = sessionStorage.getItem('email');
     if (isNormal) {
       resetPWAPI(inputState).then((res) => {
-        // console.log(res);
         alert(`${res.message}`);
         if (res.statusCode == 200) {
           if (sessionStorage.getItem('nickname') == null) {
