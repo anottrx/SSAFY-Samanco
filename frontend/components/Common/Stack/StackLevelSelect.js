@@ -1,4 +1,9 @@
-import { Autocomplete, TextField, Stack, Paper, Rating } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
+import Rating from '@mui/material/Rating';
+
 import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 
