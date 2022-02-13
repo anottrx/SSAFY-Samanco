@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { TextField, IconButton } from '@mui/material';
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 
 const ChattingWrapper = styled.div`
@@ -136,6 +136,10 @@ function Chatting({ session }) {
 
     const mySession = session;
 
+    session.on('connectionCreated', (event) => {
+      console.log('채팅 세션 열림!!!!!!!', event);
+    });
+
     mySession.on('signal:chat', (event) => {
       if (!event.data) return;
       const today = new Date();
@@ -206,4 +210,4 @@ function Chatting({ session }) {
   );
 }
 
-export default Chatting;
+export default React.memo(Chatting);

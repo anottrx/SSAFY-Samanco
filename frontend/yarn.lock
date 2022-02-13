@@ -4419,6 +4419,14 @@
   dependencies:
     "safe-buffer" "^5.1.0"
 
+"react-beforeunload@^2.5.2":
+  "integrity" "sha512-lVRVUTdcQ07ea/S+5nql6ui/SyR0N9tudGQHdHvAa9WOrGgNMoxR6DOmgRNVRj6DmG1ruIAdSeem0tmM5zfy3w=="
+  "resolved" "https://registry.npmjs.org/react-beforeunload/-/react-beforeunload-2.5.2.tgz"
+  "version" "2.5.2"
+  dependencies:
+    "prop-types" "^15.7.2"
+    "tiny-invariant" "^1.1.0"
+
 "react-calendar@^3.6.0":
   "integrity" "sha512-zkK95zWLWLC6w3O7p3SHx/FJXEyyD2UMd4jr3CrKD+G73N+G5vEwrXxYQCNivIPoFNBjqoyYYGlkHA+TBDPLCw=="
   "resolved" "https://registry.npmjs.org/react-calendar/-/react-calendar-3.7.0.tgz"
@@ -5090,6 +5098,11 @@
   "integrity" "sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU="
   "resolved" "https://registry.npmjs.org/through/-/through-2.3.8.tgz"
   "version" "2.3.8"
+
+"tiny-invariant@^1.1.0":
+  "integrity" "sha512-1Uhn/aqw5C6RI4KejVeTg6mIS7IqxnLJ8Mv2tV5rTc0qWobay7pDUz6Wi392Cnc8ak1H0F2cjoRzb2/AW4+Fvg=="
+  "resolved" "https://registry.npmjs.org/tiny-invariant/-/tiny-invariant-1.2.0.tgz"
+  "version" "1.2.0"
 
 "tiny-warning@^1.0.2":
   "integrity" "sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA=="

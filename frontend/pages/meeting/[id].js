@@ -17,9 +17,10 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicOffOutlinedIcon from '@mui/icons-material/MicOffOutlined';
 import axios from 'axios';
 import UserVideo from '../../components/Meeting/UserVideo';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 
 import { SnackbarProvider, useSnackbar } from 'notistack';
+import { useBeforeunload } from 'react-beforeunload';
 
 import { quitRoomAPI } from '../api/meeting';
 
@@ -107,7 +108,13 @@ function MeetingDetail() {
   const [camOn, setCamOn] = useState(false);
   const [isConfigModalShow, setIsConfigModalShow] = useState(true);
   const userGridSize = useRef(4);
+  const [inputValue, setInputValue] = useState({
+    roomId: '',
+    userId: sessionStorage.getItem('userId'),
+  });
   const [setup, changeSetup] = useState(() => []);
+
+  const router = useRouter();
 
   const handleChangeSetup = (event, newValue) => {
     changeSetup(newValue);
@@ -130,18 +137,13 @@ function MeetingDetail() {
     });
   };
 
-  // const handleClickVariant = (variant) => () => {
-  //   // variant could be success, error, warning, info, or default
-  //   enqueueSnackbar('This is a success message!', { variant });
-  // };
   const myUserName = sessionStorage.getItem('nickname')
     ? sessionStorage.getItem('nickname')
     : 'unknown';
 
+  useBeforeunload(() => '미팅방을 나가시겠어요?');
+
   useEffect(() => {
-    // 유저가 방에 들어왔을 때
-    // if (detail && publisherStatus) {
-    // To do : 방 정보 받아와서 인원 수에 따라 userGridSize 변경하기
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(() => {
@@ -160,11 +162,6 @@ function MeetingDetail() {
     return () => {
       leaveSession();
       clear();
-
-      // window.onbeforeunload = function () {
-      //   // leaveSession();
-      //   if (screenSession) screenSession.disconnect();
-      // };
     };
   }, []);
 
@@ -173,12 +170,6 @@ function MeetingDetail() {
       allTrackOff(publisher);
     };
   }, [publisher]);
-
-  // useEffect(() => {
-  //   if (OV) {
-  //     setSession(OV.initSession());
-  //   }
-  // }, [OV]);
 
   // OpenVidu 모듈 동적 import
   const importOpenVidu = () => {
@@ -195,11 +186,8 @@ function MeetingDetail() {
   };
 
   // 세션 변경 시 실행됨
-  // 각 유저마다 세션이 있따.
   useEffect(() => {
     if (!session) return;
-
-    // console.log('session 있다');
 
     const mySession = session;
 
@@ -213,8 +201,6 @@ function MeetingDetail() {
       // sub : 새로운 스트림 / subs : 기존 참여자들
       else {
         // console.log('새로 들어왔다!!!!!!!!!!!!!!!!!!!!!!!!!!', sub);
-
-        // console.log('------------------getConnectionInfo--------------------');
         getConnectionInfo(event).then((res) => {
           let subscribersInfos = res.subscribers;
           let target = subscribersInfos?.filter((subs) => {
@@ -226,8 +212,6 @@ function MeetingDetail() {
               JSON.parse(event.stream.connection.data).clientData
             );
         });
-        // welcomeSnackBar(JSON.parse(event.stream.connection.data).clientData);
-
         let subs = subscribers;
         subs.push(sub);
         setSubscribers([...subs]);
@@ -334,6 +318,41 @@ function MeetingDetail() {
         );
       });
   }, [session]);
+
+  useEffect(() => {
+    // 뒤로 가기 누르면 실행됨
+    const handleStart = (url) => {
+      if (url !== '/meeting/' + detail.roomId + '/' || url !== '/meeting') {
+        inputValue.roomId = detail.roomId;
+
+        if (detail.hostId == sessionStorage.getItem('userId')) {
+          // 방장일 경우 한번 더 확인
+          if (confirm('방장이 방을 나가면 방이 삭제됩니다. 나가시겠어요?')) {
+            deleteSession();
+            quitRoomAPI(inputValue).then((res) => {
+              if (res.statusCode == 200) {
+                Router.replace('/meeting');
+              }
+            });
+          } else {
+            Router.replace('/meeting/' + detail.roomId);
+          }
+        } else {
+          // 방장이 아니면 방 나가기
+          quitRoomAPI(inputValue).then((res) => {
+            if (res.statusCode == 200) {
+              Router.replace('/meeting');
+            }
+          });
+        }
+      }
+    };
+
+    router.events.on('routeChangeStart', handleStart);
+    return () => {
+      router.events.off('routeChangeStart', handleStart);
+    };
+  }, []);
 
   useEffect(() => {
     if (!screenSession) return;
@@ -484,10 +503,6 @@ function MeetingDetail() {
     });
   };
 
-  const [inputValue, setInputValue] = useState({
-    roomId: '',
-    userId: sessionStorage.getItem('userId'),
-  });
   const shareMonitor = () => {
     if (!screenOV || !screenSession) return;
     const mySession = screenOV.initSession();
@@ -554,7 +569,8 @@ function MeetingDetail() {
     const mySession = session;
     inputValue.roomId = detail.roomId;
 
-    mySession.signal({ data: myUserName, to: [], type: 'userleft' });
+    if (mySession)
+      mySession.signal({ data: myUserName, to: [], type: 'userleft' });
     // GoodByeSnackBar(myUserName);
 
     videoTrackOff(publisher);
@@ -563,9 +579,10 @@ function MeetingDetail() {
 
     quitRoomAPI(inputValue).then((res) => {
       if (res.statusCode == 200) {
-      } else {
-        alert(`${res.message}`);
       }
+      // else {
+      //   alert(`${res.message}`);
+      // }
     });
     // 방장도 미팅룸 탈퇴
     // to do : 방장이면 방 삭제
