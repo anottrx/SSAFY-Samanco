@@ -77,7 +77,8 @@ export default function Login() {
       msg = '비밀번호를 입력해주세요.';
     }
 
-    if (isNormal) { // 유효성 검사 통과 시 login API 요청
+    if (isNormal) {
+      // 유효성 검사 통과 시 login API 요청
       loginAPI(inputState).then((res) => {
         switch (res.statusCode) {
           case 200: // 로그인 성공
@@ -94,11 +95,11 @@ export default function Login() {
                 } else {
                   setCookie('userEmail', '');
                 }
-                if(sessionStorage.getItem('nickname')==res1.nickname) {
+                if (sessionStorage.getItem('nickname') == res1.nickname) {
                   window.history.forward();
                   window.location.replace('/');
                 }
-              })
+              });
             }
             break;
           case 401: // 비밀번호 틀림
