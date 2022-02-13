@@ -163,13 +163,15 @@ function ExitDialog(props) {
   let { open, exitDialogClose, detail } = props;
   return (
     <Dialog open={open} onClose={exitDialogClose}>
-      {detail.hostId == sessionStorage.getItem('userId') ? (
+      {/* {detail.hostId == sessionStorage.getItem('userId') ? (
         <DialogTitle>
           {'방장이 방을 나가면 미팅이 종료됩니다. 그래도 나가시겠습니까?'}
         </DialogTitle>
       ) : (
         <DialogTitle>{'방을 나가시겠습니까?'}</DialogTitle>
-      )}
+      )} */}
+
+      <DialogTitle>{'방을 나가시겠습니까?'}</DialogTitle>
       <DialogActions>
         <Button onClick={exitDialogClose}>취소</Button>
         <Button

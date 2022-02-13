@@ -17,9 +17,6 @@ function OpenViduVideoComponent({ streamManager }) {
 
   return (
     <>
-      {/* <div style={{ backgroundColor: 'white', position: 'absolute' }}>
-        {audioStatus}
-      </div> */}
       <video
         autoPlay={true}
         ref={videoRef}

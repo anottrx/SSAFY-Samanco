@@ -198,10 +198,7 @@ function MeetingDetail() {
       if (event.stream.typeOfVideo === 'SCREEN') {
         // 새로운 스트림이 화면 공유이면
         setScreenShare(event.stream.streamManager);
-      }
-      // sub : 새로운 스트림 / subs : 기존 참여자들
-      else {
-        // console.log('새로 들어왔다!!!!!!!!!!!!!!!!!!!!!!!!!!', sub);
+      } else {
         getConnectionInfo(event).then((res) => {
           let subscribersInfos = res.subscribers;
           let target = subscribersInfos?.filter((subs) => {
@@ -262,7 +259,8 @@ function MeetingDetail() {
     });
 
     mySession.once('sessionDisconnected', () => {
-      alert('미팅이 종료 되었습니다.');
+      if (sessionStorage.getItem('userId') != detail.hostId)
+        alert('미팅이 종료 되었습니다.');
       clear();
       Router.push('/meeting');
     });
@@ -323,15 +321,17 @@ function MeetingDetail() {
   useEffect(() => {
     // 뒤로 가기 누르면 실행됨
     const handleStart = (url) => {
-      if (url !== '/meeting/' + detail.roomId + '/' || url !== '/meeting') {
+      if (url !== '/meeting/' + detail.roomId + '/' && url !== '/meeting') {
         inputValue.roomId = detail.roomId;
 
         if (detail.hostId == sessionStorage.getItem('userId')) {
           // 방장일 경우 한번 더 확인
-          if (confirm('방장이 방을 나가면 방이 삭제됩니다. 나가시겠어요?')) {
-            deleteSession();
+          if (
+            confirm('방장이 방을 나가면 방이 삭제됩니다. 그래도 나가시겠어요?')
+          ) {
             quitRoomAPI(inputValue).then((res) => {
               if (res.statusCode == 200) {
+                deleteSession();
                 Router.replace('/meeting');
               }
             });
@@ -343,6 +343,9 @@ function MeetingDetail() {
           quitRoomAPI(inputValue).then((res) => {
             if (res.statusCode == 200) {
               Router.replace('/meeting');
+              videoTrackOff(publisher);
+              leaveSession();
+              clear();
             }
           });
         }
@@ -581,15 +584,12 @@ function MeetingDetail() {
     quitRoomAPI(inputValue).then((res) => {
       if (res.statusCode == 200) {
       }
-      // else {
-      //   alert(`${res.message}`);
-      // }
     });
     // 방장도 미팅룸 탈퇴
     // to do : 방장이면 방 삭제
-    if (detail.hostId == sessionStorage.getItem('userId')) {
-      deleteSession();
-    }
+    // if (detail.hostId == sessionStorage.getItem('userId')) {
+    //   deleteSession();
+    // }
     Router.replace('/meeting');
   };
 
