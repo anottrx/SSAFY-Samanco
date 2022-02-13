@@ -8,7 +8,9 @@ import MyClub from '../../components/Club/MyClub';
 // import CloseIcon from '@mui/icons-material/Close';
 
 import styled from '@emotion/styled';
-import { Button, Divider, Card } from '@mui/material';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import Divider from '@mui/material/Divider';
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 

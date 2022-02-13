@@ -7,15 +7,15 @@ import {
 } from 'react';
 
 import styled from '@emotion/styled';
-import {
-  Grid,
-  Skeleton,
-  Card,
-  CardContent,
-  Typography,
-  Pagination,
-  Badge,
-} from '@mui/material';
+
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Skeleton from '@mui/material/Skeleton';
+import Pagination from '@mui/material/Pagination';
+import Badge from '@mui/material/Badge';
+
 import { BadgeUnstyled } from '@mui/base';
 
 import Router from 'next/router';

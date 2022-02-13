@@ -8,7 +8,9 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import CloseIcon from '@mui/icons-material/Close';
 
 import styled from '@emotion/styled';
-import { Button, Card, Divider } from '@mui/material';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import Divider from '@mui/material/Divider';
 
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
