@@ -27,6 +27,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
+import Swal from 'sweetalert2';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Router from 'next/router';
@@ -243,8 +244,17 @@ const ProjectDetail = () => {
     const QuitDialogOpen = () => {
       if (sessionStorage.getItem('userId')) setOpenQuit(true);
       else {
-        alert('로그인이 필요한 작업입니다.');
-        Router.push('/login');
+        // alert('로그인이 필요한 작업입니다.');
+        // Router.push('/login');
+        Swal.fire({
+          title: '로그인이 필요한 작업입니다.',
+          text: '로그인 페이지로 이동합니다.',
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 800,
+        }).then(() => {
+          Router.push('/login');
+        });
       }
     };
     const QuitDialogClose = () => {
@@ -318,13 +328,23 @@ const ProjectDetail = () => {
                           Router.push('/meeting/' + detail.roomId);
                         } else {
                           // 방 입장 실패
-                          alert(`${res.message}`);
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
                         }
                       });
                     }
                   } else {
                     // 방 조회 실패 시
-                    alert(`${res.message}`);
+                    // alert(`${res.message}`);
+                    Swal.fire({
+                      icon: 'error',
+                      title: res.message,
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    });
                   }
                 });
               }}
@@ -374,13 +394,27 @@ const ProjectDetail = () => {
                   newHostPosition: newHostPosition,
                 }).then((res) => {
                   if (res.statusCode == 200) {
-                    alert('방장이 변경되었습니다.');
-                    quitProject({
-                      userId: detail.hostId,
-                      projectId: detail.id,
+                    // alert('방장이 변경되었습니다.');
+                    Swal.fire({
+                      title: '방장이 변경되었습니다.',
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 500,
+                    }).then(() => {
+                      quitProject({
+                        userId: detail.hostId,
+                        projectId: detail.id,
+                      });
+                      Router.push('/project');
                     });
-                    Router.push('/project');
-                  } else alert(`${res.message}`);
+                  } else {
+                    // alert(`${res.message}`);
+                    Swal.fire({
+                      icon: 'error',
+                      title: res.message,
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    });
+                  }
                   // 페이지 새로고침
                 });
               }}
@@ -432,12 +466,23 @@ const ProjectDetail = () => {
                 // 방장일 때
                 if (sessionStorage.getItem('userId') == detail.hostId) {
                   if (hostAssign === null) {
-                    alert(
-                      '프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.'
-                    );
+                    // alert(
+                    //   '프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.'
+                    // );
+                    Swal.fire({
+                      icon: 'warning',
+                      title:
+                        '프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.',
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    });
                   } else if (hostAssign === 'quit') {
                     if (detail.positions[9].size == 1) {
-                      alert('팀원이 존재하지 않습니다.');
+                      // alert('팀원이 존재하지 않습니다.');
+                      Swal.fire({
+                        icon: 'error',
+                        title: '팀원이 존재하지 않습니다.',
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
                     } else UserDialogOpen();
                     // 방장 권한 넘기기
                   } else if (hostAssign === 'delete') {
@@ -446,10 +491,24 @@ const ProjectDetail = () => {
                       hostId: sessionStorage.getItem('userId'),
                     }).then((res) => {
                       if (res.statusCode === 200) {
-                        alert('프로젝트가 삭제 되었습니다.');
-                        Router.push('/project');
+                        // alert('프로젝트가 삭제 되었습니다.');
+                        // Router.push('/project');
+                        Swal.fire({
+                          title: '프로젝트가 삭제 되었습니다.',
+                          text: '프로젝트 목록으로 이동합니다',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 800,
+                        }).then(() => {
+                          Router.push('/project');
+                        });
                       } else {
-                        alert(`${res.message}`);
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
                       }
                     });
                     // 프로젝트 삭제
@@ -461,10 +520,24 @@ const ProjectDetail = () => {
                     projectId: detail.id,
                   }).then((res) => {
                     if (res.statusCode === 200) {
-                      alert('프로젝트가 탈퇴 되었습니다.');
-                      Router.push('/project');
+                      // alert('프로젝트가 탈퇴 되었습니다.');
+                      // Router.push('/project');
+                      Swal.fire({
+                        title: '프로젝트가 탈퇴 되었습니다.',
+                        text: '프로젝트 목록으로 이동합니다',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 500,
+                      }).then(() => {
+                        Router.push('/project');
+                      });
                     } else {
-                      alert(`${res.message}`);
+                      // alert(`${res.message}`);
+                      Swal.fire({
+                        icon: 'error',
+                        title: res.message,
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
                     }
                   });
                 }

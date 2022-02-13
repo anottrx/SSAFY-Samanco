@@ -153,7 +153,16 @@ function projectUpdate() {
     )
       [check, msg] = [false, '팀원은 한 명이상 존재해야 합니다.'];
 
-    if (!check) alert(msg);
+    // if (!check) alert(msg);
+    if (!check) {
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
+    }
+    retu
     return check;
   }
 

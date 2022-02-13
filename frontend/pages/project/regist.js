@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import { LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
+import Swal from 'sweetalert2';
 
 import styled from '@emotion/styled';
 
@@ -127,7 +128,15 @@ function ProjectRegist() {
     )
       [check, msg] = [false, '팀원은 한 명이상 존재해야 합니다.'];
 
-    if (!check) alert(msg);
+    // if (!check) alert(msg);
+    if (!check) {
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
+    }
     return check;
   }
 
@@ -226,9 +235,25 @@ function ProjectRegist() {
 
                   registAPI(formData).then((res) => {
                     if (res.statusCode == 200) {
-                      alert('프로젝트가 등록되었습니다.');
-                      Router.push('/project');
-                    } else alert(`${res.message}`);
+                      // alert('프로젝트가 등록되었습니다.');
+                      // Router.push('/project');
+                      Swal.fire({
+                        title: '프로젝트가 등록되었습니다.',
+                        text: '프로젝트 목록으로 이동합니다',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 500,
+                      }).then(() => {
+                        Router.push('/project');
+                      });
+                    } else {
+                      // alert(`${res.message}`);
+                      Swal.fire({
+                        icon: 'error',
+                        title: res.message,
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
+                    }
                   });
                 }
               }}

@@ -5,6 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import Link from '@mui/material/Link';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import Swal from 'sweetalert2';
 
 import styled from '@emotion/styled';
 import LinkIcon from '@mui/icons-material/Link';
@@ -83,36 +84,68 @@ export default function UserCard({
             <IconButton
               onClick={() => {
                 // 유저 탈퇴시키기
-                switch (from) {
-                  case 'project':
-                    quitProject({
-                      userId: user.id,
-                      clubId: clubId,
-                    }).then((res) => {
-                      if (res.data.statusCode == 200) {
-                        alert('해당 유저를 내보냈습니다.');
-                        setReloadCondition(true);
-                      } else {
-                        alert(`${res.data.message}`);
+                Swal.fire({
+                  title: '유저 탈퇴 진행 중입니다',
+                  showConfirmButton: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    resetPWAPI(inputState).then((res) => {
+                      switch (from) {
+                        case 'project':
+                          quitProject({
+                            userId: user.id,
+                            clubId: clubId,
+                          }).then((res) => {
+                            if (res.data.statusCode == 200) {
+                              // alert('해당 유저를 내보냈습니다.');
+                              Swal.fire({
+                                title: '해당 유저를 내보냈습니다.',
+                                icon: 'success',
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              }).then(() => {
+                                setReloadCondition(true);
+                              });
+                            } else {
+                              // alert(`${res.data.message}`);
+                              Swal.fire({
+                                icon: 'error',
+                                title: res.data.message,
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              });
+                            }
+                          });
+                          break;
+                        case 'study':
+                          quitStudy({
+                            userId: user.id,
+                            studyId: clubId,
+                          }).then((res) => {
+                            if (res.statusCode == 200) {
+                              // alert('해당 유저를 내보냈습니다.');
+                              Swal.fire({
+                                title: '해당 유저를 내보냈습니다.',
+                                icon: 'success',
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              }).then(() => {
+                                setReloadCondition(true);
+                              });
+                              // setReloadCondition(true);
+                            } else {
+                              // alert(`${res.data.message}`);
+                              Swal.fire({
+                                icon: 'error',
+                                title: res.data.message,
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              });
+                            }
+                          });
+                          break;
+                        default:
+                          break;
                       }
                     });
-                    break;
-                  case 'study':
-                    quitStudy({
-                      userId: user.id,
-                      studyId: clubId,
-                    }).then((res) => {
-                      if (res.statusCode == 200) {
-                        alert('해당 유저를 내보냈습니다.');
-                        setReloadCondition(true);
-                      } else {
-                        alert(`${res.data.message}`);
-                      }
-                    });
-                    break;
-                  default:
-                    break;
-                }
+                  },
+                });
               }}
             >
               <DeleteIcon />
