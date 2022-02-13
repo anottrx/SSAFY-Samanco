@@ -3,7 +3,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import Layout from '../../components/Layout';
-import { Paper, TextField, Box, Button, MenuItem } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+
 import styled from '@emotion/styled';
 import styles from '../../styles/Board.module.css';
 

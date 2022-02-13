@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
-import {
-  ButtonGroup,
-  Button,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-} from '@mui/material';
+
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

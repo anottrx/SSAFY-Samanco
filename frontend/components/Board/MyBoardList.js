@@ -8,16 +8,15 @@ import React, {
 import { useSelector, useDispatch } from 'react-redux';
 
 import { styled } from '@mui/material/styles';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  tableCellClasses,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Pagination,
-} from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import { tableCellClasses } from '@mui/material';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Pagination from '@mui/material/Pagination';
+
 import Router from 'next/router';
 import * as boardActions from '../../store/module/board';
 import style from '@emotion/styled';
@@ -27,7 +26,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { getArticleById, getArticleByUserId } from '../../pages/api/board';
 import BoardColor from '../../data/BoardColor.json';
 
-//게시글 목록 페이지
+//내 게시글 목록 페이지
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

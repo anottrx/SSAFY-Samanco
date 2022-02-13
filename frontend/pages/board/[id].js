@@ -21,23 +21,22 @@ import SendIcon from '@mui/icons-material/Send';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import {
-  Card,
-  Container,
-  CardContent,
-  Typography,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  DialogContent,
-  ButtonGroup,
-  TextField,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Chip,
-} from '@mui/material';
+import Card from '@mui/material/Card';
+import Container from '@mui/material/Container';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import TextField from '@mui/material/TextField';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Chip from '@mui/material/Chip';
+
 import CommentList from '../../components/Board/CommentList';
 import BoardColor from '../../data/BoardColor.json';
 import * as meetingActions from '../../store/module/meeting';
