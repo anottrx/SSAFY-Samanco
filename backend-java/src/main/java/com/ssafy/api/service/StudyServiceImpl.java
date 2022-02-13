@@ -64,7 +64,7 @@ public class StudyServiceImpl implements StudyService {
             return 401;
         }
 
-        Study study = studyRepositorySupport.selectStudy(studyId);
+        Study study = studyRepositorySupport.selectStudy(studyId, 0);
         if (study==null || !study.getHostId().equals(hostId)){
             return 402;
         }
@@ -80,7 +80,7 @@ public class StudyServiceImpl implements StudyService {
         if (!valid.isStudyValid(studyId)){
             return 402;
         }
-        Study study = studyRepositorySupport.selectStudy(studyId);
+        Study study = studyRepositorySupport.selectStudy(studyId, 0);
         if (study==null || !study.getHostId().equals(userId)){
             return 402;
         }
@@ -112,8 +112,8 @@ public class StudyServiceImpl implements StudyService {
     }
 
     @Override
-    public StudyDto selectStudy(Long userId, Long studyId) {
-        Study result=studyRepositorySupport.selectStudy(studyId);
+    public StudyDto selectStudy(Long userId, Long studyId, int addHit) {
+        Study result=studyRepositorySupport.selectStudy(studyId, addHit);
         if (result==null){
             return null;
         }
@@ -267,7 +267,7 @@ public class StudyServiceImpl implements StudyService {
         if (!valid.isStudyValid(studyId)){
             return 402;
         }
-        Study study = studyRepositorySupport.selectStudy(studyId);
+        Study study = studyRepositorySupport.selectStudy(studyId, 0);
         if (!study.getHostId().equals(hostId)){
             return 401;
         }
@@ -285,7 +285,7 @@ public class StudyServiceImpl implements StudyService {
         if (userStudy==null || !"ok".equalsIgnoreCase(userStudy.getStudyJoinStatus())){
             return 401;
         }
-        Study study = studyRepositorySupport.selectStudy(studyId);
+        Study study = studyRepositorySupport.selectStudy(studyId, 0);
         if (study==null){
             return 402;
         }
@@ -303,7 +303,7 @@ public class StudyServiceImpl implements StudyService {
         if (userStudy==null || !"before".equalsIgnoreCase(userStudy.getStudyJoinStatus())){
             return 401;
         }
-        Study study = studyRepositorySupport.selectStudy(studyId);
+        Study study = studyRepositorySupport.selectStudy(studyId, 0);
         if (study==null){
             return 402;
         }
@@ -314,7 +314,7 @@ public class StudyServiceImpl implements StudyService {
 
     @Override
     public int changeHostStudy(Long studyId, Long oldHostId, Long newHostId) {
-        Study study = studyRepositorySupport.selectStudy(studyId);
+        Study study = studyRepositorySupport.selectStudy(studyId, 0);
         if (study==null || !study.getHostId().equals(oldHostId)){
             return 401;
         }

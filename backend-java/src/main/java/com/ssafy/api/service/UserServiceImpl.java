@@ -248,7 +248,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public int quitProject(Long userId, Long projectId) {
-		Project project = projectRepositorySupport.selectProject(userId, projectId);
+		Project project = projectRepositorySupport.selectProject(userId, projectId, 0);
 		if (userId.equals(project.getHostId())){
 			return 403;
 		}
@@ -319,7 +319,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<UserDto> selectStudyJoinUsers(Long userId, Long studyId) {
-		Study study = studyRepositorySupport.selectStudy(studyId);
+		Study study = studyRepositorySupport.selectStudy(studyId, 0);
 		if (study==null || !study.getHostId().equals(userId)){
 			return null;
 		}

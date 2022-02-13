@@ -17,7 +17,7 @@ public interface ProjectService {
     void deleteProject(Long userId, Long projectId);
 
     ProjectDto selectByHost(Long userId);
-    ProjectDto selectProject(Long userId, Long projectId);
+    ProjectDto selectProject(Long userId, Long projectId, int addHit);
 
     ProjectDto selectByUser(Long userId);
     List<ProjectDto> selectProjectAll();

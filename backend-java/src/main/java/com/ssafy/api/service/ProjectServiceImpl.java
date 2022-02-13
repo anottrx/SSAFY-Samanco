@@ -96,8 +96,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto selectProject(Long userId, Long projectId) {
-        Project result=projectRepositorySupport.selectProject(userId, projectId);
+    public ProjectDto selectProject(Long userId, Long projectId, int addHit) {
+        Project result=projectRepositorySupport.selectProject(userId, projectId, addHit);
         if (result==null){
             return null;
         }
@@ -136,7 +136,7 @@ public class ProjectServiceImpl implements ProjectService {
             return null;
         }
 
-        return selectProject(userId, projectId);
+        return selectProject(userId, projectId, 0);
     }
 
     @Override

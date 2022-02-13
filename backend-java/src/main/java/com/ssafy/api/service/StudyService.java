@@ -14,7 +14,7 @@ public interface StudyService {
     int updateStudy(StudyUpdateReq updateInfo);
     int deleteStudy(Long userId, Long studyId);
     List<StudyDto> selectByHost(Long userId);
-    StudyDto selectStudy(Long userId, Long studyId);
+    StudyDto selectStudy(Long userId, Long studyId, int addHit);
     List<StudyDto> selectByUser(Long userId);
     List<StudyDto> selectStudyAll();
     StudyDto studyEntityToDto(Study entity);

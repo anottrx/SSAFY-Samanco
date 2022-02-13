@@ -101,7 +101,7 @@ public class ProjectRepositorySupport {
     }
 
     @Transactional
-    public Project selectProject(Long userId, Long projectId) {
+    public Project selectProject(Long userId, Long projectId, int addHit) {
         Project result = jpaQueryFactory.selectFrom(qProject)
                 .where(qProject.id.eq(projectId), qProject.isDeleted.eq(false)).fetchOne();
         if (result==null){
@@ -109,7 +109,7 @@ public class ProjectRepositorySupport {
         }
         // 조회수 증가
         jpaQueryFactory.update(qProject).where(qProject.id.eq(projectId))
-                .set(qProject.hit, qProject.hit.add(1))
+                .set(qProject.hit, qProject.hit.add(addHit))
                 .execute();
 
         return result;
