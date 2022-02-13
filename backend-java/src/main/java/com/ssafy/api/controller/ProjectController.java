@@ -242,7 +242,7 @@ public class ProjectController{
         if (project==null){
             return ResponseEntity.status(200).body(ProjectSelectRes.of(401, "유효하지 않은 프로젝트입니다.", null));
         }
-        if (user!=null && projectId==user.getProjectId()) {
+        if (user!=null && projectId.equals(user.getProjectId())) {
             project.setProjectJoinStatus(user.getProjectJoinStatus());
         }
         return ResponseEntity.status(200).body(ProjectSelectRes.of(200, "Success", project));
@@ -351,12 +351,12 @@ public class ProjectController{
         String newHostPosition= projectChangeHostReq.getNewHostPosition();
         UserDto user=userService.selectUser(newHostId);
         System.out.println(user);
-        if (user==null || user.getProjectId()!= projectId || !"OK".equalsIgnoreCase(user.getProjectJoinStatus())){
+        if (user==null || !user.getProjectId().equals(projectId) || !"OK".equalsIgnoreCase(user.getProjectJoinStatus())){
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "프로젝트의 호스트를 넘길 수 없습니다."));
         }
         ProjectDto project=projectService.selectByHost(oldHostId);
         System.out.println(project);
-        if (project==null || projectId!=project.getId()){
+        if (project==null || !projectId.equals(project.getId())){
             return ResponseEntity.status(200).body(BaseResponseBody.of(402, "프로젝트의 호스트를 넘길 수 없습니다."));
         }
 

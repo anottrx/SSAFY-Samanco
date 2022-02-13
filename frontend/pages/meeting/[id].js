@@ -320,17 +320,22 @@ function MeetingDetail() {
 
   useEffect(() => {
     // 뒤로 가기 누르면 실행됨
+    let flag=false;
+    console.log("use effect")
     const handleStart = (url) => {
       if (url !== '/meeting/' + detail.roomId + '/' && url !== '/meeting') {
         inputValue.roomId = detail.roomId;
-
+        console.log("out");
         if (detail.hostId == sessionStorage.getItem('userId')) {
           // 방장일 경우 한번 더 확인
+          console.log("hostid");
           if (
             confirm('방장이 방을 나가면 방이 삭제됩니다. 그래도 나가시겠어요?')
           ) {
+            console.log("confirm")
             quitRoomAPI(inputValue).then((res) => {
               if (res.statusCode == 200) {
+                console.log("quit url");
                 deleteSession();
                 Router.replace('/meeting');
               }

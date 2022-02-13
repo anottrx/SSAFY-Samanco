@@ -65,7 +65,7 @@ public class StudyServiceImpl implements StudyService {
         }
 
         Study study = studyRepositorySupport.selectStudy(studyId);
-        if (study==null || study.getHostId()!=hostId){
+        if (study==null || !study.getHostId().equals(hostId)){
             return 402;
         }
 
@@ -81,7 +81,7 @@ public class StudyServiceImpl implements StudyService {
             return 402;
         }
         Study study = studyRepositorySupport.selectStudy(studyId);
-        if (study==null || study.getHostId()!=userId){
+        if (study==null || !study.getHostId().equals(userId)){
             return 402;
         }
         studyRepositorySupport.deleteStudy(userId, studyId);
@@ -130,10 +130,10 @@ public class StudyServiceImpl implements StudyService {
             study.setStudyJoinStatus(userStudy.getStudyJoinStatus());
             if ("OK".equalsIgnoreCase(userStudy.getStudyJoinStatus())){     // 팀원인 경우
                 Room room=roomRepositorySupport.selectRoomByTagId(studyId, "study");
-                if (room==null && study.getHostId()==userId){    // 방이 안 만들어졌고 방장인 경우
+                if (room==null && study.getHostId().equals(userId)){    // 방이 안 만들어졌고 방장인 경우
                     study.setCanRegister(true);
                 }
-                if (room!=null && room.getHostId()!=userId){     // 방이 만들어졌고 방장이 아닌 팀원
+                if (room!=null && !room.getHostId().equals(userId)){     // 방이 만들어졌고 방장이 아닌 팀원
                     study.setCanJoin(true);
                     study.setRoomId(room.getId());
                 }
@@ -289,7 +289,7 @@ public class StudyServiceImpl implements StudyService {
         if (study==null){
             return 402;
         }
-        System.out.println(study+" "+ userId);
+//        System.out.println(study+" "+ userId);
         if (study.getHostId().equals(userId)){
             return 403;
         }
@@ -315,7 +315,7 @@ public class StudyServiceImpl implements StudyService {
     @Override
     public int changeHostStudy(Long studyId, Long oldHostId, Long newHostId) {
         Study study = studyRepositorySupport.selectStudy(studyId);
-        if (study==null || study.getHostId()!=oldHostId){
+        if (study==null || !study.getHostId().equals(oldHostId)){
             return 401;
         }
         UserStudy userStudy = studyRepositorySupport.selectUserStudy(newHostId, studyId);
