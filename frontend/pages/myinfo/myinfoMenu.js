@@ -8,7 +8,7 @@ const MyInfoMenu = () => {
 
   let links = [
     { path: '/', label: '메인', name: '/myinfo/main' },
-    { path: '/myinfo', label: '내 정보', name: '/myinfo' },
+    { path: '/myinfo', label: '마이페이지', name: '/myinfo' },
     {
       path: '/myinfo/project',
       label: '내 프로젝트',
