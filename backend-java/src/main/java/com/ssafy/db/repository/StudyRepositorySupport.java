@@ -65,7 +65,7 @@ public class StudyRepositorySupport {
     }
 
     @Transactional
-    public Study selectStudy(Long studyId) {
+    public Study selectStudy(Long studyId, int addHit) {
         Study result = jpaQueryFactory.selectFrom(qStudy)
                 .where(qStudy.id.eq(studyId), qStudy.isDeleted.eq(false)).fetchOne();
         if (result==null){
@@ -73,7 +73,7 @@ public class StudyRepositorySupport {
         }
         // 조회수 증가
         jpaQueryFactory.update(qStudy).where(qStudy.id.eq(studyId))
-                .set(qStudy.hit, qStudy.hit.add(1))
+                .set(qStudy.hit, qStudy.hit.add(addHit))
                 .execute();
 
         return result;

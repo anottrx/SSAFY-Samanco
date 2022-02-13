@@ -197,11 +197,12 @@ public class StudyController {
             @ApiResponse(code = 401, message = "해당 스터디 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> selectStudy(@RequestBody StudyUserIdReq studyInfo) throws IOException {
+    public ResponseEntity<? extends BaseResponseBody> selectStudy(@RequestBody StudyUserIdHitReq studyInfo) throws IOException {
 
         Long userId = studyInfo.getUserId();
         Long studyId = studyInfo.getStudyId();
-        StudyDto study=studyService.selectStudy(userId, studyId);
+        int addHit = studyInfo.getAddHit();
+        StudyDto study=studyService.selectStudy(userId, studyId, addHit);
         if (study==null) {
             return ResponseEntity.status(200).body(StudySelectRes.of(401, "유효하지 않은 스터디입니다.", null));
         }
