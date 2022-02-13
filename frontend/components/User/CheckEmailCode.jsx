@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import {
-  OutlinedInput,
-  InputAdornment,
-  Button,
-  Typography,
-} from '@mui/material';
+
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 import { checkEmailCodeAPI, checkEmailPWAPI } from '../../pages/api/user';
 import CountdownTimer from '../Common/CountdownTimer';
 
