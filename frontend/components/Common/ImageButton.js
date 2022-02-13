@@ -107,7 +107,7 @@ export default function ButtonBases({ image }) {
             fontSize: 20,
             fontWeight: 'bolder',
             color: 'white',
-            WebkitTextStroke: '0.8px rgb(0 0 0 / 45%)',
+            // WebkitTextStroke: '0.8px rgb(0 0 0 / 45%)',
           }}
         >
           {image.title}
