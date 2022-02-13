@@ -26,6 +26,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
+import Swal from 'sweetalert2';
 
 import { useState, useEffect, useCallback } from 'react';
 import Router from 'next/router';
@@ -242,8 +243,17 @@ const StudyDetail = () => {
     const QuitDialogOpen = () => {
       if (sessionStorage.getItem('userId')) setOpenQuit(true);
       else {
-        alert('로그인이 필요한 작업입니다.');
-        Router.push('/login');
+        // alert('로그인이 필요한 작업입니다.');
+        // Router.push('/login');
+        Swal.fire({
+          title: '로그인이 필요한 작업입니다.',
+          text: '로그인 페이지로 이동합니다.',
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 800,
+        }).then(() => {
+          Router.push('/login');
+        });
       }
     };
     const QuitDialogClose = () => {
@@ -317,13 +327,23 @@ const StudyDetail = () => {
                           Router.push('/meeting/' + detail.roomId);
                         } else {
                           // 방 입장 실패
-                          alert(`${res.message}`);
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
                         }
                       });
                     }
                   } else {
                     // 방 조회 실패 시
-                    alert(`${res.message}`);
+                    // alert(`${res.message}`);
+                    Swal.fire({
+                      icon: 'error',
+                      title: res.message,
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    });
                   }
                 });
               }}
@@ -376,7 +396,14 @@ const StudyDetail = () => {
                       studyId: detail.id,
                     });
                     Router.push('/study');
-                  } else alert(`${res.message}`);
+                  } else {
+                    // alert(`${res.message}`);
+                    Swal.fire({
+                      icon: 'error',
+                      title: res.message,
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    });
+                  }
                   // 페이지 새로고침
                   setReloadCondition(true);
                 });
@@ -445,7 +472,12 @@ const StudyDetail = () => {
                         alert('스터디가 삭제 되었습니다.');
                         Router.push('/study');
                       } else {
-                        alert(`${res.message}`);
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
                       }
                     });
                     // 프로젝트 삭제
@@ -460,7 +492,12 @@ const StudyDetail = () => {
                       alert('스터디가 탈퇴 되었습니다.');
                       Router.push('/study');
                     } else {
-                      alert(`${res.message}`);
+                      // alert(`${res.message}`);
+                      Swal.fire({
+                        icon: 'error',
+                        title: res.message,
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
                     }
                   });
                 }
@@ -564,8 +601,17 @@ const StudyDetail = () => {
     const JoinDialogOpen = () => {
       if (sessionStorage.getItem('userId')) setOpen(true);
       else {
-        alert('로그인이 필요한 작업입니다.');
-        Router.push('/login');
+        // alert('로그인이 필요한 작업입니다.');
+        // Router.push('/login');
+        Swal.fire({
+          title: '로그인이 필요한 작업입니다.',
+          text: '로그인 페이지로 이동합니다.',
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 800,
+        }).then(() => {
+          Router.push('/login');
+        });
       }
     };
     const JoinDialogClose = () => {
@@ -596,8 +642,17 @@ const StudyDetail = () => {
                   userId: sessionStorage.getItem('userId'),
                 }).then((res) => console.log(res));
               } else {
-                alert('로그인이 필요한 작업입니다.');
-                Router.push('/login');
+                // alert('로그인이 필요한 작업입니다.');
+                // Router.push('/login');
+                Swal.fire({
+                  title: '로그인이 필요한 작업입니다.',
+                  text: '로그인 페이지로 이동합니다.',
+                  icon: 'warning',
+                  showConfirmButton: false,
+                  timer: 800,
+                }).then(() => {
+                  Router.push('/login');
+                });
               }
             }}
             variant={like ? 'contained' : 'outlined'}
@@ -661,7 +716,12 @@ const StudyDetail = () => {
                       if (res.statusCode === 200) {
                         alert('스터디 지원 신청이 되었습니다.');
                       } else {
-                        alert(`${res.message}`);
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
                       }
                     })
                     .catch((err) => console.log(err));
@@ -690,7 +750,12 @@ const StudyDetail = () => {
                       if (res.statusCode === 200) {
                         alert('스터디 지원 취소가 되었습니다.');
                       } else {
-                        alert(`${res.message}`);
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
                       }
                     })
                     .catch((err) => console.log(err));
@@ -742,12 +807,22 @@ function PwDialog(props) {
                       Router.push('/meeting/' + room.roomId);
                       pwDialogClose();
                     } else {
-                      alert(`${res.message}`);
+                      // alert(`${res.message}`);
+                      Swal.fire({
+                        icon: 'error',
+                        title: res.message,
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
                     }
                   });
                 }
               : () => {
-                  alert('비밀번호를 확인해주세요.');
+                  // alert('비밀번호를 확인해주세요.');
+                  Swal.fire({
+                    icon: 'error',
+                    title: '비밀번호를 확인해주세요.',
+                    confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  });
                 }
           }
           autoFocus

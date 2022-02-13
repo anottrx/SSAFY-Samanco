@@ -9,6 +9,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Swal from 'sweetalert2';
 
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import { LocalizationProvider } from '@mui/lab';
@@ -147,7 +148,15 @@ function studyUpdate() {
     )
       [check, msg] = [false, '스터디 주제를 선택해주세요.'];
 
-    if (!check) alert(msg);
+    // if (!check) alert(msg);
+    if (!check) {
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
+    }
     return check;
   }
 
@@ -265,10 +274,23 @@ function studyUpdate() {
 
                   updateAPI(formData).then((res) => {
                     if (res.statusCode == 200) {
-                      alert('스터디 수정되었습니다.');
-                      Router.push('/study/' + inputValue.studyId);
+                      // alert('스터디 수정되었습니다.');
+                      // Router.push('/study/' + inputValue.studyId);
+                      Swal.fire({
+                        title: '스터디가 수정되었습니다.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 800,
+                      }).then(() => {
+                        Router.push('/study/' + inputValue.studyId);
+                      })
                     } else {
-                      alert(`${res.message}`);
+                      // alert(`${res.message}`);
+                      Swal.fire({
+                        icon: 'error',
+                        title: res.message,
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
                     }
                   });
                 }

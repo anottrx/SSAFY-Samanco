@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import styled from '@emotion/styled';
+import Swal from 'sweetalert2';
 
 import { registAPI } from '../api/study';
 import Router from 'next/router';
@@ -101,7 +102,16 @@ function StudyRegist() {
     )
       [check, msg] = [false, '스터디 주제를 선택해주세요.'];
 
-    if (!check) alert(msg);
+    // if (!check) alert(msg);
+    if (!check) {
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
+    }
+    retu
     return check;
   }
 
@@ -197,9 +207,25 @@ function StudyRegist() {
 
                   registAPI(formData).then((res) => {
                     if (res.statusCode == 200) {
-                      alert('스터디가 등록되었습니다.');
-                      Router.push('/study');
-                    } else alert(`${res.message}`);
+                      // alert('스터디가 등록되었습니다.');
+                      // Router.push('/study');
+                      Swal.fire({
+                        title: '스터디가 등록되었습니다.',
+                        text: '스터디 목록으로 이동합니다',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 800,
+                      }).then(() => {
+                        Router.push('/study');
+                      })
+                    } else {
+                      // alert(`${res.message}`);
+                      Swal.fire({
+                        icon: 'error',
+                        title: res.message,
+                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      });
+                    }
                   });
                 }
               }}

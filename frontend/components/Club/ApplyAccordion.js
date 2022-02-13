@@ -10,6 +10,7 @@ import Stack from '@mui/material/Stack';
 import Link from '@mui/material/Link';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
+import Swal from 'sweetalert2';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LinkIcon from '@mui/icons-material/Link';
@@ -151,26 +152,41 @@ function ApplyAccordion(props) {
 
                       props.approveAPI(approveData).then((res) => {
                         if (res.statusCode == 200) {
-                          alert('해당 유저의 가입을 승인하였습니다.');
-                          if (props.from === 'project') {
-                            getProjectUserByjoin(joinData) // 재조회
-                              .then((res) => {
-                                dispatch(
-                                  applyActions.setApplyList({ list: res.users })
-                                );
-                              })
-                              .catch((err) => console.log(err));
-                          } else {
-                            getStudyUserByjoin(joinData) // 재조회
-                              .then((res) => {
-                                dispatch(
-                                  applyActions.setApplyList({ list: res.users })
-                                );
-                              })
-                              .catch((err) => console.log(err));
-                          }
+                          // alert('해당 유저의 가입을 승인하였습니다.');
+                          Swal.fire({
+                            icon: 'warning',
+                            title: '해당 유저의 가입을 승인하였습니다.',
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          }).then(() => {
+                            if (props.from === 'project') {
+                              getProjectUserByjoin(joinData) // 재조회
+                                .then((res) => {
+                                  dispatch(
+                                    applyActions.setApplyList({
+                                      list: res.users,
+                                    })
+                                  );
+                                })
+                                .catch((err) => console.log(err));
+                            } else {
+                              getStudyUserByjoin(joinData) // 재조회
+                                .then((res) => {
+                                  dispatch(
+                                    applyActions.setApplyList({
+                                      list: res.users,
+                                    })
+                                  );
+                                })
+                                .catch((err) => console.log(err));
+                            }
+                          });
                         } else {
-                          alert(`${res.message}`);
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
                         }
                       });
 
@@ -218,26 +234,41 @@ function ApplyAccordion(props) {
 
                       props.approveAPI(approveData).then((res) => {
                         if (res.statusCode == 200) {
-                          alert('해당 유저의 가입을 거절하였습니다.');
-                          if (props.from === 'project') {
-                            getProjectUserByjoin(joinData) // 재조회
-                              .then((res) => {
-                                dispatch(
-                                  applyActions.setApplyList({ list: res.users })
-                                );
-                              })
-                              .catch((err) => console.log(err));
-                          } else {
-                            getStudyUserByjoin(joinData) // 재조회
-                              .then((res) => {
-                                dispatch(
-                                  applyActions.setApplyList({ list: res.users })
-                                );
-                              })
-                              .catch((err) => console.log(err));
-                          }
+                          // alert('해당 유저의 가입을 거절하였습니다.');
+                          Swal.fire({
+                            icon: 'warning',
+                            title: '해당 유저의 가입을 거절하였습니다.',
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          }).then(() => {
+                            if (props.from === 'project') {
+                              getProjectUserByjoin(joinData) // 재조회
+                                .then((res) => {
+                                  dispatch(
+                                    applyActions.setApplyList({
+                                      list: res.users,
+                                    })
+                                  );
+                                })
+                                .catch((err) => console.log(err));
+                            } else {
+                              getStudyUserByjoin(joinData) // 재조회
+                                .then((res) => {
+                                  dispatch(
+                                    applyActions.setApplyList({
+                                      list: res.users,
+                                    })
+                                  );
+                                })
+                                .catch((err) => console.log(err));
+                            }
+                          });
                         } else {
-                          alert(`${res.message}`);
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
                         }
                       });
 
