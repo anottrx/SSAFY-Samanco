@@ -1,11 +1,12 @@
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Card, CardContent, Button, Divider } from '@mui/material';
+import { Card, CardContent, Button, Divider, Grid } from '@mui/material';
 import styled from '@emotion/styled';
 import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';
 import { useSelector, useDispatch } from 'react-redux';
+import Link from 'next/link';
 import {
   getProjectByUserId,
   projectImageDownload,
@@ -45,12 +46,28 @@ function MyClub(props) {
     margin: 20px 0px;
   `;
 
+  const CusGrid = styled(Grid)`
+    min-height: 530px;
+  `;
+
+  const CusCard = styled(Card)`
+    width: 100%;
+    padding: 10px;
+  `;
+
   const dispatch = useDispatch();
   let clubData;
+  let myData;
   if (props.from === 'project') {
     clubData = useSelector(({ project }) => project.myProject);
+    if (props.myinfo === 'myinfo') {
+      myData = 'project';
+    }
   } else if (props.from === 'study') {
     clubData = useSelector(({ study }) => study.myStudy);
+    if (props.myinfo === 'myinfo') {
+      myData = 'study';
+    }
   }
 
   useLayoutEffect(() => {
@@ -79,7 +96,29 @@ function MyClub(props) {
     }
   }, []);
 
-  return !clubData ? null : (
+  return !clubData ? ( // 데이터가 없는 경우
+    myData == 'project' || myData === 'study' ? (
+      // 마이페이지에서 내프로젝트와 내스터디로 이동한 경우
+      <MyClubWrapper>
+        <h2>{props.label}</h2>
+        <CusGrid>
+          {myData == 'project' ? ( // 내 프로젝트가 없다면
+            <CusCard>
+              <Link href="/project" passHref>
+                가입한 프로젝트가 없습니다. 프로젝트를 둘러보세요!
+              </Link>
+            </CusCard>
+          ) : myData == 'study' ? ( // 내 스터디가 없다면
+            <CusCard>
+              <Link href="/study" passHref>
+                가입한 스터디가 없습니다. 스터디를 둘러보세요!
+              </Link>
+            </CusCard>
+          ) : null}
+        </CusGrid>
+      </MyClubWrapper>
+    ) : null // 프로젝트와 스터디 목록인 경우
+  ) : (
     <>
       <MyClubWrapper>
         <h2>{props.label}</h2>
