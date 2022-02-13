@@ -4,13 +4,17 @@ import { useState, useRef, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import StackSelect from '../../components/Common/Stack/StackSelect';
 
-import { Paper, TextField, Box, Button } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import styled from '@emotion/styled';
 
 import { registAPI } from '../api/study';
 import Router from 'next/router';
+import Head from 'next/head';
 
 function StudyRegist() {
   const CusPaper = styled(Paper)`
@@ -104,7 +108,10 @@ function StudyRegist() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
-        <h1>Study Regist</h1>
+        <Head>
+          <title>스터디 등록 | 싸피사만코</title>
+        </Head>
+        <h1 style={{ marginTop: '20px' }}>스터디 등록</h1>
         <CusPaper>
           <ImgUploadBtn
             id="img_box"

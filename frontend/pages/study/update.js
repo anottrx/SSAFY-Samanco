@@ -2,24 +2,24 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import Layout from '../../components/Layout';
-import {
-  Paper,
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import { LocalizationProvider } from '@mui/lab';
 
 import StackSelect from '../../components/Common/Stack/StackSelect';
 
 import styled from '@emotion/styled';
-import { updateAPI, studyImageDownload } from '../api/study';
+import { updateAPI } from '../api/study';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 function studyUpdate() {
   const detail = useSelector(({ study }) => study.studyDetail);
@@ -154,7 +154,10 @@ function studyUpdate() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
-        <h1>Study Update</h1>
+        <Head>
+          <title>스터디 수정 | 싸피사만코</title>
+        </Head>
+        <h1 style={{ marginTop: '20px' }}>스터디 수정</h1>
         <CusPaper>
           <ImgUploadBtn
             id="img_box"

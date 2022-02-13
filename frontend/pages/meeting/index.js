@@ -2,10 +2,11 @@ import Layout from '../../components/Layout';
 import SearchBar from '../../components/Common/Search';
 import ItemList from '../../components/Meeting/ItemList';
 
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import styled from '@emotion/styled';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 export default function Meeting() {
   const ItemWrapper = styled.div`
@@ -30,7 +31,10 @@ export default function Meeting() {
 
   return (
     <Layout>
-      <h1>Meeting</h1>
+      <Head>
+        <title>미팅룸 | 싸피사만코</title>
+      </Head>
+      <h1 style={{ marginTop: '20px' }}>미팅룸</h1>
       <ItemWrapper>
         <MeetingActions>
           <SearchBar target="meeting"></SearchBar>

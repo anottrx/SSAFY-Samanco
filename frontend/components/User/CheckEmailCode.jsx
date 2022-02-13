@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import {
-  OutlinedInput,
-  InputAdornment,
-  Button,
-  Typography,
-} from '@mui/material';
+
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 import { checkEmailCodeAPI, checkEmailPWAPI } from '../../pages/api/user';
 import CountdownTimer from '../Common/CountdownTimer';
 
 export default function CheckEmailCode(props) {
   const [inputValue, setInputValue] = useState({
     code: '',
-    email: props.email
-  })
+    email: props.email,
+  });
   const [code, setCode] = useState('');
   const [authFin, setAuthFin] = useState(false);
   const [timer, setTimer] = useState(true);
@@ -24,7 +24,6 @@ export default function CheckEmailCode(props) {
 
   const changeTimerHandle = (value, name) => {
     setTimer(value);
-    // console.log(value + ' ' + name);
     props.changeHandle(false, 'code');
     alert('시간이 만료되었습니다! 인증코드를 재발급해 주세요');
     setAuthFin(true);
@@ -35,38 +34,38 @@ export default function CheckEmailCode(props) {
     e.preventDefault();
     const value = code;
     inputValue.code = code;
-    inputValue.email = props.email
+    inputValue.email = props.email;
 
     if (!value) {
       alert('인증번호를 입력해주세요.');
     } else {
-      // console.log(value);
-      //   checkEmailPWAPI(value).then((res) => {
-      //     setEmailCodeRes({ code: res.statusCode, msg: res.message });
-
-      // console.log(inputValue);
-
-      if(props.lostpw) {
-        console.log('비밀번호 잃어버려서 온 것')
-      } else {
-        console.log('회원가입하다가 온 것')
-        checkEmailCodeAPI(code).then((res) => {
+      if (props.lostpw) {
+        // console.log('비밀번호 잃어버려서 온 것')
+        checkEmailPWAPI(inputValue).then((res) => {
           // console.log(res);
           if (res.statusCode == 200) {
             props.changeHandle(true, 'code');
             setAuthFin(true);
+          } else if (res.statusCode == 401) {
+            alert('잘못 입력했습니다');
+          } else {
+            props.changeHandle(false, 'code');
+          }
+        });
+      } else {
+        // console.log('회원가입하다가 온 것')
+        checkEmailCodeAPI(inputValue).then((res) => {
+          console.log(res);
+          if (res.statusCode == 200) {
+            props.changeHandle(true, 'code');
+            setAuthFin(true);
+          } else if (res.statusCode == 401) {
+            alert('잘못 입력했습니다');
           } else {
             props.changeHandle(false, 'code');
           }
         });
       }
-
-      
-      // 인증 실패시
-      // props.changeHandle(false, "code");
-      // props.changeHandle(true, "code");
-      // setAuthFin(true);
-      //   });
     }
   };
 

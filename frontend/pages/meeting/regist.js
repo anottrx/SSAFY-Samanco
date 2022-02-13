@@ -2,16 +2,15 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import Layout from '../../components/Layout';
 import { useSelector, useDispatch } from 'react-redux';
 import Router, { useRouter } from 'next/router';
+import Head from 'next/head';
 import * as meetingActions from '../../store/module/meeting';
 
-import {
-  Paper,
-  TextField,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  MenuItem,
-} from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 import styled from '@emotion/styled';
 
 import { registAPI, joinRoomAPI, getRoomById } from '../api/meeting';
@@ -53,54 +52,10 @@ function MeetingRegist() {
     }
   `;
 
-  const ImgUploadBtn = styled(Button)`
-    padding: 20px;
-    border: 1px dashed grey;
-    min-width: 150px;
-    min-height: 150px;
-    margin: 10px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: contain;
-  `;
-
-  const MeetingRegistTagField = styled(TextField)`
-    width: 300px;
-  `;
-  const MeetingRegistTagMenu = styled(MenuItem)`
-    width: 300px;
-  `;
-
-  const currencies = [
-    {
-      value: 'project',
-      label: '프로젝트',
-    },
-    {
-      value: 'study',
-      label: '스터디',
-    },
-    {
-      value: 'board',
-      label: '게시판',
-    },
-  ];
-
-  let userId;
-  useEffect(() => {
-    // userId = sessionStorage.getItem('userId');
-  }, []);
-
   const [inputValue, setInputValue] = useState({
     hostId: sessionStorage.getItem('userId'),
     isSecret: 0,
-    password: '',
   });
-
-  const [files, setFiles] = useState('');
 
   const [privateCheck, setprivateCheck] = useState(false);
 
@@ -113,30 +68,6 @@ function MeetingRegist() {
     }
   };
 
-  const onImgChange = (event) => {
-    const file = event.target.files[0];
-    setFiles(file);
-  };
-
-  const uploadRef = useRef(null);
-
-  useEffect(() => {
-    // preview();
-  });
-
-  const preview = () => {
-    if (!files) return false;
-
-    const imgEl = document.querySelector('#img_box');
-    const reader = new FileReader();
-
-    reader.onload = () =>
-      (imgEl.style.backgroundImage = `url(${reader.result})`);
-
-    imgEl.innerText = '';
-    reader.readAsDataURL(files);
-  };
-
   const changeHandle = (value, name) => {
     inputValue[name] = value;
     // 리렌더링 X
@@ -144,12 +75,8 @@ function MeetingRegist() {
 
   function validateCheck() {
     let [check, msg] = [true, ''];
-    // if (typeof inputValue.tag == 'undefined')
-    // [check, msg] = [false, '태그를 선택해주세요'];
     if (typeof inputValue.title == 'undefined')
       [check, msg] = [false, '미팅룸 이름을 입력해주세요.'];
-    // else if (typeof inputValue.size == 'undefined' || inputValue.size == 0)
-    // [check, msg] = [false, '미팅룸 인원은 한 명 이상이여야 합니다.'];
     else if (
       privateCheck &&
       (typeof inputValue.password == 'undefined' || inputValue.password == '')
@@ -176,44 +103,11 @@ function MeetingRegist() {
 
   return (
     <Layout>
-      <h1>Meeting Regist</h1>
+      <Head>
+        <title>미팅룸 등록 | 싸피사만코</title>
+      </Head>
+      <h1 style={{ marginTop: '20px' }}>미팅룸 등록</h1>
       <CusPaper>
-        {/* <ImgUploadBtn
-          id="img_box"
-          onClick={(event) => {
-            event.preventDefault();
-            uploadRef.current.click();
-          }}
-        >
-          Image Upload
-        </ImgUploadBtn>
-
-        <input
-          ref={uploadRef}
-          type="file"
-          className="imgInput"
-          id="studyImg"
-          accept="image/*"
-          name="file"
-          encType="multipart/form-data"
-          onChange={onImgChange}
-        ></input>
-
-        <MeetingRegistTagField
-          className={styled.meetingRegistTag}
-          id="filled-select-currency"
-          select
-          label="태그"
-          defaultValue=""
-          onChange={(e) => changeHandle(e.target.value, 'tag')}
-        >
-          {currencies.map((option, index) => (
-            <MeetingRegistTagMenu key={index} value={option.value}>
-              {option.label}
-            </MeetingRegistTagMenu>
-          ))}
-        </MeetingRegistTagField> */}
-
         <TextField
           fullWidth
           name="title"
@@ -221,14 +115,6 @@ function MeetingRegist() {
           onChange={(e) => changeHandle(e.target.value, 'title')}
           value={inputValue.title}
         />
-
-        {/* <TextField
-          fullWidth
-          name="size"
-          label="미팅룸 인원"
-          onChange={(e) => changeHandle(e.target.value, 'size')}
-          value={inputValue.size}
-        /> */}
 
         <FormControlLabel
           control={
@@ -266,16 +152,7 @@ function MeetingRegist() {
             variant="outlined"
             onClick={() => {
               if (validateCheck()) {
-                // const formData = new FormData();
-
-                // Object.keys(inputValue).map((key) => {
-                //   let value = inputValue[key];
-                //   formData.append(key, JSON.stringify(value));
-                // });
-
                 if (tag !== undefined) {
-                  // formData.append('tag', tag);
-                  // formData.append('tagId', tagId);
                   inputValue.tag = tag;
                   inputValue.tagId = tagId;
                 } else {
@@ -283,12 +160,6 @@ function MeetingRegist() {
                   inputValue.tagId = '';
                 }
 
-                // formData.append('file', files);
-
-                // for(var key of formData.entries())
-                // {
-                //     console.log(`${key}`);
-                // }
                 console.log(inputValue);
                 let roomId;
                 registAPI(inputValue).then((res) => {

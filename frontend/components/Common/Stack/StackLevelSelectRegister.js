@@ -1,12 +1,11 @@
-import {
-  Autocomplete,
-  TextField,
-  Stack,
-  Paper,
-  ButtonGroup,
-  Rating,
-  Box,
-} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
+import Rating from '@mui/material/Rating';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Box from '@mui/material/Box';
+
 import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import RemoveIcon from '@mui/icons-material/Remove';

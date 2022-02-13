@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { getStudyUserByjoin, approveStudy } from '../../pages/api/study';
 
+import Head from 'next/head';
+
 function ApplyList() {
   const detail = useSelector(({ study }) => study.studyDetail);
   const applyData = useSelector(({ apply }) => apply.applyList);
@@ -23,10 +25,6 @@ function ApplyList() {
       .catch((err) => console.log(err));
   }
 
-  useLayoutEffect(() => {
-    fetchData();
-  }, []);
-
   useEffect(() => {
     if (reloadCondition) {
       fetchData();
@@ -36,6 +34,9 @@ function ApplyList() {
 
   return (
     <Layout>
+      <Head>
+        <title>스터디 지원자 목록 | 싸피사만코</title>
+      </Head>
       <h2>지원자 목록 조회</h2>
       <ApplyAccordion
         applyData={applyData}

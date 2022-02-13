@@ -1,4 +1,6 @@
-import { InputBase, IconButton, Paper } from '@mui/material';
+import InputBase from '@mui/material/InputBase';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState, useEffect, useCallback } from 'react';
 

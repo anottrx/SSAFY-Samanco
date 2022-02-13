@@ -14,25 +14,25 @@ import { projectImageDownload } from '../../pages/api/project';
 import DatePickerUser from '../../components/Common/DatePickerUser';
 import { LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
-import {
-  TextField,
-  Button,
-  Box,
-  Select,
-  MenuItem,
-  Autocomplete,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Card,
-  CardContent,
-  OutlinedInput,
-  Divider,
-  InputAdornment,
-  Container,
-} from '@mui/material';
+
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Autocomplete from '@mui/material/Autocomplete';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Divider from '@mui/material/Divider';
+import InputAdornment from '@mui/material/InputAdornment';
+import Container from '@mui/material/Container';
+
 import styled from '@emotion/styled';
 import StackLevelListInfo from '../Common/Stack/StackLevelListInfo';
 import StackLevelSelectRegister from '../Common/Stack/StackLevelSelectRegister';
@@ -48,10 +48,10 @@ const urlReg =
 
 const DatePickerWrapper = styled.div`
   display: flex;
-  width: 370px;
+  // width: 370px;
   & > div {
     flex: 1;
-    width: 370px;
+    // width: 370px;
     margin: 0px 0px;
   }
 `;
@@ -329,7 +329,7 @@ export default function MyInfo() {
 
     getUserInfoAPI(inputState.userId).then((res) => {
       if (res.statusCode == 200) {
-        console.log('내 정보 보기 결과: ' + JSON.stringify(res));
+        // console.log('내 정보 보기 결과: ' + JSON.stringify(res));
         inputState.name = res.user.name;
         const today = new Date();
         const todayYear = today.getFullYear().toString().slice(2);
@@ -883,9 +883,9 @@ export default function MyInfo() {
                                       <Button
                                         variant="outlined"
                                         onClick={handleUserNicknameClick}
-                                        sx={{ width: '100px' }}
+                                        sx={{ width: '10px' }}
                                       >
-                                        닉네임 변경하기
+                                        변경하기
                                       </Button>
                                     )
                                   ) : (
@@ -1062,7 +1062,9 @@ export default function MyInfo() {
                     <br />
                     <TextField
                       id="description"
-                      placeholder="자기자신에 대해 소개해주세요"
+                      placeholder={
+                        onlyView ? '' : '자기자신에 대해 소개해주세요'
+                      }
                       fullWidth
                       rows={4}
                       multiline

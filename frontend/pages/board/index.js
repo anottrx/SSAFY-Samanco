@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Tabs, Tab, Typography, Box, Button } from '@mui/material';
+
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 import Layout from '../../components/Layout';
 import styled from '@emotion/styled';
@@ -10,6 +15,7 @@ import BoardColor from '../../data/BoardColor.json';
 import BoardList from '../../components/Board/BoardList';
 import * as boardActions from '../../store/module/board';
 import Router from 'next/router';
+import Head from 'next/head';
 
 //게시판 탭(공지사항, 자유게시판, 질문게시판, 정보공유, 사람구해요)
 
@@ -114,7 +120,10 @@ export default function Board() {
 
   return (
     <Layout>
-      <h1>Board</h1>
+      <Head>
+        <title>게시판 | 싸피사만코</title>
+      </Head>
+      <h1 style={{ marginTop: '20px' }}>게시판</h1>
       <ButtonWrapper>
         <CusButton
           variant="outlined"

@@ -6,7 +6,10 @@ import DatePicker from '../../components/Common/DatePicker';
 import StackSelect from '../../components/Common/Stack/StackSelect';
 import Counter from '../../components/Common/PositionSelect';
 
-import { Paper, TextField, Button, Autocomplete } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Autocomplete from '@mui/material/Autocomplete';
 import { LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 
@@ -14,6 +17,7 @@ import styled from '@emotion/styled';
 
 import { registAPI } from '../api/project';
 import Router from 'next/router';
+import Head from 'next/head';
 
 const position = [
   { name: 'Frontend', count: 0 },
@@ -130,7 +134,10 @@ function ProjectRegist() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
-        <h1>Project Regist</h1>
+        <Head>
+          <title>프로젝트 등록 | 싸피사만코</title>
+        </Head>
+        <h1 style={{ marginTop: '20px' }}>프로젝트 등록</h1>
         <CusPaper>
           <ImgUploadBtn
             id="img_box"

@@ -3,15 +3,14 @@ import { useState } from 'react';
 import styled from '@emotion/styled';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import {
-  Stack,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  Fab,
-  Box,
-} from '@mui/material';
+
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import Fab from '@mui/material/Fab';
+import Box from '@mui/material/Box';
 
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';
@@ -71,7 +70,7 @@ function RoomInfo({
     <InfoWrapper>
       <div className="names">
         <span className="roomTitle">{detail.title}</span>
-        <span className="hostName">[방장] {detail.host}</span>
+        <span className="hostName">[방장] {detail.nickname}</span>
         <Stack>
           <span>
             <AccessTimeIcon />
@@ -164,13 +163,15 @@ function ExitDialog(props) {
   let { open, exitDialogClose, detail } = props;
   return (
     <Dialog open={open} onClose={exitDialogClose}>
-      {detail.hostId == sessionStorage.getItem('userId') ? (
+      {/* {detail.hostId == sessionStorage.getItem('userId') ? (
         <DialogTitle>
           {'방장이 방을 나가면 미팅이 종료됩니다. 그래도 나가시겠습니까?'}
         </DialogTitle>
       ) : (
         <DialogTitle>{'방을 나가시겠습니까?'}</DialogTitle>
-      )}
+      )} */}
+
+      <DialogTitle>{'방을 나가시겠습니까?'}</DialogTitle>
       <DialogActions>
         <Button onClick={exitDialogClose}>취소</Button>
         <Button

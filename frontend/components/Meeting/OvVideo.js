@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 function OpenViduVideoComponent({ streamManager }) {
   const videoRef = useRef();
@@ -17,12 +17,13 @@ function OpenViduVideoComponent({ streamManager }) {
 
   return (
     <>
-      {/* <div style={{ backgroundColor: 'white', position: 'absolute' }}>
-        {audioStatus}
-      </div> */}
-      <video autoPlay={true} ref={videoRef} style={{ borderRadius: '5px' }} />
+      <video
+        autoPlay={true}
+        ref={videoRef}
+        style={{ borderRadius: '5px', border: '1px solid gdray' }}
+      />
     </>
   );
 }
 
-export default OpenViduVideoComponent;
+export default React.memo(OpenViduVideoComponent);

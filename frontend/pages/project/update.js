@@ -2,16 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import Layout from '../../components/Layout';
-import {
-  Paper,
-  TextField,
-  Button,
-  Autocomplete,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-} from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Autocomplete from '@mui/material/Autocomplete';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import { LocalizationProvider } from '@mui/lab';
 
@@ -23,6 +22,7 @@ import styled from '@emotion/styled';
 import { updateAPI } from '../api/project';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 const position = [
   { name: 'Frontend', count: 0 },
@@ -160,7 +160,10 @@ function projectUpdate() {
   return (
     <LocalizationProvider dateAdapter={DateAdapter}>
       <Layout>
-        <h1>Project Update</h1>
+        <Head>
+          <title>프로젝트 수정 | 싸피사만코</title>
+        </Head>
+        <h1 style={{ marginTop: '20px' }}>프로젝트 수정</h1>
         <CusPaper>
           <ImgUploadBtn
             id="img_box"

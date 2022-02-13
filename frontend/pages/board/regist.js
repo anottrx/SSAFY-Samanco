@@ -2,12 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 
 import Layout from '../../components/Layout';
 
-import { Paper, TextField, Box, Button, MenuItem } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+
 import styled from '@emotion/styled';
 import styles from '../../styles/Board.module.css';
 
 import { registBoard } from '../api/board';
 import Router from 'next/router';
+import Head from 'next/head';
 
 //게시글 등록 페이지
 function BoardRegist() {
@@ -120,7 +126,10 @@ function BoardRegist() {
 
   return (
     <Layout>
-      <h1>Board Regist</h1>
+      <Head>
+        <title>게시물 등록 | 싸피사만코</title>
+      </Head>
+      <h1 style={{ marginTop: '20px' }}>게시물 등록</h1>
       <CusPaper>
         {nickname == 'admin' ? (
           <TextField

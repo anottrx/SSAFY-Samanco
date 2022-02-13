@@ -10,7 +10,11 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
-import { Button, Menu, MenuItem, Fade } from '@mui/material';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Fade from '@mui/material/Fade';
+
 import Cookies from 'universal-cookie';
 import { useCookies } from 'react-cookie';
 import { getUserLoginTokenAPI } from '../pages/api/user';
@@ -151,7 +155,7 @@ function MyApp({ Component, pageProps }) {
               {/* <Link href="/developer">
                   <img src="/images/pojangmacha.png" width={110} ></img>
                 </Link> */}
-              <a href="https://obvious-spade-e4e.notion.site/2-e9c8cb53c7ad41bc97ce50af77b34a69">
+              <a href="https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A502">
                 <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
               </a>
               {/* footer */}

@@ -18,19 +18,12 @@ const counterSlice = createSlice({
     setMeetingDetail: (state, action) => {
       state.meetingDetail = action.payload.detail;
     },
-    setPublisherStatus: (state, action) => {
-      state.publisherStatus = action.payload.status;
-    },
     setMeetingFilterList: (state, action) => {
       state.meetingFilterList = action.payload.list;
     },
   },
 });
 
-export const {
-  setMeetingList,
-  setMeetingDetail,
-  setPublisherStatus,
-  setMeetingFilterList,
-} = counterSlice.actions; // 액션 생성함수
+export const { setMeetingList, setMeetingDetail, setMeetingFilterList } =
+  counterSlice.actions; // 액션 생성함수
 export default counterSlice.reducer; // 리듀서

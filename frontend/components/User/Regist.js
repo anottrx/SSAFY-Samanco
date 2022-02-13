@@ -11,16 +11,16 @@ import {
   sendEmailCodeAPI,
   getUserLoginTokenAPI,
 } from '../../pages/api/user';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import {
-  Box,
-  OutlinedInput,
-  Button,
-  Select,
-  Typography,
-  MenuItem,
-  IconButton,
-} from '@mui/material';
+
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Box from '@mui/material/Box';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import styled from '@emotion/styled';
 
@@ -131,9 +131,13 @@ export default function Regist() {
       setShowEmailCodeCheck(true);
       setAuthFin(true); // 우선 인증버튼 누르자마자 막기
       sendEmailCodeAPI(inputState.email).then((res) => {
-        // console.log(inputState.email);
+        console.log(res);
         if (res.statusCode == 200) {
           //
+        } else if (res.statusCode == 401) {
+          alert('이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요');
+          setShowEmailCodeCheck(false);
+          setAuthFin(false); // 우선 인증버튼 누르자마자 막기
         } else {
           //
         }
@@ -295,7 +299,7 @@ export default function Regist() {
         minHeight="70vh"
         onSubmit={handleSubmit}
       >
-        <h1>회원가입</h1>
+        <h1 style={{ marginTop: '20px' }}>회원가입</h1>
         {/* 이메일 */}
         <div>
           <Typography display="inline" sx={{ fontSize: 14 }}>
@@ -323,7 +327,10 @@ export default function Regist() {
           />
           <>
             {showEmailCodeCheck ? (
-              <CheckEmailCode changeHandle={changeHandle} email={inputState.email}/>
+              <CheckEmailCode
+                changeHandle={changeHandle}
+                email={inputState.email}
+              />
             ) : (
               <></>
             )}

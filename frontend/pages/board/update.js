@@ -3,13 +3,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import Layout from '../../components/Layout';
-import { Paper, TextField, Box, Button, MenuItem } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+
 import styled from '@emotion/styled';
 import styles from '../../styles/Board.module.css';
 
 import { updateBoard } from '../api/board';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 //게시글 수정 페이지
 function BoardUpdate() {
@@ -124,7 +130,10 @@ function BoardUpdate() {
 
   return (
     <Layout>
-      <h1>Board Update</h1>
+      <Head>
+        <title>게시물 수정 | 싸피사만코</title>
+      </Head>
+      <h1 style={{ marginTop: '20px' }}>게시물 수정</h1>
       <CusPaper>
         {nickname == 'admin' ? (
           <TextField
