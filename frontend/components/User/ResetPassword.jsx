@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Swal from 'sweetalert2';
 // import styled from '@emotion/styled';
 
 export default function ResetPassword() {
@@ -88,24 +89,58 @@ export default function ResetPassword() {
 
     inputState.email = sessionStorage.getItem('email');
     if (isNormal) {
-      resetPWAPI(inputState).then((res) => {
-        alert(`${res.message}`);
-        if (res.statusCode == 200) {
-          if (sessionStorage.getItem('nickname') == null) {
-            // 비밀번호를 잃어버려서 재설정하는 경우
-            sessionStorage.clear();
-            window.history.forward();
-            window.location.replace('/login');
-          } else {
-            // 로그인한 사용자가 비밀번호를 재설정하는 경우
-            Router.push('/myinfo');
-          }
-        } else {
-          console.log('비밀번호 재설정 실패');
-        }
+      Swal.fire({
+        title: '비밀번호 변경 중입니다',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+          resetPWAPI(inputState).then((res) => {
+            // alert(`${res.message}`);
+            if (res.statusCode == 200) {
+              if (sessionStorage.getItem('nickname') == null) {
+                // 비밀번호를 잃어버려서 재설정하는 경우
+                Swal.fire({
+                  title: '비밀번호 변경에 성공했습니다',
+                  text: '메인페이지로 이동합니다',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 500,
+                }).then(() => {
+                  sessionStorage.clear();
+                  window.history.forward();
+                  window.location.replace('/login');
+                });
+              } else {
+                // 로그인한 사용자가 비밀번호를 재설정하는 경우
+                Swal.fire({
+                  title: '비밀번호 변경에 성공했습니다',
+                  text: '마이페이지로 이동합니다',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 500,
+                }).then(() => {
+                  Router.push('/myinfo');
+                });
+              }
+            } else {
+              // console.log('비밀번호 재설정 실패');
+              Swal.fire({
+                icon: 'error',
+                title: '비밀번호 변경 중 문제가 발생했습니다',
+                text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
+                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+              });
+            }
+          });
+        },
       });
     } else {
-      alert(msg);
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     }
   };
 

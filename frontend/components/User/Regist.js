@@ -22,6 +22,7 @@ import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Swal from 'sweetalert2';
 import styled from '@emotion/styled';
 
 export default function Regist() {
@@ -116,31 +117,54 @@ export default function Regist() {
   const sendEmailCodeClick = (e) => {
     // 이메일로 인증번호 보내기 + 인증번호 입력 받을 수 있게 폼 열기
     e.preventDefault();
-
+    let isNormal = true;
+    let msg = '';
     // else  if(inputState.code==false) {
     //     setShowEmailCodeCheck(false);
     //     setAuthFin(false);
     //   }
 
     if (!inputState.email) {
-      alert('이메일을 입력해주세요.');
+      isNormal = false;
+      msg = '이메일을 입력해주세요.';
     } else if (!emailReg.test(inputState.email)) {
-      alert('이메일 양식을 확인해주세요.');
+      isNormal = false;
+      msg = '이메일 양식을 확인해주세요.';
     } else {
       // 인증코드 보내기
       setShowEmailCodeCheck(true);
       setAuthFin(true); // 우선 인증버튼 누르자마자 막기
-      sendEmailCodeAPI(inputState.email).then((res) => {
-        console.log(res);
-        if (res.statusCode == 200) {
-          //
-        } else if (res.statusCode == 401) {
-          alert('이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요');
-          setShowEmailCodeCheck(false);
-          setAuthFin(false); // 우선 인증버튼 누르자마자 막기
-        } else {
-          //
-        }
+      Swal.fire({
+        title: '인증번호를 전송중입니다',
+        text: '전송에 시간이 조금 걸릴 수 있으니 조금만 기다려주세요',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+          sendEmailCodeAPI(inputState.email).then((res) => {
+            console.log(res);
+            if (res.statusCode == 200) {
+              console.log('보냄');
+              Swal.fire({
+                title: '이메일로 인증번호를 전송했습니다',
+                text: '이메일 수신에 시간이 조금 걸릴 수 있습니다',
+                icon: 'info',
+                showConfirmButton: false,
+                timer: 800,
+              });
+            } else if (res.statusCode == 401) {
+              // alert('이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요');
+              Swal.fire({
+                title: '이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요',
+                icon: 'error',
+                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+              });
+              setShowEmailCodeCheck(false);
+              setAuthFin(false); // 우선 인증버튼 누르자마자 막기
+            } else {
+              //
+            }
+          });
+        },
       });
     }
   };
@@ -236,53 +260,84 @@ export default function Regist() {
       });
 
       for (var key of formData.entries()) {
-        console.log(`${key}`);
+        // console.log(`${key}`);
       }
 
-      registAPI(formData).then((res) => {
-        // console.log(res);
-        if (res.statusCode == 200) {
-          // 가입 성공 시
-          // alert("가입이 되었습니다!");
+      inputState.email = sessionStorage.getItem('email');
+      if (isNormal) {
+        Swal.fire({
+          title: '회원가입 중입니다',
+          showConfirmButton: false,
+          didOpen: () => {
+            registAPI(formData).then((res) => {
+              if (res.statusCode == 200) {
+                // 가입 성공 시
+                loginAPI(inputState).then((res) => {
+                  setCookie('userToken', res.accessToken); // 쿠키 설정
+                  setCookie('userEmail', inputState.email);
+                  const token = res.accessToken;
+                  getUserLoginTokenAPI(token).then((res1) => {
+                    console.log(res1);
+                    sessionStorage.setItem('userId', res1.userId);
+                    sessionStorage.setItem('email', inputState.email);
+                    sessionStorage.setItem('nickname', res1.nickname);
+                  });
 
-          // 로그인
-          loginAPI(inputState).then((res) => {
-            setCookie('userToken', res.accessToken); // 쿠키 설정
-            setCookie('userEmail', inputState.email);
-            const token = res.accessToken;
-            getUserLoginTokenAPI(token).then((res1) => {
-              console.log(res1);
-              sessionStorage.setItem('userId', res1.userId);
-              sessionStorage.setItem('email', inputState.email);
-              sessionStorage.setItem('nickname', res1.nickname);
+                  Swal.fire({
+                    title:
+                      '회원가입에 성공했습니다. 추가 정보를 더 입력하실 건가요?',
+                    icon: 'success',
+                    confirmButtonText: '네, 지금 할래요',
+                    cancelButtonText: '아니요, 다음에 할래요',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      sessionStorage.setItem('keep', 'true');
+                      sessionStorage.setItem('password', inputState.password);
+                      sessionStorage.setItem('userClass', inputState.class);
+                      sessionStorage.setItem('studentId', inputState.studentId);
+                      sessionStorage.setItem(
+                        'generation',
+                        inputState.generation
+                      );
+                      sessionStorage.setItem('name', inputState.name);
+                      window.history.forward();
+                      Router.push('/regist/info');
+                    } else {
+                      Swal.fire({
+                        title: '메인페이지로 이동합니다',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 500,
+                      }).then(() => {
+                        window.history.forward();
+                        window.location.replace('/');
+                      });
+                    }
+                  });
+                });
+              } else {
+                // alert(`${res.message}`);
+                Swal.fire({
+                  icon: 'error',
+                  title: '회원가입에 실패했습니다.',
+                  text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
+                  confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                });
+                // console.log('회원가입실패');
+              }
             });
-            if (
-              window.confirm(
-                '가입이 완료되었습니다! 추가 정보를 입력하실 건가요?'
-              )
-            ) {
-              sessionStorage.setItem('keep', 'true');
-
-              sessionStorage.setItem('password', inputState.password);
-              sessionStorage.setItem('userClass', inputState.class);
-              sessionStorage.setItem('studentId', inputState.studentId);
-              sessionStorage.setItem('generation', inputState.generation);
-              sessionStorage.setItem('name', inputState.name);
-              window.history.forward();
-              Router.push('/regist/info');
-            } else {
-              // 페이지 이동
-              window.history.forward();
-              window.location.replace('/');
-            }
-          });
-        } else {
-          alert(`${res.message}`);
-          // console.log('회원가입실패');
-        }
-      });
+          },
+        });
+      }
     } else {
-      alert(msg);
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     }
   };
 

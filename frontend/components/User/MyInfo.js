@@ -32,6 +32,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Divider from '@mui/material/Divider';
 import InputAdornment from '@mui/material/InputAdornment';
 import Container from '@mui/material/Container';
+import Swal from 'sweetalert2';
 
 import styled from '@emotion/styled';
 import StackLevelListInfo from '../Common/Stack/StackLevelListInfo';
@@ -457,7 +458,12 @@ export default function MyInfo() {
   const [checkedNickname, setCheckedNickname] = useState(true);
   const [changeNickname, setChangeNickname] = useState(false);
   const handleUserNicknameClick = (e) => {
-    alert('닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다');
+    // alert('닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다');
+    Swal.fire({
+      icon: 'info',
+      title: '닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다',
+      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+    });
     setCheckedNickname(false);
     setChangeNickname(true);
     setNicknameChange(true);
@@ -475,27 +481,46 @@ export default function MyInfo() {
         msg = '현재 닉네임과 동일합니다';
         isNormal = false;
       }
-      if (!isNormal) {
-        alert(msg);
-        setChangeNickname(false);
-        setNicknameChange(false);
-      }
 
       if (isNormal) {
         updateNicknameAPI(nicknameInfo).then((res) => {
           if (res.statusCode == 200) {
             setCheckPassword(true);
-            alert('멋진 닉네임이네요~^^ 변경 가능합니다');
+            // alert('멋진 닉네임이네요~^^ 변경 가능합니다');
+            Swal.fire({
+              title: '멋진 닉네임이네요~^^',
+              text: '변경 가능합니다. 수정완료 버튼을 통해 바꿔주세요',
+              icon: 'success',
+              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+            });
             setNicknameChange(false);
             setChangeNickname(false);
             setCheckedNickname(true);
           } else {
-            alert(`${res.message}`);
+            // alert(`${res.message}`);
+            Swal.fire({
+              icon: 'error',
+              title: `${res.message}`,
+              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+            });
           }
         });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: msg,
+          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+        });
+        setChangeNickname(false);
+        setNicknameChange(false);
       }
     } else {
-      //
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     }
   };
 
@@ -513,6 +538,13 @@ export default function MyInfo() {
 
   const handleResetClick = (e) => {
     e.preventDefault();
+    nicknameInfo.nickname = sessionStorage.getItem('nickname');
+    Swal.fire({
+      title: '정보 수정을 취소합니다',
+      icon: 'warning',
+      showConfirmButton: false,
+      timer: 500,
+    });
     setOnlyView(true);
     setFinishUpdate(false);
     getUserInfo();
@@ -540,17 +572,18 @@ export default function MyInfo() {
     // console.log(inputState.stacks);
 
     let isNormal = true;
-
+    let msg = '';
+    console.log(nicknameChange);
     if (changeNickname) {
       isNormal = false;
-      alert('닉네임 중복 체크를 완료해 주세요.');
+      msg = '닉네임 중복 체크를 완료해 주세요.';
     } else if (
       inputState.phone != null &&
       inputState.phone.length > 0 &&
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert('전화번호 양식을 확인해 주세요.');
+      msg = '전화번호 양식을 확인해 주세요.';
     } else if (
       inputState.link != null &&
       inputState.link.length >= 1 &&
@@ -558,17 +591,24 @@ export default function MyInfo() {
     ) {
       isNormal = false;
       // console.log(links.length);
-      alert('링크 양식을 확인해 주세요.');
+      msg = '링크 양식을 확인해 주세요.';
     }
 
     if (isNormal) {
       handleClickOpen();
       // console.log(loginInfo);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     }
   };
 
   const handleUpdateInfo = (e) => {
     let isNormal = true;
+    let msg = '';
 
     if (
       inputState.phone != null &&
@@ -576,10 +616,10 @@ export default function MyInfo() {
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert('전화번호 양식을 확인해 주세요.');
+      msg = '전화번호 양식을 확인해 주세요.';
     } else if (changeNickname) {
       isNormal = false;
-      alert('닉네임 중복 체크를 완료해 주세요.');
+      msg = '닉네임 중복 체크를 완료해 주세요.';
     }
 
     if (isNormal) {
@@ -659,22 +699,41 @@ export default function MyInfo() {
             console.log('key', `${key}`);
           }
 
-          updateUserAPI(formData).then((res) => {
-            // console.log(res);
-            // console.log(JSON.stringify(res));
-            if (res.statusCode == 200) {
-              if (sessionStorage.getItem('nickname') != inputState.nickname) {
-                // 닉네임 변경시 상단바 변경도 필요하기 때문
-                sessionStorage.setItem('nickname', inputState.nickname);
-                // 새로고침
-
-                // forceReload();
-              }
-              setNicknameChange(false);
-              setReloadCondition(true);
-            } else {
-              alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
-            }
+          Swal.fire({
+            title: '회원정보 수정 진행중입니다',
+            showConfirmButton: false,
+            didOpen: () => {
+              Swal.showLoading();
+              updateUserAPI(formData).then((res) => {
+                if (res.statusCode == 200) {
+                  // console.log("성공")
+                  Swal.fire({
+                    title: '회원정보 수정에 성공했습니다',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 500,
+                  }).then(() => {
+                    if (
+                      sessionStorage.getItem('nickname') != inputState.nickname
+                    ) {
+                      // 닉네임 변경시 상단바 변경도 필요하기 때문에 새로고침
+                      sessionStorage.setItem('nickname', inputState.nickname);
+                      // forceReload();
+                    }
+                    setNicknameChange(false);
+                    setReloadCondition(true);
+                  });
+                } else {
+                  // alert('회원정보 수정에 실패했습니다. 에러코드:' + res.statusCode);
+                  Swal.fire({
+                    icon: 'error',
+                    title: '회원정보 수정에 실패했습니다',
+                    text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
+                    confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  });
+                }
+              });
+            },
           });
 
           handleClose();
@@ -686,6 +745,12 @@ export default function MyInfo() {
           // setOnlyView(false);
           // setFinishUpdate(true);
         }
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
       });
     }
   };
@@ -701,17 +766,37 @@ export default function MyInfo() {
       deleteUserAPI(userId).then((res) => {
         if (res.statusCode == 200) {
           // 탈퇴 성공 시
-          alert('다음에는 오프라인에서 함께 코딩해요!');
+          // alert('다음에는 오프라인에서 함께 코딩해요!');
+          Swal.fire({
+            icon: 'success',
+            title: '탈퇴가 완료되었습니다',
+            text: '다음에는 오프라인에서 함께 코딩해요!',
+            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+          });
           sessionStorage.clear();
           cookies.set('userToken', '');
           cookies.set('userEmail', '');
           // 페이지 이동
           window.history.forward();
           document.location.href = '/';
-        } else alert(`${res.message}`);
+        } else {
+          // alert(`${res.message}`);
+          Swal.fire({
+            icon: 'error',
+            title: '탈퇴에 문제가 발생했습니다',
+            text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
+            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+          });
+        }
       });
     } else {
-      alert('좋아요! 싸피사만코와 오래오래 코딩해요!');
+      // alert('좋아요! 싸피사만코와 오래오래 코딩해요!');
+      Swal.fire({
+        icon: 'warning',
+        title: '탈퇴가 취소되었습니다',
+        text: '좋아요! 싸피사만코와 오래오래 코딩해요!',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     }
   };
 

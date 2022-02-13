@@ -21,6 +21,8 @@ import FormControl, { useFormControl } from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+import Swal from 'sweetalert2';
+
 const LinkButton = styled(Typography)`
   variant="h6"
   display="inline"
@@ -47,7 +49,12 @@ export default function LoginPage() {
       sessionStorage.getItem('nickname') != null &&
       sessionStorage.getItem('nickname') != 'undefined'
     ) {
-      alert('로그인된 상태입니다');
+      // alert('로그인된 상태입니다');
+      Swal.fire({
+        title: '로그인된 상태입니다',
+        icon: 'warning',
+        showConfirmButton: false,
+      });
       Router.push('/');
     }
   }, []);
@@ -124,27 +131,44 @@ export default function LoginPage() {
                   setCookie('userEmail', '');
                 }
                 if (sessionStorage.getItem('nickname') == res1.nickname) {
+                  Swal.fire({
+                    title: '로그인에 성공했습니다',
+                    text: '메인페이지로 이동합니다',
+                    icon: 'success',
+                    showConfirmButton: false,
+                  })
                   window.history.forward();
                   window.location.replace('/');
                 }
               });
             }
             break;
-          case 401: // 비밀번호 틀림
-            alert('비밀번호를 확인해주세요.');
-            break;
-          case 404: // 유저 정보 X
-            alert('회원 정보가 존재하지 않습니다.');
-            break;
+          // case 401: // 비밀번호 틀림
+          //   alert('비밀번호를 확인해주세요.');
+          //   break;
+          // case 404: // 유저 정보 X
+          //   alert('회원 정보가 존재하지 않습니다.');
+          //   break;
           default:
-            alert(
-              `로그인 중 문제가 발생했습니다. 관리자에게 문의하세요. 에러코드 (${res.statusCode})`
-            );
+            Swal.fire({
+              icon: 'error',
+              title: '로그인 중 문제가 발생했습니다',
+              text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
+              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+            });
+            // alert(
+            //   `로그인 중 문제가 발생했습니다. 지속적으로 같은 문제 발생시 관리자에게 문의하세요. 에러코드 (${res.statusCode})`
+            // );
             break;
         }
       });
     } else {
-      alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
+      // alert(msg);
     }
   };
 

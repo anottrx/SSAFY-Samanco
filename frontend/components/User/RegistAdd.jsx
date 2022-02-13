@@ -14,6 +14,7 @@ import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Swal from 'sweetalert2';
 
 import styled from '@emotion/styled';
 import { LocalizationProvider } from '@mui/lab';
@@ -93,11 +94,18 @@ export default function RegistInfo() {
       sessionStorage.getItem('keep') == null ||
       sessionStorage.getItem('keep') == ''
     ) {
-      alert('잘못된 접근입니다');
-      sessionStorage.clear();
+      // alert('잘못된 접근입니다');
+      Swal.fire({
+        title: '잘못된 접근입니다.',
+        icon: 'warning',
+        showConfirmButton: false,
+        timer: 800,
+      }).then(() => {
+        sessionStorage.clear();
       // 페이지 이동
       window.history.forward();
       window.location.replace('/');
+      });
     }
 
     inputState.email = sessionStorage.getItem('email');
@@ -207,7 +215,12 @@ export default function RegistInfo() {
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert('전화번호 양식을 확인해 주세요.');
+      // alert('전화번호 양식을 확인해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '전화번호 양식을 확인해 주세요',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else if (
       inputState.link != null &&
       inputState.link.length >= 1 &&
@@ -215,7 +228,12 @@ export default function RegistInfo() {
     ) {
       isNormal = false;
       // console.log(links.length);
-      alert('링크 양식을 확인해 주세요.');
+      // alert('링크 양식을 확인해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '링크 양식을 확인해 주세요',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     }
 
     inputState.stacks = {
@@ -278,26 +296,59 @@ export default function RegistInfo() {
         console.log('key', `${key}`);
       }
 
-      updateUserAPI(formData).then((res) => {
-        console.log(res);
-        console.log(JSON.stringify(res));
-        if (res.statusCode == 200) {
-          sessionStorage.clear();
-          sessionStorage.setItem('userId', inputState.userId);
-          sessionStorage.setItem('email', inputState.email);
-          sessionStorage.setItem('nickname', inputState.nickname);
-          alert('회원정보 추가 성공');
-          window.history.forward();
-          window.location.replace('/');
-        } else {
-          alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
-          sessionStorage.clear();
-          window.history.forward();
-          window.location.replace('/');
-        }
+      Swal.fire({
+        title: '추가 정보 입력 중입니다',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+
+          updateUserAPI(formData).then((res) => {
+            console.log(res);
+            console.log(JSON.stringify(res));
+            if (res.statusCode == 200) {
+              Swal.fire({
+                title: '회원정보 추가에 성공했습니다',
+                text: '메인페이지로 이동합니다',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 500,
+              }).then(() => {
+                sessionStorage.clear();
+                sessionStorage.setItem('userId', inputState.userId);
+                sessionStorage.setItem('email', inputState.email);
+                sessionStorage.setItem('nickname', inputState.nickname);
+                // alert('회원정보 추가 성공');
+                window.history.forward();
+                window.location.replace('/');
+              });
+            } else {
+              // alert('회원정보 추가에 실패했습니다. 에러코드:' + res.statusCode);
+              Swal.fire({
+                title: '회원정보 추가에 실패했습니다',
+                text: '메인페이지로 이동합니다',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 500,
+              }).then(() => {
+                sessionStorage.clear();
+                sessionStorage.setItem('userId', inputState.userId);
+                sessionStorage.setItem('email', inputState.email);
+                sessionStorage.setItem('nickname', inputState.nickname);
+                window.history.forward();
+                window.location.replace('/');
+              });
+            }
+          });
+        },
       });
     } else {
-      alert(msg);
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: '회원정보 추가 입력 중 문제가 발생했습니다',
+        text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     }
   };
 
