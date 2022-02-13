@@ -16,7 +16,8 @@ export default function MyStudyPage() {
   return (
     <>
       <MyInfoLayout>
-        <MyClub label="내 스터디" from="study" myinfo="myinfo"/>
+        <h1>내 스터디</h1>
+        <MyClub label="" from="study" myinfo="myinfo" />
       </MyInfoLayout>
     </>
   );

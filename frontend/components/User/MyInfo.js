@@ -1062,7 +1062,9 @@ export default function MyInfo() {
                     <br />
                     <TextField
                       id="description"
-                      placeholder="자기자신에 대해 소개해주세요"
+                      placeholder={
+                        onlyView ? '' : '자기자신에 대해 소개해주세요'
+                      }
                       fullWidth
                       rows={4}
                       multiline

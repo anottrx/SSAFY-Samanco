@@ -16,7 +16,8 @@ export default function MyProjectPage() {
   return (
     <>
       <MyInfoLayout>
-        <MyClub label="내 프로젝트" from="project" myinfo="myinfo"/>
+        <h1>내 프로젝트</h1>
+        <MyClub label="" from="project" myinfo="myinfo" />
       </MyInfoLayout>
     </>
   );
