@@ -269,19 +269,20 @@ const StudyDetail = () => {
     return (
       <>
         <ButtonGroup variant="outlined">
-          {sessionStorage.getItem('userId') == detail.hostId &&
-          detail.canRegister ? (
+          {sessionStorage.getItem('userId') == detail.hostId ? (
             <>
-              <Button
-                onClick={() => {
-                  Router.push({
-                    pathname: '/meeting/regist',
-                    query: { tag: 'study' },
-                  });
-                }}
-              >
-                방 생성
-              </Button>
+              {detail.canRegister ? (
+                <Button
+                  onClick={() => {
+                    Router.push({
+                      pathname: '/meeting/regist',
+                      query: { tag: 'project' },
+                    });
+                  }}
+                >
+                  방 생성
+                </Button>
+              ) : null}
               <Button
                 onClick={() => {
                   Router.push('/study/update');

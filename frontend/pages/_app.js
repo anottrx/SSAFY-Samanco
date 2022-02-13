@@ -10,7 +10,11 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
-import { Button, Menu, MenuItem, Fade } from '@mui/material';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Fade from '@mui/material/Fade';
+
 import Cookies from 'universal-cookie';
 import { useCookies } from 'react-cookie';
 import { getUserLoginTokenAPI } from '../pages/api/user';

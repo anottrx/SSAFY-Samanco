@@ -1,6 +1,11 @@
 import StackItem from '../Common/Stack/item';
 import StackLevelList from '../Common/Stack/StackLevelList';
-import { Card, Avatar, Link, IconButton, Tooltip } from '@mui/material';
+import Card from '@mui/material/Card';
+import Avatar from '@mui/material/Avatar';
+import Link from '@mui/material/Link';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+
 import styled from '@emotion/styled';
 import LinkIcon from '@mui/icons-material/Link';
 import DeleteIcon from '@mui/icons-material/Delete';

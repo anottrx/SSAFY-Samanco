@@ -1,17 +1,17 @@
 import styled from '@emotion/styled';
 import RoomInfo from '../../components/Meeting/RoomInfo';
 import Chatting from '../../components/Meeting/Chatting';
-import {
-  Card,
-  Divider,
-  Grid,
-  ToggleButtonGroup,
-  ToggleButton,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  Button,
-} from '@mui/material';
+
+import Card from '@mui/material/Card';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 

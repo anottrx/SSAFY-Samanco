@@ -2,7 +2,7 @@ import Layout from '../../components/Layout';
 import SearchBar from '../../components/Common/Search';
 import ItemList from '../../components/Meeting/ItemList';
 
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import styled from '@emotion/styled';
 
 import Router from 'next/router';

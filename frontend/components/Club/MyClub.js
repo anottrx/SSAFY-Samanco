@@ -1,7 +1,12 @@
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Card, CardContent, Button, Divider, Grid } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+
 import styled from '@emotion/styled';
 import * as projectActions from '../../store/module/project';
 import * as studyActions from '../../store/module/study';

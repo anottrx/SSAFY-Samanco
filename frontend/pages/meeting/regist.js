@@ -5,13 +5,12 @@ import Router, { useRouter } from 'next/router';
 import Head from 'next/head';
 import * as meetingActions from '../../store/module/meeting';
 
-import {
-  Paper,
-  TextField,
-  Button,
-  Checkbox,
-  FormControlLabel,
-} from '@mui/material';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 import styled from '@emotion/styled';
 
 import { registAPI, joinRoomAPI, getRoomById } from '../api/meeting';

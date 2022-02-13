@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 export default function CountdownTimer(props) {
   const [seconds, setSeconds] = useState(0);
