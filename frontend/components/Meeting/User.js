@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Skeleton, Grid, Card, Fab, Box } from '@mui/material';
+import Skeleton from '@mui/material/Skeleton';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import Fab from '@mui/material/Fab';
+import Box from '@mui/material/Box';
+
 import styled from '@emotion/styled';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffOutlinedIcon from '@mui/icons-material/VideocamOffOutlined';

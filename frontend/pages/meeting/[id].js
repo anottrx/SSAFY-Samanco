@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import RoomInfo from '../../components/Meeting/RoomInfo';
 import Chatting from '../../components/Meeting/Chatting';
-import {
-  Card,
-  Divider,
-  Grid,
-  ToggleButtonGroup,
-  ToggleButton,
-} from '@mui/material';
+
+import Card from '@mui/material/Card';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 

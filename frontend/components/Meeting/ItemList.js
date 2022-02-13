@@ -7,21 +7,20 @@ import {
 } from 'react';
 
 import styled from '@emotion/styled';
-import {
-  Grid,
-  Skeleton,
-  Card,
-  Button,
-  CardContent,
-  Typography,
-  Pagination,
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  TextField,
-} from '@mui/material';
+
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Skeleton from '@mui/material/Skeleton';
+import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
 
 import { getRoomAllAPI } from '../../pages/api/meeting';
 import Router from 'next/router';

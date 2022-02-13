@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import { TextField, IconButton } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
 import React, { useRef, useEffect, useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 
