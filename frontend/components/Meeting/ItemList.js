@@ -131,7 +131,7 @@ function ItemList() {
     <>
       {!meetingData || meetingData.length == 0 ? (
         <CusGrid>
-          <CusCard>등록된 데이터가 없습니다.</CusCard>
+          <CusCard>등록된 미팅룸이 없습니다.</CusCard>
         </CusGrid>
       ) : (
         <CusGrid
