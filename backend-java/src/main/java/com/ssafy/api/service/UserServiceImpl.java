@@ -123,11 +123,11 @@ public class UserServiceImpl implements UserService {
 	public int approveUserProject(Long hostId, Long userId, Long projectId, String projectJoinStatus) {
 		Project project=projectRepositorySupport.selectByHost(hostId);
 		System.out.println(project);
-		if (project==null || project.getId()!=projectId){
+		if (project==null || !project.getId().equals(projectId)){
 			return 402;	// host 틀림
 		}
 		User user=userRepositorySupport.selectUser(userId);
-		if (user==null || user.getProjectId()!=projectId || !"BEFORE".equalsIgnoreCase(user.getProjectJoinStatus())){
+		if (user==null || !user.getProjectId().equals(projectId) || !"BEFORE".equalsIgnoreCase(user.getProjectJoinStatus())){
 			return 401;
 		}
 		return userRepositorySupport.approveUserProject(userId, projectJoinStatus);
@@ -215,7 +215,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDto> selectProjectUsers(Long userId, Long projectId) {
 		User userResult = userRepositorySupport.selectUser(userId);
-		if (userResult==null || userResult.getProjectId()!=projectId){
+		if (userResult==null || !userResult.getProjectId().equals(projectId)){
 			return null;
 		}
 		List<User> results = projectRepositorySupport.selectProjectUsers(projectId);
@@ -232,7 +232,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDto> selectProjectJoinUsers(Long userId, Long projectId) {
 		Project projectResult = projectRepositorySupport.selectByHost(userId);
-		if (projectResult==null || projectResult.getId()!=projectId){
+		if (projectResult==null || !projectResult.getId().equals(projectId)){
 			return null;
 		}
 		List<User> results = projectRepositorySupport.selectJoinUsers(projectId);
@@ -253,7 +253,7 @@ public class UserServiceImpl implements UserService {
 			return 403;
 		}
 		User user=userRepositorySupport.selectUser(userId);
-		if (user.getProjectId()==projectId && "OK".equalsIgnoreCase(user.getProjectJoinStatus())){
+		if (user.getProjectId().equals(projectId) && "OK".equalsIgnoreCase(user.getProjectJoinStatus())){
 			return userRepositorySupport.resetUserProject(userId);
 		}
 		return 402;
@@ -262,7 +262,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int joinCancelProject(Long userId, Long projectId) {
 		User user=userRepositorySupport.selectUser(userId);
-		if (user.getProjectId()==projectId && "BEFORE".equalsIgnoreCase(user.getProjectJoinStatus())){
+		if (user.getProjectId().equals(projectId) && "BEFORE".equalsIgnoreCase(user.getProjectJoinStatus())){
 			return userRepositorySupport.resetUserProject(userId);
 		}
 		return 402;
@@ -281,7 +281,7 @@ public class UserServiceImpl implements UserService {
 			return 402;
 		}
 
-		userLikeRepositorySupport.minusTagHit(tagId, tag);
+//		userLikeRepositorySupport.minusTagHit(tagId, tag);
 		UserLike result=userLikeRepositorySupport.userLike(userId, tagId, tag);
 		if (result==null){
 			UserLike userLike=new UserLike();
@@ -301,7 +301,7 @@ public class UserServiceImpl implements UserService {
 	public List<UserDto> selectStudyUsers(Long userId, Long studyId) {
 		List<Study> studies = studyRepositorySupport.selectByUser(userId);
 		for (Study study: studies){
-			if (study.getId()==studyId){
+			if (study.getId().equals(studyId)){
 				List<User> results = studyRepositorySupport.selectStudyUsers(studyId);
 
 				if (results==null || results.size()==0){
@@ -320,7 +320,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDto> selectStudyJoinUsers(Long userId, Long studyId) {
 		Study study = studyRepositorySupport.selectStudy(studyId);
-		if (study==null || study.getHostId()!=userId){
+		if (study==null || !study.getHostId().equals(userId)){
 			return null;
 		}
 		List<User> results = studyRepositorySupport.selectJoinUsers(studyId);
@@ -370,6 +370,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int quitUserRoom(Long userId, Long roomId) {
 		Room room = roomRepositorySupport.selectRoom(roomId);
+		System.out.println(room);
 		if (room==null){
 			return 402;
 		}
@@ -380,7 +381,8 @@ public class UserServiceImpl implements UserService {
 		if (!result.getRoomId().equals(room.getId())){
 			return 402;
 		}
-		if (room.getHostId()==userId){	// 방장이 나갈경우 방에 속해있는 사용자 전부 방 나가기, 미팅 삭제
+
+		if (room.getHostId().equals(userId)){	// 방장이 나갈경우 방에 속해있는 사용자 전부 방 나가기, 미팅 삭제
 			List<User> users=userRepositorySupport.selectRoomUsers(roomId);
 			for (User user: users){
 				userRepositorySupport.quitUserRoom(user.getId());

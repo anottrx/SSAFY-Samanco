@@ -45,7 +45,7 @@ public class RoomServiceImpl implements RoomService {
             return null;
         }
         if ("project".equalsIgnoreCase(tag)){
-            if (user.getProjectId()!=tagId){
+            if (!user.getProjectId().equals(tagId)){
                 return null;
             }
         } else if ("study".equalsIgnoreCase(tag)){
@@ -54,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
             }
         } else if ("board".equalsIgnoreCase(tag)){
             Board board = commonRepository.selectBoard(tagId);
-            if (board==null || board.getUserId()!=hostId){
+            if (board==null || !board.getUserId().equals(hostId)){
                 return null;
             }
         }
@@ -77,7 +77,7 @@ public class RoomServiceImpl implements RoomService {
             return 402;
         }
         Room room = roomRepositorySupport.selectRoom(roomId);
-        if (room==null || hostId!=room.getHostId()){
+        if (room==null || !hostId.equals(room.getHostId())){
             return 401;
         }
         return roomRepositorySupport.updateRoom(updateInfo);

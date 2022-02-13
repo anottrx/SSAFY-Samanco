@@ -15,9 +15,6 @@ public class UserLikeRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
 
     QUserLike qUserLike=QUserLike.userLike;
-    QProject qProject=QProject.project;
-    QBoard qBoard=QBoard.board;
-    QStudy qStudy=QStudy.study;
 
     @Autowired
     ValidRepository valid;
@@ -41,18 +38,4 @@ public class UserLikeRepositorySupport {
 
     }
 
-    @Transactional
-    public void minusTagHit(Long tagId, String tag) {   // project, study 좋아요 누를때 상세보기가 불리면서 조회수 증가 방지
-        if ("project".equalsIgnoreCase(tag)){
-            jpaQueryFactory.update(qProject)
-                    .set(qProject.hit, qProject.hit.add(-1))
-                    .where(qProject.id.eq(tagId))
-                    .execute();
-        } else if ("study".equalsIgnoreCase(tag)){
-            jpaQueryFactory.update(qStudy)
-                    .set(qStudy.hit, qStudy.hit.add(-1))
-                    .where(qStudy.id.eq(tagId))
-                    .execute();
-        }
-    }
 }

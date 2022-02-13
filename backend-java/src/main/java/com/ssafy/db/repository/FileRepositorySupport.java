@@ -44,20 +44,6 @@ public class FileRepositorySupport {
         file.setSaveFile(result.getSaveFile());
         file.setOriginFile(result.getOriginFile());
         file.setSaveFolder(result.getSaveFolder());
-//        String realPath = new File("").getAbsolutePath() + File.separator + "files";
-//        realPath+=File.separator+result.getSaveFolder()+File.separator+result.getSaveFile();
-//        InputStream imageStream=null;
-//        try {
-//            imageStream=new FileInputStream(realPath);
-//            byte[] imageByteArray = IOUtils.toByteArray(imageStream);
-//            file.setImageByteArr(imageByteArray);
-//            imageStream.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(file.getImageByteArr());
         return file;
     }
 

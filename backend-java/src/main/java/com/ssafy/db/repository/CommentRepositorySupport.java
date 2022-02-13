@@ -49,12 +49,8 @@ public class CommentRepositorySupport {
 //    }
 
     public Comment selectComment(Long commentId) {
-        Comment result = jpaQueryFactory.selectFrom(qComment)
+        return jpaQueryFactory.selectFrom(qComment)
                 .where(qComment.id.eq(commentId), qComment.isDeleted.eq(false)).fetchOne();
-        if (result==null){
-            return null;
-        }
-        return result;
     }
 
     public List<Comment> selectBoardCommentAll(Long boardId) {
