@@ -9,10 +9,7 @@ import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
-<<<<<<< HEAD
-=======
 import { useState, useEffect } from 'react';
->>>>>>> 806bdf04457d7d918040d82f4d99484b9e0085eb
 import Router from 'next/router';
 import Head from 'next/head';
 
