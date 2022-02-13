@@ -14,6 +14,7 @@ import Divider from '@mui/material/Divider';
 
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
+import Head from 'next/head';
 
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -80,6 +81,7 @@ export default function Project() {
       ),
     });
   }
+
   useEffect(() => {
     if (cookies.get('projectNotice')) {
       isPopShow(false);
@@ -90,6 +92,9 @@ export default function Project() {
 
   return (
     <Layout>
+      <Head>
+        <title>프로젝트 | 싸피사만코</title>
+      </Head>
       {popShow && (
         <ClubInfo
           onClick={() => {
@@ -106,7 +111,7 @@ export default function Project() {
         </ClubInfo>
       )}
 
-      <h1>Project</h1>
+      <h1 style={{ marginTop: '20px' }}>프로젝트</h1>
       <ItemWrapper>
         <MyClub label="내 프로젝트" from="project"></MyClub>
         <ProjectActions>

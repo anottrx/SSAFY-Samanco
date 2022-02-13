@@ -39,6 +39,7 @@ import { joinRoomAPI, getRoomById } from '../../api/meeting';
 import * as meetingActions from '../../../store/module/meeting';
 
 import Router, { useRouter } from 'next/router';
+import Head from 'next/head';
 
 function StudyInfo() {
   let clubData = useSelector(({ study }) => study.studyDetail);
@@ -207,6 +208,9 @@ function StudyInfo() {
   return (
     <Layout>
       <CusContainer maxWidth="md">
+        <Head>
+          <title>내 스터디 | 싸피사만코</title>
+        </Head>
         <br></br>
         {clubData ? (
           <>

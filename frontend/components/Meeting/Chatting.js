@@ -1,13 +1,7 @@
 import styled from '@emotion/styled';
-import {
-  TextField,
-  FormGroup,
-  FormControl,
-  Button,
-  Box,
-  Form,
-} from '@mui/material';
-import { useRef, useEffect, useState } from 'react';
+import { TextField, IconButton } from '@mui/material';
+import React, { useRef, useEffect, useState } from 'react';
+import SendIcon from '@mui/icons-material/Send';
 
 const ChattingWrapper = styled.div`
   font: 13px Helvetica, Arial;
@@ -19,17 +13,35 @@ const ChattingWrapper = styled.div`
   flex-direction: column;
   padding: 10px;
   justify-content: space-between;
-  overflow-y: scroll;
+  // overflow-y: scroll;
 
   .messages {
     padding: 10px 5px;
     overflow-y: scroll;
     height: 100%;
+    max-width: 280px;
   }
 
   & .otherMessageWrapper {
     text-align: left;
-    margin-bottom: 15px;
+    margin-bottom: 7px;
+    align-items: flex-start;
+    display: flex;
+    align-content: flex-start;
+    flex-direction: column;
+    flew-wrap: wrap;
+    max-width: 250px;
+
+    & .otherWrapper{
+      display: flex;
+      flex-direction; row;
+      align-items: center;
+
+      & span {
+        margin-top: 3px;
+        margin-right: 5px;
+      }
+    }
   }
 
   & .otherMessage,
@@ -37,6 +49,12 @@ const ChattingWrapper = styled.div`
     border: 1px solid gray;
     border-radius: 5px;
     padding: 5px;
+    max-width: 210px;
+    display: block;
+    overflow-wrap: break-word;
+  }
+
+  .myMessage {
     margin: 0px 5px;
   }
 
@@ -46,7 +64,13 @@ const ChattingWrapper = styled.div`
 
   & .myMessageWrapper {
     text-align: right;
-    margin-bottom: 15px;
+    margin-bottom: 7px;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    flew-wrap: wrap;
+    max-width: 250px;
   }
 
   & .time {
@@ -55,13 +79,17 @@ const ChattingWrapper = styled.div`
   }
 `;
 const MyChattingWrapper = styled.div`
-    font: 13px Helvetica, Arial;
-    fullWidth;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    `;
+  font: 13px Helvetica, Arial;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-top: 1px solid #d9d9d9;
+  padding-top: 10px;
+
+  & input {
+    width: calc(100%);
+  }
+`;
 
 function Chatting({ session }) {
   const scrollEl = useRef(null);
@@ -108,6 +136,10 @@ function Chatting({ session }) {
 
     const mySession = session;
 
+    session.on('connectionCreated', (event) => {
+      console.log('채팅 세션 열림!!!!!!!', event);
+    });
+
     mySession.on('signal:chat', (event) => {
       if (!event.data) return;
       const today = new Date();
@@ -140,31 +172,42 @@ function Chatting({ session }) {
           ) : (
             <div className="otherMessageWrapper" key={index}>
               <span className="nickName">{data.nickname}</span>
-              <span className="otherMessage">{data.message}</span>
-              <span className="time">{data.createAt}</span>
+              <div className="otherWrapper">
+                <span className="otherMessage">{data.message}</span>
+                <span className="time">{data.createAt}</span>
+              </div>
             </div>
           );
         })}
       </div>
-      <hr />
       <div>
         <MyChattingWrapper>
-          <form onSubmit={submitChatHandle}>
+          <>
             <TextField
               id="chatText"
               type="text"
               size="small"
               value={chatText}
               onChange={(e) => setChatText(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  submitChatHandle(e);
+                }
+              }}
+              sx={{ width: '100%' }}
             ></TextField>
-            <Button id="submitButton" type="submit">
-              입력
-            </Button>
-          </form>
+            <IconButton
+              color="primary"
+              id="submitButton"
+              onClick={submitChatHandle}
+            >
+              <SendIcon />
+            </IconButton>
+          </>
         </MyChattingWrapper>
       </div>
     </ChattingWrapper>
   );
 }
 
-export default Chatting;
+export default React.memo(Chatting);

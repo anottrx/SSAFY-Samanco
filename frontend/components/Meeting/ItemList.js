@@ -154,7 +154,7 @@ function ItemList() {
                         sm={6}
                         md={4}
                         lg={3}
-                        key={data.no}
+                        key={data.roomId}
                         onClick={() => {
                           if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
                             joinDialogOpen();
@@ -178,7 +178,7 @@ function ItemList() {
                         sm={6}
                         md={4}
                         lg={3}
-                        key={data.no}
+                        key={data.roomId}
                         onClick={() => {
                           if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
                             joinDialogOpen();
@@ -268,7 +268,7 @@ export function Item(props) {
           >
             {data.isSecret === 1 ? <LockIcon /> : null} {data.title}
           </Typography>
-          <div>{data.isPrivate ? '-' : data.host}</div>
+          <div>{data.isPrivate ? '-' : data.nickname}</div>
           <div>
             <AccessTimeIcon style={{ marginRight: '5px' }} />
             {data.runTime}

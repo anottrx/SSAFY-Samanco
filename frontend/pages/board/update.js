@@ -15,6 +15,7 @@ import styles from '../../styles/Board.module.css';
 import { updateBoard } from '../api/board';
 
 import Router from 'next/router';
+import Head from 'next/head';
 
 //게시글 수정 페이지
 function BoardUpdate() {
@@ -129,7 +130,10 @@ function BoardUpdate() {
 
   return (
     <Layout>
-      <h1>Board Update</h1>
+      <Head>
+        <title>게시물 수정 | 싸피사만코</title>
+      </Head>
+      <h1 style={{ marginTop: '20px' }}>게시물 수정</h1>
       <CusPaper>
         {nickname == 'admin' ? (
           <TextField
