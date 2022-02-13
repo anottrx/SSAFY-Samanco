@@ -52,6 +52,7 @@ const StudyDetail = () => {
   const userData = useSelector(({ study }) => study.userList);
   const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
+  const [detailLikes, setLikes] = useState(detail.likes);
   let [imageUrl, setImageUrl] = useState(undefined);
   const [openPw, setOpenPw] = useState(false);
 
@@ -101,7 +102,8 @@ const StudyDetail = () => {
     });
   }
 
-  function fetchData() {
+  function fetchData(addHit) {
+    // function fetchData() {
     getUserAtStudy({
       studyId: detail.id,
       userId: sessionStorage.getItem('userId'),
@@ -117,14 +119,40 @@ const StudyDetail = () => {
         sessionStorage.getItem('userId') == null
           ? 0
           : sessionStorage.getItem('userId'),
+      addHit: addHit,
     }).then((res) => {
+      changeLike(res.study?.userLike);
       dispatch(studyActions.setStudyDetail({ detail: res.study }));
     });
   }
 
+  // useEffect(() => {
+  //   fetchData();
+  // }, [like]);
+
   useEffect(() => {
-    fetchData();
+    if (!detail.userLike) {
+      // 유저가 좋아요를 안누른 상태이면
+      if (like) {
+        // 버튼 눌렀을 때 == 좋아요
+        setLikes(detail.likes + 1);
+      } else {
+        setLikes(detail.likes);
+      }
+    } else {
+      // 유저가 좋아요를 누른 상태면
+      if (like) {
+        // 버튼 눌렀을 때 == 좋아요 취소
+        setLikes(detail.likes);
+      } else {
+        setLikes(detail.likes - 1);
+      }
+    }
   }, [like]);
+
+  useEffect(() => {
+    fetchData('0');
+  }, []);
 
   useEffect(() => {
     if (detail && detail.file) changeToBlob(detail.file);
@@ -132,7 +160,8 @@ const StudyDetail = () => {
 
   useEffect(() => {
     if (reloadCondition) {
-      fetchData();
+      // fetchData();
+      fetchData('0');
       setReloadCondition(false);
     }
   }, [reloadCondition]);
@@ -603,7 +632,8 @@ const StudyDetail = () => {
             variant={like ? 'contained' : 'outlined'}
           >
             {like ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-            <span>{detail.likes}</span>
+            {/* <span>{detail.likes}</span> */}
+            <span>{detailLikes}</span>
           </Button>
         </ButtonGroup>
         <>

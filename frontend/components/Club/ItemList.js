@@ -347,6 +347,7 @@ export function Item(props) {
               sessionStorage.getItem('userId') == null
                 ? 0
                 : sessionStorage.getItem('userId'),
+            addHit: '1',
           }).then((res) => {
             setDetail({ detail: res.project });
             Router.push({
@@ -361,6 +362,7 @@ export function Item(props) {
               sessionStorage.getItem('userId') == null
                 ? 0
                 : sessionStorage.getItem('userId'),
+            addHit: '1',
           }).then((res) => {
             setDetail({ detail: res.study });
             Router.push({

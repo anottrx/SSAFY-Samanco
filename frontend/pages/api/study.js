@@ -61,6 +61,7 @@ async function getStudyById(data) {
     .post('/api/study/view', {
       studyId: data.studyId,
       userId: data.userId,
+      addHit: data.addHit,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);

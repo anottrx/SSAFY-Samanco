@@ -61,6 +61,7 @@ async function getProjectById(data) {
     .post('/api/project/view', {
       projectId: data.projectId,
       userId: data.userId,
+      addHit: data.addHit,
     })
     .then((res) => res.data)
     .catch((err) => err.response.data);
