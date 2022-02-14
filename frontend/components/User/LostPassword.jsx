@@ -59,20 +59,27 @@ export default function LostPassword(props) {
       });
     } else {
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
-      sendEmailPWCodeAPI(value).then((res) => {
-        // console.log(res)
-        if (res.statusCode == 200) {
-          // props.changeHandle(true, 'code');
-          setAuthFin(true);
-          setShowEmailAgainText(true);
-        } else {
-          //
-          // props.changeHandle(false, 'code');
-        }
+      Swal.fire({
+        title: '이메일 확인 중입니다',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+          sendEmailPWCodeAPI(value).then((res) => {
+            // console.log(res)
+            if (res.statusCode == 200) {
+              // props.changeHandle(true, 'code');
+              setAuthFin(true);
+              setShowEmailAgainText(true);
+            } else {
+              //
+              // props.changeHandle(false, 'code');
+            }
+          });
+          setSendEmailButton(false);
+          setShowCodeInput(true);
+          // setAuthFin(true);
+        },
       });
-      setSendEmailButton(false);
-      setShowCodeInput(true);
-      // setAuthFin(true);
     }
   };
 
