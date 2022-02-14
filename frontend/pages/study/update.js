@@ -60,7 +60,6 @@ function studyUpdate() {
 
   const [inputValue, setInputValue] = useState({
     studyId: detail.id,
-    schedule: detail.schedule,
     hostId: sessionStorage.getItem('userId'),
     stacks: detail.stacks,
     positions: detail.positions,
