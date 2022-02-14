@@ -337,6 +337,12 @@ function JoinDialog(props) {
 
                       joinRoomAPI(inputValue).then((res) => {
                         if (res.statusCode == 200) {
+                          Swal.fire({
+                            title: '미팅룸에 들어갑니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 500,
+                          })
                           Router.push('/meeting/' + room.roomId);
                           setDetail({
                             detail: room,

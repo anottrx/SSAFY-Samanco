@@ -363,6 +363,12 @@ const ProjectDetail = () => {
 
                           joinRoomAPI(inputValue).then((res) => {
                             if (res.statusCode == 200) {
+                              Swal.fire({
+                                title: '방으로 이동합니다',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 500,
+                              })
                               Router.push('/meeting/' + detail.roomId);
                             } else {
                               // 방 입장 실패
@@ -1015,6 +1021,7 @@ function PwDialog(props) {
                 }
               : () => {
                   // alert('비밀번호를 확인해주세요.');
+                  pwDialogClose();
                   Swal.fire({
                     icon: 'error',
                     title: '비밀번호를 확인해주세요.',
