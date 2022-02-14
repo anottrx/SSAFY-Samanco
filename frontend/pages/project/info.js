@@ -768,12 +768,10 @@ function PwDialog(props) {
                             title: '미팅룸에 참여 진행 중입니다',
                             text: '참여가 완료되면 해당 방으로 이동합니다',
                             showConfirmButton: false,
-                            didOpen: () => {
-                              Swal.showLoading();
-                              Router.push('/meeting/' + room.roomId);
-                              pwDialogClose();
-                            },
+                            timer: 500,
                           });
+                          Router.push('/meeting/' + room.roomId);
+                          pwDialogClose();
                         } else {
                           // alert(`${res.message}`);
                           Swal.fire({
