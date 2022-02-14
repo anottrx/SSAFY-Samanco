@@ -26,6 +26,10 @@ function ApplyList() {
   }
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (reloadCondition) {
       fetchData();
       setReloadCondition(false);

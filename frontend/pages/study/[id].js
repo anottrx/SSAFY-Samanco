@@ -104,7 +104,6 @@ const StudyDetail = () => {
   }
 
   function fetchData(addHit) {
-    // function fetchData() {
     getUserAtStudy({
       studyId: detail.id,
       userId: sessionStorage.getItem('userId'),
@@ -126,10 +125,6 @@ const StudyDetail = () => {
       dispatch(studyActions.setStudyDetail({ detail: res.study }));
     });
   }
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [like]);
 
   useEffect(() => {
     if (!detail.userLike) {

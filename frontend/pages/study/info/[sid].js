@@ -94,9 +94,7 @@ function StudyInfo() {
 
   function changeToBlob(file) {
     studyImageDownload(file).then((res) => {
-      //console.log(res);
       if (res.data && res.data.statusCode === 200 && res.data.fileString) {
-        //console.log(res.data);
         const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
         createAndDownloadBlobFile(arrayBuffer, file.originFile);
       } else {
@@ -107,7 +105,6 @@ function StudyInfo() {
 
   function fetchData() {
     getUserAtStudy({
-      // studyId: clubData.id,
       studyId: sid,
       userId: sessionStorage.getItem('userId'),
     })
@@ -115,14 +112,6 @@ function StudyInfo() {
         dispatch(studyActions.setUserList({ list: res.users }));
       })
       .catch((err) => console.log(err));
-
-    // getStudyByUserId(parseInt(sessionStorage.getItem('userId'))).then((res) => {
-    //   dispatch(
-    //     studyActions.setStudyDetail({
-    //       detail: res.studies.filter((data) => data.id == sid)[0],
-    //     })
-    //   );
-    // });
 
     getStudyById({
       studyId: sid,
