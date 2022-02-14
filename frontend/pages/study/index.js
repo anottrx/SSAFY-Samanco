@@ -12,6 +12,7 @@ import Divider from '@mui/material/Divider';
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Head from 'next/head';
+import Swal from 'sweetalert2';
 
 // import Cookies from 'universal-cookie';
 // const cookies = new Cookies();
@@ -116,8 +117,17 @@ export default function Study() {
               if (sessionStorage.getItem('userId'))
                 Router.push('/study/regist');
               else {
-                alert('로그인이 필요한 작업입니다.');
-                Router.push('/login');
+                // alert('로그인이 필요한 작업입니다.');
+                // Router.push('/login');
+                Swal.fire({
+                  title: '로그인이 필요한 작업입니다.',
+                  text: '로그인 페이지로 이동합니다.',
+                  icon: 'warning',
+                  showConfirmButton: false,
+                  timer: 800,
+                }).then(() => {
+                  Router.push('/login');
+                });
               }
             }}
           >

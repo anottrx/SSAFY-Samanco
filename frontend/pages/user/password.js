@@ -7,6 +7,7 @@ import FormControl, { useFormControl } from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Box from '@mui/material/Box';
+import Swal from 'sweetalert2';
 
 import CheckEmailCode from '../../components/User/CheckEmailCode';
 import ResetPassword from '../../components/User/ResetPassword';
@@ -15,8 +16,15 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     console.log(sessionStorage.getItem('userId'));
     if (sessionStorage.getItem('userId') != null) {
-      alert('로그인된 상태입니다');
-      Router.push('/');
+      // alert('로그인된 상태입니다');
+      // Router.push('/');
+      Swal.fire({
+        title: '로그인된 상태입니다',
+        text: '메인페이지로 이동합니다',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 500,
+      })
     }
   }, []);
 
@@ -48,21 +56,44 @@ export default function ResetPasswordPage() {
     const value = email;
 
     if (!email) {
-      alert('이메일을 입력해주세요.');
+      // alert('이메일을 입력해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '이메일을 입력해주세요.',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else if (!emailReg.test(email)) {
-      alert('이메일 양식을 확인해 주세요.');
+      // alert('이메일 양식을 확인해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '이메일 양식을 확인해 주세요.',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else {
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
-      sendEmailPWCodeAPI(value).then((res) => {
-        // console.log(res)
-        if (res.statusCode == 200) {
-          // props.changeHandle(true, 'code');
-          setAuthFin(true);
-          setShowEmailAgainText(true);
-        } else {
-          //
-          // props.changeHandle(false, 'code');
-        }
+      Swal.fire({
+        title: '이메일로 인증번호 보내는 중입니다',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+          sendEmailPWCodeAPI(value).then((res) => {
+            // console.log(res)
+            if (res.statusCode == 200) {
+              Swal.fire({
+                title: '이메일을 보냈습니다',
+                text: '인증번호를 입력해주세요',
+                icon: 'success',
+                timer: 500,
+              });
+              // props.changeHandle(true, 'code');
+              setAuthFin(true);
+              setShowEmailAgainText(true);
+            } else {
+              //
+              // props.changeHandle(false, 'code');
+            }
+          });
+        },
       });
       setSendEmailButton(false);
       setShowCodeInput(true);
@@ -76,6 +107,11 @@ export default function ResetPasswordPage() {
 
     if (!code) {
       alert('인증코드 입력을 완료해 주세요');
+      Swal.fire({
+        icon: 'error',
+        title: '인증코드 입력을 완료해 주세요',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else {
       //   console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정

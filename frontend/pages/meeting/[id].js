@@ -7,10 +7,13 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+
+import Swal from 'sweetalert2';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -167,9 +170,15 @@ function MeetingDetail() {
         });
       })
       .catch((err) => {
-        alert(
-          '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.'
-        );
+        // alert(
+        //   '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.'
+        // );
+        Swal.fire({
+          icon: 'info',
+          title:
+            '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.',
+          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+        });
       });
 
     return () => {
@@ -271,10 +280,19 @@ function MeetingDetail() {
     });
 
     mySession.once('sessionDisconnected', () => {
-      if (sessionStorage.getItem('userId') != detail.hostId)
-        alert('미팅이 종료 되었습니다.');
-      clear();
-      Router.push('/meeting');
+      if (sessionStorage.getItem('userId') != detail.hostId) {
+        // alert('미팅이 종료 되었습니다.');
+        Swal.fire({
+          title: '미팅이 종료 되었습니다.',
+          text: '미팅룸 목록으로 이동합니다',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 800,
+        }).then(() => {
+          clear();
+          Router.push('/meeting');
+        });
+      }
     });
 
     getToken()
@@ -562,16 +580,24 @@ function MeetingDetail() {
     if (mySession)
       mySession.signal({ data: myUserName, to: [], type: 'userleft' });
 
-    quitRoomAPI(inputValue).then((res) => {
-      console.log(inputValue);
-      console.log(res);
-      videoTrackOff(publisher);
-      leaveSession();
-      clear();
-      if (detail.hostId == sessionStorage.getItem('userId')) {
-        // deleteSession();
-      }
-      Router.push('/meeting');
+    Swal.fire({
+      title: '방에서 나가는 중입니다',
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+
+        quitRoomAPI(inputValue).then((res) => {
+          console.log(inputValue);
+          console.log(res);
+          videoTrackOff(publisher);
+          leaveSession();
+          clear();
+          if (detail.hostId == sessionStorage.getItem('userId')) {
+            // deleteSession();
+          }
+          Router.push('/meeting');
+        });
+      },
     });
   };
 

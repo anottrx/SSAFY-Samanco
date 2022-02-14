@@ -31,6 +31,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Divider from '@mui/material/Divider';
 import InputAdornment from '@mui/material/InputAdornment';
 import Container from '@mui/material/Container';
+import Swal from 'sweetalert2';
 
 import styled from '@emotion/styled';
 import StackLevelListInfo from '../Common/Stack/StackLevelListInfo';
@@ -389,7 +390,12 @@ export default function UserInfoPage() {
   const [checkedNickname, setCheckedNickname] = useState(true);
   const [changeNickname, setChangeNickname] = useState(false);
   const handleUserNicknameClick = (e) => {
-    alert('닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다');
+    // alert('닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다');
+    Swal.fire({
+      icon: 'warning',
+      title: '닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다',
+      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+    });
     setCheckedNickname(false);
     setChangeNickname(true);
     setNicknameChange(true);
@@ -409,7 +415,12 @@ export default function UserInfoPage() {
       //   isNormal = false;
       // }
       if (!isNormal) {
-        alert(msg);
+        // alert(msg);
+        Swal.fire({
+          icon: 'error',
+          title: msg,
+          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+        });
         setChangeNickname(false);
         setNicknameChange(false);
       }
@@ -418,12 +429,22 @@ export default function UserInfoPage() {
         updateNicknameAPI(nicknameInfo).then((res) => {
           if (res.statusCode == 200) {
             setCheckPassword(true);
-            alert('닉네임 변경이 가능합니다.');
+            // alert('닉네임 변경이 가능합니다.');
+            Swal.fire({
+              icon: 'success',
+              title: '닉네임 변경이 가능합니다.',
+              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+            });
             setNicknameChange(false);
             setChangeNickname(false);
             setCheckedNickname(true);
           } else {
-            alert(`${res.message}`);
+            // alert(`${res.message}`);
+            Swal.fire({
+              icon: 'error',
+              title: res.message,
+              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+            });
           }
         });
       }
@@ -475,22 +496,32 @@ export default function UserInfoPage() {
 
     if (changeNickname) {
       isNormal = false;
-      alert('닉네임 중복 체크를 완료해 주세요.');
+      // alert('닉네임 중복 체크를 완료해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임 중복 체크를 완료해 주세요.',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else if (
       inputState.phone.length > 0 &&
       !phoneReg.test(inputState.phone)
     ) {
       isNormal = false;
-      alert('전화번호 양식을 확인해 주세요.');
+      // alert('전화번호 양식을 확인해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임 중복 체크를 완료해 주세요.',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else if (links.length >= 1 && !urlReg.test(links)) {
       // isNormal = false;
-      console.log(links.length);
+      // console.log(links.length);
       // alert("링크 양식을 확인해 주세요.")
     }
 
     if (isNormal) {
       handleClickOpen();
-      console.log(loginInfo);
+      // console.log(loginInfo);
     }
   };
 
@@ -499,10 +530,20 @@ export default function UserInfoPage() {
 
     if (inputState.phone.length > 0 && !phoneReg.test(inputState.phone)) {
       isNormal = false;
-      alert('전화번호 양식을 확인해 주세요.');
+      // alert('전화번호 양식을 확인해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '전화번호 양식을 확인해 주세요.',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else if (changeNickname) {
       isNormal = false;
-      alert('닉네임 중복 체크를 완료해 주세요.');
+      // alert('닉네임 중복 체크를 완료해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임 중복 체크를 완료해 주세요.',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     }
 
     if (isNormal) {
@@ -611,25 +652,60 @@ export default function UserInfoPage() {
 
   const handleQuitClick = (event) => {
     const userId = sessionStorage.getItem('userInfo');
-    if (
-      window.confirm('탈퇴하시겠습니까? 확인 버튼을 누르면 즉시 탈퇴됩니다')
-    ) {
-      deleteUserAPI(userId).then((res) => {
-        if (res.statusCode == 200) {
-          // 탈퇴 성공 시
-          alert('탈퇴시켰습니다');
-          // sessionStorage.clear();
-          sessionStorage.setItem('userInfo', '');
-          // cookies.set("userToken", "");
-          // cookies.set("userEmail", "");
-          // 페이지 이동
-          window.history.forward();
-          document.location.href = '/';
-        } else alert(`${res.message}`);
-      });
-    } else {
-      alert('취소했습니다');
-    }
+    // if (
+    //   window.confirm('탈퇴하시겠습니까? 확인 버튼을 누르면 즉시 탈퇴됩니다')
+    // ) {
+    Swal.fire({
+      title: '탈퇴시키겠습니까? 확인 버튼을 누르면 해당 회원은 즉시 탈퇴됩니다',
+      text: '탈퇴 취소는 할 수 없으니 신중하게 결정해주세요',
+      icon: 'warning',
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+      showCancelButton: true,
+      cancelButtonColor: '#d33',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: '해당 회원의 탈퇴 처리 중입니다',
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+            deleteUserAPI(userId).then((res) => {
+              if (res.statusCode == 200) {
+                // 탈퇴 성공 시
+                Swal.fire({
+                  title: '탈퇴시켰습니다',
+                  text: '회원관리 목록으로 이동합니다',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 500,
+                }).then(() => {
+                  // alert('탈퇴시켰습니다');
+                  sessionStorage.setItem('userInfo', '');
+                  window.history.forward();
+                  document.location.href = '/admin';
+                });
+              } else {
+                // alert(`${res.message}`);
+                Swal.fire({
+                  icon: 'error',
+                  title: '탈퇴 처리 중 문제가 발생했습니다',
+                  confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                });
+              }
+            });
+          },
+        });
+      } else {
+        // alert('취소했습니다');
+        Swal.fire({
+          icon: 'warning',
+          title: '탈퇴 처리를 취소했습니다',
+          showConfirmButton: false,
+          timer: 500,
+        });
+      }
+    });
   };
 
   return (

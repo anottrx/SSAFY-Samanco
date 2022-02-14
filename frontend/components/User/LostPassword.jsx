@@ -11,6 +11,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Box from '@mui/material/Box';
 import CheckEmailCode from './CheckEmailCode';
 import ResetPassword from './ResetPassword';
+import Swal from 'sweetalert2';
 
 export default function LostPassword(props) {
   // 비밀번호 재설정
@@ -43,25 +44,42 @@ export default function LostPassword(props) {
     const value = email;
 
     if (!email) {
-      alert('이메일을 입력해주세요.');
+      // alert('이메일을 입력해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '이메일을 입력해주세요',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else if (!emailReg.test(email)) {
-      alert('이메일 양식을 확인해 주세요.');
+      // alert('이메일 양식을 확인해 주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '이메일 양식을 확인해 주세요',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else {
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정
-      sendEmailPWCodeAPI(value).then((res) => {
-        // console.log(res)
-        if (res.statusCode == 200) {
-          // props.changeHandle(true, 'code');
-          setAuthFin(true);
-          setShowEmailAgainText(true);
-        } else {
-          //
-          // props.changeHandle(false, 'code');
-        }
+      Swal.fire({
+        title: '이메일 확인 중입니다',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+          sendEmailPWCodeAPI(value).then((res) => {
+            // console.log(res)
+            if (res.statusCode == 200) {
+              // props.changeHandle(true, 'code');
+              setAuthFin(true);
+              setShowEmailAgainText(true);
+            } else {
+              //
+              // props.changeHandle(false, 'code');
+            }
+          });
+          setSendEmailButton(false);
+          setShowCodeInput(true);
+          // setAuthFin(true);
+        },
       });
-      setSendEmailButton(false);
-      setShowCodeInput(true);
-      // setAuthFin(true);
     }
   };
 
@@ -70,7 +88,12 @@ export default function LostPassword(props) {
     // const value = code;
 
     if (!code) {
-      alert('인증코드 입력을 완료해 주세요');
+      // alert('인증코드 입력을 완료해 주세요');
+      Swal.fire({
+        icon: 'error',
+        title: '인증코드 입력을 완료해 주세요',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else {
       //   console.log(value);
       //   setCookie("emailAuth",  new Date().getTime()); // 쿠키 설정

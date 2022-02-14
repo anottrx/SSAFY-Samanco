@@ -4,6 +4,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Swal from 'sweetalert2';
 
 import { checkEmailCodeAPI, checkEmailPWAPI } from '../../pages/api/user';
 import CountdownTimer from '../Common/CountdownTimer';
@@ -25,8 +26,14 @@ export default function CheckEmailCode(props) {
   const changeTimerHandle = (value, name) => {
     setTimer(value);
     props.changeHandle(false, 'code');
-    alert('시간이 만료되었습니다! 인증코드를 재발급해 주세요');
-    setAuthFin(true);
+    // alert('시간이 만료되었습니다! 인증코드를 재발급해 주세요');
+    Swal.fire({
+      icon: 'error',
+      title: '시간이 만료되었습니다! 인증코드를 재발급해 주세요',
+      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+    }).then(() => {
+      setAuthFin(true);
+    });
   };
 
   const compareEmailCodeClick = (e) => {
@@ -37,33 +44,66 @@ export default function CheckEmailCode(props) {
     inputValue.email = props.email;
 
     if (!value) {
-      alert('인증번호를 입력해주세요.');
+      // alert('인증번호를 입력해주세요.');
+      Swal.fire({
+        icon: 'error',
+        title: '인증번호를 입력해주세요',
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
     } else {
       if (props.lostpw) {
         // console.log('비밀번호 잃어버려서 온 것')
-        checkEmailPWAPI(inputValue).then((res) => {
-          // console.log(res);
-          if (res.statusCode == 200) {
-            props.changeHandle(true, 'code');
-            setAuthFin(true);
-          } else if (res.statusCode == 401) {
-            alert('잘못 입력했습니다');
-          } else {
-            props.changeHandle(false, 'code');
-          }
+        Swal.fire({
+          title: '인증번호를 확인 중입니다',
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+
+            checkEmailPWAPI(inputValue).then((res) => {
+              // console.log(res);
+              if (res.statusCode == 200) {
+                props.changeHandle(true, 'code');
+                setAuthFin(true);
+              } else if (res.statusCode == 401) {
+                // alert('잘못 입력했습니다');
+                Swal.fire({
+                  icon: 'error',
+                  title: '인증번호를 잘못 입력했습니다',
+                  text: '다시 확인해주세요',
+                  confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                });
+              } else {
+                props.changeHandle(false, 'code');
+              }
+            });
+          },
         });
       } else {
         // console.log('회원가입하다가 온 것')
-        checkEmailCodeAPI(inputValue).then((res) => {
-          console.log(res);
-          if (res.statusCode == 200) {
-            props.changeHandle(true, 'code');
-            setAuthFin(true);
-          } else if (res.statusCode == 401) {
-            alert('잘못 입력했습니다');
-          } else {
-            props.changeHandle(false, 'code');
-          }
+        Swal.fire({
+          title: '인증번호를 확인 중입니다',
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+
+            checkEmailCodeAPI(inputValue).then((res) => {
+              // console.log(res);
+              if (res.statusCode == 200) {
+                props.changeHandle(true, 'code');
+                setAuthFin(true);
+              } else if (res.statusCode == 401) {
+                // alert('잘못 입력했습니다');
+                Swal.fire({
+                  icon: 'error',
+                  title: '인증번호를 잘못 입력했습니다',
+                  text: '다시 확인해주세요',
+                  confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                });
+              } else {
+                props.changeHandle(false, 'code');
+              }
+            });
+          },
         });
       }
     }

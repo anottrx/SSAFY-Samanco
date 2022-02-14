@@ -5044,6 +5044,11 @@
   "resolved" "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   "version" "1.0.0"
 
+"sweetalert2@^11.4.0":
+  "integrity" "sha512-+p0jT2LxUQGreWa60j7nm1frJfqbcmamZcpZi4puEGAJ0CmyPqQ4UGmBqbB4WxkJYKsn8qcOA9ufqn0MWtQWLQ=="
+  "resolved" "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.4.0.tgz"
+  "version" "11.4.0"
+
 "table@^6.0.9":
   "integrity" "sha512-s/fitrbVeEyHKFa7mFdkuQMWlH1Wgw/yEXMt5xACT4ZpzWFluehAxRtUUQKPuWhaLAWhFcVx6w3oC8VKaUfPGA=="
   "resolved" "https://registry.npmjs.org/table/-/table-6.8.0.tgz"

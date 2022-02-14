@@ -21,6 +21,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SendIcon from '@mui/icons-material/Send';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Swal from 'sweetalert2';
 
 import Card from '@mui/material/Card';
 import Container from '@mui/material/Container';
@@ -194,18 +195,35 @@ const BoardDetail = () => {
                     pwDialogOpen();
                   } else {
                     // 비밀방 아니면 바로 입장
-                    joinRoomAPI(inputValue).then((res) => {
-                      if (res.statusCode == 200) {
-                        Router.push('/meeting/' + detail.roomId);
-                      } else {
-                        // 방 입장 실패
-                        alert(`${res.message}`);
-                      }
+                    Swal.fire({
+                      title: '해당 방으로 이동 중입니다',
+                      showConfirmButton: false,
+                      didOpen: () => {
+                        Swal.showLoading();
+                        joinRoomAPI(inputValue).then((res) => {
+                          if (res.statusCode == 200) {
+                            Router.push('/meeting/' + detail.roomId);
+                          } else {
+                            // 방 입장 실패
+                            // alert(`${res.message}`);
+                            Swal.fire({
+                              icon: 'error',
+                              title: res.message,
+                              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                            });
+                          }
+                        });
+                      },
                     });
                   }
                 } else {
                   // 방 조회 실패 시
-                  alert(`${res.message}`);
+                  // alert(`${res.message}`);
+                  Swal.fire({
+                    icon: 'error',
+                    title: res.message,
+                    confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  });
                 }
               });
             }}
@@ -258,16 +276,36 @@ const BoardDetail = () => {
             <Button
               onClick={() => {
                 JoinDialogClose();
-                deleteBoard({
-                  boardId: detail.boardId,
-                  userId: sessionStorage.getItem('userId'),
-                }).then((res) => {
-                  if (res.statusCode === 200) {
-                    alert('게시물이 삭제되었습니다.');
-                    Router.push('/board');
-                  } else {
-                    alert(`${res.message}`);
-                  }
+                Swal.fire({
+                  title: '게시물 삭제 중입니다',
+                  showConfirmButton: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    deleteBoard({
+                      boardId: detail.boardId,
+                      userId: sessionStorage.getItem('userId'),
+                    }).then((res) => {
+                      if (res.statusCode === 200) {
+                        // alert('게시물이 삭제되었습니다.');
+                        Swal.fire({
+                          title: '게시물이 삭제되었습니다',
+                          text: '게시판 목록으로 이동합니다',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 500,
+                        }).then(() => {
+                          Router.push('/board');
+                        });
+                      } else {
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
+                      }
+                    });
+                  },
                 });
               }}
               autoFocus
@@ -342,7 +380,12 @@ const BoardDetail = () => {
           const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
           createAndDownloadBlobFile(arrayBuffer, file.originFile);
         } else {
-          alert('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+          // alert('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+          Swal.fire({
+            icon: 'error',
+            title: '파일이 존재하지 않습니다. 관리자에게 문의해주세요.',
+            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+          });
         }
       });
     }
@@ -461,8 +504,16 @@ const BoardDetail = () => {
                   let mute = res;
                 });
               } else {
-                alert('로그인이 필요한 작업입니다.');
-                Router.push('/login');
+                // alert('로그인이 필요한 작업입니다.');
+                Swal.fire({
+                  title: '로그인이 필요한 작업입니다.',
+                  text: '로그인 페이지로 이동합니다.',
+                  icon: 'warning',
+                  showConfirmButton: false,
+                  timer: 800,
+                }).then(() => {
+                  Router.push('/login');
+                });
               }
             }}
             variant={like ? 'contained' : 'outlined'}
@@ -489,17 +540,29 @@ const BoardDetail = () => {
     `;
 
     function registRequest() {
-      registComment({
-        boardId: detail.boardId,
-        content: inputComment.content,
-        userId: sessionStorage.getItem('userId'),
-      }).then((res) => {
-        if (res.statusCode === 200) {
-          // 현재 페이지 재로딩
-          setReloadCondition(true);
-        } else {
-          alert(`${res.message}`);
-        }
+      Swal.fire({
+        title: '댓글 등록 중입니다',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+          registComment({
+            boardId: detail.boardId,
+            content: inputComment.content,
+            userId: sessionStorage.getItem('userId'),
+          }).then((res) => {
+            if (res.statusCode === 200) {
+              // 현재 페이지 재로딩
+              setReloadCondition(true);
+            } else {
+              // alert(`${res.message}`);
+              Swal.fire({
+                icon: 'error',
+                title: res.message,
+                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+              });
+            }
+          });
+        },
       });
     }
 
@@ -569,17 +632,41 @@ function PwDialog(props) {
               ? () => {
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId;
-                  joinRoomAPI(inputValue).then((res) => {
-                    if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.roomId);
-                      pwDialogClose();
-                    } else {
-                      alert(`${res.message}`);
-                    }
+                  Swal.fire({
+                    title: '비밀번호 확인 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Swal.fire({
+                            title: '해당 방으로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 500,
+                          }).then(() => {
+                            Router.push('/meeting/' + room.roomId);
+                            pwDialogClose();
+                          });
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
+                      });
+                    },
                   });
                 }
               : () => {
-                  alert('비밀번호를 확인해주세요.');
+                  // alert('비밀번호를 확인해주세요.');
+                  Swal.fire({
+                    icon: 'error',
+                    title: '비밀번호를 확인해주세요.',
+                    confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  });
                 }
           }
           autoFocus

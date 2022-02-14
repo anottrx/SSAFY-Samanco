@@ -21,6 +21,7 @@ import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
+import Swal from 'sweetalert2';
 
 import { getRoomAllAPI } from '../../pages/api/meeting';
 import Router from 'next/router';
@@ -155,12 +156,24 @@ function ItemList() {
                         lg={3}
                         key={data.roomId}
                         onClick={() => {
-                          if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
+                          if (
+                            sessionStorage.getItem('userId') != '' &&
+                            sessionStorage.getItem('userId') != undefined
+                          ) {
                             joinDialogOpen();
                             setRoom(data);
                           } else {
-                            alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
-                          }                          
+                            // alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                            Swal.fire({
+                              title: '로그인이 필요한 작업입니다.',
+                              text: '로그인 페이지로 이동합니다.',
+                              icon: 'warning',
+                              showConfirmButton: false,
+                              timer: 800,
+                            }).then(() => {
+                              Router.push('/login');
+                            });
+                          }
                         }}
                       >
                         <Item data={data}></Item>
@@ -179,12 +192,24 @@ function ItemList() {
                         lg={3}
                         key={data.roomId}
                         onClick={() => {
-                          if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
+                          if (
+                            sessionStorage.getItem('userId') != '' &&
+                            sessionStorage.getItem('userId') != undefined
+                          ) {
                             joinDialogOpen();
                             setRoom(data);
                           } else {
-                            alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
-                          }    
+                            // alert('로그인한 사용자만 이용 가능합니다. 로그인해주세요')
+                            Swal.fire({
+                              title: '로그인이 필요한 작업입니다.',
+                              text: '로그인 페이지로 이동합니다.',
+                              icon: 'warning',
+                              showConfirmButton: false,
+                              timer: 800,
+                            }).then(() => {
+                              Router.push('/login');
+                            });
+                          }
                         }}
                       >
                         <Item data={data}></Item>
@@ -304,15 +329,28 @@ function JoinDialog(props) {
               : () => {
                   // 카메라, 오디오 정보 -> publisher
                   inputValue.roomId = room.roomId;
-                  joinRoomAPI(inputValue).then((res) => {
-                    if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.roomId);
-                      setDetail({
-                        detail: room,
+                  Swal.fire({
+                    title: '카메라, 오디오 정보 확인 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Router.push('/meeting/' + room.roomId);
+                          setDetail({
+                            detail: room,
+                          });
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                    } else {
-                      alert(`${res.message}`);
-                    }
+                    },
                   });
                   joinDialogClose();
                 }
@@ -354,20 +392,38 @@ function PwDialog(props) {
               ? () => {
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId;
-                  joinRoomAPI(inputValue).then((res) => {
-                    if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.roomId);
-                      setDetail({
-                        detail: room,
+                  Swal.fire({
+                    title: '입장 진행 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Router.push('/meeting/' + room.roomId);
+                          setDetail({
+                            detail: room,
+                          });
+                          pwDialogClose();
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                      pwDialogClose();
-                    } else {
-                      alert(`${res.message}`);
-                    }
+                    },
                   });
                 }
               : () => {
-                  alert('비밀번호를 확인해주세요.');
+                  // alert('비밀번호를 확인해주세요.');
+                  Swal.fire({
+                    icon: 'error',
+                    title: '비밀번호를 확인해주세요.',
+                    confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  });
                 }
           }
           autoFocus

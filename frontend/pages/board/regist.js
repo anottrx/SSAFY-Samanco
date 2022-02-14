@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Swal from 'sweetalert2';
 
 import styled from '@emotion/styled';
 import styles from '../../styles/Board.module.css';
@@ -120,7 +121,14 @@ function BoardRegist() {
     if (typeof inputValue.content == 'undefined')
       [check, msg] = [false, '게시물 내용을 입력해주세요.'];
 
-    if (!check) alert(msg);
+    if (!check) {
+      // alert(msg);
+      Swal.fire({
+        icon: 'error',
+        title: msg,
+        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      });
+    }
     return check;
   }
 
@@ -213,6 +221,34 @@ function BoardRegist() {
             onClick={() => {
               if (validateCheck()) {
                 const formData = new FormData();
+                Swal.fire({
+                  title: '게시물 등록 중입니다',
+                  showConfirmButton: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    registBoard(formData).then((res) => {
+                      if (res.statusCode === 200) {
+                        // alert('게시물이 작성되었습니다.');
+                        Swal.fire({
+                          title: '게시물이 작성되었습니다.',
+                          text: '게시물 목록으로 이동합니다',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 500,
+                        }).then(() => {
+                          Router.push('/board');
+                        });
+                      } else {
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
+                      }
+                    });
+                  },
+                });
 
                 Object.keys(inputValue).map((key) => {
                   let value = inputValue[key];
@@ -226,15 +262,6 @@ function BoardRegist() {
                 // for (var key of formData.entries()) {
                 //   console.log(`${key}`);
                 // }
-
-                registBoard(formData).then((res) => {
-                  if (res.statusCode === 200) {
-                    alert('게시물이 작성되었습니다.');
-                    Router.push('/board');
-                  } else {
-                    alert(`${res.message}`);
-                  }
-                });
               }
             }}
           >

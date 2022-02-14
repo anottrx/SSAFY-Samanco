@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
+import Swal from 'sweetalert2';
 
 import Cookies from 'universal-cookie';
 import { useCookies } from 'react-cookie';
@@ -252,7 +253,7 @@ function MyApp({ Component, pageProps }) {
           </MenuItem>
           <MenuItem
             onClick={(e) => {
-              alert('로그아웃 되었습니다.');
+              // alert('로그아웃 되었습니다.');
               sessionStorage.clear();
               cookies.set('userToken', '', -1);
               cookies.remove('userToken', { path: '/myinfo' });
@@ -260,6 +261,12 @@ function MyApp({ Component, pageProps }) {
               cookies.remove('userToken');
               setIsLogin(false);
               setUserId(null);
+              Swal.fire({
+                title: '로그아웃 되었습니다',
+                text: '메인페이지로 이동합니다',
+                icon: 'success',
+                showConfirmButton: false,
+              })
               window.location.replace('/');
               handleClose();
             }}
