@@ -368,7 +368,7 @@ const ProjectDetail = () => {
                                 icon: 'success',
                                 showConfirmButton: false,
                                 timer: 500,
-                              })
+                              });
                               Router.push('/meeting/' + detail.roomId);
                             } else {
                               // 방 입장 실패
@@ -745,6 +745,8 @@ const ProjectDetail = () => {
       });
     }, []);
 
+    console.log('project Detail', detail);
+
     return (
       <ActionWrapper>
         <ButtonGroup variant="outlined" aria-label="text button group">
@@ -801,7 +803,9 @@ const ProjectDetail = () => {
             }
             {
               // 모집중 일때, 지원을 안했거나, 취소한 상태이면 지원하기 버튼 표시
-              (detail.collectStatus === 'ING' &&
+              // 모집 인원 수 == 현재 인원 수 같으면 표시 X
+              (detail.positions[8].size !== detail.positions[9].size &&
+                detail.collectStatus === 'ING' &&
                 detail.projectJoinStatus == null) ||
               detail.projectJoinStatus == 'CANCEL' ? (
                 <Button variant="outlined" onClick={JoinDialogOpen}>
@@ -880,7 +884,7 @@ const ProjectDetail = () => {
                                 icon: 'success',
                                 showConfirmButton: false,
                                 timer: 500,
-                              })
+                              });
                             } else {
                               // alert(`${res.message}`);
                               Swal.fire({
@@ -1004,7 +1008,7 @@ function PwDialog(props) {
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 500,
-                          })
+                          });
                           Router.push('/meeting/' + room.roomId);
                           pwDialogClose();
                         } else {
