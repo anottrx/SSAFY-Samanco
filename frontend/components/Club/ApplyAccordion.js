@@ -111,86 +111,94 @@ function ApplyAccordion(props) {
                   <Button
                     onClick={() => {
                       // 가입 승인
-                      let approveData = {
-                        userId: data.id,
-                        hostId:
-                          sessionStorage.getItem('userId') == null
-                            ? 0
-                            : sessionStorage.getItem('userId'),
-                        joinTag: 'OK',
-                      };
-                      let joinData = {
-                        userId:
-                          sessionStorage.getItem('userId') == null
-                            ? 0
-                            : sessionStorage.getItem('userId'),
-                      };
-                      switch (props.from) {
-                        case 'project':
-                          approveData = {
-                            ...approveData,
-                            projectId: props.clubId,
-                          };
-                          joinData = {
-                            ...joinData,
-                            projectId: props.clubId,
-                          };
-                          break;
-                        case 'study':
-                          approveData = {
-                            ...approveData,
-                            studyId: props.clubId,
-                          };
-                          joinData = {
-                            ...joinData,
-                            studyId: props.clubId,
-                          };
-                          break;
-                        default:
-                          break;
-                      }
+                      Swal.fire({
+                        title: '가입 승인 중입니다',
+                        showConfirmButton: false,
+                        didOpen: () => {
+                          Swal.showLoading();
 
-                      props.approveAPI(approveData).then((res) => {
-                        if (res.statusCode == 200) {
-                          // alert('해당 유저의 가입을 승인하였습니다.');
-                          Swal.fire({
-                            icon: 'warning',
-                            title: '해당 유저의 가입을 승인하였습니다.',
-                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                          }).then(() => {
-                            if (props.from === 'project') {
-                              getProjectUserByjoin(joinData) // 재조회
-                                .then((res) => {
-                                  dispatch(
-                                    applyActions.setApplyList({
-                                      list: res.users,
+                          let approveData = {
+                            userId: data.id,
+                            hostId:
+                              sessionStorage.getItem('userId') == null
+                                ? 0
+                                : sessionStorage.getItem('userId'),
+                            joinTag: 'OK',
+                          };
+                          let joinData = {
+                            userId:
+                              sessionStorage.getItem('userId') == null
+                                ? 0
+                                : sessionStorage.getItem('userId'),
+                          };
+                          switch (props.from) {
+                            case 'project':
+                              approveData = {
+                                ...approveData,
+                                projectId: props.clubId,
+                              };
+                              joinData = {
+                                ...joinData,
+                                projectId: props.clubId,
+                              };
+                              break;
+                            case 'study':
+                              approveData = {
+                                ...approveData,
+                                studyId: props.clubId,
+                              };
+                              joinData = {
+                                ...joinData,
+                                studyId: props.clubId,
+                              };
+                              break;
+                            default:
+                              break;
+                          }
+
+                          props.approveAPI(approveData).then((res) => {
+                            if (res.statusCode == 200) {
+                              // alert('해당 유저의 가입을 승인하였습니다.');
+                              Swal.fire({
+                                icon: 'warning',
+                                title: '해당 유저의 가입을 승인하였습니다.',
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              }).then(() => {
+                                if (props.from === 'project') {
+                                  getProjectUserByjoin(joinData) // 재조회
+                                    .then((res) => {
+                                      dispatch(
+                                        applyActions.setApplyList({
+                                          list: res.users,
+                                        })
+                                      );
                                     })
-                                  );
-                                })
-                                .catch((err) => console.log(err));
+                                    .catch((err) => console.log(err));
+                                } else {
+                                  getStudyUserByjoin(joinData) // 재조회
+                                    .then((res) => {
+                                      dispatch(
+                                        applyActions.setApplyList({
+                                          list: res.users,
+                                        })
+                                      );
+                                    })
+                                    .catch((err) => console.log(err));
+                                }
+                              });
                             } else {
-                              getStudyUserByjoin(joinData) // 재조회
-                                .then((res) => {
-                                  dispatch(
-                                    applyActions.setApplyList({
-                                      list: res.users,
-                                    })
-                                  );
-                                })
-                                .catch((err) => console.log(err));
+                              // alert(`${res.message}`);
+                              Swal.fire({
+                                icon: 'error',
+                                title: res.message,
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              });
                             }
                           });
-                        } else {
-                          // alert(`${res.message}`);
-                          Swal.fire({
-                            icon: 'error',
-                            title: res.message,
-                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                          });
-                        }
-                      });
 
-                      props.setReloadCondition(true);
+                          props.setReloadCondition(true);
+                        },
+                      });
                     }}
                   >
                     <CheckIcon />
@@ -198,81 +206,89 @@ function ApplyAccordion(props) {
                   <Button
                     onClick={() => {
                       // 가입 거절
-                      let approveData = {
-                        userId: data.id,
-                        hostId: sessionStorage.getItem('userId'),
-                        joinTag: 'NO',
-                      };
-                      let joinData = {
-                        userId: sessionStorage.getItem('userId'),
-                      };
+                      Swal.fire({
+                        title: '가입 거절 중입니다',
+                        showConfirmButton: false,
+                        didOpen: () => {
+                          Swal.showLoading();
 
-                      switch (props.from) {
-                        case 'project':
-                          approveData = {
-                            ...approveData,
-                            projectId: props.clubId,
+                          let approveData = {
+                            userId: data.id,
+                            hostId: sessionStorage.getItem('userId'),
+                            joinTag: 'NO',
                           };
-                          joinData = {
-                            ...joinData,
-                            projectId: props.clubId,
+                          let joinData = {
+                            userId: sessionStorage.getItem('userId'),
                           };
-                          break;
-                        case 'study':
-                          approveData = {
-                            ...approveData,
-                            studyId: props.clubId,
-                          };
-                          joinData = {
-                            ...joinData,
-                            studyId: props.clubId,
-                          };
-                          break;
-                        default:
-                          break;
-                      }
 
-                      props.approveAPI(approveData).then((res) => {
-                        if (res.statusCode == 200) {
-                          // alert('해당 유저의 가입을 거절하였습니다.');
-                          Swal.fire({
-                            icon: 'warning',
-                            title: '해당 유저의 가입을 거절하였습니다.',
-                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                          }).then(() => {
-                            if (props.from === 'project') {
-                              getProjectUserByjoin(joinData) // 재조회
-                                .then((res) => {
-                                  dispatch(
-                                    applyActions.setApplyList({
-                                      list: res.users,
+                          switch (props.from) {
+                            case 'project':
+                              approveData = {
+                                ...approveData,
+                                projectId: props.clubId,
+                              };
+                              joinData = {
+                                ...joinData,
+                                projectId: props.clubId,
+                              };
+                              break;
+                            case 'study':
+                              approveData = {
+                                ...approveData,
+                                studyId: props.clubId,
+                              };
+                              joinData = {
+                                ...joinData,
+                                studyId: props.clubId,
+                              };
+                              break;
+                            default:
+                              break;
+                          }
+
+                          props.approveAPI(approveData).then((res) => {
+                            if (res.statusCode == 200) {
+                              // alert('해당 유저의 가입을 거절하였습니다.');
+                              Swal.fire({
+                                icon: 'warning',
+                                title: '해당 유저의 가입을 거절하였습니다.',
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              }).then(() => {
+                                if (props.from === 'project') {
+                                  getProjectUserByjoin(joinData) // 재조회
+                                    .then((res) => {
+                                      dispatch(
+                                        applyActions.setApplyList({
+                                          list: res.users,
+                                        })
+                                      );
                                     })
-                                  );
-                                })
-                                .catch((err) => console.log(err));
+                                    .catch((err) => console.log(err));
+                                } else {
+                                  getStudyUserByjoin(joinData) // 재조회
+                                    .then((res) => {
+                                      dispatch(
+                                        applyActions.setApplyList({
+                                          list: res.users,
+                                        })
+                                      );
+                                    })
+                                    .catch((err) => console.log(err));
+                                }
+                              });
                             } else {
-                              getStudyUserByjoin(joinData) // 재조회
-                                .then((res) => {
-                                  dispatch(
-                                    applyActions.setApplyList({
-                                      list: res.users,
-                                    })
-                                  );
-                                })
-                                .catch((err) => console.log(err));
+                              // alert(`${res.message}`);
+                              Swal.fire({
+                                icon: 'error',
+                                title: res.message,
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              });
                             }
                           });
-                        } else {
-                          // alert(`${res.message}`);
-                          Swal.fire({
-                            icon: 'error',
-                            title: res.message,
-                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                          });
-                        }
-                      });
 
-                      props.setReloadCondition(true);
+                          props.setReloadCondition(true);
+                        },
+                      });
                     }}
                   >
                     <CloseIcon />

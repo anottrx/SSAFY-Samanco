@@ -218,42 +218,48 @@ function ProjectRegist() {
               onClick={() => {
                 if (validateCheck()) {
                   const formData = new FormData();
-
-                  Object.keys(inputValue).map((key) => {
-                    let value = inputValue[key];
-                    if (key === 'stacks' || key == 'positions')
-                      formData.append(key, JSON.stringify(value));
-                    else formData.append(key, value);
-                  });
-
-                  formData.append('file', files);
-
-                  // for(var key of formData.entries())
-                  // {
-                  //     console.log(`${key}`);
-                  // }
-
-                  registAPI(formData).then((res) => {
-                    if (res.statusCode == 200) {
-                      // alert('프로젝트가 등록되었습니다.');
-                      // Router.push('/project');
-                      Swal.fire({
-                        title: '프로젝트가 등록되었습니다.',
-                        text: '프로젝트 목록으로 이동합니다',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 500,
-                      }).then(() => {
-                        Router.push('/project');
+                  Swal.fire({
+                    title: '프로젝트 등록 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      Object.keys(inputValue).map((key) => {
+                        let value = inputValue[key];
+                        if (key === 'stacks' || key == 'positions')
+                          formData.append(key, JSON.stringify(value));
+                        else formData.append(key, value);
                       });
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+
+                      formData.append('file', files);
+
+                      // for(var key of formData.entries())
+                      // {
+                      //     console.log(`${key}`);
+                      // }
+
+                      registAPI(formData).then((res) => {
+                        if (res.statusCode == 200) {
+                          // alert('프로젝트가 등록되었습니다.');
+                          // Router.push('/project');
+                          Swal.fire({
+                            title: '프로젝트가 등록되었습니다.',
+                            text: '프로젝트 목록으로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 500,
+                          }).then(() => {
+                            Router.push('/project');
+                          });
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                    }
+                    },
                   });
                 }
               }}

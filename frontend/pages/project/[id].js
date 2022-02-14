@@ -355,18 +355,26 @@ const ProjectDetail = () => {
                       pwDialogOpen();
                     } else {
                       // 비밀방 아니면 바로 입장
-                      joinRoomAPI(inputValue).then((res) => {
-                        if (res.statusCode == 200) {
-                          Router.push('/meeting/' + detail.roomId);
-                        } else {
-                          // 방 입장 실패
-                          // alert(`${res.message}`);
-                          Swal.fire({
-                            icon: 'error',
-                            title: res.message,
-                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      Swal.fire({
+                        title: '방으로 이동 중입니다',
+                        showConfirmButton: false,
+                        didOpen: () => {
+                          Swal.showLoading();
+
+                          joinRoomAPI(inputValue).then((res) => {
+                            if (res.statusCode == 200) {
+                              Router.push('/meeting/' + detail.roomId);
+                            } else {
+                              // 방 입장 실패
+                              // alert(`${res.message}`);
+                              Swal.fire({
+                                icon: 'error',
+                                title: res.message,
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              });
+                            }
                           });
-                        }
+                        },
                       });
                     }
                   } else {
@@ -419,35 +427,42 @@ const ProjectDetail = () => {
             <Button
               onClick={() => {
                 let [newHostId, newHostPosition] = nextHost.split(',');
-                changeProjectHost({
-                  projectId: detail.id,
-                  oldHostId: detail.hostId,
-                  newHostId: newHostId,
-                  newHostPosition: newHostPosition,
-                }).then((res) => {
-                  if (res.statusCode == 200) {
-                    // alert('방장이 변경되었습니다.');
-                    Swal.fire({
-                      title: '방장이 변경되었습니다.',
-                      icon: 'success',
-                      showConfirmButton: false,
-                      timer: 500,
-                    }).then(() => {
-                      quitProject({
-                        userId: detail.hostId,
-                        projectId: detail.id,
-                      });
-                      Router.push('/project');
+                Swal.fire({
+                  title: '방장 변경 중입니다',
+                  showConfirmButton: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    changeProjectHost({
+                      projectId: detail.id,
+                      oldHostId: detail.hostId,
+                      newHostId: newHostId,
+                      newHostPosition: newHostPosition,
+                    }).then((res) => {
+                      if (res.statusCode == 200) {
+                        // alert('방장이 변경되었습니다.');
+                        Swal.fire({
+                          title: '방장이 변경되었습니다.',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 500,
+                        }).then(() => {
+                          quitProject({
+                            userId: detail.hostId,
+                            projectId: detail.id,
+                          });
+                          Router.push('/project');
+                        });
+                      } else {
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
+                      }
+                      // 페이지 새로고침
                     });
-                  } else {
-                    // alert(`${res.message}`);
-                    Swal.fire({
-                      icon: 'error',
-                      title: res.message,
-                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                    });
-                  }
-                  // 페이지 새로고침
+                  },
                 });
               }}
             >
@@ -518,59 +533,74 @@ const ProjectDetail = () => {
                     } else UserDialogOpen();
                     // 방장 권한 넘기기
                   } else if (hostAssign === 'delete') {
-                    deleteAPI({
-                      id: detail.id,
-                      hostId: sessionStorage.getItem('userId'),
-                    }).then((res) => {
-                      if (res.statusCode === 200) {
-                        // alert('프로젝트가 삭제 되었습니다.');
-                        // Router.push('/project');
-                        Swal.fire({
-                          title: '프로젝트가 삭제 되었습니다.',
-                          text: '프로젝트 목록으로 이동합니다',
-                          icon: 'success',
-                          showConfirmButton: false,
-                          timer: 800,
-                        }).then(() => {
-                          Router.push('/project');
+                    Swal.fire({
+                      title: '프로젝트 삭제 중입니다',
+                      showConfirmButton: false,
+                      didOpen: () => {
+                        Swal.showLoading();
+
+                        deleteAPI({
+                          id: detail.id,
+                          hostId: sessionStorage.getItem('userId'),
+                        }).then((res) => {
+                          if (res.statusCode === 200) {
+                            // alert('프로젝트가 삭제 되었습니다.');
+                            // Router.push('/project');
+                            Swal.fire({
+                              title: '프로젝트가 삭제 되었습니다.',
+                              text: '프로젝트 목록으로 이동합니다',
+                              icon: 'success',
+                              showConfirmButton: false,
+                              timer: 800,
+                            }).then(() => {
+                              Router.push('/project');
+                            });
+                          } else {
+                            // alert(`${res.message}`);
+                            Swal.fire({
+                              icon: 'error',
+                              title: res.message,
+                              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                            });
+                          }
                         });
-                      } else {
-                        // alert(`${res.message}`);
-                        Swal.fire({
-                          icon: 'error',
-                          title: res.message,
-                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                        });
-                      }
+                        // 프로젝트 삭제
+                      },
                     });
-                    // 프로젝트 삭제
                   }
                 } else {
                   // 방장이 아닐 때
-                  quitProject({
-                    userId: sessionStorage.getItem('userId'),
-                    projectId: detail.id,
-                  }).then((res) => {
-                    if (res.statusCode === 200) {
-                      // alert('프로젝트가 탈퇴 되었습니다.');
-                      // Router.push('/project');
-                      Swal.fire({
-                        title: '프로젝트가 탈퇴 되었습니다.',
-                        text: '프로젝트 목록으로 이동합니다',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 500,
-                      }).then(() => {
-                        Router.push('/project');
+                  Swal.fire({
+                    title: '프로젝트 탈퇴 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      quitProject({
+                        userId: sessionStorage.getItem('userId'),
+                        projectId: detail.id,
+                      }).then((res) => {
+                        if (res.statusCode === 200) {
+                          // alert('프로젝트가 탈퇴 되었습니다.');
+                          // Router.push('/project');
+                          Swal.fire({
+                            title: '프로젝트가 탈퇴 되었습니다.',
+                            text: '프로젝트 목록으로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 500,
+                          }).then(() => {
+                            Router.push('/project');
+                          });
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                      });
-                    }
+                    },
                   });
                 }
               }}
@@ -676,8 +706,17 @@ const ProjectDetail = () => {
     const JoinDialogOpen = () => {
       if (sessionStorage.getItem('userId')) setOpen(true);
       else {
-        alert('로그인이 필요한 작업입니다.');
-        Router.push('/login');
+        // alert('로그인이 필요한 작업입니다.');
+        // Router.push('/login');
+        Swal.fire({
+          title: '로그인이 필요한 작업입니다.',
+          text: '로그인 페이지로 이동합니다.',
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 800,
+        }).then(() => {
+          Router.push('/login');
+        });
       }
     };
     const JoinDialogClose = () => {
@@ -719,8 +758,17 @@ const ProjectDetail = () => {
                   let mute = res;
                 });
               } else {
-                alert('로그인이 필요한 작업입니다.');
-                Router.push('/login');
+                // alert('로그인이 필요한 작업입니다.');
+                // Router.push('/login');
+                Swal.fire({
+                  title: '로그인이 필요한 작업입니다.',
+                  text: '로그인 페이지로 이동합니다.',
+                  icon: 'warning',
+                  showConfirmButton: false,
+                  timer: 800,
+                }).then(() => {
+                  Router.push('/login');
+                });
               }
             }}
             variant={like ? 'contained' : 'outlined'}
@@ -808,22 +856,34 @@ const ProjectDetail = () => {
                 onClick={() => {
                   JoinDialogClose();
                   if (selectPosition) {
-                    joinProjectAPI({
-                      position: selectPosition,
-                      projectId: detail.id,
-                      userId: sessionStorage.getItem('userId'),
-                    })
-                      .then((res) => {
-                        if (res.statusCode === 200) {
-                          alert('프로젝트 지원 신청이 되었습니다.');
-                        } else {
-                          alert(`${res.message}`);
-                        }
-                      })
-                      .catch((err) => console.log(err));
-                    setReloadCondition(true);
+                    Swal.fire({
+                      title: '프로젝트 지원 신청 중입니다',
+                      showConfirmButton: false,
+                      didOpen: () => {
+                        Swal.showLoading();
+                        joinProjectAPI({
+                          position: selectPosition,
+                          projectId: detail.id,
+                          userId: sessionStorage.getItem('userId'),
+                        })
+                          .then((res) => {
+                            if (res.statusCode === 200) {
+                              alert('프로젝트 지원 신청이 되었습니다.');
+                            } else {
+                              alert(`${res.message}`);
+                            }
+                          })
+                          .catch((err) => console.log(err));
+                        setReloadCondition(true);
+                      },
+                    });
                   } else {
-                    alert('포지션을 선택해주세요.');
+                    // alert('포지션을 선택해주세요.');
+                    Swal.fire({
+                      icon: 'error',
+                      title: '포지션을 선택해주세요.',
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    });
                   }
                 }}
                 autoFocus
@@ -842,19 +902,37 @@ const ProjectDetail = () => {
                 onClick={() => {
                   JoinCancelDialogClose();
                   // 지원 취소 api
-                  joinCancelProject({
-                    projectId: detail.id,
-                    userId: sessionStorage.getItem('userId'),
-                  })
-                    .then((res) => {
-                      if (res.statusCode === 200) {
-                        alert('프로젝트 지원 취소가 되었습니다.');
-                      } else {
-                        alert(`${res.message}`);
-                      }
-                    })
-                    .catch((err) => console.log(err));
-                  setReloadCondition(true);
+                  Swal.fire({
+                    title: '지원 취소 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      joinCancelProject({
+                        projectId: detail.id,
+                        userId: sessionStorage.getItem('userId'),
+                      })
+                        .then((res) => {
+                          if (res.statusCode === 200) {
+                            // alert('프로젝트 지원 취소가 되었습니다.');
+                            Swal.fire({
+                              title: '프로젝트 지원 취소가 되었습니다.',
+                              icon: 'success',
+                              showConfirmButton: false,
+                              timer: 500,
+                            });
+                          } else {
+                            // alert(`${res.message}`);
+                            Swal.fire({
+                              icon: 'error',
+                              title: res.message,
+                              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                            });
+                          }
+                        })
+                        .catch((err) => console.log(err));
+                      setReloadCondition(true);
+                    },
+                  });
                 }}
                 autoFocus
               >
@@ -897,17 +975,40 @@ function PwDialog(props) {
               ? () => {
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId;
-                  joinRoomAPI(inputValue).then((res) => {
-                    if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.roomId);
-                      pwDialogClose();
-                    } else {
-                      alert(`${res.message}`);
-                    }
+                  Swal.fire({
+                    title: '비밀번호 확인 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Swal.fire({
+                            title: '방으로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 500,
+                          })
+                          Router.push('/meeting/' + room.roomId);
+                          pwDialogClose();
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
+                      });
+                    },
                   });
                 }
               : () => {
-                  alert('비밀번호를 확인해주세요.');
+                  // alert('비밀번호를 확인해주세요.');
+                  Swal.fire({
+                    icon: 'error',
+                    title: '비밀번호를 확인해주세요.',
+                    confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  });
                 }
           }
           autoFocus
