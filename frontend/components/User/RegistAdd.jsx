@@ -482,7 +482,7 @@ export default function RegistInfo() {
             </Typography>
             <TextField
               id="link"
-              value={inputState.link || ''}
+              value={inputState.link}
               onChange={handleChange}
               fullWidth
             />
@@ -510,7 +510,7 @@ export default function RegistInfo() {
               fullWidth
               rows={4}
               multiline
-              value={inputState.description || ''}
+              value={inputState.description}
               onChange={handleChange}
               sx={{ width: 370, fontSize: 14 }}
             />
