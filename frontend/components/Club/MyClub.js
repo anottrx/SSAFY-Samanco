@@ -287,6 +287,7 @@ function MyClub(props) {
           {clubData.file ? (
             <img
               src={imageUrl}
+              width={150}
               height={150}
               style={{ objectFit: 'contain' }}
             ></img>
@@ -383,7 +384,12 @@ function CardImages({ data }) {
   }, []);
 
   return data.file ? (
-    <img src={imageUrl} height={150} style={{ objectFit: 'contain' }}></img>
+    <img
+      src={imageUrl}
+      width={150}
+      height={150}
+      style={{ objectFit: 'contain' }}
+    ></img>
   ) : (
     <DefaultImage />
   );
