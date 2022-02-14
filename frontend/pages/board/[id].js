@@ -540,29 +540,22 @@ const BoardDetail = () => {
     `;
 
     function registRequest() {
-      Swal.fire({
-        title: '댓글 등록 중입니다',
-        showConfirmButton: false,
-        didOpen: () => {
-          Swal.showLoading();
-          registComment({
-            boardId: detail.boardId,
-            content: inputComment.content,
-            userId: sessionStorage.getItem('userId'),
-          }).then((res) => {
-            if (res.statusCode === 200) {
-              // 현재 페이지 재로딩
-              setReloadCondition(true);
-            } else {
-              // alert(`${res.message}`);
-              Swal.fire({
-                icon: 'error',
-                title: res.message,
-                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-              });
-            }
+      registComment({
+        boardId: detail.boardId,
+        content: inputComment.content,
+        userId: sessionStorage.getItem('userId'),
+      }).then((res) => {
+        if (res.statusCode === 200) {
+          // 현재 페이지 재로딩
+          setReloadCondition(true);
+        } else {
+          // alert(`${res.message}`);
+          Swal.fire({
+            icon: 'error',
+            title: res.message,
+            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
           });
-        },
+        }
       });
     }
 

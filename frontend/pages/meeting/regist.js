@@ -184,17 +184,24 @@ function MeetingRegist() {
                     }).then(() => {
                       inputValue.roomId = roomId;
                       inputValue.userId = inputValue.hostId;
-
                       Swal.fire({
-                        title: '미팅룸으로 이동 중입니다',
+                        title: '방 가입 중입니다',
                         showConfirmButton: false,
                         didOpen: () => {
                           Swal.showLoading();
                           joinRoomAPI(inputValue).then((res) => {
                             // 방장도 미팅룸 가입
                             if (res.statusCode == 200) {
+                              console.log('방 가입 완료');
                               getRoomById(roomId).then((res) => {
                                 if (res.statusCode == 200) {
+                                  Swal.fire({
+                                    title: '방 가입에 성공했습니다',
+                                    text: '방으로 이동합니다',
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 700,
+                                  });
                                   Router.push('/meeting/' + roomId);
                                   setDetail({
                                     detail: res.room,

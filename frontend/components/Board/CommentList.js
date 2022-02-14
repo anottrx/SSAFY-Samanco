@@ -78,41 +78,33 @@ function CommentList({ detail, setReloadCondition }) {
   `;
 
   function updateRequest() {
-    Swal.fire({
-      title: '댓글 수정 중입니다',
-      showConfirmButton: false,
-      didOpen: () => {
-        Swal.showLoading();
-
-        updateComment({
-          boardId: detail.boardId,
-          commentId: targetComment.commentId,
-          content: editComment.content,
-          userId:
-            sessionStorage.getItem('userId') == null
-              ? 0
-              : sessionStorage.getItem('userId'),
-        }).then((res) => {
-          if (res.statusCode === 200) {
-            // alert('댓글이 수정되었습니다.');
-            Swal.fire({
-              title: '댓글이 수정되었습니다',
-              icon: 'success',
-              showConfirmButton: false,
-              timer: 500,
-            });
-            Router.replace('/board/' + detail.boardId);
-            setReloadCondition(true);
-          } else {
-            // alert(`${res.message}`);
-            Swal.fire({
-              icon: 'error',
-              title: res.message,
-              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-            });
-          }
+    updateComment({
+      boardId: detail.boardId,
+      commentId: targetComment.commentId,
+      content: editComment.content,
+      userId:
+        sessionStorage.getItem('userId') == null
+          ? 0
+          : sessionStorage.getItem('userId'),
+    }).then((res) => {
+      if (res.statusCode === 200) {
+        // alert('댓글이 수정되었습니다.');
+        Swal.fire({
+          title: '댓글이 수정되었습니다',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 500,
         });
-      },
+        Router.replace('/board/' + detail.boardId);
+        setReloadCondition(true);
+      } else {
+        // alert(`${res.message}`);
+        Swal.fire({
+          icon: 'error',
+          title: res.message,
+          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+        });
+      }
     });
   }
 

@@ -111,7 +111,6 @@ function StudyRegist() {
         confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
       });
     }
-    retu;
     return check;
   }
 
