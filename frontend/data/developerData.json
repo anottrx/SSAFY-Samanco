@@ -15,7 +15,7 @@
     "isLeader": false,
     "position": "Backend",
     "github": "https://github.com/kjin41",
-    "email": "kjin4_1@naver.com",
+    "email": "qudehdqud@gmail.com",
     "image": "https://avatars.githubusercontent.com/u/51227769?v=4",
     "mbti": "ESTJ"
   },
@@ -28,15 +28,5 @@
     "email": "uxahxp@gmail.com",
     "image": "https://avatars.githubusercontent.com/u/70973495?v=4",
     "mbti": "INFJ"
-  },
-  {
-    "id": 3,
-    "name": "최다연",
-    "isLeader": false,
-    "position": "Frontend",
-    "github": "https://github.com/cdy27",
-    "email": "choidy95@gmail.com",
-    "image": "/images/profile_default_gen0.png",
-    "mbti": "ISFP"
   }
 ]
