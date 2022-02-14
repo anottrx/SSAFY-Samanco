@@ -26,7 +26,7 @@ export default function Project() {
     flex-direction: column;
     justify-content: center;
     // align-items: flex-start;
-    // align-items: start;
+    align-items: center;
     text-align: left;
 
     // & nav.MuiPagination-root.MuiPagination-text {
