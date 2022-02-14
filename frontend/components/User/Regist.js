@@ -141,9 +141,9 @@ export default function Regist() {
         didOpen: () => {
           Swal.showLoading();
           sendEmailCodeAPI(inputState.email).then((res) => {
-            console.log(res);
+            // console.log(res);
             if (res.statusCode == 200) {
-              console.log('보냄');
+              // console.log('보냄');
               Swal.fire({
                 title: '이메일로 인증번호를 전송했습니다',
                 text: '이메일 수신에 시간이 조금 걸릴 수 있습니다',
@@ -263,7 +263,6 @@ export default function Regist() {
         // console.log(`${key}`);
       }
 
-      inputState.email = sessionStorage.getItem('email');
       if (isNormal) {
         Swal.fire({
           title: '회원가입 중입니다',
@@ -276,8 +275,9 @@ export default function Regist() {
                   setCookie('userToken', res.accessToken); // 쿠키 설정
                   setCookie('userEmail', inputState.email);
                   const token = res.accessToken;
+                  // console.log(res)
                   getUserLoginTokenAPI(token).then((res1) => {
-                    console.log(res1);
+                    // console.log(res1);
                     sessionStorage.setItem('userId', res1.userId);
                     sessionStorage.setItem('email', inputState.email);
                     sessionStorage.setItem('nickname', res1.nickname);
