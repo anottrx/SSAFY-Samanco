@@ -74,7 +74,7 @@ function RoomInfo({
         <Stack>
           <span>
             <AccessTimeIcon />
-            {detail.startTime}분 / {detail.timeLimit}분
+            {detail.runTime}
           </span>
         </Stack>
       </div>
