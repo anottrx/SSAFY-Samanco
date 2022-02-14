@@ -133,6 +133,7 @@ video {
 }
 body {
   line-height: 1;
+  padding-right: 0 !important;
 }
 ol,
 ul {
