@@ -311,7 +311,7 @@ function StudyInfo() {
                   onClick={() => {
                     Router.push({
                       pathname: '/meeting/regist',
-                      query: { tag: 'project' },
+                      query: { tag: 'study' },
                     });
                   }}
                 >
