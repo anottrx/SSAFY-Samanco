@@ -169,6 +169,7 @@ public class ProjectController{
         }
         // project update
         int projectCode=projectService.updateProject(updateInfo);
+//        int projectCode=200;
         // project 스택 update
         stackService.updateStack(updateInfo.getStacks(), updateInfo.getProjectId(), "project");
         // project 이미지 update

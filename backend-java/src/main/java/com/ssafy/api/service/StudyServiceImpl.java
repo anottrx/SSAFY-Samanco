@@ -118,6 +118,9 @@ public class StudyServiceImpl implements StudyService {
             return null;
         }
         StudyDto study=studyEntityToDto(result);
+        if (study==null){
+            return null;
+        }
         study.setStacks(stackRepositorySupport.selectStack(studyId, "study"));
         study.setFile(fileRepositorySupport.selectFile(studyId, "study"));
         UserLike userLike = userLikeRepositorySupport.userLike(userId, studyId, "study");
@@ -152,6 +155,9 @@ public class StudyServiceImpl implements StudyService {
         List<StudyDto> studies=new ArrayList<>();
         for (Study result: results){
             StudyDto studyDto=studyEntityToDto(result);
+            if (studyDto==null){
+                continue;
+            }
             studyDto.setStacks(stackRepositorySupport.selectStack(result.getId(), "study"));
             studyDto.setFile(fileRepositorySupport.selectFile(result.getId(), "study"));
             studies.add(studyDto);
@@ -169,6 +175,9 @@ public class StudyServiceImpl implements StudyService {
         List<StudyDto> studies=new ArrayList<>();
         for (Study result: results) {
             StudyDto study=studyEntityToDto(result);
+            if (study==null){
+                continue;
+            }
             Long studyId=study.getId();
             study.setStacks(stackRepositorySupport.selectStack(studyId, "study"));
             study.setFile(fileRepositorySupport.selectFile(studyId, "study"));
@@ -180,7 +189,9 @@ public class StudyServiceImpl implements StudyService {
 
     @Override
     public StudyDto studyEntityToDto(Study result) {
-
+        if (!valid.isUserValid(result.getHostId())){
+            return null;
+        }
         // like
         int likes=userLikeRepositorySupport.countUserLikeByTarget(result.getId(), "study");
 
@@ -206,6 +217,9 @@ public class StudyServiceImpl implements StudyService {
         List<StudyDto> studies=new ArrayList<>();
         for (Study result: results) {
             StudyDto study=studyEntityToDto(result);
+            if (study==null){
+                continue;
+            }
             Long studyId=study.getId();
             study.setStacks(stackRepositorySupport.selectStack(studyId, "study"));
             study.setFile(fileRepositorySupport.selectFile(studyId, "study"));
@@ -225,6 +239,9 @@ public class StudyServiceImpl implements StudyService {
         List<StudyDto> studies=new ArrayList<>();
         for (Study result: results) {
             StudyDto study=studyEntityToDto(result);
+            if (study==null){
+                continue;
+            }
             Long studyId=study.getId();
             study.setStacks(stackRepositorySupport.selectStack(studyId, "study"));
             study.setFile(fileRepositorySupport.selectFile(studyId, "study"));
@@ -290,7 +307,7 @@ public class StudyServiceImpl implements StudyService {
             return 402;
         }
 //        System.out.println(study+" "+ userId);
-        if (study.getHostId().equals(userId)){
+        if (study.getHostId().equals(userId)){  // 호스트는 탈퇴 못함 스터디 삭제하도록
             return 403;
         }
         studyRepositorySupport.quitStudy(userId, studyId);
