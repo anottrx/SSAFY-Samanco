@@ -596,7 +596,7 @@ function MeetingDetail() {
             // deleteSession();
           }
           Swal.fire({
-            title: '미팅룸으로 이동합니다',
+            title: '미팅룸 목록으로 이동합니다',
             icon: 'success',
             showConfirmButton: false,
             timer: 500,
