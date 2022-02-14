@@ -173,38 +173,53 @@ function MeetingRegist() {
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
                     roomId = res.room.roomId;
-                    alert(
-                      '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
-                    );
+                    // alert(
+                    //   '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.'
+                    // );
+                    Swal.fire({
+                      title:
+                        '미팅룸이 생성되었습니다. 해당 방으로 이동합니다. 카메라와 마이크 세팅을 준비해주세요.',
+                      icon: 'success',
+                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    }).then(() => {
+                      inputValue.roomId = roomId;
+                      inputValue.userId = inputValue.hostId;
 
-                    inputValue.roomId = roomId;
-                    inputValue.userId = inputValue.hostId;
-                    joinRoomAPI(inputValue).then((res) => {
-                      // 방장도 미팅룸 가입
-                      if (res.statusCode == 200) {
-                        getRoomById(roomId).then((res) => {
-                          if (res.statusCode == 200) {
-                            Router.push('/meeting/' + roomId);
-                            setDetail({
-                              detail: res.room,
-                            });
-                          } else {
-                            // alert(`${res.message}`);
-                            Swal.fire({
-                              icon: 'error',
-                              title: res.message,
-                              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                            });
-                          }
-                        });
-                      } else {
-                        // alert(`${res.message}`);
-                        Swal.fire({
-                          icon: 'error',
-                          title: res.message,
-                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                        });
-                      }
+                      Swal.fire({
+                        title: '미팅룸으로 이동 중입니다',
+                        showConfirmButton: false,
+                        didOpen: () => {
+                          Swal.showLoading();
+                          joinRoomAPI(inputValue).then((res) => {
+                            // 방장도 미팅룸 가입
+                            if (res.statusCode == 200) {
+                              getRoomById(roomId).then((res) => {
+                                if (res.statusCode == 200) {
+                                  Router.push('/meeting/' + roomId);
+                                  setDetail({
+                                    detail: res.room,
+                                  });
+                                } else {
+                                  // alert(`${res.message}`);
+                                  Swal.fire({
+                                    icon: 'error',
+                                    title: res.message,
+                                    confirmButtonText:
+                                      '&nbsp&nbsp확인&nbsp&nbsp',
+                                  });
+                                }
+                              });
+                            } else {
+                              // alert(`${res.message}`);
+                              Swal.fire({
+                                icon: 'error',
+                                title: res.message,
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              });
+                            }
+                          });
+                        },
+                      });
                     });
                   } else {
                     // alert(`${res.message}`);

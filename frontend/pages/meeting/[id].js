@@ -175,7 +175,8 @@ function MeetingDetail() {
         // );
         Swal.fire({
           icon: 'info',
-          title: '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.',
+          title:
+            '카메라와 마이크 접근 권한이 필요합니다. 브라우저 설정에서 [허용]으로 변경 해주세요.',
           confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
         });
       });
@@ -279,7 +280,7 @@ function MeetingDetail() {
     });
 
     mySession.once('sessionDisconnected', () => {
-      if (sessionStorage.getItem('userId') != detail.hostId){
+      if (sessionStorage.getItem('userId') != detail.hostId) {
         // alert('미팅이 종료 되었습니다.');
         Swal.fire({
           title: '미팅이 종료 되었습니다.',
@@ -290,7 +291,7 @@ function MeetingDetail() {
         }).then(() => {
           clear();
           Router.push('/meeting');
-        })
+        });
       }
     });
 
@@ -579,16 +580,24 @@ function MeetingDetail() {
     if (mySession)
       mySession.signal({ data: myUserName, to: [], type: 'userleft' });
 
-    quitRoomAPI(inputValue).then((res) => {
-      console.log(inputValue);
-      console.log(res);
-      videoTrackOff(publisher);
-      leaveSession();
-      clear();
-      if (detail.hostId == sessionStorage.getItem('userId')) {
-        // deleteSession();
-      }
-      Router.push('/meeting');
+    Swal.fire({
+      title: '방에서 나가는 중입니다',
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+
+        quitRoomAPI(inputValue).then((res) => {
+          console.log(inputValue);
+          console.log(res);
+          videoTrackOff(publisher);
+          leaveSession();
+          clear();
+          if (detail.hostId == sessionStorage.getItem('userId')) {
+            // deleteSession();
+          }
+          Router.push('/meeting');
+        });
+      },
     });
   };
 

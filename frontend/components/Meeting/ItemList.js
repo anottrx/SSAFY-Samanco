@@ -156,7 +156,10 @@ function ItemList() {
                         lg={3}
                         key={data.roomId}
                         onClick={() => {
-                          if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
+                          if (
+                            sessionStorage.getItem('userId') != '' &&
+                            sessionStorage.getItem('userId') != undefined
+                          ) {
                             joinDialogOpen();
                             setRoom(data);
                           } else {
@@ -170,7 +173,7 @@ function ItemList() {
                             }).then(() => {
                               Router.push('/login');
                             });
-                          }                          
+                          }
                         }}
                       >
                         <Item data={data}></Item>
@@ -189,7 +192,10 @@ function ItemList() {
                         lg={3}
                         key={data.roomId}
                         onClick={() => {
-                          if(sessionStorage.getItem("userId")!='' && sessionStorage.getItem("userId") !=undefined) {
+                          if (
+                            sessionStorage.getItem('userId') != '' &&
+                            sessionStorage.getItem('userId') != undefined
+                          ) {
                             joinDialogOpen();
                             setRoom(data);
                           } else {
@@ -203,7 +209,7 @@ function ItemList() {
                             }).then(() => {
                               Router.push('/login');
                             });
-                          }    
+                          }
                         }}
                       >
                         <Item data={data}></Item>
@@ -323,20 +329,28 @@ function JoinDialog(props) {
               : () => {
                   // 카메라, 오디오 정보 -> publisher
                   inputValue.roomId = room.roomId;
-                  joinRoomAPI(inputValue).then((res) => {
-                    if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.roomId);
-                      setDetail({
-                        detail: room,
+                  Swal.fire({
+                    title: '카메라, 오디오 정보 확인 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Router.push('/meeting/' + room.roomId);
+                          setDetail({
+                            detail: room,
+                          });
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                      });
-                    }
+                    },
                   });
                   joinDialogClose();
                 }
@@ -378,21 +392,29 @@ function PwDialog(props) {
               ? () => {
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId;
-                  joinRoomAPI(inputValue).then((res) => {
-                    if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.roomId);
-                      setDetail({
-                        detail: room,
+                  Swal.fire({
+                    title: '입장 진행 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Router.push('/meeting/' + room.roomId);
+                          setDetail({
+                            detail: room,
+                          });
+                          pwDialogClose();
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                      pwDialogClose();
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                      });
-                    }
+                    },
                   });
                 }
               : () => {
