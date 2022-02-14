@@ -25,17 +25,18 @@ export default function Project() {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    // align-items: flex-start;
+    align-items: center;
     text-align: left;
 
-    & nav.MuiPagination-root.MuiPagination-text {
-      width: 100%;
-      max-width: 1640px;
-    }
+    // & nav.MuiPagination-root.MuiPagination-text {
+    //   width: 100%;
+    //   max-width: 1640px;
+    // }
 
-    & .css-wjh20t-MuiPagination-ul {
-      align-items: center;
-    }
+    // & .css-wjh20t-MuiPagination-ul {
+    //   align-items: center;
+    // }
   `;
 
   const ProjectActions = styled.div`
