@@ -62,6 +62,12 @@ export default function CheckEmailCode(props) {
             checkEmailPWAPI(inputValue).then((res) => {
               // console.log(res);
               if (res.statusCode == 200) {
+                Swal.fire({
+                  title: '인증에 성공했습니다',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 500,
+                })
                 props.changeHandle(true, 'code');
                 setAuthFin(true);
               } else if (res.statusCode == 401) {
@@ -89,6 +95,12 @@ export default function CheckEmailCode(props) {
             checkEmailCodeAPI(inputValue).then((res) => {
               // console.log(res);
               if (res.statusCode == 200) {
+                Swal.fire({
+                  title: '이메일 인증에 성공했습니다',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 500,
+                })
                 props.changeHandle(true, 'code');
                 setAuthFin(true);
               } else if (res.statusCode == 401) {
@@ -100,6 +112,11 @@ export default function CheckEmailCode(props) {
                   confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
                 });
               } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: '문제가 발생했습니다. 다시 시도해주세요.',
+                  confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                });
                 props.changeHandle(false, 'code');
               }
             });

@@ -326,7 +326,7 @@ export default function RegistInfo() {
               Swal.fire({
                 title: '회원정보 추가에 실패했습니다',
                 text: '메인페이지로 이동합니다',
-                icon: 'success',
+                icon: 'error',
                 showConfirmButton: false,
                 timer: 500,
               }).then(() => {
