@@ -132,6 +132,10 @@ function ItemList(props) {
 
   const CusGrid = styled(Grid)`
     min-height: 530px;
+    // min-width: 100%;
+    width: 100% !important;
+    max-width: 1640px !important;
+    align-items: flex-start !important;
   `;
 
   const CusCard = styled(Card)`
@@ -148,7 +152,7 @@ function ItemList(props) {
       ) : (
         <CusGrid
           container
-          maxWidth="lg"
+          // maxWidth="lg"
           rowSpacing={1}
           columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4 }}
         >
@@ -204,6 +208,7 @@ export function Item(props) {
     flex-direction: column;
     text-align: left;
     cursor: pointer;
+    max-width: 370px;
   `;
 
   const CusCountBadge = styled(Badge)`
