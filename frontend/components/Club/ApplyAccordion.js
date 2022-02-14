@@ -18,9 +18,11 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from '@emotion/styled';
 import { getProjectUserByjoin } from '../../pages/api/project';
-import { getStudyUserByjoin } from '../../pages/api/study';
+import { getStudyUserByjoin, studyImageDownload } from '../../pages/api/study';
 import { useDispatch } from 'react-redux';
 import * as applyActions from '../../store/module/apply';
+
+import { useState, useEffect } from 'react';
 
 // project/[id], study/[id] 에 reloadCondition
 function ApplyAccordion(props) {
@@ -36,6 +38,7 @@ function ApplyAccordion(props) {
       margin-right: 10px;
     }
   `;
+
   const ProfileWrapper = styled.div`
     display: flex;
     flex-direction: row;
@@ -61,10 +64,22 @@ function ApplyAccordion(props) {
     display: flex;
     justify-content: flex-end;
   `;
+
+  const DefaultImage = styled.div`
+    width: 100px;
+    height: 100px;
+    // background-color: #e0e0e0;
+    background-image: url('/images/profile_default_gen0.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+  `;
+
   return (
     <div>
       {props.applyData ? (
         props.applyData.map((data) => {
+          console.log('userData', data);
           return (
             <Accordion key={data.id}>
               <AccordionSummary
@@ -80,7 +95,11 @@ function ApplyAccordion(props) {
 
               <AccordionDetails>
                 <ProfileWrapper>
-                  <Skeleton variant="circular" width={100} height={100} />
+                  {data.file ? (
+                    <UserImage file={data.file} />
+                  ) : (
+                    <DefaultImage />
+                  )}
                   <Stack>
                     <Typography>{data.description}</Typography>
                     {/* {
@@ -303,6 +322,57 @@ function ApplyAccordion(props) {
         <div>아직 지원한 지원자가 없습니다 ㅜ.ㅜ</div>
       )}
     </div>
+  );
+}
+
+function UserImage({ file }) {
+  let [imageUrl, setImageUrl] = useState(undefined);
+
+  useEffect(() => {
+    // first;
+  }, []);
+
+  function base64ToArrayBuffer(base64) {
+    const binaryString = window.atob(base64); // Comment this if not using base64
+    const bytes = new Uint8Array(binaryString.length);
+    return bytes.map((byte, i) => binaryString.charCodeAt(i));
+  }
+
+  function createAndDownloadBlobFile(body, filename) {
+    const blob = new Blob([body]);
+    const fileName = `${filename}`;
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, fileName);
+    } else {
+      const url = window.URL.createObjectURL(blob);
+      setImageUrl(url);
+    }
+  }
+
+  function changeToBlob(file) {
+    studyImageDownload(file).then((res) => {
+      //console.log(res);
+      if (res.data && res.data.statusCode === 200 && res.data.fileString) {
+        //console.log(res.data);
+        const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
+        createAndDownloadBlobFile(arrayBuffer, file.originFile);
+      } else {
+        console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+      }
+    });
+  }
+
+  useEffect(() => {
+    changeToBlob(file);
+  }, []);
+
+  return (
+    <img
+      src={imageUrl}
+      height={100}
+      width={100}
+      style={{ objectFit: 'contain' }}
+    ></img>
   );
 }
 
