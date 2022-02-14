@@ -226,37 +226,43 @@ function BoardUpdate() {
             onClick={() => {
               if (validateCheck()) {
                 const formData = new FormData();
-
-                Object.keys(inputValue).map((key) => {
-                  let value = inputValue[key];
-                  formData.append(key, value);
-                });
-
-                // for(var key of formData.entries())
-                // {
-                //     console.log(`${key}`);
-                // }
-                formData.append('file', files);
-
-                updateBoard(formData).then((res) => {
-                  if (res.statusCode === 200) {
-                    // alert('게시물이 수정되었습니다.');
-                    Swal.fire({
-                      title: '게시물이 수정되었습니다.',
-                      icon: 'success',
-                      showConfirmButton: false,
-                      timer: 500,
-                    }).then(() => {
-                      Router.push('/board/' + detail.boardId);
-                    })
-                  } else {
-                    // alert(`${res.message}`);
-                    Swal.fire({
-                      icon: 'error',
-                      title: res.message,
-                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                Swal.fire({
+                  title: '게시물 수정 중입니다',
+                  showConfirmButton: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    Object.keys(inputValue).map((key) => {
+                      let value = inputValue[key];
+                      formData.append(key, value);
                     });
-                  }
+
+                    // for(var key of formData.entries())
+                    // {
+                    //     console.log(`${key}`);
+                    // }
+                    formData.append('file', files);
+
+                    updateBoard(formData).then((res) => {
+                      if (res.statusCode === 200) {
+                        // alert('게시물이 수정되었습니다.');
+                        Swal.fire({
+                          title: '게시물이 수정되었습니다.',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 500,
+                        }).then(() => {
+                          Router.push('/board/' + detail.boardId);
+                        });
+                      } else {
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
+                      }
+                    });
+                  },
                 });
               }
             }}

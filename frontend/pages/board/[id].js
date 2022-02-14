@@ -195,18 +195,25 @@ const BoardDetail = () => {
                     pwDialogOpen();
                   } else {
                     // 비밀방 아니면 바로 입장
-                    joinRoomAPI(inputValue).then((res) => {
-                      if (res.statusCode == 200) {
-                        Router.push('/meeting/' + detail.roomId);
-                      } else {
-                        // 방 입장 실패
-                        // alert(`${res.message}`);
-                        Swal.fire({
-                          icon: 'error',
-                          title: res.message,
-                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    Swal.fire({
+                      title: '해당 방으로 이동 중입니다',
+                      showConfirmButton: false,
+                      didOpen: () => {
+                        Swal.showLoading();
+                        joinRoomAPI(inputValue).then((res) => {
+                          if (res.statusCode == 200) {
+                            Router.push('/meeting/' + detail.roomId);
+                          } else {
+                            // 방 입장 실패
+                            // alert(`${res.message}`);
+                            Swal.fire({
+                              icon: 'error',
+                              title: res.message,
+                              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                            });
+                          }
                         });
-                      }
+                      },
                     });
                   }
                 } else {
@@ -269,29 +276,36 @@ const BoardDetail = () => {
             <Button
               onClick={() => {
                 JoinDialogClose();
-                deleteBoard({
-                  boardId: detail.boardId,
-                  userId: sessionStorage.getItem('userId'),
-                }).then((res) => {
-                  if (res.statusCode === 200) {
-                    // alert('게시물이 삭제되었습니다.');
-                    Swal.fire({
-                      title: '게시물이 삭제되었습니다',
-                      text: '게시판 목록으로 이동합니다',
-                      icon: 'success',
-                      showConfirmButton: false,
-                      timer: 500,
-                    }).then(() => {
-                      Router.push('/board');
+                Swal.fire({
+                  title: '게시물 삭제 중입니다',
+                  showConfirmButton: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    deleteBoard({
+                      boardId: detail.boardId,
+                      userId: sessionStorage.getItem('userId'),
+                    }).then((res) => {
+                      if (res.statusCode === 200) {
+                        // alert('게시물이 삭제되었습니다.');
+                        Swal.fire({
+                          title: '게시물이 삭제되었습니다',
+                          text: '게시판 목록으로 이동합니다',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 500,
+                        }).then(() => {
+                          Router.push('/board');
+                        });
+                      } else {
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
+                      }
                     });
-                  } else {
-                    // alert(`${res.message}`);
-                    Swal.fire({
-                      icon: 'error',
-                      title: res.message,
-                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                    });
-                  }
+                  },
                 });
               }}
               autoFocus
@@ -526,22 +540,29 @@ const BoardDetail = () => {
     `;
 
     function registRequest() {
-      registComment({
-        boardId: detail.boardId,
-        content: inputComment.content,
-        userId: sessionStorage.getItem('userId'),
-      }).then((res) => {
-        if (res.statusCode === 200) {
-          // 현재 페이지 재로딩
-          setReloadCondition(true);
-        } else {
-          // alert(`${res.message}`);
-          Swal.fire({
-            icon: 'error',
-            title: res.message,
-            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+      Swal.fire({
+        title: '댓글 등록 중입니다',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+          registComment({
+            boardId: detail.boardId,
+            content: inputComment.content,
+            userId: sessionStorage.getItem('userId'),
+          }).then((res) => {
+            if (res.statusCode === 200) {
+              // 현재 페이지 재로딩
+              setReloadCondition(true);
+            } else {
+              // alert(`${res.message}`);
+              Swal.fire({
+                icon: 'error',
+                title: res.message,
+                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+              });
+            }
           });
-        }
+        },
       });
     }
 
@@ -611,18 +632,32 @@ function PwDialog(props) {
               ? () => {
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId;
-                  joinRoomAPI(inputValue).then((res) => {
-                    if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.roomId);
-                      pwDialogClose();
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  Swal.fire({
+                    title: '비밀번호 확인 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Swal.fire({
+                            title: '해당 방으로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 500,
+                          }).then(() => {
+                            Router.push('/meeting/' + room.roomId);
+                            pwDialogClose();
+                          });
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                    }
+                    },
                   });
                 }
               : () => {
