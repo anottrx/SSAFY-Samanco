@@ -160,7 +160,7 @@ function ApplyAccordion(props) {
                             if (res.statusCode == 200) {
                               // alert('해당 유저의 가입을 승인하였습니다.');
                               Swal.fire({
-                                icon: 'warning',
+                                icon: 'success',
                                 title: '해당 유저의 가입을 승인하였습니다.',
                                 confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
                               }).then(() => {
