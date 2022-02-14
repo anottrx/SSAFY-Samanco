@@ -252,6 +252,7 @@ function ApplyAccordion(props) {
                               Swal.fire({
                                 icon: 'warning',
                                 title: '해당 유저의 가입을 거절하였습니다.',
+                                text: '해당 유저는 앞으로 지원을 할 수 없습니다.',
                                 confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
                               }).then(() => {
                                 if (props.from === 'project') {
