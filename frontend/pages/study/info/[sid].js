@@ -363,7 +363,7 @@ function StudyInfo() {
                                 icon: 'success',
                                 showConfirmButton: false,
                                 timer: 500,
-                              })
+                              });
                               Router.push('/meeting/' + detail.roomId);
                             } else {
                               // 방 입장 실패
@@ -425,6 +425,7 @@ function StudyInfo() {
             <Button onClick={UserDialogClose}>취소</Button>
             <Button
               onClick={() => {
+                UserDialogClose();
                 let newHostId = nextHost;
                 Swal.fire({
                   title: '방장 변경 중입니다',
@@ -522,6 +523,7 @@ function StudyInfo() {
                     });
                   }
                   if (hostAssign === 'quit') {
+                    // ------- 방장 권한 넘기기 클릭
                     if (userData.length == 1) {
                       // alert('팀원이 존재하지 않습니다.');
                       Swal.fire({
@@ -530,7 +532,7 @@ function StudyInfo() {
                         confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
                       });
                     } else UserDialogOpen();
-                    // 방장 권한 넘기기
+                    // 방장 권한 넘기는 다이얼로그
                   } else if (hostAssign === 'delete') {
                     Swal.fire({
                       title: '스터디 삭제 중입니다',
@@ -797,7 +799,7 @@ function PwDialog(props) {
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 500,
-                          })
+                          });
                           Router.push('/meeting/' + room.roomId);
                           pwDialogClose();
                         } else {

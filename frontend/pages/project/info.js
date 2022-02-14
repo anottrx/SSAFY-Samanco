@@ -338,7 +338,7 @@ function ProjectInfo() {
                                 icon: 'success',
                                 showConfirmButton: false,
                                 timer: 500,
-                              })
+                              });
                               Router.push('/meeting/' + detail.roomId);
                             } else {
                               // 방 입장 실패
@@ -400,6 +400,7 @@ function ProjectInfo() {
             <Button onClick={UserDialogClose}>취소</Button>
             <Button
               onClick={() => {
+                UserDialogClose();
                 let [newHostId, newHostPosition] = nextHost.split(',');
                 Swal.fire({
                   title: '방장 변경 중입니다',
@@ -490,6 +491,7 @@ function ProjectInfo() {
                     // alert(
                     //   '프로젝트 삭제 또는 방장 권한 넘기기를 선택해주세요.'
                     // );
+
                     Swal.fire({
                       icon: 'warning',
                       title:
