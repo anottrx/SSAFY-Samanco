@@ -20,10 +20,15 @@ function ApplyList() {
       userId: sessionStorage.getItem('userId'),
     })
       .then((res) => {
+        console.log(res);
         dispatch(applyActions.setApplyList({ list: res.users }));
       })
       .catch((err) => console.log(err));
   }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (reloadCondition) {

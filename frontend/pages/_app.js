@@ -64,7 +64,10 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginTop: '70px',
-    padding: '10px',
+    padding: '10px 10px 13px 10px',
+  },
+  links: {
+    cursor: 'pointer',
   },
 };
 const ImgMacha = styled.img`
@@ -154,7 +157,10 @@ function MyApp({ Component, pageProps }) {
             </main>
             <footer style={styles.footer}>
               <Link href="/developer">
-                <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
+                <ImgMacha
+                  style={styles.links}
+                  src="/images/pojangmacha.png"
+                ></ImgMacha>
               </Link>
               {/* <a href="https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A502">
                 <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
@@ -266,7 +272,7 @@ function MyApp({ Component, pageProps }) {
                 text: '메인페이지로 이동합니다',
                 icon: 'success',
                 showConfirmButton: false,
-              })
+              });
               window.location.replace('/');
               handleClose();
             }}
