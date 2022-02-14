@@ -868,9 +868,20 @@ const ProjectDetail = () => {
                         })
                           .then((res) => {
                             if (res.statusCode === 200) {
-                              alert('프로젝트 지원 신청이 되었습니다.');
+                              // alert('프로젝트 지원 신청이 되었습니다.');
+                              Swal.fire({
+                                title: '프로젝트 지원 신청이 되었습니다.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 500,
+                              })
                             } else {
-                              alert(`${res.message}`);
+                              // alert(`${res.message}`);
+                              Swal.fire({
+                                icon: 'error',
+                                title: res.message,
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              });
                             }
                           })
                           .catch((err) => console.log(err));
