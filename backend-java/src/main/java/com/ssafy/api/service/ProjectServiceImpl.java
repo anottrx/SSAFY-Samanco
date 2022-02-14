@@ -162,6 +162,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto projectEntityToDto(Project result) {
+        if (!valid.isUserValid(result.getHostId())){
+            return null;
+        }
         // position
         List<User> results=projectRepositorySupport.selectProjectUsers(result.getId());
         int[] currentPositionSize=new int[4];
@@ -251,6 +254,9 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectDto> projects=new ArrayList<>();
         for (Project result: results) {
             ProjectDto project=projectEntityToDto(result);
+            if (project==null){
+                continue;
+            }
             Long projectId=project.getId();
             project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
             project.setFile(fileRepositorySupport.selectFile(projectId, "project"));
@@ -275,6 +281,9 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectDto> projects=new ArrayList<>();
         for (Project result: results) {
             ProjectDto project=projectEntityToDto(result);
+            if (project==null){
+                continue;
+            }
             Long projectId=project.getId();
             project.setStacks(stackRepositorySupport.selectStack(projectId, "project"));
             project.setFile(fileRepositorySupport.selectFile(projectId, "project"));

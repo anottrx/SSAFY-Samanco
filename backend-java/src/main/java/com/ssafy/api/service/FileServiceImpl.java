@@ -38,6 +38,7 @@ public class FileServiceImpl implements FileService{
             if(!fileFolder.exists()) {
                 fileFolder.mkdirs();
             }
+            System.out.println(realPath);
             String today = new SimpleDateFormat("yyMMdd").format(new Date());
             String saveFolder = realPath + File.separator + today;
             // 파일을 저장할 세부 경로 지정
