@@ -111,7 +111,7 @@ function StudyRegist() {
         confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
       });
     }
-    retu
+    retu;
     return check;
   }
 
@@ -190,42 +190,48 @@ function StudyRegist() {
               onClick={() => {
                 if (validateCheck()) {
                   const formData = new FormData();
-
-                  Object.keys(inputValue).map((key) => {
-                    let value = inputValue[key];
-                    if (key === 'stacks')
-                      formData.append(key, JSON.stringify(value));
-                    else formData.append(key, value);
-                  });
-
-                  formData.append('file', files);
-
-                  // for(var key of formData.entries())
-                  // {
-                  //     console.log(`${key}`);
-                  // }
-
-                  registAPI(formData).then((res) => {
-                    if (res.statusCode == 200) {
-                      // alert('스터디가 등록되었습니다.');
-                      // Router.push('/study');
-                      Swal.fire({
-                        title: '스터디가 등록되었습니다.',
-                        text: '스터디 목록으로 이동합니다',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 800,
-                      }).then(() => {
-                        Router.push('/study');
-                      })
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  Swal.fire({
+                    title: '스터디 등록 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      Object.keys(inputValue).map((key) => {
+                        let value = inputValue[key];
+                        if (key === 'stacks')
+                          formData.append(key, JSON.stringify(value));
+                        else formData.append(key, value);
                       });
-                    }
+
+                      formData.append('file', files);
+
+                      // for(var key of formData.entries())
+                      // {
+                      //     console.log(`${key}`);
+                      // }
+
+                      registAPI(formData).then((res) => {
+                        if (res.statusCode == 200) {
+                          // alert('스터디가 등록되었습니다.');
+                          // Router.push('/study');
+                          Swal.fire({
+                            title: '스터디가 등록되었습니다.',
+                            text: '스터디 목록으로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 800,
+                          }).then(() => {
+                            Router.push('/study');
+                          });
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
+                      });
+                    },
                   });
                 }
               }}

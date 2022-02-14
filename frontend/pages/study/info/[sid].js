@@ -362,18 +362,25 @@ function StudyInfo() {
                       pwDialogOpen();
                     } else {
                       // 비밀방 아니면 바로 입장
-                      joinRoomAPI(inputValue).then((res) => {
-                        if (res.statusCode == 200) {
-                          Router.push('/meeting/' + detail.roomId);
-                        } else {
-                          // 방 입장 실패
-                          // alert(`${res.message}`);
-                          Swal.fire({
-                            icon: 'error',
-                            title: res.message,
-                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                      Swal.fire({
+                        title: '방으로 이동 중입니다',
+                        showConfirmButton: false,
+                        didOpen: () => {
+                          Swal.showLoading();
+                          joinRoomAPI(inputValue).then((res) => {
+                            if (res.statusCode == 200) {
+                              Router.push('/meeting/' + detail.roomId);
+                            } else {
+                              // 방 입장 실패
+                              // alert(`${res.message}`);
+                              Swal.fire({
+                                icon: 'error',
+                                title: res.message,
+                                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                              });
+                            }
                           });
-                        }
+                        },
                       });
                     }
                   } else {
@@ -424,36 +431,43 @@ function StudyInfo() {
             <Button
               onClick={() => {
                 let newHostId = nextHost;
-                changeStudyHost({
-                  studyId: clubData.id,
-                  oldHostId: clubData.hostId,
-                  newHostId: newHostId,
-                }).then((res) => {
-                  if (res.statusCode == 200) {
-                    // alert('방장이 변경되었습니다.');
-                    Swal.fire({
-                      title: '방장이 변경되었습니다.',
-                      text: '스터디 목록으로 이동합니다',
-                      icon: 'success',
-                      showConfirmButton: false,
-                      timer: 800,
-                    }).then(() => {
-                      quitStudy({
-                        userId: clubData.hostId,
-                        studyId: clubData.id,
-                      });
-                      Router.push('/study');
-                    })
-                  } else {
-                    // alert(`${res.message}`);
-                    Swal.fire({
-                      icon: 'error',
-                      title: res.message,
-                      confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
-                    });  
-                  }
-                  // 페이지 새로고침
-                  setReloadCondition(true);
+                Swal.fire({
+                  title: '방장 변경 중입니다',
+                  showConfirmButton: false,
+                  didOpen: () => {
+                    Swal.showLoading();
+                    changeStudyHost({
+                      studyId: clubData.id,
+                      oldHostId: clubData.hostId,
+                      newHostId: newHostId,
+                    }).then((res) => {
+                      if (res.statusCode == 200) {
+                        // alert('방장이 변경되었습니다.');
+                        Swal.fire({
+                          title: '방장이 변경되었습니다.',
+                          text: '스터디 목록으로 이동합니다',
+                          icon: 'success',
+                          showConfirmButton: false,
+                          timer: 800,
+                        }).then(() => {
+                          quitStudy({
+                            userId: clubData.hostId,
+                            studyId: clubData.id,
+                          });
+                          Router.push('/study');
+                        });
+                      } else {
+                        // alert(`${res.message}`);
+                        Swal.fire({
+                          icon: 'error',
+                          title: res.message,
+                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                        });
+                      }
+                      // 페이지 새로고침
+                      setReloadCondition(true);
+                    });
+                  },
                 });
               }}
             >
@@ -507,7 +521,8 @@ function StudyInfo() {
                     // alert('스터디 삭제 또는 방장 권한 넘기기를 선택해주세요.');
                     Swal.fire({
                       icon: 'warning',
-                      title: '스터디 삭제 또는 방장 권한 넘기기를 선택해주세요.',
+                      title:
+                        '스터디 삭제 또는 방장 권한 넘기기를 선택해주세요.',
                       confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
                     });
                   }
@@ -522,58 +537,73 @@ function StudyInfo() {
                     } else UserDialogOpen();
                     // 방장 권한 넘기기
                   } else if (hostAssign === 'delete') {
-                    deleteAPI({
-                      id: sid,
-                      hostId: sessionStorage.getItem('userId'),
-                    }).then((res) => {
-                      if (res.statusCode === 200) {
-                        // alert('스터디가 삭제 되었습니다.');
-                        Swal.fire({
-                          title: '스터디가 삭제 되었습니다.',
-                          text: '스터디 목록으로 이동합니다',
-                          icon: 'success',
-                          showConfirmButton: false,
-                          timer: 800,
-                        }).then(() => {
-                          Router.push('/study');
-                        })
-                      } else {
-                        // alert(`${res.message}`);
-                        Swal.fire({
-                          icon: 'error',
-                          title: res.message,
-                          confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                    Swal.fire({
+                      title: '스터디 삭제 중입니다',
+                      showConfirmButton: false,
+                      didOpen: () => {
+                        Swal.showLoading();
+                        deleteAPI({
+                          id: sid,
+                          hostId: sessionStorage.getItem('userId'),
+                        }).then((res) => {
+                          if (res.statusCode === 200) {
+                            // alert('스터디가 삭제 되었습니다.');
+                            Swal.fire({
+                              title: '스터디가 삭제 되었습니다.',
+                              text: '스터디 목록으로 이동합니다',
+                              icon: 'success',
+                              showConfirmButton: false,
+                              timer: 800,
+                            }).then(() => {
+                              Router.push('/study');
+                            });
+                          } else {
+                            // alert(`${res.message}`);
+                            Swal.fire({
+                              icon: 'error',
+                              title: res.message,
+                              confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                            });
+                          }
                         });
-                      }
+                      },
                     });
                     // 프로젝트 삭제
                   }
                 } else {
                   // 방장이 아닐 때
-                  quitStudy({
-                    userId: sessionStorage.getItem('userId'),
-                    studyId: clubData.id,
-                  }).then((res) => {
-                    if (res.statusCode === 200) {
-                      // alert('스터디가 탈퇴 되었습니다.');
-                      Swal.fire({
-                        title: '스터디가 탈퇴 되었습니다.',
-                        text: '스터디 목록으로 이동합니다',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 800,
-                      }).then(() => {
-                        Router.push('/study');
-                      })
-                      // Router.push('/study');
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  Swal.fire({
+                    title: '스터디 탈퇴 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+
+                      quitStudy({
+                        userId: sessionStorage.getItem('userId'),
+                        studyId: clubData.id,
+                      }).then((res) => {
+                        if (res.statusCode === 200) {
+                          // alert('스터디가 탈퇴 되었습니다.');
+                          Swal.fire({
+                            title: '스터디가 탈퇴 되었습니다.',
+                            text: '스터디 목록으로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 800,
+                          }).then(() => {
+                            Router.push('/study');
+                          });
+                          // Router.push('/study');
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                    }
+                    },
                   });
                 }
               }}
@@ -760,18 +790,25 @@ function PwDialog(props) {
               ? () => {
                   inputValue.password = pw;
                   inputValue.roomId = room.roomId;
-                  joinRoomAPI(inputValue).then((res) => {
-                    if (res.statusCode == 200) {
-                      Router.push('/meeting/' + room.roomId);
-                      pwDialogClose();
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  Swal.fire({
+                    title: '방으로 이동 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      joinRoomAPI(inputValue).then((res) => {
+                        if (res.statusCode == 200) {
+                          Router.push('/meeting/' + room.roomId);
+                          pwDialogClose();
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
                       });
-                    }
+                    },
                   });
                 }
               : () => {

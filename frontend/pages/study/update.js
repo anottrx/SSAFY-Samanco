@@ -257,41 +257,47 @@ function studyUpdate() {
               onClick={() => {
                 if (validateCheck()) {
                   const formData = new FormData();
-
-                  Object.keys(inputValue).map((key) => {
-                    let value = inputValue[key];
-                    if (key === 'stacks' || key == 'positions')
-                      formData.append(key, JSON.stringify(value));
-                    else formData.append(key, value);
-                  });
-
-                  formData.append('file', files);
-
-                  // for(var key of formData.entries())
-                  // {
-                  //     console.log(`${key}`);
-                  // }
-
-                  updateAPI(formData).then((res) => {
-                    if (res.statusCode == 200) {
-                      // alert('스터디 수정되었습니다.');
-                      // Router.push('/study/' + inputValue.studyId);
-                      Swal.fire({
-                        title: '스터디가 수정되었습니다.',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 800,
-                      }).then(() => {
-                        Router.push('/study/' + inputValue.studyId);
-                      })
-                    } else {
-                      // alert(`${res.message}`);
-                      Swal.fire({
-                        icon: 'error',
-                        title: res.message,
-                        confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                  Swal.fire({
+                    title: '스터디 수정 중입니다',
+                    showConfirmButton: false,
+                    didOpen: () => {
+                      Swal.showLoading();
+                      Object.keys(inputValue).map((key) => {
+                        let value = inputValue[key];
+                        if (key === 'stacks' || key == 'positions')
+                          formData.append(key, JSON.stringify(value));
+                        else formData.append(key, value);
                       });
-                    }
+
+                      formData.append('file', files);
+
+                      // for(var key of formData.entries())
+                      // {
+                      //     console.log(`${key}`);
+                      // }
+
+                      updateAPI(formData).then((res) => {
+                        if (res.statusCode == 200) {
+                          // alert('스터디 수정되었습니다.');
+                          // Router.push('/study/' + inputValue.studyId);
+                          Swal.fire({
+                            title: '스터디가 수정되었습니다.',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 800,
+                          }).then(() => {
+                            Router.push('/study/' + inputValue.studyId);
+                          });
+                        } else {
+                          // alert(`${res.message}`);
+                          Swal.fire({
+                            icon: 'error',
+                            title: res.message,
+                            confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+                          });
+                        }
+                      });
+                    },
                   });
                 }
               }}
