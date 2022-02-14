@@ -595,6 +595,12 @@ function MeetingDetail() {
           if (detail.hostId == sessionStorage.getItem('userId')) {
             // deleteSession();
           }
+          Swal.fire({
+            title: '미팅룸으로 이동합니다',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 500,
+          })
           Router.push('/meeting');
         });
       },
