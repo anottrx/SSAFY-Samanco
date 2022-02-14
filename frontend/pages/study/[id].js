@@ -805,7 +805,13 @@ const StudyDetail = () => {
                       })
                         .then((res) => {
                           if (res.statusCode === 200) {
-                            alert('스터디 지원 신청이 되었습니다.');
+                            // alert('스터디 지원 신청이 되었습니다.');
+                            Swal.fire({
+                              title: '스터디 지원 신청이 되었습니다.',
+                              icon: 'success',
+                              showConfirmButton: false,
+                              timer: 600,
+                            })
                           } else {
                             // alert(`${res.message}`);
                             Swal.fire({
@@ -847,7 +853,13 @@ const StudyDetail = () => {
                       })
                         .then((res) => {
                           if (res.statusCode === 200) {
-                            alert('스터디 지원 취소가 되었습니다.');
+                            // alert('스터디 지원 취소가 되었습니다.');
+                            Swal.fire({
+                              title: '스터디 지원 취소가 되었습니다.',
+                              icon: 'success',
+                              showConfirmButton: false,
+                              timer: 600,
+                            })
                           } else {
                             // alert(`${res.message}`);
                             Swal.fire({
