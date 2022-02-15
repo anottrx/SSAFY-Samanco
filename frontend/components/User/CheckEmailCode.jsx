@@ -44,7 +44,6 @@ export default function CheckEmailCode(props) {
     inputValue.email = props.email;
 
     if (!value) {
-      // alert('인증번호를 입력해주세요.');
       Swal.fire({
         icon: 'error',
         title: '인증번호를 입력해주세요',
@@ -60,7 +59,6 @@ export default function CheckEmailCode(props) {
             Swal.showLoading();
 
             checkEmailPWAPI(inputValue).then((res) => {
-              // console.log(res);
               if (res.statusCode == 200) {
                 Swal.fire({
                   title: '인증에 성공했습니다',
@@ -71,7 +69,6 @@ export default function CheckEmailCode(props) {
                 props.changeHandle(true, 'code');
                 setAuthFin(true);
               } else if (res.statusCode == 401) {
-                // alert('잘못 입력했습니다');
                 Swal.fire({
                   icon: 'error',
                   title: '인증번호를 잘못 입력했습니다',
@@ -93,7 +90,6 @@ export default function CheckEmailCode(props) {
             Swal.showLoading();
 
             checkEmailCodeAPI(inputValue).then((res) => {
-              // console.log(res);
               if (res.statusCode == 200) {
                 Swal.fire({
                   title: '이메일 인증에 성공했습니다',

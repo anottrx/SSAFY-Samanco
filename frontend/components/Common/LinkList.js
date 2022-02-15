@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 
 function LinkList({ items }) {
-  //   const [links, setLinks] = useState([]);
-  //   setLinks(items.split(" "));
-
   return (
     <>
       {items != null ? (

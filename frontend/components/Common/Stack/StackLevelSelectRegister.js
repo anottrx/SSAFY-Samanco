@@ -37,15 +37,12 @@ const stack = [
 ];
 
 function StackLevelSelectRegister(props) {
-  // console.log("props" + props.values);
-  // console.log("JSON.stringify(props.values)" + JSON.stringify(props.values));
   const stackList = JSON.stringify(props.values);
 
   let initValue;
   if (stackList != null) {
     initValue = JSON.parse(stackList);
   }
-  // console.log("initValue" + initValue);
 
   let initArray = [];
   if (stackList && initValue) {
@@ -54,17 +51,11 @@ function StackLevelSelectRegister(props) {
       initArray.push({ name: value.name, level: value.grade });
     });
   }
-  // console.log("initArray" + JSON.stringify(initArray));
 
   const [stacks, setStacks] = useState(props.values ? initArray : []);
-  // console.log("stacks: " + JSON.stringify(stacks))
 
   const handleAutocompleteChange = (event) => {
     const name = event.target.innerText;
-
-    // console.log("name: " + name)
-    // console.log("stacks: " + JSON.stringify(stacks))
-
     if (!name) return false;
     let isInclude = false;
 
@@ -222,7 +213,6 @@ function StackLevelSelectRegister(props) {
 
     // if (!CSS) props.changeHandle(0, "CSSLevel");
     // if (!JavaScript) props.changeHandle(0, "JavaScriptLevel");
-    // if (!VueJS) props.changeHandle(0, "VueJSLevel");
     // props.changeHandle(stackStack, "stacks");
   }, [stacks]);
 

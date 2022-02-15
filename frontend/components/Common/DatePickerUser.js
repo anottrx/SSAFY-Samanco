@@ -6,7 +6,6 @@ import dateFormat from 'dateformat';
 export let getDateValue;
 
 export default function DatePickerUser(props) {
-  // console.log(props.value.initDate);
   const [dateValue, setDateValue] = useState(
     props.value.initDate
       ? props.value.initDate
@@ -27,7 +26,6 @@ export default function DatePickerUser(props) {
       props.changeHandle(dateValue, 'endDate');
     } else if (props.label.length == 0) {
       let birthday;
-      // console.log(dateValue);
       if (dateValue.length != 10) {
         setDateValue(new Date().toJSON().split('T')[0]);
         birthday =
