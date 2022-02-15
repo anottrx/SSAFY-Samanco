@@ -93,9 +93,10 @@ export default function UserCard({
                       case 'project':
                         quitProject({
                           userId: user.id,
-                          clubId: clubId,
+                          // clubId: clubId,
+                          projectId: clubId
                         }).then((res) => {
-                          if (res.data.statusCode == 200) {
+                          if (res.statusCode == 200) {
                             // alert('해당 유저를 내보냈습니다.');
                             Swal.fire({
                               title: '해당 유저를 내보냈습니다.',

@@ -719,7 +719,8 @@ function ProjectInfo() {
                     <UserCard
                       key={user.id}
                       user={user}
-                      projectId={clubData.id}
+                      // projectId={clubData.id}
+                      clubId = {clubData.id}
                       hostId={clubData.hostId}
                       from="project"
                       setReloadCondition={setReloadCondition}
