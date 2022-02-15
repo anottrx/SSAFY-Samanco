@@ -62,6 +62,10 @@
 
 # 🛠 주요 기술 스택
 
+<img src="https://user-images.githubusercontent.com/70973495/153995436-fdc6e0a1-f522-4c2c-ba45-1df9e25d5cf7.png">
+
+<br />
+
 ## FrontEnd
 
 <img src = 'https://user-images.githubusercontent.com/70973495/153879498-91c36777-cb31-464c-8d35-46bcefa6618a.png' width="50"></img>
