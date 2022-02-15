@@ -272,6 +272,9 @@ function BoardList(props) {
                   setDetail({ detail: res.board });
                   // dispatch(boardActions.setTag({ tag: res.board.tag }));
                 }
+                // Router.push(`/board/${data.boardId}`, '/board', {
+                //   shallow: true,
+                // });
                 Router.push('/board/' + data.boardId);
               }); // 조회수 증가
             }}
