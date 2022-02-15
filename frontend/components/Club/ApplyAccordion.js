@@ -89,7 +89,10 @@ function ApplyAccordion(props) {
               >
                 <SummaryWrapper>
                   <Typography>{data.nickname}</Typography>
-                  <StackItem title={data.projectPosition}></StackItem>
+                  {
+                    props.from === "project" && 
+                    <StackItem title={data.projectPosition}></StackItem>
+                  }
                 </SummaryWrapper>
               </AccordionSummary>
 
