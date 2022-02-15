@@ -4,6 +4,7 @@ const initialState = {
   project: [],
   userList: [],
   userFilterList: null,
+  loginInfo: {}
 };
 
 const counterSlice = createSlice({
@@ -19,9 +20,12 @@ const counterSlice = createSlice({
     setUserFilterList: (state, action) => {
       state.userFilterList = action.payload.list;
     },
+    setLoginInfo: (state, action) => {
+      state.loginInfo = action.payload.loginInfo;
+    }
   },
 });
 
-export const { setProject, setUserList, setUserFilterList } =
+export const { setProject, setUserList, setUserFilterList, setLoginInfo } =
   counterSlice.actions;
 export default counterSlice.reducer;
