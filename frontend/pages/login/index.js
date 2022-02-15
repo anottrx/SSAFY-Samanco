@@ -1,5 +1,5 @@
-// import Login from '../../components/User/Login';
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Router from 'next/router';
 import Link from 'next/link';
 import styled from '@emotion/styled';
@@ -7,6 +7,7 @@ import Cookies from 'universal-cookie';
 
 import { getUserLoginTokenAPI, loginAPI } from '../../pages/api/user';
 import { useCookies } from 'react-cookie';
+import * as userActions from '../../store/module/user';
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -20,7 +21,6 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControl, { useFormControl } from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
 import Swal from 'sweetalert2';
 
 const LinkButton = styled(Typography)`
@@ -39,6 +39,9 @@ const LinkWrapper = styled.div`
 
 export default function LoginPage() {
   const cookie = new Cookies();
+
+  const dispatch = useDispatch();
+  const userLoginInfo = useSelector(({ user }) => user.loginInfo);
 
   useEffect(() => {
     document.title = '로그인 | 싸피사만코';
@@ -125,6 +128,16 @@ export default function LoginPage() {
                 sessionStorage.setItem('userId', res1.userId);
                 sessionStorage.setItem('email', inputState.email);
                 sessionStorage.setItem('nickname', res1.nickname);
+
+                const userLoginInfo = {
+                  nickname: res1.nickname,
+                  isLogin: true,
+                };
+                // console.log(userLoginInfo);
+                dispatch(
+                  userActions.setLoginInfo({ loginInfo: userLoginInfo })
+                );
+
                 if (rememberId) {
                   setCookie('userEmail', inputState.email);
                 } else {
@@ -136,7 +149,7 @@ export default function LoginPage() {
                     text: '메인페이지로 이동합니다',
                     icon: 'success',
                     showConfirmButton: false,
-                  })
+                  });
                   window.history.forward();
                   window.location.replace('/');
                 }

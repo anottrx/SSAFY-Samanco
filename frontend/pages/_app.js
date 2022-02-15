@@ -4,6 +4,7 @@ import { wrapper, persistedReducer } from '../store';
 import { createStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
+import { useSelector, useDispatch } from 'react-redux';
 
 // import { Container } from "next/app";
 import Head from 'next/head';
@@ -86,12 +87,17 @@ function MyApp({ Component, pageProps }) {
   let [isLogin, setIsLogin] = useState(false);
   let [userId, setUserId] = useState(null);
   let [nickname, setNickname] = useState(null);
+  // const userLoginInfo = useSelector(({ user }) => user.loginInfo);
 
   const cookies = new Cookies();
 
   useEffect(() => {
     const HOST = process.env.NEXT_PUBLIC_ENV_HOST;
     const PORT = process.env.NEXT_PUBLIC_ENV_PORT;
+
+    // if (userLoginInfo.isLogin == true) {
+    //   console.log('로그인성공');
+    // }
 
     console.log('[HOST]:', HOST, '| [PORT]:', PORT);
 
