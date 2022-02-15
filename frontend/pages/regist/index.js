@@ -19,5 +19,5 @@ export default function RegistPage() {
     }
   }, []);
 
-  return <Regist />;
+  return (<Regist />);
 }
