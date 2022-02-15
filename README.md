@@ -115,7 +115,7 @@
 
 # 🚀 DevOps
 
-- Nginx 사용해서 배포하고 있습니다.
+- Nginx를 사용해서 수동 배포하고 있습니다.
 - 백엔드 : `./gradlew build` ➡ jar 파일 생성
 - 프론트엔드 : `yarn build` ➡ index.html 생성
 - 배포 환경
