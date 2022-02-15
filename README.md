@@ -1,5 +1,5 @@
 <a href="https://i6a502.p.ssafy.io/">
-<img src="https://user-images.githubusercontent.com/70973495/153874139-e0683762-d80e-4111-994f-d1cc12d92ed1.png" style="width: 200px"/>
+<img src="https://user-images.githubusercontent.com/70973495/153874139-e0683762-d80e-4111-994f-d1cc12d92ed1.png"  width="200"/>
 </a>
 <br />
 
@@ -14,13 +14,13 @@
 # 🔗 Link
 
 <a href="https://obvious-spade-e4e.notion.site/e9c8cb53c7ad41bc97ce50af77b34a69">
-<img src = 'https://user-images.githubusercontent.com/70973495/153875715-a4fb8140-3e48-4014-bb58-7f2b63da6e6e.png' style="width: 50px"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153875715-a4fb8140-3e48-4014-bb58-7f2b63da6e6e.png'  width="50"></img>
 </a>
 <a href="https://docs.google.com/spreadsheets/d/12uD2LLekhywXKfPABvxevmAVTjWOg-V4VEFnt_CTbEc/edit#gid=403503433">
-<img src = 'https://user-images.githubusercontent.com/70973495/153877788-e9b40f8d-10c5-4d13-a187-06f448c0cb50.png' style="width: 50px"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153877788-e9b40f8d-10c5-4d13-a187-06f448c0cb50.png'  width="50"></img>
 </a>
 <a href="https://www.figma.com/file/pGbmriDDNqDFY53a7kTMnE/%EC%8B%B8%ED%94%BC%EC%82%AC%EB%A7%8C%EC%BD%94?node-id=0%3A1">
-<img src = 'https://user-images.githubusercontent.com/70973495/153876604-2b17a5fb-0b4d-4a1c-bb9c-3ec6d7e586ea.png' style="width: 50px"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153876604-2b17a5fb-0b4d-4a1c-bb9c-3ec6d7e586ea.png'  width="50"></img>
 </a>
 <br />
 <br />
@@ -64,26 +64,25 @@
 
 ## FrontEnd
 
-<img src = 'https://user-images.githubusercontent.com/70973495/153879498-91c36777-cb31-464c-8d35-46bcefa6618a.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153879590-c363d214-64a8-42fb-bbbf-8f951d2c8b91.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153879834-669069db-2924-486a-984f-63da5118a605.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153880152-897c34ef-78b2-41df-8b5a-a9d61f8638c2.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153880296-81cfbfcf-e124-480a-9cd9-8bd10e55ed72.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153880358-fc54e9e6-9abd-4795-9bb0-f0a2073aea86.png' style="width: 50px"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153879498-91c36777-cb31-464c-8d35-46bcefa6618a.png' width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153879590-c363d214-64a8-42fb-bbbf-8f951d2c8b91.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153879834-669069db-2924-486a-984f-63da5118a605.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153880152-897c34ef-78b2-41df-8b5a-a9d61f8638c2.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153880296-81cfbfcf-e124-480a-9cd9-8bd10e55ed72.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153880358-fc54e9e6-9abd-4795-9bb0-f0a2073aea86.png'  width="50"></img>
 
 - Nextjs (React), JavaScript, Redux (react-redux, toolkit), emotion, Material UI, WebRTC (OpenVidu)
 
 ## BackEnd
 
-<img src = 'https://user-images.githubusercontent.com/70973495/153880564-e92481d4-e311-4277-8a6d-b7a7b181e632.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153880668-262c55e8-230c-4839-a5fb-b8ec1e2ff279.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153880779-55029295-c1e3-4ae4-b97e-3d5573b48a2a.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153880926-a0fad65c-e942-440e-a492-095c5b40ffe5.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153881194-5ce039bf-22b3-49b9-a143-e59efd08013f.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153881404-1bf03724-73bf-4e6f-afb1-50495103fa53.png' style="width: 50px"></img>
-<img src = 'https://user-images.githubusercontent.com/70973495/153881845-cd7b68eb-b0b1-45d3-ac34-aee367cb2106.png' style="width: 50px"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153880564-e92481d4-e311-4277-8a6d-b7a7b181e632.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153880668-262c55e8-230c-4839-a5fb-b8ec1e2ff279.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153880779-55029295-c1e3-4ae4-b97e-3d5573b48a2a.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153880926-a0fad65c-e942-440e-a492-095c5b40ffe5.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153881194-5ce039bf-22b3-49b9-a143-e59efd08013f.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153881404-1bf03724-73bf-4e6f-afb1-50495103fa53.png'  width="50"></img>
 
-- SpringBoot, SpringSecurity, Java, JPA, MySQL, AWS EC2, PM2
+- SpringBoot, SpringSecurity, Java, JPA, MySQL, AWS EC2
 
 <br />
 <br />
@@ -91,7 +90,7 @@
 
 # ⛑ DB Structure
 
-<img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/4aae80a2-0c96-4006-90d7-7d119a150004/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220214%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220214T142508Z&X-Amz-Expires=86400&X-Amz-Signature=6ea583d6afdd7a1beccacae26f8ac92118f507a2e759d5e79ac6c4843047ce0b&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject">
+<img src="https://user-images.githubusercontent.com/70973495/153973448-08e4487d-e7b9-4469-a76a-2df93034086b.png">
 
 <br />
 <br />
@@ -99,12 +98,9 @@
 
 # 🚀 DevOps
 
-- 배포 파이프 라인
-- Spring 백엔드는 ~~를 통해 배포가 됩니다.
-- 프론트엔드는 PM2를 통해 배포되고 있습니다.
 - 배포 환경
   - URL: https://i6a502.p.ssafy.io/
-  - 테스트 계정: ID: `admin` / PW: `admin`
+  - 테스트 계정: ID: `test` / PW: `test`
 
 <br />
 <br />
