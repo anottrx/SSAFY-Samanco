@@ -48,7 +48,7 @@ import * as meetingActions from '../../store/module/meeting';
 const BoardDetail = () => {
   const detail = useSelector(({ board }) => board.boardDetail);
   const roomDetail = useSelector(({ meeting }) => meeting.meetingDetail);
-  const tag = detail.tag;
+  const tag = detail?.tag;
   const [reloadCondition, setReloadCondition] = useState(false);
   const [like, changeLike] = useState(detail.userLike);
   const [detailLikes, setLikes] = useState(detail.likes);
@@ -207,7 +207,7 @@ const BoardDetail = () => {
                               icon: 'success',
                               showConfirmButton: false,
                               timer: 500,
-                            })
+                            });
                             Router.push('/meeting/' + detail.roomId);
                           } else {
                             // 방 입장 실패

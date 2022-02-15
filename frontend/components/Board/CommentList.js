@@ -37,7 +37,8 @@ function CommentList({ detail, setReloadCondition }) {
     var commentsArray = [];
 
     detail.comments.map((data) => {
-      if (detail.boardId === data.boardId) {
+      console.log('comments:', data);
+      if (data && detail.boardId === data.boardId) {
         commentsArray.push(data);
       }
     });
