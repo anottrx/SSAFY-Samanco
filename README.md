@@ -83,6 +83,7 @@
 <img src = 'https://user-images.githubusercontent.com/70973495/153880564-e92481d4-e311-4277-8a6d-b7a7b181e632.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153880668-262c55e8-230c-4839-a5fb-b8ec1e2ff279.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153880779-55029295-c1e3-4ae4-b97e-3d5573b48a2a.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153976773-eeffe2f5-01b2-4cb6-9fbb-f6fe03028bed.png'  height="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153880926-a0fad65c-e942-440e-a492-095c5b40ffe5.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153975302-7ec5ab22-2b8c-4d4a-a5b0-4c336149001a.png'  height="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153881194-5ce039bf-22b3-49b9-a143-e59efd08013f.png'  width="50"></img>
@@ -94,7 +95,7 @@
 <img src = 'https://user-images.githubusercontent.com/70973495/153880358-fc54e9e6-9abd-4795-9bb0-f0a2073aea86.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153976447-4b083538-7da4-4541-b9b1-793c7728cd4a.png'  height="50"></img>
 
-- SpringBoot, SpringSecurity, Java, JPA, Query DSL, MySQL, AWS EC2, nginx, certbot, docker, OpenVidu, Ubuntu
+- SpringBoot, SpringSecurity, Java, JWT, JPA, Query DSL, MySQL, AWS EC2, nginx, certbot, docker, OpenVidu, Ubuntu
 
 <br />
 <br />
