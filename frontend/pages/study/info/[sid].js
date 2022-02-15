@@ -637,7 +637,7 @@ function StudyInfo() {
 
     return (
       <ContentWrapper>
-        <div>기술 스택</div>
+        <div>스터디 주제 (스택)</div>
         <StackList stackData={clubData.stacks}></StackList>
         <br />
         <RowWrapper>

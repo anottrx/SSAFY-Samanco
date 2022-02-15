@@ -180,7 +180,7 @@ function StudyRegist() {
 
           <StackSelect
             changeHandle={changeHandle}
-            label="스터디 주제"
+            label="스터디 주제 (스택)"
           ></StackSelect>
 
           <div className="registBtn">

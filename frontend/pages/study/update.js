@@ -247,7 +247,7 @@ function studyUpdate() {
           <StackSelect
             changeHandle={changeHandle}
             initData={detail.stacks}
-            label="스터디 스택"
+            label="스터디 주제 (스택)"
           ></StackSelect>
 
           <div className="registBtn">
