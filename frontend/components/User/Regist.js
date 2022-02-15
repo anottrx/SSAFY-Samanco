@@ -306,13 +306,35 @@ export default function Regist() {
                       Router.push('/regist/info');
                     } else {
                       Swal.fire({
-                        title: '메인페이지로 이동합니다',
+                        title:
+                          '싸피사만코에 오신 것을 환영합니다! 신규 회원을 위한 공지사항을 지금 읽어보실래요?',
                         icon: 'success',
-                        showConfirmButton: false,
-                        timer: 500,
-                      }).then(() => {
-                        window.history.forward();
-                        window.location.replace('/');
+                        confirmButtonText: '네, 지금 읽을게요',
+                        cancelButtonText: '아니요, 다음에 읽을래요',
+                        showCancelButton: true,
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          Swal.fire({
+                            title: '공지사항으로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 500,
+                          }).then(() => {
+                            window.history.forward();
+                            window.location.replace('/board/85');
+                            // Router.replace('/board/85/');
+                          });
+                        } else {
+                          Swal.fire({
+                            title: '메인페이지로 이동합니다',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 500,
+                          }).then(() => {
+                            window.history.forward();
+                            window.location.replace('/');
+                          });
+                        }
                       });
                     }
                   });
