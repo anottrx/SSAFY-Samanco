@@ -218,11 +218,11 @@ function BoardList(props) {
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>제목</StyledTableCell>
-              <StyledTableCell align="right">닉네임</StyledTableCell>
-              <StyledTableCell align="right">작성일</StyledTableCell>
-              <StyledTableCell align="right">좋아요</StyledTableCell>
-              <StyledTableCell align="right">조회수</StyledTableCell>
+              <StyledTableCell align="center">제목</StyledTableCell>
+              <StyledTableCell align="center">닉네임</StyledTableCell>
+              <StyledTableCell align="center">작성일</StyledTableCell>
+              <StyledTableCell align="center">좋아요</StyledTableCell>
+              <StyledTableCell align="center">조회수</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -290,10 +290,10 @@ function BoardList(props) {
                 </FileIcon>
               ) : null}
             </StyledTableCell>
-            <StyledTableCell align="right">{data.nickname}</StyledTableCell>
-            <StyledTableCell align="right">{data.dateOrTime}</StyledTableCell>
-            <StyledTableCell align="right">{data.likes}</StyledTableCell>
-            <StyledTableCell align="right">{data.hit}</StyledTableCell>
+            <StyledTableCell align="center">{data.nickname}</StyledTableCell>
+            <StyledTableCell align="center">{data.dateOrTime}</StyledTableCell>
+            <StyledTableCell align="center">{data.likes}</StyledTableCell>
+            <StyledTableCell align="center">{data.hit}</StyledTableCell>
           </StyledTableRow>
         );
       });
