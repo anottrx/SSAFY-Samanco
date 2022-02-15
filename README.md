@@ -65,13 +65,18 @@
 ## FrontEnd
 
 <img src = 'https://user-images.githubusercontent.com/70973495/153879498-91c36777-cb31-464c-8d35-46bcefa6618a.png' width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153975776-e425b441-3046-4e1f-a452-115c52b1c09f.png' width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153879590-c363d214-64a8-42fb-bbbf-8f951d2c8b91.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153879834-669069db-2924-486a-984f-63da5118a605.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153880152-897c34ef-78b2-41df-8b5a-a9d61f8638c2.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153880296-81cfbfcf-e124-480a-9cd9-8bd10e55ed72.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153975910-097bae95-b5ac-4b60-8a2d-383da7f38e94.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153880358-fc54e9e6-9abd-4795-9bb0-f0a2073aea86.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153975991-4835a81a-dec1-4bb5-bafd-4d4d7b46347d.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153976076-77d2e07b-ff62-42e4-beab-cb86294ac3a5.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153976124-55e23f7b-ce3d-4b48-8e45-3df41af24ed9.png'  height="50"></img>
 
-- Nextjs (React), JavaScript, Redux (react-redux, toolkit), emotion, Material UI, WebRTC (OpenVidu)
+- Nextjs (React), JavaScript, Redux (react-redux, toolkit), emotion, Material UI, sweetalert2, WebRTC (OpenVidu), Babel, Eslint, Prettier
 
 ## BackEnd
 
@@ -79,10 +84,17 @@
 <img src = 'https://user-images.githubusercontent.com/70973495/153880668-262c55e8-230c-4839-a5fb-b8ec1e2ff279.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153880779-55029295-c1e3-4ae4-b97e-3d5573b48a2a.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153880926-a0fad65c-e942-440e-a492-095c5b40ffe5.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153975302-7ec5ab22-2b8c-4d4a-a5b0-4c336149001a.png'  height="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153881194-5ce039bf-22b3-49b9-a143-e59efd08013f.png'  width="50"></img>
 <img src = 'https://user-images.githubusercontent.com/70973495/153881404-1bf03724-73bf-4e6f-afb1-50495103fa53.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153974995-6d37fc00-dff7-4cb4-8bd1-dda569feb2a0.png
+'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153975172-655c2dd9-d2d7-41d7-8794-feccfacd4ca8.png'  height="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153974961-d59c721a-bb71-40b0-88f8-501c031b2653.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153880358-fc54e9e6-9abd-4795-9bb0-f0a2073aea86.png'  width="50"></img>
+<img src = 'https://user-images.githubusercontent.com/70973495/153976447-4b083538-7da4-4541-b9b1-793c7728cd4a.png'  height="50"></img>
 
-- SpringBoot, SpringSecurity, Java, JPA, MySQL, AWS EC2
+- SpringBoot, SpringSecurity, Java, JPA, Query DSL, MySQL, AWS EC2, nginx, certbot, docker, OpenVidu, Ubuntu
 
 <br />
 <br />
@@ -98,6 +110,9 @@
 
 # 🚀 DevOps
 
+- Nginx 사용해서 배포하고 있습니다.
+- 백엔드 : `./gradlew build` ➡ jar 파일 생성
+- 프론트엔드 : `yarn build` ➡ index.html 생성
 - 배포 환경
   - URL: https://i6a502.p.ssafy.io/
   - 테스트 계정: ID: `test` / PW: `test`
