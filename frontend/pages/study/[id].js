@@ -358,7 +358,7 @@ const StudyDetail = () => {
                                 icon: 'success',
                                 showConfirmButton: false,
                                 timer: 500,
-                              })
+                              });
                               Router.push('/meeting/' + detail.roomId);
                             } else {
                               // 방 입장 실패
@@ -599,7 +599,7 @@ const StudyDetail = () => {
   function StudyInfo() {
     return (
       <ContentWrapper>
-        <div>스터디 주제</div>
+        <div>스터디 주제 (스택)</div>
         <StackList stackData={detail.stacks}></StackList>
         <br />
       </ContentWrapper>
@@ -812,7 +812,7 @@ const StudyDetail = () => {
                               icon: 'success',
                               showConfirmButton: false,
                               timer: 600,
-                            })
+                            });
                           } else {
                             // alert(`${res.message}`);
                             Swal.fire({
@@ -860,7 +860,7 @@ const StudyDetail = () => {
                               icon: 'success',
                               showConfirmButton: false,
                               timer: 600,
-                            })
+                            });
                           } else {
                             // alert(`${res.message}`);
                             Swal.fire({
