@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Router from 'next/router';
+import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 // import { useCookies } from 'react-cookie';
 import {
@@ -101,10 +102,6 @@ const ImgDefault = styled.img`
   background-size: contain;
   object-fit: scale-down;
 `;
-// const DetailWrapper = styled.div`
-//   display: flex;
-//   flex-direction: row;
-// `;
 const DetailWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -134,13 +131,6 @@ const ContentUpWrapper = styled.div`
   max-width: 800px;
   flex-direction: column;
 `;
-const ContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  // padding: 0px 30px;
-  padding: 0px 0px;
-  flex: 1;
-`;
 const ContentWrapper2 = styled.div`
   display: flex;
   flex-direction: column;
@@ -168,6 +158,15 @@ const RowWrapper = styled.div`
 `;
 
 export default function MyInfo() {
+  const dispatch = useDispatch();
+  const setDetail = useCallback(
+    ({ detail }) => {
+      dispatch(userActions.setUserDetail({ detail }));
+    },
+    [dispatch]
+  );
+  const detail = useSelector(({ user }) => user.userDetail);
+
   const [authChange, setAuthChange] = useState(false);
   const [onlyView, setOnlyView] = useState(true);
   const [finishUpdate, setFinishUpdate] = useState(false);
@@ -235,7 +234,6 @@ export default function MyInfo() {
     if (name == 'birthday') {
       inputState.birthday = value;
       userBirthday.value = value;
-      // console.log('생일 ' + JSON.stringify(inputState));
     } else {
       if (name == null && value.length == 6) {
         inputState.birthday = value;
@@ -309,28 +307,12 @@ export default function MyInfo() {
     const token = cookies.get('userToken');
     cookies.remove('userToken', { path: '/myinfo' });
     // cookies.remove("userToken", {path: "/"})
-
-    // getUserLoginTokenAPI(token).then((res) => {
-    //   if (res.statusCode == 200) {
-    //     //
-    //   } else {
-    //     //
-    //   }
-    //   console.log('getUserLoginTokenAPI 관련 결과' + JSON.stringify(res));
-    //   inputState.userId = res.userId;
-    //   inputState.email = res.email;
-    //   inputState.nickname = res.nickname;
-    //   nicknameInfo.nickname = inputState.nickname;
-
-    //   const userId = res.userId;
-
     inputState.userId = sessionStorage.getItem('userId');
     inputState.nickname = sessionStorage.getItem('nickname');
     inputState.email = sessionStorage.getItem('email');
 
     getUserInfoAPI(inputState.userId).then((res) => {
       if (res.statusCode == 200) {
-        // console.log('내 정보 보기 결과: ' + JSON.stringify(res));
         inputState.name = res.user.name;
         const today = new Date();
         const todayYear = today.getFullYear().toString().slice(2);
@@ -345,7 +327,6 @@ export default function MyInfo() {
           let month = inputState.birthday.slice(2, 4);
           let day = inputState.birthday.slice(4, 6);
           setUserBirthdayDate(year + '-' + month + '-' + day);
-          // console.log(userBirthdayDate);
           userBirthday.initDate = year + '-' + month + '-' + day;
           userBirthday.value = year + '-' + month + '-' + day;
           if (year == '22' && month == '02') {
@@ -398,7 +379,7 @@ export default function MyInfo() {
 
   useEffect(() => {
     getUserInfo();
-    preview();
+    // preview();
   }, []);
 
   useEffect(() => {
@@ -415,10 +396,8 @@ export default function MyInfo() {
 
   const preview = () => {
     if (!files) return false;
-
     const imgEl = document.querySelector('#img_box');
     const reader = new FileReader();
-
     reader.onload = () => {
       if (imgEl) {
         imgEl.style.backgroundImage = `url(${reader.result})`;
@@ -435,30 +414,13 @@ export default function MyInfo() {
     });
   };
 
-  function handleLinksChange(linkArr) {
-    // console.log(linkArr);
-    let linkList = '';
-    const size = linkArr.length;
-    for (let i = 0; i < size; i++) {
-      linkList = linkList + ' ' + linkArr[i];
-      // console.log(linkArr[i]);
-    }
-    linkList = linkList.trim();
-    inputState.link = linkList;
-    setLinks(linkList.split(' '));
-  }
-
   const positionHandleChange = (e) => {
-    // console.log(e.target.value);
     inputState.position = e.target.value;
-    // console.log('inputState' + JSON.stringify(inputState));
-    // console.log(inputState);
   };
 
   const [checkedNickname, setCheckedNickname] = useState(true);
   const [changeNickname, setChangeNickname] = useState(false);
   const handleUserNicknameClick = (e) => {
-    // alert('닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다');
     Swal.fire({
       icon: 'info',
       title: '닉네임 중복 확인 후 수정완료 버튼을 눌러야 변경이 완료됩니다',
@@ -492,7 +454,6 @@ export default function MyInfo() {
             updateNicknameAPI(nicknameInfo).then((res) => {
               if (res.statusCode == 200) {
                 setCheckPassword(true);
-                // alert('멋진 닉네임이네요~^^ 변경 가능합니다');
                 Swal.fire({
                   title: '멋진 닉네임이네요~^^',
                   text: '변경 가능합니다. 수정완료 버튼을 통해 바꿔주세요',
@@ -503,7 +464,6 @@ export default function MyInfo() {
                 setChangeNickname(false);
                 setCheckedNickname(true);
               } else {
-                // alert(`${res.message}`);
                 Swal.fire({
                   icon: 'error',
                   title: `${res.message}`,
@@ -524,7 +484,6 @@ export default function MyInfo() {
         });
       }
     } else {
-      // alert(msg);
       Swal.fire({
         icon: 'error',
         title: msg,
@@ -557,7 +516,7 @@ export default function MyInfo() {
       setOnlyView(true);
       setFinishUpdate(false);
       getUserInfo();
-    })
+    });
   };
 
   const [open, setOpen] = useState(false);
@@ -579,11 +538,10 @@ export default function MyInfo() {
 
   const handleUpdateFinishClick = (e) => {
     e.preventDefault();
-    // console.log(inputState.stacks);
 
     let isNormal = true;
     let msg = '';
-    console.log(nicknameChange);
+    // console.log(nicknameChange);
     if (changeNickname) {
       isNormal = false;
       msg = '닉네임 중복 체크를 완료해 주세요.';
@@ -600,13 +558,11 @@ export default function MyInfo() {
       !urlReg.test(inputState.link)
     ) {
       isNormal = false;
-      // console.log(links.length);
       msg = '링크 양식을 확인해 주세요.';
     }
 
     if (isNormal) {
       handleClickOpen();
-      // console.log(loginInfo);
     } else {
       Swal.fire({
         icon: 'error',
@@ -667,21 +623,16 @@ export default function MyInfo() {
       inputState.stacks_get = stacksArr;
 
       loginAPI(loginInfo).then((res) => {
-        // console.log(loginInfo.email + ' ' + loginInfo.password);
         if (res.statusCode == 200) {
-          // console.log("로그인 성공");
+          // 로그인 성공
           inputState.password = loginInfo.password;
 
           const formData = new FormData();
-
-          // console.log('inputState' + JSON.stringify(inputState));
-          // console.log(inputState);
 
           Object.keys(inputState).map((key) => {
             let value = inputState[key];
             if (key === 'stacks') {
               formData.append(key, '[' + JSON.stringify(value) + ']');
-              // console.log(key + " " + ("["+JSON.stringify(value)+"]"));
             } else if (key === 'birthday') {
               if (
                 inputState.birthday.slice(0, 2) == '22' &&
@@ -699,14 +650,13 @@ export default function MyInfo() {
               }
             } else {
               formData.append(key, value);
-              // console.log(key + ' ' + value);
             }
           });
 
           formData.append('file', files);
 
           for (let key of formData.entries()) {
-            console.log('key', `${key}`);
+            // console.log('key', `${key}`);
           }
 
           Swal.fire({
@@ -734,7 +684,6 @@ export default function MyInfo() {
                     setReloadCondition(true);
                   });
                 } else {
-                  // alert('회원정보 수정에 실패했습니다. 에러코드:' + res.statusCode);
                   Swal.fire({
                     icon: 'error',
                     title: '회원정보 수정에 실패했습니다',
@@ -766,7 +715,6 @@ export default function MyInfo() {
   };
 
   const classHandleChange = (e) => {
-    // inputState.userClass = e.target.value;
     inputState.class = e.target.value;
   };
 
@@ -786,7 +734,6 @@ export default function MyInfo() {
         deleteUserAPI(userId).then((res) => {
           if (res.statusCode == 200) {
             // 탈퇴 성공 시
-            // alert('다음에는 오프라인에서 함께 코딩해요!');
             Swal.fire({
               icon: 'success',
               title: '탈퇴가 완료되었습니다',
@@ -800,7 +747,6 @@ export default function MyInfo() {
             window.history.forward();
             document.location.href = '/';
           } else {
-            // alert(`${res.message}`);
             Swal.fire({
               icon: 'error',
               title: '탈퇴에 문제가 발생했습니다',
@@ -810,7 +756,6 @@ export default function MyInfo() {
           }
         });
       } else {
-        // alert('좋아요! 싸피사만코와 오래오래 코딩해요!');
         Swal.fire({
           icon: 'warning',
           title: '탈퇴가 취소되었습니다',
@@ -868,7 +813,6 @@ export default function MyInfo() {
                       autoFocus
                       margin="dense"
                       id="password"
-                      // value={loginInfo.password}
                       onChange={handlePasswordChange}
                       type="password"
                       fullWidth
@@ -880,16 +824,10 @@ export default function MyInfo() {
                     <Button onClick={handleUpdateInfo}>확인</Button>
                   </DialogActions>
                 </Dialog>
-                {/* <br /> */}
                 <Divider light sx={{ marginTop: 1.5, marginBottom: 1 }} />
                 <div>
                   <DetailWrapper maxWidth="sm">
                     <CardContent sx={{ width: '60%', marginRight: 5 }}>
-                      {/* <Box sx={{ width: "100%", fontSize: "24px", mb: 2 }}>
-                      <label>
-                        <b>{inputState.name}</b>님, 환영합니다
-                      </label>
-                    </Box> */}
                       <Box
                         className="ssafyInfo"
                         sx={{ width: '100%', fontSize: '18px', mb: 1 }}
@@ -922,9 +860,7 @@ export default function MyInfo() {
                         <label>(학번 {inputState.studentId})</label>
                       </Box>
                       <RowUpWrapper>
-                        {/* <Box whiteSpace="nowrap" sx={{ mb: 1 }}> */}
                         <label>이메일</label>
-                        {/* {inputState.email} */}
                         {onlyView ? (
                           <input value={inputState.email} disabled />
                         ) : (
@@ -939,11 +875,9 @@ export default function MyInfo() {
                             }}
                           />
                         )}
-                        {/* </Box> */}
                       </RowUpWrapper>
 
                       <RowUpWrapper>
-                        {/* <label> */}
                         <label>닉네임</label>
                         {onlyView ? (
                           <>
@@ -953,7 +887,6 @@ export default function MyInfo() {
                               disabled={
                                 onlyView ? true : changeNickname ? false : true
                               }
-                              // style={{ display: "inline-block", width: "240px" }}
                               onChange={(e) => {
                                 handleNicknameChange(e);
                                 handleChange(e);
@@ -968,7 +901,6 @@ export default function MyInfo() {
                               disabled={
                                 onlyView ? true : changeNickname ? false : true
                               }
-                              // style={{ display: "inline-block", width: "240px" }}
                               onChange={(e) => {
                                 handleNicknameChange(e);
                                 handleChange(e);
@@ -1002,11 +934,8 @@ export default function MyInfo() {
                             />
                           </>
                         )}
-
-                        {/* </label> */}
                       </RowUpWrapper>
                       <RowUpWrapper>
-                        {/* <Box sx={{ mb: 2, verticalAlign: "center" }}> */}
                         <label>생년월일</label>
                         {onlyView ? (
                           <input
@@ -1016,9 +945,7 @@ export default function MyInfo() {
                                 ? userBirthday.value
                                 : ''
                             }
-                            // value={inputState.birthday}
                             disabled
-                            // style={{ width: "60%" }}
                           />
                         ) : (
                           <LocalizationProvider dateAdapter={DateAdapter}>
@@ -1034,8 +961,6 @@ export default function MyInfo() {
                           </LocalizationProvider>
                         )}
                       </RowUpWrapper>
-                      {/* </Box> */}
-                      {/* <Box sx={{ mb: 2 }}> */}
                       <RowWrapper>
                         <label>전화번호</label>
                         {onlyView ? (
@@ -1066,13 +991,6 @@ export default function MyInfo() {
                         <label>분야</label>
                         {onlyView ? (
                           <>
-                            {/* <label>
-                        {positionOptions.map((u, i) => {
-                          if (u.value == inputState.position) {
-                            return (<label>{u.name}</label>);
-                          }
-                        })}
-                      </label> */}
                             <input
                               id="position"
                               disabled
@@ -1087,8 +1005,6 @@ export default function MyInfo() {
                                       })
                                       .join('')
                               }
-                              //  value={inputState.position || ""}
-                              // onChange={handleChange}
                             />
                           </>
                         ) : (
@@ -1114,18 +1030,11 @@ export default function MyInfo() {
                             })}
                           </Select>
                         )}
-                        {/* <input
-                  id="position"
-                  value={inputState.position || ""}
-                  disabled={onlyView ? true : false}
-                  onChange={handleChange}
-                /> */}
                       </RowUpWrapper>
                     </CardContent>
                     {onlyView && inputState.file == null ? (
                       <ImgDefault src={imageDefault}></ImgDefault>
                     ) : (
-                      //  <ImgDefault src="/images/gen7.png"></ImgDefault>
                       <CusSkeleton>
                         <ImgUploadBtn
                           id="img_box"
@@ -1196,31 +1105,6 @@ export default function MyInfo() {
                         fullWidth
                       />
                     )}
-                    {/* {onlyView ? (
-                      <LinkList items={links} />
-                    ) : (
-                      <>
-                        <span style={{ fontSize: "10px" }}>
-                          (최대 2개 가능)
-                        </span>
-                        <i style={{ fontSize: "10px" }}>
-                          &nbsp;입력 후 엔터를 눌러주세요
-                        </i>
-                        <Autocomplete
-                          multiple
-                          freeSolo
-                          // options={links}
-                          // getOptionLabel={(option) => option}
-                          // value={links}
-                          // options={links.map((l) => l.value)}
-                          // getOptionLabel={(option) => (option ? option : "")}
-                          renderInput={(params) => <TextField {...params} />}
-                          onChange={(e, option, reason) => {
-                            handleLinksChange(option);
-                          }}
-                        />
-                      </>
-                    )} */}
                   </CardContent>
                 </ContentWrapper2>
                 {finishUpdate ? (

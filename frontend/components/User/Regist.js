@@ -1,4 +1,4 @@
-import RegistInfo from './RegistAdd';
+import { useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import CheckEmailCode from './CheckEmailCode';
@@ -24,8 +24,11 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Swal from 'sweetalert2';
 import styled from '@emotion/styled';
+import * as userActions from '../../store/module/user';
 
 export default function Regist() {
+  const dispatch = useDispatch();
+
   const [pwCheckRes, setPwCheckRes] = useState(null);
   const [pwSameRes, setPwSameRes] = useState(null);
 
@@ -37,6 +40,7 @@ export default function Regist() {
 
   const [code, setCode] = useState('');
   const [inputState, setInputState] = useState({
+    userId: '',
     name: '',
     password: '',
     passwordConfirm: '',
@@ -59,7 +63,6 @@ export default function Regist() {
     { value: '6', name: '6기' },
     { value: '7', name: '7기' },
   ];
-
   const classOptions = [
     { value: 'JAVA', name: '자바반' },
     { value: 'PYTHON', name: '파이썬반' },
@@ -71,9 +74,7 @@ export default function Regist() {
     inputState[name] = value;
     if (value == false) {
       setAuthFin(false);
-      // setShowEmailCodeCheck(true);
     }
-    // 리렌더링 X
   };
 
   const handleChange = (e) => {
@@ -87,16 +88,12 @@ export default function Regist() {
   const generationHandleChange = (e) => {
     inputState.generation = e.target.value;
   };
-
   const classHandleChange = (e) => {
-    // inputState.userClass = e.target.value;
     inputState.class = e.target.value;
   };
-
   const nicknameHandleChange = (e) => {
     const value = e.target.value;
     checkNicknameAPI(value).then((res) => {
-      // console.log("닉네임이 " +value+"인 사람의 닉네임API 체크 결과" + res)
       setNicknameCheckRes({ code: res.statusCode, msg: res.message });
     });
   };
@@ -119,10 +116,6 @@ export default function Regist() {
     e.preventDefault();
     let isNormal = true;
     let msg = '';
-    // else  if(inputState.code==false) {
-    //     setShowEmailCodeCheck(false);
-    //     setAuthFin(false);
-    //   }
 
     if (!inputState.email) {
       isNormal = false;
@@ -141,9 +134,7 @@ export default function Regist() {
         didOpen: () => {
           Swal.showLoading();
           sendEmailCodeAPI(inputState.email).then((res) => {
-            // console.log(res);
             if (res.statusCode == 200) {
-              // console.log('보냄');
               Swal.fire({
                 title: '이메일로 인증번호를 전송했습니다',
                 text: '이메일 수신에 시간이 조금 걸릴 수 있습니다',
@@ -152,7 +143,6 @@ export default function Regist() {
                 timer: 800,
               });
             } else if (res.statusCode == 401) {
-              // alert('이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요');
               Swal.fire({
                 title: '이미 있는 이메일주소입니다. 다른 이메일로 시도해주세요',
                 icon: 'error',
@@ -161,7 +151,12 @@ export default function Regist() {
               setShowEmailCodeCheck(false);
               setAuthFin(false); // 우선 인증버튼 누르자마자 막기
             } else {
-              //
+              Swal.fire({
+                icon: 'error',
+                title: '로그인 중 문제가 발생했습니다',
+                text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
+                confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
+              });
             }
           });
         },
@@ -208,8 +203,6 @@ export default function Regist() {
   const phoneReg = /^[0-9]{8,13}$/;
   // 전화번호 정규표현식
 
-  const koreanReg = /[ㄱ-ㅎㅏ-ㅣ가-힇ㆍ ᆢ]/g;
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -223,7 +216,7 @@ export default function Regist() {
       isNormal = false;
       msg = '이메일 양식을 확인해주세요.';
     } else if (!authFin || !showEmailCodeCheck || !inputState.code) {
-      isNormal = false;
+      // isNormal = false;
       msg = '이메일 인증을 해주세요.';
     } else if (!inputState.nickname) {
       isNormal = false;
@@ -275,12 +268,20 @@ export default function Regist() {
                   setCookie('userToken', res.accessToken); // 쿠키 설정
                   setCookie('userEmail', inputState.email);
                   const token = res.accessToken;
-                  // console.log(res)
                   getUserLoginTokenAPI(token).then((res1) => {
-                    // console.log(res1);
                     sessionStorage.setItem('userId', res1.userId);
                     sessionStorage.setItem('email', inputState.email);
                     sessionStorage.setItem('nickname', res1.nickname);
+                    inputState.userId = res1.userId;
+
+                    const userLoginInfo = {
+                      nickname: res1.nickname,
+                      isLogin: true,
+                      userId: res1.userId,
+                    };
+                    dispatch(
+                      userActions.setLoginInfo({ loginInfo: userLoginInfo })
+                    );
                   });
 
                   Swal.fire({
@@ -293,15 +294,10 @@ export default function Regist() {
                     cancelButtonColor: '#d33',
                   }).then((result) => {
                     if (result.isConfirmed) {
-                      sessionStorage.setItem('keep', 'true');
-                      sessionStorage.setItem('password', inputState.password);
-                      sessionStorage.setItem('userClass', inputState.class);
-                      sessionStorage.setItem('studentId', inputState.studentId);
-                      sessionStorage.setItem(
-                        'generation',
-                        inputState.generation
+                      // console.log(inputState)
+                      dispatch(
+                        userActions.setRegistInfo({ registInfo: inputState })
                       );
-                      sessionStorage.setItem('name', inputState.name);
                       window.history.forward();
                       Router.push('/regist/info');
                     } else {
@@ -318,21 +314,18 @@ export default function Regist() {
                   });
                 });
               } else {
-                // alert(`${res.message}`);
                 Swal.fire({
                   icon: 'error',
                   title: '회원가입에 실패했습니다.',
                   text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
                   confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
                 });
-                // console.log('회원가입실패');
               }
             });
           },
         });
       }
     } else {
-      // alert(msg);
       Swal.fire({
         icon: 'error',
         title: msg,
@@ -355,7 +348,6 @@ export default function Regist() {
         onSubmit={handleSubmit}
       >
         <h1 style={{ marginTop: '20px' }}>회원가입</h1>
-        {/* 이메일 */}
         <div>
           <Typography display="inline" sx={{ fontSize: 14 }}>
             이메일
@@ -516,7 +508,6 @@ export default function Regist() {
             </div>
           )}
         </div>
-        {/* 기수 */}
         <div className="mb-6">
           <div sx={{ flexDirection: 'row' }}>
             <Typography display="inline" sx={{ fontSize: 14, mr: 20.5 }}>
@@ -545,7 +536,6 @@ export default function Regist() {
               );
             })}
           </Select>
-          {/* 반 */}
           <Select
             id="class"
             onChange={classHandleChange}
@@ -566,7 +556,6 @@ export default function Regist() {
             })}
           </Select>
         </div>
-        {/* 학번 */}
         <div>
           <div sx={{ flexDirection: 'row' }}>
             <Typography display="inline" sx={{ fontSize: 14, mr: 20.5 }}>
@@ -584,7 +573,6 @@ export default function Regist() {
             onChange={handleChange}
             sx={{ width: 180, mr: 1.25, fontSize: 14 }}
           />
-          {/* 이름 */}
           <OutlinedInput
             type="text"
             id="name"
@@ -596,7 +584,6 @@ export default function Regist() {
             sx={{ width: 180, fontSize: 14 }}
           />
         </div>
-        {/* 가입 버튼 */}
         <Button
           type="submit"
           variant="contained"

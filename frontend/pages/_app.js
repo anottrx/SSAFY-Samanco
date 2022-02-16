@@ -122,6 +122,7 @@ function MyApp({ Component, pageProps }) {
     //     setNickname(userNickname);
     //   });
     // }
+    
   }, [isLogin, nickname]);
 
   return (
@@ -265,7 +266,6 @@ function MyApp({ Component, pageProps }) {
           </MenuItem>
           <MenuItem
             onClick={(e) => {
-              // alert('로그아웃 되었습니다.');
               sessionStorage.clear();
               cookies.set('userToken', '', -1);
               cookies.remove('userToken', { path: '/myinfo' });
