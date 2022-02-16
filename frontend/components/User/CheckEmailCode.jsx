@@ -26,7 +26,6 @@ export default function CheckEmailCode(props) {
   const changeTimerHandle = (value, name) => {
     setTimer(value);
     props.changeHandle(false, 'code');
-    // alert('시간이 만료되었습니다! 인증코드를 재발급해 주세요');
     Swal.fire({
       icon: 'error',
       title: '시간이 만료되었습니다! 인증코드를 재발급해 주세요',
@@ -100,7 +99,6 @@ export default function CheckEmailCode(props) {
                 props.changeHandle(true, 'code');
                 setAuthFin(true);
               } else if (res.statusCode == 401) {
-                // alert('잘못 입력했습니다');
                 Swal.fire({
                   icon: 'error',
                   title: '인증번호를 잘못 입력했습니다',

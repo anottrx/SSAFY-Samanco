@@ -95,7 +95,6 @@ export default function ResetPassword() {
         didOpen: () => {
           Swal.showLoading();
           resetPWAPI(inputState).then((res) => {
-            // alert(`${res.message}`);
             if (res.statusCode == 200) {
               if (sessionStorage.getItem('nickname') == null) {
                 // 비밀번호를 잃어버려서 재설정하는 경우
@@ -123,7 +122,6 @@ export default function ResetPassword() {
                 });
               }
             } else {
-              // console.log('비밀번호 재설정 실패');
               Swal.fire({
                 icon: 'error',
                 title: '비밀번호 변경 중 문제가 발생했습니다',
@@ -135,7 +133,6 @@ export default function ResetPassword() {
         },
       });
     } else {
-      // alert(msg);
       Swal.fire({
         icon: 'error',
         title: msg,
@@ -157,7 +154,6 @@ export default function ResetPassword() {
         // minHeight="70vh"
         onSubmit={handleSubmit}
       >
-        {/* 비밀번호 */}
         <div className="mb-6">
           <Typography display="inline" sx={{ fontSize: 14 }}>
             새 비밀번호
@@ -201,7 +197,6 @@ export default function ResetPassword() {
             </div>
           ) : null}
         </div>
-        {/* 비밀번호 확인 */}
         <div className="mb-6">
           <Typography display="inline" sx={{ fontSize: 14 }}>
             새 비밀번호 확인
@@ -242,8 +237,6 @@ export default function ResetPassword() {
             </div>
           )}
         </div>
-
-        {/* 가입 버튼 */}
         <Button
           type="submit"
           variant="contained"

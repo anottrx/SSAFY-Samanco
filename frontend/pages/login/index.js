@@ -5,7 +5,11 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 import Cookies from 'universal-cookie';
 
-import { getUserLoginTokenAPI, loginAPI } from '../../pages/api/user';
+import {
+  getUserLoginTokenAPI,
+  loginAPI,
+  getUserInfoAPI,
+} from '../../pages/api/user';
 import { useCookies } from 'react-cookie';
 import * as userActions from '../../store/module/user';
 
@@ -29,7 +33,6 @@ const LinkButton = styled(Typography)`
   gutterBottom
   sx={{ width: 300, fontSize: 13.5, mr: 2 }}
 `;
-
 const LinkWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -46,13 +49,20 @@ export default function LoginPage() {
   useEffect(() => {
     document.title = '로그인 | 싸피사만코';
 
+    // if(userLoginInfo.isLogin==true) {
+    //   Swal.fire({
+    //     title: '로그인된 상태입니다',
+    //     icon: 'warning',
+    //     showConfirmButton: false,
+    //   });
+    //   Router.push('/');
+    // }
     if (
       cookie.get('userToken') != null &&
       cookie.get('userToken') != '' &&
       sessionStorage.getItem('nickname') != null &&
       sessionStorage.getItem('nickname') != 'undefined'
     ) {
-      // alert('로그인된 상태입니다');
       Swal.fire({
         title: '로그인된 상태입니다',
         icon: 'warning',
@@ -121,10 +131,8 @@ export default function LoginPage() {
         switch (res.statusCode) {
           case 200: // 로그인 성공
             setCookie('userToken', res.accessToken); // 쿠키 설정
-            // alert(res.accessToken)
             if (res.accessToken != null && res.accessToken != '') {
               getUserLoginTokenAPI(res.accessToken).then((res1) => {
-                // alert(JSON.stringify(res1));
                 sessionStorage.setItem('userId', res1.userId);
                 sessionStorage.setItem('email', inputState.email);
                 sessionStorage.setItem('nickname', res1.nickname);
@@ -133,10 +141,13 @@ export default function LoginPage() {
                   nickname: res1.nickname,
                   isLogin: true,
                 };
-                // console.log(userLoginInfo);
                 dispatch(
                   userActions.setLoginInfo({ loginInfo: userLoginInfo })
                 );
+
+                getUserInfoAPI(res1.userId).then((res) => {
+                  dispatch(userActions.setUserDetail({ detail: res.user }));
+                });
 
                 if (rememberId) {
                   setCookie('userEmail', inputState.email);
@@ -169,9 +180,6 @@ export default function LoginPage() {
               text: '지속적으로 같은 문제 발생시 관리자에게 문의하세요',
               confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
             });
-            // alert(
-            //   `로그인 중 문제가 발생했습니다. 지속적으로 같은 문제 발생시 관리자에게 문의하세요. 에러코드 (${res.statusCode})`
-            // );
             break;
         }
       });
@@ -181,7 +189,6 @@ export default function LoginPage() {
         title: msg,
         confirmButtonText: '&nbsp&nbsp확인&nbsp&nbsp',
       });
-      // alert(msg);
     }
   };
 
@@ -194,7 +201,6 @@ export default function LoginPage() {
         marginTop={8}
         sx={{ flexDirection: 'column' }}
       >
-        {/* <Login /> */}
         <Box
           component="form"
           noValidate
