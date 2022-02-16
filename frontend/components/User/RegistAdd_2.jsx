@@ -153,7 +153,7 @@ export default function RegistInfo2() {
   const handleChange = (e) => {
     const { id, value } = e.target;
     infoValue.stacks = inputState.stacks;
-    console.log(infoValue.birthday);
+    // console.log(infoValue.birthday);
 
     setInputState((prevState) => ({
       ...prevState,
@@ -163,7 +163,7 @@ export default function RegistInfo2() {
   };
 
   const positionHandleChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     inputState.position = e.target.value;
     // console.log("inputState" + JSON.stringify(inputState));
     // console.log(inputState);
@@ -292,9 +292,9 @@ export default function RegistInfo2() {
 
       formData.append('file', files);
 
-      for (let key of formData.entries()) {
-        console.log('key', `${key}`);
-      }
+      // for (let key of formData.entries()) {
+      //   console.log('key', `${key}`);
+      // }
 
       Swal.fire({
         title: '추가 정보 입력 중입니다',
@@ -303,8 +303,8 @@ export default function RegistInfo2() {
           Swal.showLoading();
 
           updateUserAPI(formData).then((res) => {
-            console.log(res);
-            console.log(JSON.stringify(res));
+            // console.log(res);
+            // console.log(JSON.stringify(res));
             if (res.statusCode == 200) {
               Swal.fire({
                 title: '회원정보 추가에 성공했습니다',

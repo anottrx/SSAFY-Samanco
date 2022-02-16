@@ -45,7 +45,7 @@ function UserVideo({ streamManager }) {
     background-position: center center;
   `;
 
-  console.log('-------------user', streamManager);
+  // console.log('-------------user', streamManager);
   return (
     <div>
       {streamManager !== undefined && streamManager.stream.videoActive ? (

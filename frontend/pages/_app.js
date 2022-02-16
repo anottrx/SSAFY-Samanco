@@ -99,7 +99,7 @@ function MyApp({ Component, pageProps }) {
     //   console.log('로그인성공');
     // }
 
-    console.log('[HOST]:', HOST, '| [PORT]:', PORT);
+    // console.log('[HOST]:', HOST, '| [PORT]:', PORT);
 
     const userNickname = sessionStorage.getItem('nickname');
     const token = cookies.get('userToken');

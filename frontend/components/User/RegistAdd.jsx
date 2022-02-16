@@ -145,7 +145,7 @@ export default function RegistInfo2() {
       !urlReg.test(inputState.link)
     ) {
       isNormal = false;
-      console.log(inputState.link);
+      // console.log(inputState.link);
       msg = '링크 양식을 확인해 주세요';
     }
 
