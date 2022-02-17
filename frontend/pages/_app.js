@@ -7,6 +7,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // import { Container } from "next/app";
+import NavItem from './menu/NavItem';
 import Head from 'next/head';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
@@ -80,13 +81,37 @@ const ImgLogo = styled.img`
   cursor: pointer;
 `;
 
+const NAV_LINK_LIST = [
+  {
+    id: 1,
+    linkUrl: '/myinfo',
+    linkText: '마이페이지',
+  },
+  {
+    id: 2,
+    linkUrl: '/myinfo/project',
+    linkText: '내 프로젝트',
+  },
+  {
+    id: 3,
+    linkUrl: '/myinfo/study',
+    linkText: '내 스터디',
+  },
+  {
+    id: 4,
+    linkUrl: '/myinfo/board',
+    linkText: '내 게시글',
+  },
+];
+
 function MyApp({ Component, pageProps }) {
   const store = createStore(persistedReducer);
   const persistor = persistStore(store);
 
-  let [isLogin, setIsLogin] = useState(false);
-  let [userId, setUserId] = useState(null);
-  let [nickname, setNickname] = useState(null);
+  const [isLogin, setIsLogin] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [nickname, setNickname] = useState(null);
+
   // const userLoginInfo = useSelector(({ user }) => user.loginInfo);
 
   const cookies = new Cookies();
@@ -104,10 +129,10 @@ function MyApp({ Component, pageProps }) {
     const userNickname = sessionStorage.getItem('nickname');
     const token = cookies.get('userToken');
     if (
-      token != null &&
-      token != '' &&
-      userNickname != null &&
-      userNickname != 'undefined'
+      token !== null &&
+      token !== '' &&
+      userNickname !== null &&
+      userNickname !== 'undefined'
     ) {
       // console.log(token);
       setIsLogin(true);
@@ -135,7 +160,7 @@ function MyApp({ Component, pageProps }) {
       }
     >
       {(pageProps && pageProps.pathname) === '/meeting/[id]' ? (
-        <React.Fragment>
+        <>
           <Head>
             <title>싸피사만코</title>
             <meta name="싸피사만코" content="SSAFY 교육생만을 위한 커뮤니티!" />
@@ -147,26 +172,23 @@ function MyApp({ Component, pageProps }) {
             </main>
             {/* pageProps.pathname === '/meeting/[id]' 일 때는 Layout 없이 렌더링 */}
           </div>
-        </React.Fragment>
+        </>
       ) : (
-        <React.Fragment>
+        <>
           <Head>
             <title>싸피사만코</title>
             <meta name="싸피사만코" content="SSAFY 교육생만을 위한 커뮤니티!" />
           </Head>
           <div style={styles.layout}>
             <header style={styles.header}>
-              <HeaderLink isLogin={isLogin} userId={userId}></HeaderLink>
+              <HeaderLink isLogin={isLogin} userId={userId} />
             </header>
             <main style={styles.main}>
               <Component {...pageProps} />
             </main>
             <footer style={styles.footer}>
               <Link href="/developer">
-                <ImgMacha
-                  style={styles.links}
-                  src="/images/pojangmacha.png"
-                ></ImgMacha>
+                <ImgMacha style={styles.links} src="/images/pojangmacha.png" />
               </Link>
               {/* <a href="https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A502">
                 <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
@@ -174,17 +196,19 @@ function MyApp({ Component, pageProps }) {
               {/* footer */}
             </footer>
           </div>
-        </React.Fragment>
+        </>
       )}
     </PersistGate>
   );
 
   function HeaderLink(props) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
       setAnchorEl(null);
     };
@@ -219,53 +243,17 @@ function MyApp({ Component, pageProps }) {
           onClose={handleClose}
           TransitionComponent={Fade}
         >
+          {NAV_LINK_LIST.map((item) => ( // 상단바 메뉴
+            <NavItem
+              key={item.id}
+              linkUrl={item.linkUrl}
+              linkText={item.linkText}
+              onClose={handleClose}
+            />
+          ))}
+
           <MenuItem
             onClick={(e) => {
-              e.preventDefault();
-              Router.push('/myinfo');
-              handleClose();
-            }}
-          >
-            <span className="site-nav-item" style={styles.link}>
-              마이페이지
-            </span>
-          </MenuItem>
-          <MenuItem
-            onClick={(e) => {
-              e.preventDefault();
-              Router.push('/myinfo/project');
-              handleClose();
-            }}
-          >
-            <span className="site-nav-item" style={styles.link}>
-              내 프로젝트
-            </span>
-          </MenuItem>
-          <MenuItem
-            onClick={(e) => {
-              e.preventDefault();
-              Router.push('/myinfo/study');
-              handleClose();
-            }}
-          >
-            <span className="site-nav-item" style={styles.link}>
-              내 스터디
-            </span>
-          </MenuItem>
-          <MenuItem
-            onClick={(e) => {
-              e.preventDefault();
-              Router.push('/myinfo/board');
-              handleClose();
-            }}
-          >
-            <span className="site-nav-item" style={styles.link}>
-              내 게시글
-            </span>
-          </MenuItem>
-          <MenuItem
-            onClick={(e) => {
-              // alert('로그아웃 되었습니다.');
               sessionStorage.clear();
               cookies.set('userToken', '', -1);
               cookies.remove('userToken', { path: '/myinfo' });
