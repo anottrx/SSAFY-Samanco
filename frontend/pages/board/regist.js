@@ -139,7 +139,7 @@ function BoardRegist() {
       </Head>
       <h1 style={{ marginTop: '20px' }}>게시물 등록</h1>
       <CusPaper>
-        {nickname == 'admin' ? (
+        {(nickname == 'admin' || nickname == 'admin2')  ? (
           <TextField
             className={styles.boardRegistTag}
             id="filled-select-currency"

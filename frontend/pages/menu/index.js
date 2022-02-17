@@ -23,7 +23,7 @@ const menu = () => {
 
   return (
     <div className={styles.menus}>
-      {nickname !== 'admin'
+      {nickname !== 'admin' && nickname !== 'admin2'
         ? links.map((link, index) => {
             return (
               <Link href={link.path} key={index}>

@@ -138,7 +138,11 @@ function BoardList(props) {
 
     if (tag === 'notice') setIsNotice(true);
     else if (tag === 'all') setIsAll(true);
-    if (sessionStorage.getItem('nickname') === 'admin') setIsAdmin(true);
+    if (
+      sessionStorage.getItem('nickname') === 'admin' ||
+      sessionStorage.getItem('nickname') === 'admin2'
+    )
+      setIsAdmin(true);
   }, [tag]);
 
   useEffect(() => {

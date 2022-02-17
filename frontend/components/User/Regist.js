@@ -409,6 +409,7 @@ export default function Regist() {
           {/* 1. 사용 가능 */}
           {inputState.nickname != '' &&
           nicknameCheckRes &&
+          !inputState.nickname.includes('admin') &&
           nicknameCheckRes.code == 200 ? (
             <div className="" role="alert">
               <span className="font-medium">멋진 닉네임이네요~^^</span>
@@ -417,6 +418,7 @@ export default function Regist() {
           {/* 2. 사용 불가능 */}
           {inputState.nickname != '' &&
           nicknameCheckRes &&
+          inputState.nickname.includes('admin') &&
           nicknameCheckRes.code != 200 ? (
             <div className="" role="alert">
               <span className="font-medium">{nicknameCheckRes.msg}</span>
