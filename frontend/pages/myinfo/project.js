@@ -63,34 +63,34 @@ export default function MyProjectPage() {
     });
   }
 
-  useEffect(() => {
-    if (cookies.get('projectDday')) {
-      isPopShow(false);
-    } else {
-      if (userDetail.projectJoinStatus == 'OK') {
-        getProjectById({
-          projectId: userDetail.projectId,
-          userId: userDetail.id,
-          addHit: '1',
-        }).then((res) => {
-          let date = new Date();
-          let year = date.getFullYear();
-          let month = ('0' + (1 + date.getMonth())).slice(-2);
-          let day = ('0' + date.getDate()).slice(-2);
-          let today = year + '-' + month + '-' + day;
-          if (res.project.startDate == today) {
-            isPopShow(true);
-          }
-        });
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (cookies.get('projectDday')) {
+  //     isPopShow(false);
+  //   } else {
+  //     if (userDetail.projectJoinStatus == 'OK') {
+  //       getProjectById({
+  //         projectId: userDetail.projectId,
+  //         userId: userDetail.id,
+  //         addHit: '1',
+  //       }).then((res) => {
+  //         let date = new Date();
+  //         let year = date.getFullYear();
+  //         let month = ('0' + (1 + date.getMonth())).slice(-2);
+  //         let day = ('0' + date.getDate()).slice(-2);
+  //         let today = year + '-' + month + '-' + day;
+  //         if (res.project.startDate == today) {
+  //           isPopShow(true);
+  //         }
+  //       });
+  //     }
+  //   }
+  // }, []);
 
   return (
     <>
       <MyInfoLayout>
         <h1>내 프로젝트</h1>
-        {popShow && (
+        {/* {popShow && (
           <ClubInfo
             onClick={() => {
               setCookie();
@@ -101,7 +101,7 @@ export default function MyProjectPage() {
             <span>프로젝트 시작일입니다! </span>
             <CloseIcon className="popCloseBtn" />
           </ClubInfo>
-        )}
+        )} */}
         <MyClub label="" from="project" myinfo="myinfo" />
       </MyInfoLayout>
     </>
