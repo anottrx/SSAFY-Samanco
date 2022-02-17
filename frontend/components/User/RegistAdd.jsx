@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Router from 'next/router';
+import { useSelector, useDispatch } from 'react-redux';
 import StackLevelSelectRegister from '../../components/Common/Stack/StackLevelSelectRegister';
 
 import {
@@ -24,6 +25,8 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import StackLevelInfoDialog from '../Common/Stack/StackLevelInfoDialog';
 
 export default function RegistInfo() {
+  const registInfoData = useSelector(({ user }) => user.registInfo);
+  
   const [inputState, setInputState] = useState({
     phone: '',
     birthday: '',
@@ -43,6 +46,7 @@ export default function RegistInfo() {
   });
 
   const positionOptions = [
+    { value: '', name: '선택해주세요' },
     { value: 'frontend', name: '프론트엔드' },
     { value: 'backend', name: '백엔드' },
     { value: 'mobile', name: '모바일' },
@@ -89,12 +93,7 @@ export default function RegistInfo() {
   const uploadRef = useRef(null);
 
   useEffect(() => {
-    if (
-      !sessionStorage.getItem('keep') ||
-      sessionStorage.getItem('keep') == null ||
-      sessionStorage.getItem('keep') == ''
-    ) {
-      // alert('잘못된 접근입니다');
+    if (registInfoData == null) {
       Swal.fire({
         title: '잘못된 접근입니다.',
         icon: 'warning',
@@ -102,24 +101,25 @@ export default function RegistInfo() {
         timer: 800,
       }).then(() => {
         sessionStorage.clear();
-      // 페이지 이동
-      window.history.forward();
-      window.location.replace('/');
+        window.history.forward();
+        window.location.replace('/');
       });
     }
 
-    inputState.email = sessionStorage.getItem('email');
-    inputState.userId = sessionStorage.getItem('userId');
-    inputState.nickname = sessionStorage.getItem('nickname');
-    inputState.name = sessionStorage.getItem('name');
-    inputState.class = sessionStorage.getItem('userClass');
-    inputState.generation = sessionStorage.getItem('generation');
-    inputState.studentId = sessionStorage.getItem('studentId');
-    inputState.password = sessionStorage.getItem('password');
-
-    preview();
+    inputState.email = registInfoData.email;
+    inputState.userId = registInfoData.userId;
+    inputState.nickname = registInfoData.nickname;
+    inputState.name = registInfoData.name;
+    inputState.class = registInfoData.class;
+    inputState.generation = registInfoData.generation;
+    inputState.studentId = registInfoData.studentId;
+    inputState.password = registInfoData.password;
   });
 
+  useEffect(() => {
+    preview();
+  });
+  
   const preview = () => {
     if (!files) return false;
 
