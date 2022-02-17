@@ -53,7 +53,7 @@ export default function AdminList() {
     },
     [dispatch]
   );
-  console.log(detail);
+  // console.log(detail);
 
   setUsers = useCallback(
     ({ list }) => {

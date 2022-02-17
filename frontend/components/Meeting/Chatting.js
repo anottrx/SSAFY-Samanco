@@ -138,7 +138,7 @@ function Chatting({ session }) {
     const mySession = session;
 
     session.on('connectionCreated', (event) => {
-      console.log('채팅 세션 열림!!!!!!!', event);
+      // console.log('채팅 세션 열림!!!!!!!', event);
     });
 
     mySession.on('signal:chat', (event) => {

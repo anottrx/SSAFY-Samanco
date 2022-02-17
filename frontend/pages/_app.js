@@ -124,7 +124,7 @@ function MyApp({ Component, pageProps }) {
     //   console.log('로그인성공');
     // }
 
-    console.log('[HOST]:', HOST, '| [PORT]:', PORT);
+    // console.log('[HOST]:', HOST, '| [PORT]:', PORT);
 
     const userNickname = sessionStorage.getItem('nickname');
     const token = cookies.get('userToken');
@@ -243,14 +243,18 @@ function MyApp({ Component, pageProps }) {
           onClose={handleClose}
           TransitionComponent={Fade}
         >
-          {NAV_LINK_LIST.map((item) => ( // 상단바 메뉴
-            <NavItem
-              key={item.id}
-              linkUrl={item.linkUrl}
-              linkText={item.linkText}
-              onClose={handleClose}
-            />
-          ))}
+          {NAV_LINK_LIST.map(
+            (
+              item // 상단바 메뉴
+            ) => (
+              <NavItem
+                key={item.id}
+                linkUrl={item.linkUrl}
+                linkText={item.linkText}
+                onClose={handleClose}
+              />
+            )
+          )}
 
           <MenuItem
             onClick={(e) => {

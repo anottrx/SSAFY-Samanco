@@ -587,8 +587,8 @@ function MeetingDetail() {
         Swal.showLoading();
 
         quitRoomAPI(inputValue).then((res) => {
-          console.log(inputValue);
-          console.log(res);
+          // console.log(inputValue);
+          // console.log(res);
           videoTrackOff(publisher);
           leaveSession();
           clear();
@@ -894,7 +894,7 @@ function ExitDialog(props) {
     detail,
   } = props;
   inputValue.roomId = detail.roomId;
-  console.log('----------------------------ExitDialog inputValue', inputValue);
+  // console.log('----------------------------ExitDialog inputValue', inputValue);
   return (
     <Dialog open={open} onClose={exitDialogClose}>
       {detail.hostId == sessionStorage.getItem('userId') ? (

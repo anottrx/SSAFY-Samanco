@@ -61,7 +61,7 @@ const BoardDetail = () => {
 
   useEffect(() => {
     if (router.query.id) {
-      console.log(router.query.id);
+      // console.log(router.query.id);
       setQueryId(router.query.id);
     }
   });

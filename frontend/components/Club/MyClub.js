@@ -216,7 +216,7 @@ function MyClub(props) {
     }, []);
 
     // 클럽 데이터에 아이디가 없는지? -> (true) 없으면 스터디, (false) 있으면 프로젝트
-    console.log(clubData.id === undefined);
+    // console.log(clubData.id === undefined);
 
     return clubData.id === undefined ? (
       <CarouselWrapper>
