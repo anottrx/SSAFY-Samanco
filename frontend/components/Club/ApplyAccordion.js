@@ -322,7 +322,7 @@ function ApplyAccordion(props) {
           );
         })
       ) : (
-        <div>아직 지원한 지원자가 없습니다 ㅜ.ㅜ</div>
+        <div>현재 지원한 지원자가 없습니다.</div>
       )}
     </div>
   );
