@@ -216,7 +216,7 @@ export default function Regist() {
       isNormal = false;
       msg = '이메일 양식을 확인해주세요.';
     } else if (!authFin || !showEmailCodeCheck || !inputState.code) {
-      // isNormal = false;
+      isNormal = false;
       msg = '이메일 인증을 해주세요.';
     } else if (!inputState.nickname) {
       isNormal = false;
