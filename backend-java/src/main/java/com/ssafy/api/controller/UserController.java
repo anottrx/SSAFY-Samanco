@@ -109,7 +109,7 @@ public class UserController {
 		else if(emailCode == 403)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(403,"이메일이 중복됩니다. 다른 이메일로 가입해주세요."));
 
-//		//2. 닉네임 오류
+		//2. 닉네임 오류
 		int nickCode=userService.nickCheck(registerInfo.getNickname());
 		if(nickCode == 401)
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401,"닉네임 길이는 2자이상 16자이하로 해주세요."));
