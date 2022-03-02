@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
 import * as boardActions from '../../store/module/board';
@@ -46,6 +46,8 @@ import * as meetingActions from '../../store/module/meeting';
 //게시글 상세보기 페이지
 
 const BoardDetail = () => {
+  const router = useRouter();
+
   const detail = useSelector(({ board }) => board.boardDetail);
   const roomDetail = useSelector(({ meeting }) => meeting.meetingDetail);
   const tag = detail?.tag;
@@ -53,6 +55,16 @@ const BoardDetail = () => {
   const [like, changeLike] = useState(detail.userLike);
   const [detailLikes, setLikes] = useState(detail.likes);
   const [openPw, setOpenPw] = useState(false);
+  const [queryId, setQueryId] = useState(undefined);
+
+  // const bid = router.query;
+
+  useEffect(() => {
+    if (router.query.id) {
+      // console.log(router.query.id);
+      setQueryId(router.query.id);
+    }
+  });
 
   const pwDialogOpen = () => {
     setOpenPw(true);
@@ -71,7 +83,7 @@ const BoardDetail = () => {
 
   function fetchData(addHit) {
     getArticleById({
-      boardId: detail.boardId,
+      boardId: queryId ? queryId : detail.boardId,
       userId:
         sessionStorage.getItem('userId') == null
           ? 0

@@ -79,7 +79,7 @@ function ApplyAccordion(props) {
     <div>
       {props.applyData ? (
         props.applyData.map((data) => {
-          console.log('userData', data);
+          // console.log('userData', data);
           return (
             <Accordion key={data.id}>
               <AccordionSummary
@@ -89,7 +89,10 @@ function ApplyAccordion(props) {
               >
                 <SummaryWrapper>
                   <Typography>{data.nickname}</Typography>
-                  <StackItem title={data.projectPosition}></StackItem>
+                  {
+                    props.from === "project" && 
+                    <StackItem title={data.projectPosition}></StackItem>
+                  }
                 </SummaryWrapper>
               </AccordionSummary>
 
@@ -319,7 +322,7 @@ function ApplyAccordion(props) {
           );
         })
       ) : (
-        <div>아직 지원한 지원자가 없습니다 ㅜ.ㅜ</div>
+        <div>현재 지원한 지원자가 없습니다.</div>
       )}
     </div>
   );
@@ -357,7 +360,7 @@ function UserImage({ file }) {
         const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
         createAndDownloadBlobFile(arrayBuffer, file.originFile);
       } else {
-        console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+        // console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
       }
     });
   }

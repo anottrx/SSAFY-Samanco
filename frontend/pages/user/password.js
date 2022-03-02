@@ -14,7 +14,7 @@ import ResetPassword from '../../components/User/ResetPassword';
 
 export default function ResetPasswordPage() {
   useEffect(() => {
-    console.log(sessionStorage.getItem('userId'));
+    // console.log(sessionStorage.getItem('userId'));
     if (sessionStorage.getItem('userId') != null) {
       // alert('로그인된 상태입니다');
       // Router.push('/');
@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
         icon: 'success',
         showConfirmButton: false,
         timer: 500,
-      })
+      });
     }
   }, []);
 

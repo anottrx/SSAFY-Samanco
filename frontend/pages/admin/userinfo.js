@@ -9,7 +9,10 @@ export default function AdminUserInfo() {
   useEffect(() => {
     document.title = '회원 관리 | 싸피사만코';
 
-    if (sessionStorage.getItem('nickname') === 'admin') {
+    if (
+      sessionStorage.getItem('nickname') === 'admin' ||
+      sessionStorage.getItem('nickname') === 'admin2'
+    ) {
       setIsAdmin(true);
     } else {
       window.history.forward();

@@ -98,7 +98,7 @@ const StudyDetail = () => {
         const arrayBuffer = base64ToArrayBuffer(res.data.fileString);
         createAndDownloadBlobFile(arrayBuffer, file.originFile);
       } else {
-        console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
+        // console.log('파일이 존재하지 않습니다. 관리자에게 문의해주세요.');
       }
     });
   }

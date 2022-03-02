@@ -138,7 +138,11 @@ function BoardList(props) {
 
     if (tag === 'notice') setIsNotice(true);
     else if (tag === 'all') setIsAll(true);
-    if (sessionStorage.getItem('nickname') === 'admin') setIsAdmin(true);
+    if (
+      sessionStorage.getItem('nickname') === 'admin' ||
+      sessionStorage.getItem('nickname') === 'admin2'
+    )
+      setIsAdmin(true);
   }, [tag]);
 
   useEffect(() => {
@@ -272,6 +276,9 @@ function BoardList(props) {
                   setDetail({ detail: res.board });
                   // dispatch(boardActions.setTag({ tag: res.board.tag }));
                 }
+                // Router.push(`/board/${data.boardId}`, '/board', {
+                //   shallow: true,
+                // });
                 Router.push('/board/' + data.boardId);
               }); // 조회수 증가
             }}

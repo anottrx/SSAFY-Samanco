@@ -81,8 +81,6 @@ export default function LostPassword(props) {
 
   const checkCodeClick = (e) => {
     e.preventDefault();
-    // const value = code;
-
     if (!code) {
       Swal.fire({
         icon: 'error',
@@ -134,7 +132,6 @@ export default function LostPassword(props) {
         ) : (
           <>
             <h4>가입하신 이메일 주소를 입력해주세요</h4>
-            {/* <br /> */}
             <FormControl sx={{ width: 370 }}>
               <OutlinedInput
                 id="email"

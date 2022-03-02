@@ -168,7 +168,7 @@ function MeetingRegist() {
                   inputValue.tagId = '';
                 }
 
-                console.log(inputValue);
+                // console.log(inputValue);
                 let roomId;
                 registAPI(inputValue).then((res) => {
                   if (res.statusCode == 200) {
@@ -192,7 +192,7 @@ function MeetingRegist() {
                           joinRoomAPI(inputValue).then((res) => {
                             // 방장도 미팅룸 가입
                             if (res.statusCode == 200) {
-                              console.log('방 가입 완료');
+                              // console.log('방 가입 완료');
                               getRoomById(roomId).then((res) => {
                                 if (res.statusCode == 200) {
                                   Swal.fire({
