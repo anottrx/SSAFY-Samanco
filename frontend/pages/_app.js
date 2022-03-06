@@ -73,12 +73,13 @@ const styles = {
   },
 };
 const ImgMacha = styled.img`
-  max-width: 80px;
-  max-height: 25px;
+  width: 80px;
+  height: 25px;
 `;
 const ImgLogo = styled.img`
-  max-height: 30px;
   cursor: pointer;
+  width: 107px;
+  height: 30px;
 `;
 
 const NAV_LINK_LIST = [
