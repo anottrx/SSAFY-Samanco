@@ -73,8 +73,8 @@ const styles = {
   },
 };
 const ImgMacha = styled.img`
-  width: 80px;
-  height: 25px;
+  width: 85.8px;
+  height: auto;
 `;
 const ImgLogo = styled.img`
   cursor: pointer;
