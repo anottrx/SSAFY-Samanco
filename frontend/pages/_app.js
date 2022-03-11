@@ -189,7 +189,7 @@ function MyApp({ Component, pageProps }) {
             </main>
             <footer style={styles.footer}>
               <Link href="/developer">
-                <ImgMacha style={styles.links} src="/images/pojangmacha.png" alt="pojangmacha"/>
+                <ImgMacha style={styles.links} src="/images/pojangmacha.webp" alt="pojangmacha"/>
               </Link>
               {/* <a href="https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A502">
                 <ImgMacha src="/images/pojangmacha.png"></ImgMacha>
@@ -288,7 +288,7 @@ function MyApp({ Component, pageProps }) {
       <div style={styles.headerLink}>
         <Link href="/" passHref>
           {/* <img src="/images/main-logo-black.png" height="30px"></img> */}
-          <ImgLogo src="/images/main-logo-black.png" alt="main-logo-black" />
+          <ImgLogo src="/images/main-logo-black.webp" alt="main-logo-black" />
         </Link>
         <div>
           {props.isLogin ? (

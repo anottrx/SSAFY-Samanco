@@ -45,7 +45,7 @@ export default function Home() {
             <Link href="/project">
               <LinkImage className={styles.card}>
                 <h2>프로젝트, 스터디 &rarr;</h2>
-                <img src="/images/main_image1.png" alt="main_image1"></img>
+                <img src="/images/main_image1.webp" alt="main_image1"></img>
                 <p>원하는 팀원을 모집할 수 있어요</p>
               </LinkImage>
             </Link>
@@ -53,7 +53,7 @@ export default function Home() {
             <Link href="/meeting">
               <LinkImage className={styles.card}>
                 <h2>미팅룸 &rarr;</h2>
-                <img src="/images/main_image2.png" alt="main_image2"></img>
+                <img src="/images/main_image2.webp" alt="main_image2"></img>
                 <p>
                   화상 회의를 이용해
                   <br />
@@ -65,7 +65,7 @@ export default function Home() {
             <Link href="/board">
               <LinkImage className={styles.card}>
                 <h2>게시판 &rarr;</h2>
-                <img src="/images/main_image3.png" alt="main_image3"></img>
+                <img src="/images/main_image3.webp" alt="main_image3"></img>
                 <p>
                   시험과 취업 정보를 얻고,
                   <br />
