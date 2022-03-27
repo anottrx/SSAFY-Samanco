@@ -1,11 +1,11 @@
-<a href="https://i6a502.p.ssafy.io/">
+<!-- <a href="https://i6a502.p.ssafy.io/"> -->
 <img src="https://user-images.githubusercontent.com/70973495/153874139-e0683762-d80e-4111-994f-d1cc12d92ed1.png"  width="200"/>
 </a>
 <br />
 
 > ## `SSAFY!` 사이버에서 만나서 코딩하자
 
-<span>💡 로고를 클릭하면 싸피사만코로 이동합니다.</span>
+<!-- <span>💡 로고를 클릭하면 싸피사만코로 이동합니다.</span> -->
 
 <br />
 <br />
@@ -118,9 +118,9 @@
 - Nginx를 사용해서 수동 배포하고 있습니다.
 - 백엔드 : `./gradlew build` ➡ jar 파일 생성
 - 프론트엔드 : `yarn build` ➡ index.html 생성
-- 배포 환경
-  - URL: https://i6a502.p.ssafy.io/
-  - 테스트 계정: ID: `test` / PW: `test`
+  <!-- - 배포 환경 -->
+    <!-- - URL: https://i6a502.p.ssafy.io/ -->
+    <!-- - 테스트 계정: ID: `test` / PW: `test` -->
 
 <br />
 <br />
