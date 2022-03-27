@@ -140,7 +140,7 @@ npm run dev
 <br />
 <br />
 
----
+<!-- ---
 
 ## 카테고리
 
@@ -152,4 +152,4 @@ npm run dev
 | :black_square_button: Android App | :black_square_button: IoT             | :black_square_button: C#         | :black_square_button: Node.js        |
 | :black_square_button: iOS App     | :black_square_button: AR/VR/Metaverse | :black_square_button: Python     | :black_square_button: Flask/Django   |
 | :black_square_button: Desktop App | :black_square_button: Game            | :white_check_mark: Java          | :white_check_mark: Spring/Springboot |
-|                                   |                                       | :black_square_button: Kotlin     |                                      |
+|                                   |                                       | :black_square_button: Kotlin     |                                      | -->
