@@ -2,6 +2,7 @@ module.exports = {
   reactStrictMode: true,
   images: {
     loader: 'custom',
+    formats: ['image/avif', 'image/webp'],
   },
   distDir: 'dist',
   trailingSlash: true,
