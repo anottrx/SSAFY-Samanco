@@ -126,6 +126,20 @@
 <br />
 <br />
 
+# 🌱 실행하기
+
+- 백엔드 : GroupCallApplication 실행
+- 프론트엔드
+
+```shell
+npm install
+npm run dev
+```
+
+<br />
+<br />
+<br />
+
 ---
 
 ## 카테고리
