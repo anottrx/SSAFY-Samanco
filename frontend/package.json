@@ -26,7 +26,7 @@
     "form-data": "^4.0.0",
     "i": "^0.3.7",
     "lodash": "^4.17.21",
-    "next": "^12.0.10",
+    "next": "^12.1.6",
     "next-redux-wrapper": "^7.0.5",
     "node-fetch": "^2.6.1",
     "notistack": "^2.0.3",
@@ -61,7 +61,6 @@
     "eslint-config-next": "11.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "msw": "^0.36.5",
     "prettier": "^2.3.2",
     "redux-devtools-extension": "^2.13.9",
     "redux-logger": "^3.0.6"

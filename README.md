@@ -125,6 +125,21 @@
 <br />
 <br />
 
+# 🌟 성과
+
+- lighthouse로 성능테스트
+  | SEO 100점 |
+  | :-------------------------------------------------------------------------------------------------------: |
+  | <img src="./readme_assets/seo.png" alt="lighthouse_seo" width="600px"/>
+  | Accessibility 100점 |
+  | <img src="./readme_assets/accessibility.png" alt="lighthouse_accessibility" width="600px"/>
+  | Best Practices 100점 |
+  | <img src="./readme_assets/bestpractices.png" alt="lighthouse_best_practiceso" width="600px"/>
+
+<br />
+<br />
+<br />
+
 # 🌱 실행하기
 
 - 백엔드 : GroupCallApplication 실행

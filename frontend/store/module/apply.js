@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   applyList: [],
 };
 
 const counterSlice = createSlice({
-  name: "apply",
+  name: 'apply',
   initialState,
   reducers: {
     setApplyList: (state, action) => {
