@@ -102,9 +102,9 @@ export default function RegistInfo2() {
         timer: 800,
       }).then(() => {
         sessionStorage.clear();
-      // 페이지 이동
-      window.history.forward();
-      window.location.replace('/');
+        // 페이지 이동
+        window.history.forward();
+        window.location.replace('/');
       });
     }
 

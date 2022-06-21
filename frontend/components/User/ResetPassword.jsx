@@ -160,7 +160,7 @@ export default function ResetPassword() {
           </Typography>
           <br />
           <OutlinedInput
-            type="password"
+            // type="password"
             id="password"
             placeholder="8~16자리, 영문자, 숫자, 특수문자"
             value={inputState.password}
@@ -203,7 +203,7 @@ export default function ResetPassword() {
           </Typography>
           <br />
           <OutlinedInput
-            type="password"
+            // type="password"
             id="passwordConfirm"
             value={inputState.passwordConfirm}
             onChange={(e) => {

@@ -2,10 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 import { useCookies } from 'react-cookie';
-import {
-  getUserInfoAPI,
-  deleteUserAPI,
-} from '../../pages/api/user';
+import { getUserInfoAPI, deleteUserAPI } from '../../pages/api/user';
 import DatePickerUser from '../../components/Common/DatePickerUser';
 import { LocalizationProvider } from '@mui/lab';
 import DateAdapter from '@mui/lab/AdapterDateFns';
@@ -296,7 +293,9 @@ export default function UserInfoPage() {
 
   const handleQuitClick = (event) => {
     Swal.fire({
-      title: adminUserId + '번 회원을 탈퇴시키겠습니까? 확인 버튼을 누르면 해당 회원은 즉시 탈퇴됩니다',
+      title:
+        adminUserId +
+        '번 회원을 탈퇴시키겠습니까? 확인 버튼을 누르면 해당 회원은 즉시 탈퇴됩니다',
       text: '탈퇴 취소는 할 수 없으니 신중하게 결정해주세요',
       icon: 'warning',
       confirmButtonText: '확인',

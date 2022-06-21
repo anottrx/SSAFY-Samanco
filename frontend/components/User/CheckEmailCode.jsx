@@ -64,7 +64,7 @@ export default function CheckEmailCode(props) {
                   icon: 'success',
                   showConfirmButton: false,
                   timer: 500,
-                })
+                });
                 props.changeHandle(true, 'code');
                 setAuthFin(true);
               } else if (res.statusCode == 401) {
@@ -95,7 +95,7 @@ export default function CheckEmailCode(props) {
                   icon: 'success',
                   showConfirmButton: false,
                   timer: 500,
-                })
+                });
                 props.changeHandle(true, 'code');
                 setAuthFin(true);
               } else if (res.statusCode == 401) {

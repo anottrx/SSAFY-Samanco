@@ -342,7 +342,7 @@ function JoinDialog(props) {
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 500,
-                          })
+                          });
                           Router.push('/meeting/' + room.roomId);
                           setDetail({
                             detail: room,
@@ -412,7 +412,7 @@ function PwDialog(props) {
                             icon: 'success',
                             showConfirmButton: false,
                             timer: 600,
-                          })
+                          });
                           Router.push('/meeting/' + room.roomId);
                           setDetail({
                             detail: room,
